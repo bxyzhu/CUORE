@@ -1,3 +1,163 @@
+// Fits all gamma peaks from Th232
+void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
+{
+    // Pb212 238.6
+    double dFitMinPb    =   230.;
+    double dFitMaxPb    =   247.;
+
+    // 511
+    double dFitMinE     =   495;
+    double dFitMaxE     =   525;
+
+    // Tl208 583.2
+    double dFitMinTl2   =   575.;
+    double dFitMaxTl2   =   590.;
+
+    // Tl208 860.56
+    double dFitMinTl3   =   854.;
+    double dFitMaxTl3   =   868.;
+
+    // Ac228 - 911
+    double dFitMinAc2   =   900;
+    double dFitMaxAc2   =   920;
+
+    // Ac228 - 968
+    double dFitMinAc1   =   958;
+    double dFitMaxAc1   =   978;
+
+    // Double Escape - 1593
+    double dFitMinDE    =   1570;
+    double dFitMaxDE    =   1605;
+
+    // Single Escape - 2104
+    double dFitMinSE    =   2090;
+    double dFitMaxSE    =   2115;
+
+    // Tl208 - 2615
+    double dFitMinTl1   =   2600;
+    double dFitMaxTl1   =   2630;
+
+
+    // Fit functions
+
+    TF1 *fFitPb = new TF1("fFitPb", "gaus(0) + pol1(3)", dFitMinPb, dFitMaxPb);
+    fFitPb->SetParameters(10000., 238.6, 2.8, 0., 0.);
+
+    TF1 *fFitE = new TF1("fFitE", "gaus(0) + gaus(3) + pol1(6)", dFitMinE, dFitMaxE);
+    fFitE->SetParameters(1000., 510.77., 2.8, 10000., 511, 2.8, 0., 0.);
+
+    TF1 *fFitTl2 = new TF1("fFitTl2","gaus(0) + pol1(3)", dFitMinTl2, dFitMaxTl2);
+    fFitTl2->SetParameters(10000., 583.2, 2.8, 0., 0.);
+
+    TF1 *fFitTl3 = new TF1("fFitTl3","gaus(0) + pol1(3)", dFitMinTl3, dFitMaxTl3);
+    fFitTl3->SetParameters(10000., 860.56, 2.8, 0., 0.);
+
+    TF1 *fFitAc2 = new TF1("fFitAc2","gaus(0) + pol1(3)", dFitMinAc2, dFitMaxAc2);
+    fFitAc2->SetParameters(10000., 911.2, 2.8, 0., 0.);
+
+    TF1 *fFitAc1 = new TF1("fFitAc1","gaus(0) + gaus(3) + pol1(6)", dFitMinAc1, dFitMaxAc1); // Fit 968 with 2 gaussians
+    fFitAc1->SetParameters(5000., 964.77, 2.8, 10000., 968.98, 2.8, 0., 0.);
+
+
+    TF1 *fFitDE = new TF1("fFitDE","gaus(0) + gaus(3) + pol1(6)", dFitMinDE, dFitMaxDE);
+    fFitDE->SetParameters(5000., 1588.19, 2.8, 15000., 1593., 2.8, 0., 0.);
+
+    TF1 *fFitSE = new TF1("fFitSE","gaus(0) + pol1(3)", dFitMinSE, dFitMaxSE);
+    fFitSE->SetParameters(1000., 2104., 3);
+
+    TF1 *fFitTl1 = new TF1("fFitTl1","gaus(0) + pol1(3)", dFitMinTl1, dFitMaxTl1);
+    fFitTl1->SetParameters(1000, 2615, 2.8, 0, 0);
+
+
+
+    TCanvas *cth = new TCanvas(Form("%s",dHisto->GetName()), Form("%s",dHisto->GetName()), 1600, 1600);
+    cth->Divide(3,3);
+
+    // Fit and draw all peaks
+    // TCanvas *cpb = new TCanvas("cpb", "cpb", 1100, 750);
+    cth->cd(1);
+    TH1D *hpb   = (TH1D*)dHisto->Clone("hpb");
+    hpb->SetTitle("Pb212 (238.632 keV)");
+    hpb->SetAxisRange(dFitMinPb, dFitMaxPb);
+    hpb->Fit("fFitPb","R");
+
+
+    // TCanvas *ce = new TCanvas("ce", "ce", 1100, 750);
+    cth->cd(2);
+    TH1D *he   = (TH1D*)dHisto->Clone("he");
+    he->SetTitle("Tl208 and electron (510.77 and 511 keV)");
+    he->SetAxisRange(dFitMinE, dFitMaxE);
+    he->Fit("fFitE","R");
+
+    // TCanvas *ctl2 = new TCanvas("ctl2", "ctl2", 1100, 750);
+    cth->cd(3);
+    TH1D *htl2   = (TH1D*)dHisto->Clone("htl2");
+    htl2->SetTitle("Tl208 (583.2 keV)");
+    htl2->SetAxisRange(dFitMinTl2, dFitMaxTl2);
+    htl2->Fit("fFitTl2","R");
+
+    // TCanvas *ctl3 = new TCanvas("ctl3", "ctl3", 1100, 750);
+    cth->cd(4);
+    TH1D *htl3   = (TH1D*)dHisto->Clone("htl3");
+    htl3->SetTitle("Tl208 (860.56 keV)");
+    htl3->SetAxisRange(dFitMinTl3, dFitMaxTl3);
+    htl3->Fit("fFitTl3","R");
+
+    // TCanvas *cac2 = new TCanvas("cac2", "cac2", 1100, 750);
+    cth->cd(5);
+    TH1D *hac2   = (TH1D*)dHisto->Clone("hac2");
+    hac2->SetTitle("Ac228 (911.2 keV)");
+    hac2->SetAxisRange(dFitMinAc2, dFitMaxAc2);
+    hac2->Fit("fFitAc2","R");
+
+    // TCanvas *cac1 = new TCanvas("cac1", "cac1", 1100, 750);
+    cth->cd(6);
+    TH1D *hac1   = (TH1D*)dHisto->Clone("hac1");
+    hac1->SetTitle("Ac228 (964.77 and 968.98 keV)");
+    hac1->SetAxisRange(dFitMinAc1, dFitMaxAc1);
+    hac1->Fit("fFitAc1","R");
+
+    // TCanvas *cde = new TCanvas("cde", "cde", 1100, 750);
+    cth->cd(7);
+    TH1D *hde   = (TH1D*)dHisto->Clone("hde");
+    hde->SetTitle("Ac228 and Tl208 (1588.19 and 1593 keV)");
+    hde->SetAxisRange(dFitMinDE, dFitMaxDE);
+    hde->Fit("fFitDE","R");
+
+    // TCanvas *cse = new TCanvas("cse", "cse", 1100, 750);
+    cth->cd(8);
+    TH1D *hse   = (TH1D*)dHisto->Clone("hse");
+    hse->SetTitle("Tl208 (2104 keV)");
+    hse->SetAxisRange(dFitMinSE, dFitMaxSE);
+    hse->Fit("fFitSE","R");
+    // hse->Fit("gaus");
+
+    // TCanvas *ctl1 = new TCanvas("ctl1", "ctl1", 1100, 750);
+    cth->cd(9);
+    TH1D *htl1  = (TH1D*)dHisto->Clone("htl1");
+    htl1->SetTitle("Tl208 (2615 keV)");
+    htl1->SetAxisRange(dFitMinTl1, dFitMaxTl1);
+    htl1->Fit("fFitTl1","R");
+
+
+    if(bSavePlots)
+    {
+
+    }
+
+
+
+}
+
+// Fits gamma peaks from Ra226 chain
+void FitRaPeaks()
+{
+
+
+
+}
+
+
 void DrawBkg()
 {
     gStyle->SetOptStat(0);
@@ -429,4 +589,82 @@ void AlphaRecalibration()
     g1->SetLineColor(1);
     g1->Fit("pol1");
     g1->Draw("A*");
+}
+
+void DrawMC(int dMult = 1)
+{
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit();
+    int bin = 3500;
+    double binsize = 3500/bin;
+
+    TH1D *h50mK = new TH1D("h50mK","", bin, 0, 3500);
+    TH1D *h600mK = new TH1D("h600mK","", bin, 0, 3500);
+    // TH1D *hMC = new TH1D("hMC","", bin, 0, 3500);
+    TH1D *hIVC = new TH1D("hIVC","", bin, 0, 3500);
+    TH1D *hOVC = new TH1D("hOVC","", bin, 0, 3500);
+
+
+
+    TChain *outTree50mK = new TChain("outTree");
+    outTree50mK->Add(Form("/Users/brian/macros/Simulations/Bkg/50mK-Th232-B-M%d-T50-r0.0425.root", dMult));
+    outTree50mK->Project("h50mK","Ener1");
+
+
+    TChain *outTree600mK = new TChain("outTree");
+    outTree600mK->Add(Form("/Users/brian/macros/Simulations/Bkg/600mK-Th232-B-M%d-T50-r0.0425.root", dMult));
+    outTree600mK->Project("h600mK","Ener1");
+
+/*
+    TChain *outTreeMC = new TChain("outTree");
+    outTreeMC->Add(Form("/Users/brian/macros/Simulations/Bkg/Mixing-Th232-B-M%d-T50-r0.0425.root", dMult));
+    outTreeMC->Project("hMC","Ener1");
+*/
+    TChain *outTreeIVC = new TChain("outTree");
+    outTreeIVC->Add(Form("/Users/brian/macros/Simulations/Bkg/IVC-Th232-B-M%d-T50-r0.0425.root", dMult));
+    outTreeIVC->Project("hIVC","Ener1");
+
+    TChain *outTreeOVC = new TChain("outTree");
+    outTreeOVC->Add(Form("/Users/brian/macros/Simulations/Bkg/OVC-Th232-B-M%d-T50-r0.0425.root", dMult));
+    outTreeOVC->Project("hOVC","Ener1");
+
+/*
+    TCanvas *cSmear = new TCanvas("cSmear", "cSmear", 1100, 750);
+
+    TLegend *leg;
+    leg = new TLegend(0.72,0.70,0.925,0.9);
+
+    cSmear->SetLogy();
+
+
+    h50mK->SetAxisRange(0, 3500);
+    h50mK->SetLineColor(kRed);
+    h600mK->SetLineColor(kBlue);
+    // hMC->SetLineColor(kBlack);
+    hOVC->SetLineColor(5);
+    hIVC->SetLineColor(kGreen);
+    // hMC->Rebin(5);
+    // hSmeared->SetLineColor(kRed);
+    // hSmeared->Rebin(5);
+    h50mK->Draw();
+    h600mK->Draw("SAME");
+    // hMC->Draw("SAME");
+    hIVC->Draw("SAME");
+    hOVC->Draw("SAME");
+
+
+    leg->AddEntry(h50mK, "50mK", "l");
+    leg->AddEntry(h600mK, "600mK", "l");
+    // leg->AddEntry(hMC, "Mixing Chamber", "l");
+    leg->AddEntry(hIVC, "IVC", "l");
+    leg->AddEntry(hOVC, "OVC", "l");
+
+    leg->Draw();
+*/
+
+    FitThPeaks(h50mK);
+    FitThPeaks(h600mK);
+    FitThPeaks(hIVC);
+    FitThPeaks(hOVC);
+
 }
