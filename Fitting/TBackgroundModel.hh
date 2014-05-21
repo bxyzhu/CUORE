@@ -33,10 +33,14 @@ private:
 	TH1D		*fDataHistoM2;
 
 	// Model
-	TH1D		*fModelPDF;
+	TH1D		*fModel50mKTh;
+	TH1D		*fModelMixingTh;
+	TH1D		*fModel600mKTh;
+	TH1D		*fModelIVCTh;
+	TH1D		*fModelOVCTh;
 
 	// Smearing
-	TRandom1	*fRandomGenerator;	
+	TRandom3	*fRandomGenerator;	
 	
 	double	fParameters[2] = {0}; 
 

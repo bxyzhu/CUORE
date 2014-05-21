@@ -21,7 +21,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code){
 	// implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
 	Obj->SetParameters(0,x[0]);   
 	Obj->SetParameters(1,x[1]);  
-
+	Obj->SetParameters(2,x[2]);
 	Obj->UpdateModel();
 
 //  Obj->PrintParameters();
@@ -40,13 +40,18 @@ TBackgroundModel::TBackgroundModel()
     base_cut = base_cut && "abs(BaselineSlope)<0.1";
     base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
 
-	fDataHistoTot = new TH1D("fDataHistoTot", "Data Histogram", 10000, 0., 10000.);
-	fDataHistoM1 = new TH1D("fDataHistoM1", "Data Histogram", 10000, 0., 10000.);
-	fDataHistoM2 = new TH1D("fDataHistoM2", "Data Histogram", 10000, 0., 10000.);
+	fDataHistoTot = new TH1D("fDataHistoTot", "Data Histogram", 3000, 0., 3000.);
+	fDataHistoM1 = new TH1D("fDataHistoM1", "Data Histogram", 3000, 0., 3000.);
+	fDataHistoM2 = new TH1D("fDataHistoM2", "Data Histogram", 3000, 0., 3000.);
 
-	// Model
-	fModelPDF = new TH1D("fModelPDF", "Model Histogram", 10000, 0., 10000.);
-	fRandomGenerator = new TRandom1(0);
+	// Model histograms
+	fModel50mKTh = new TH1D("fModel50mKTh", "50mK", 3000, 0., 3000.);
+	fModelMixingTh = new TH1D("fModelMixingTh", "Mixing Chamber", 3000, 0., 3000.);
+	fModel600mKTh = new TH1D("fModel600mKTh", "600mK", 3000, 0., 3000.);
+	fModelIVCTh = new TH1D("fModelIVCKTh", "IVC", 3000, 0., 3000.);
+	fModelOVCTh = new TH1D("fModelOVCKTh", "OVC", 3000, 0., 3000.);
+
+	fRandomGenerator = new TRandom3(0);
 	// fParameters[0] = 0.;
 	// fParameters[1] = 0.;
 
@@ -112,11 +117,26 @@ void TBackgroundModel::UpdateModel()
 	}
 
 	// Reset all bins in model histogram(s)
-	fModelPDF->Reset();
+	fModel50mKTh->Reset();
+	fModelMixingTh->Reset();
+	fModel600mKTh->Reset();
+	fModelIVCTh->Reset();
+	fModelOVCTh->Reset();
+
+
+
 
 
 	// Smearing -> Energy resolution depends on energy of event
 	fSmearedMC = TRandom1->Gaus(Energy,EnergyRes);
+
+
+	fModel50mKTh = ;
+	fModelMixingTh = ;
+	fModel600mKTh = ;
+	fModelIVCTh = ;
+	fModelOVCTh = ;
+
 
 /*
 	// Test
@@ -142,12 +162,13 @@ void TBackgroundModel::UpdateModel()
 double TBackgroundModel::GetChiSquare()
 {
 	//cout<<"Calling GetChiSquare()"<<endl;
-	double chiSquare=0.;
-	double data_i,err_i,model_i;	
+	double chiSquare = 0.;
+	double data_i, err_i, model_i;	
 
 	for(int i = 1; i<fModelHisto->GetNbinsX()-1; i++)
 	{
 		data_i = fDataHistoTot->GetBinContent(i);
+
 		model_i = fModelPDF->GetBinContent(i);
 
 //		err_i	=1000.;	
@@ -219,8 +240,11 @@ bool TBackgroundModel::DoTheFit(){
 	double 	dummy;
 	minuit.GetParameter(0,fParameters[0],dummy);
 	minuit.GetParameter(1,fParameters[1],dummy);
+
 	UpdateModel();
+	
 	cout<<"At the end ChiSq = "<<GetChiSquare()<<endl;
+	
 	fModelPDF->SetLineColor(kRed);
 	fModelPDF->Draw("SAME");
 
