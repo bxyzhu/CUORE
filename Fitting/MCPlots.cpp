@@ -1,3 +1,12 @@
+// Loads MC files
+TChain *LoadMC(string dLocation, string dSource, int dMult)
+{
+    TChain *outTree = new TChain("outTree");
+    outTree->Add(Form("/Users/brian/macros/Simulations/Bkg/%s-%s-B-M%d-T50-r0.0425.root", dLocation.c_str(), dSource.c_str(), dMult));
+
+    return outTree;
+}
+
 
 // Fits all gamma peaks from Th232
 void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
@@ -425,19 +434,36 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
 }
 
 
-void DrawBkg()
+
+void DrawMC(int dMult = 1, bool bSavePlots = false)
 {
     gStyle->SetOptStat(0);
-	gStyle->SetOptFit();	
+    gStyle->SetOptFit();
+    int bin = 3500;
+    double binsize = 3500/bin;
 
-    int dMult = 1;
-    float dEMin = 0, dEMax = 8000;
+    TH1D *hBkg = new TH1D("hBkg", "", bin, 0, 3500);
 
-    // Load Data files
 
-    // const int datasets[] = {2061, 2064, 2067, 2070, 2073, 2076};
-    const int datasets[] = {2061};
-    const int nDataset = sizeof(datasets)/sizeof(int);
+    TH1D *h50mK = new TH1D("h50mK","", bin, 0, 3500);
+    TH1D *h600mK = new TH1D("h600mK","", bin, 0, 3500);
+    // TH1D *hMC = new TH1D("hMC","", bin, 0, 3500);
+    TH1D *hIVC = new TH1D("hIVC","", bin, 0, 3500);
+    TH1D *hOVC = new TH1D("hOVC","", bin, 0, 3500);
+
+
+    TChain *outTree50mK = LoadMC("50mK", "Th232", 1);
+    TChain *outTree600mK = LoadMC("600mK", "Th232", 1);
+    TChain *outTreeIVC = LoadMC("IVC", "Th232", 1);
+    TChain *outTreeOVC = LoadMC("OVC", "Th232", 1);
+
+
+    outTree50mK->Project("h50mK","Ener1");
+    outTree600mK->Project("h600mK","Ener1");
+    outTreeIVC->Project("hIVC","Ener1");
+    outTreeOVC->Project("hOVC","Ener1");
+
+
 
     TChain *qtree = new TChain("qtree");
     qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");
@@ -448,35 +474,50 @@ void DrawBkg()
     base_cut = base_cut && "abs(BaselineSlope)<0.1";
     base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
 
-    TH1D *hfull;
-    TH1D *hzoomed;
-    TH1D *hzoomedm1;
-    TH1D *hzoomedm2;
 
-    TCanvas *cfull = new TCanvas("cfull", "cfull", 1200, 800);
-    // gPad->SetLogy();
-    hzoomed = new TH1D("hzoomed", "Zoomed Spectra", 1250, 3000, 8000);
-    hzoomedm1 = new TH1D("hzoomedm1", "Zoomed Spectra", 1250, 3000, 8000);
-    hzoomedm2 = new TH1D("hzoomedm2", "Zoomed Spectra", 1250, 3000, 8000);
+    qtree->Project("hBkg", "Energy", base_cut && "Multiplicity_OFTime == 1");
 
-    hzoomed->SetFillColor(kBlue);
-    hzoomed->GetXaxis()->SetTitle("Energy (keV)");
-    hzoomed->GetYaxis()->SetTitle("Counts/(4 keV)");
-
-    hzoomedm1->SetFillColor(2);
-    hzoomedm2->SetFillColor(5);
-
-    qtree->Project("hzoomed", "Energy", base_cut);
-    qtree->Project("hzoomedm1", "Energy", base_cut && "Multiplicity_OFTime == 1");
-    qtree->Project("hzoomedm2", "Energy", base_cut && "Multiplicity_OFTime == 2");
-
-    hzoomed->Draw();
-    // hzoomedm1->Draw("SAME");
-    // hzoomedm2->Draw("SAME");
+/*
+    TCanvas *cSmear = new TCanvas("cSmear", "cSmear", 1100, 750);
 
     TLegend *leg;
-    leg = new TLegend(0.60,0.75,0.925,0.9);
+    leg = new TLegend(0.72,0.70,0.925,0.9);
 
-    leg->AddEntry(hzoomed,"Total","f");
-    
+    cSmear->SetLogy();
+
+
+    h50mK->SetAxisRange(0, 3500);
+    h50mK->SetLineColor(kBlack);
+    // h600mK->SetLineColor(kBlue);
+    // hMC->SetLineColor(kBlack);
+    // hOVC->SetLineColor(5);
+    // hIVC->SetLineColor(kGreen);
+    // hMC->Rebin(5);
+    // hSmeared->SetLineColor(kRed);
+    // hSmeared->Rebin(5);
+    // h50mK->Draw();
+    // h600mK->Draw("SAME");
+    // hMC->Draw("SAME");
+    // hIVC->Draw("SAME");
+    // hOVC->Draw("SAME");
+
+
+    // leg->AddEntry(h50mK, "50mK", "l");
+    // leg->AddEntry(h600mK, "600mK", "l");
+    // leg->AddEntry(hMC, "Mixing Chamber", "l");
+    // leg->AddEntry(hIVC, "IVC", "l");
+    // leg->AddEntry(hOVC, "OVC", "l");
+
+    // leg->Draw();
+*/
+
+    FitThPeaks(h50mK, bSavePlots);
+    FitThPeaks(h600mK, bSavePlots);
+    FitThPeaks(hBkg, bSavePlots);
+    // FitThPeaks(hIVC, bSavePlots);
+    // FitThPeaks(hOVC, bSavePlots);
+    // FitRaPeaks(h50mK, bSavePlots);
+    // FitRaPeaks(h600mK, bSavePlots);
+    // FitRaPeaks(hIVC, bSavePlots);
+    // FitRaPeaks(hOVC, bSavePlots);
 }
