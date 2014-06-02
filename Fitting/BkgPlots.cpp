@@ -31,7 +31,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     double dFitMaxDE    =   1605;
 
     // Single Escape - 2104
-    double dFitMinSE    =   2090;
+    double dFitMinSE    =   2094;
     double dFitMaxSE    =   2115;
 
     // Tl208 - 2615
@@ -49,16 +49,16 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     fFitE->SetParameters(1000, 510.77, 3., 0., 0.);
 
     TF1 *fFitTl2 = new TF1("fFitTl2","gaus(0) + pol1(3)", dFitMinTl2, dFitMaxTl2);
-    fFitTl2->SetParameters(10000., 583.2, 2.8, 0., 0.);
+    fFitTl2->SetParameters(1000., 583.2, 2.8, 0., 0.);
 
     TF1 *fFitTl3 = new TF1("fFitTl3","gaus(0) + pol1(3)", dFitMinTl3, dFitMaxTl3);
-    fFitTl3->SetParameters(10000., 860.56, 2.8, 0., 0.);
+    fFitTl3->SetParameters(1000., 860.56, 2.8, 0., 0.);
 
     TF1 *fFitAc2 = new TF1("fFitAc2","gaus(0) + pol1(3)", dFitMinAc2, dFitMaxAc2);
-    fFitAc2->SetParameters(10000., 911.2, 2.8, 0., 0.);
+    fFitAc2->SetParameters(1000., 911.2, 2.8, 0., 0.);
 
     TF1 *fFitAc1 = new TF1("fFitAc1","gaus(0) + gaus(3) + pol1(6)", dFitMinAc1, dFitMaxAc1); // Fit 968 with 2 gaussians
-    fFitAc1->SetParameters(5000., 964.77, 2.8, 10000., 968.98, 2.8, 0., 0.);
+    fFitAc1->SetParameters(50., 964.77, 2.8, 1000., 968.98, 2.8, 0., 0.);
 
 
     TF1 *fFitDE = new TF1("fFitDE","gaus(0) + gaus(3) + pol1(6)", dFitMinDE, dFitMaxDE);
@@ -66,7 +66,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     fFitDE->SetParameters(500, 1580, 3., 5000, 1588, 3., 0., 0.);
 
     TF1 *fFitSE = new TF1("fFitSE","gaus(0) + pol1(3)", dFitMinSE, dFitMaxSE);
-    fFitSE->SetParameters(1000., 2104., 3);
+    fFitSE->SetParameters(1000., 2104., 3, 0, 0);
 
     TF1 *fFitTl1 = new TF1("fFitTl1","gaus(0) + pol1(3)", dFitMinTl1, dFitMaxTl1);
     fFitTl1->SetParameters(1000, 2615, 2.8, 0, 0);
@@ -103,6 +103,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     cth->cd(4);
     TH1D *htl3   = (TH1D*)dHisto->Clone("htl3");
     htl3->SetTitle("Tl208 (860.56 keV)");
+    htl3->Rebin();
     htl3->SetAxisRange(dFitMinTl3, dFitMaxTl3);
     htl3->Fit("fFitTl3","R");
 
@@ -124,6 +125,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     cth->cd(7);
     TH1D *hde   = (TH1D*)dHisto->Clone("hde");
     hde->SetTitle("Ac228 (1580.53 and 1588.19)");
+    hde->Rebin(1.5);
     hde->SetAxisRange(dFitMinDE, dFitMaxDE);
     hde->Fit("fFitDE","R");
 
@@ -131,6 +133,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     cth->cd(8);
     TH1D *hse   = (TH1D*)dHisto->Clone("hse");
     hse->SetTitle("Tl208 (2104 keV)");
+    hse->Rebin();
     hse->SetAxisRange(dFitMinSE, dFitMaxSE);
     hse->Fit("fFitSE","R");
     // hse->Fit("gaus");
@@ -167,8 +170,8 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     double dFitMaxPb2    =   302.;
 
     // Pb214 351.932
-    double dFitMinPb3    =   342.;
-    double dFitMaxPb3    =   358.;
+    double dFitMinPb3    =   344.;
+    double dFitMaxPb3    =   360.;
 
     // Bi214 609.31
     double dFitMinBi1    =   601.;
@@ -196,7 +199,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
 
     // Bi214 1155.19
     double dFitMinBi7    =   1148.;
-    double dFitMaxBi7    =   1162.;
+    double dFitMaxBi7    =   1157.;
 
     // Bi214 1238.11
     double dFitMinBi8    =   1230.;
@@ -219,7 +222,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     double dFitMaxBi12   =   1772.;
 
     // Bi214 1847.42
-    double dFitMinBi13   =   1840.;
+    double dFitMinBi13   =   1841.;
     double dFitMaxBi13   =   1855.;
 
     // Bi214 2204.21
@@ -233,13 +236,13 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     // Fit functions
 
     TF1 *fFitPb1 = new TF1("fFitPb1", "gaus(0) + pol1(3)", dFitMinPb1, dFitMaxPb1);
-    fFitPb1->SetParameters(1000., 241.997, 2.8, 0., 0.);
+    fFitPb1->SetParameters(100., 241.997, 2.8, 0., 0.);
 
     TF1 *fFitPb2 = new TF1("fFitPb2", "gaus(0) + pol1(3)", dFitMinPb2, dFitMaxPb2);
-    fFitPb2->SetParameters(1000., 295.224, 2.8, 0., 0.);
+    fFitPb2->SetParameters(100., 295.224, 2.8, 0., 0.);
 
     TF1 *fFitPb3 = new TF1("fFitPb3", "gaus(0) + pol1(3)", dFitMinPb3, dFitMaxPb3);
-    fFitPb3->SetParameters(1000., 351.932, 2.8, 0., 0.);
+    fFitPb3->SetParameters(100., 351.932, 2.8, 0., 0.);
 
     TF1 *fFitBi1 = new TF1("fFitBi1","gaus(0) + pol1(3)", dFitMinBi1, dFitMaxBi1);
     fFitBi1->SetParameters(1000, 609.31, 2.8, 0, 0);
@@ -260,16 +263,16 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     fFitBi6->SetParameters(1000, 1120.29, 2.8, 0, 0);
 
     TF1 *fFitBi7 = new TF1("fFitBi7","gaus(0) + pol1(3)", dFitMinBi7, dFitMaxBi7);
-    fFitBi7->SetParameters(1000, 1155.19, 2.8, 0, 0);
+    fFitBi7->SetParameters(100, 1155.19, 3.5, 0, 0);
 
     TF1 *fFitBi8 = new TF1("fFitBi8","gaus(0) + pol1(3)", dFitMinBi8, dFitMaxBi8);
     fFitBi8->SetParameters(1000, 1238.11, 2.8, 0, 0);    
 
     TF1 *fFitBi9 = new TF1("fFitBi9","gaus(0) + pol1(3)", dFitMinBi9, dFitMaxBi9);
-    fFitBi9->SetParameters(1000, 1377.67, 2.8, 0, 0);
+    fFitBi9->SetParameters(100, 1377.67, 2.8, 0, 0);
 
     TF1 *fFitBi10 = new TF1("fFitBi10","gaus(0) + gaus(3) + pol1(6)", dFitMinBi10, dFitMaxBi10);
-    fFitBi10->SetParameters(800, 1401.515, 2.8, 1000, 1407.98, 2.8, 0, 0);
+    fFitBi10->SetParameters(40, 1401.515, 2.8, 100, 1407.98, 2.8, 0, 0);
 
     TF1 *fFitBi11 = new TF1("fFitBi11","gaus(0) + pol1(3)", dFitMinBi11, dFitMaxBi11);
     fFitBi11->SetParameters(1000, 1729.6, 2.8, 0, 0);
@@ -278,13 +281,13 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     fFitBi12->SetParameters(1000, 1764.49, 2.8, 0, 0);
 
     TF1 *fFitBi13 = new TF1("fFitBi13","gaus(0) + pol1(3)", dFitMinBi13, dFitMaxBi13);
-    fFitBi13->SetParameters(1000, 1847.42, 2.8, 0, 0);
+    fFitBi13->SetParameters(10, 1847.42, 2.8, 0, 0);
 
     TF1 *fFitBi14 = new TF1("fFitBi14","gaus(0) + pol1(3)", dFitMinBi14, dFitMaxBi14);
     fFitBi14->SetParameters(1000, 2204.21, 2.8, 0, 0);
 
     TF1 *fFitBi15 = new TF1("fFitBi15","gaus(0) + pol1(3)", dFitMinBi15, dFitMaxBi15);
-    fFitBi15->SetParameters(1000, 2447.86, 2.8, 0, 0);
+    fFitBi15->SetParameters(10, 2447.86, 2.8, 0, 0);
 
             
 
@@ -306,6 +309,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra1->cd(2);
     TH1D *hpb2   = (TH1D*)dHisto->Clone("hpb2");
     hpb2->SetTitle("Pb214 (295.224 keV)");
+    // hpb2->Rebin();
     hpb2->SetAxisRange(dFitMinPb2, dFitMaxPb2);
     hpb2->Fit("fFitPb2","R");
 
@@ -354,7 +358,8 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra2->cd(1);
     TH1D *hbi7   = (TH1D*)dHisto->Clone("hbi7");
     hbi7->SetTitle("Bi214 (1155.19 keV)");
-    hbi7->SetAxisRange(dFitMinBi7, dFitMaxBi7);
+    // hbi7->Rebin();
+    hbi7->SetAxisRange(dFitMinBi7, dFitMaxBi7+4);
     hbi7->Fit("fFitBi7","R");
 
     cra2->cd(2);
@@ -372,6 +377,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra2->cd(4);
     TH1D *hbi10   = (TH1D*)dHisto->Clone("hbi10");
     hbi10->SetTitle("Bi214 (1401.515 and 1407.98 keV)");
+    hbi10->Rebin();
     hbi10->SetAxisRange(dFitMinBi10, dFitMaxBi10);
     hbi10->Fit("fFitBi10","R");
 
@@ -402,6 +408,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra2->cd(9);
     TH1D *hbi15   = (TH1D*)dHisto->Clone("hbi15");
     hbi15->SetTitle("Bi214 (2447.86 keV)");
+    hbi15->Rebin();
     hbi15->SetAxisRange(dFitMinBi15, dFitMaxBi15);
     hbi15->Fit("fFitBi15","R");
 
@@ -425,19 +432,17 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
 }
 
 
-void DrawBkg()
+void DrawBkg(int dMult = 1, bool bSavePlots = false)
 {
     gStyle->SetOptStat(0);
 	gStyle->SetOptFit();	
 
     int dMult = 1;
-    float dEMin = 0, dEMax = 8000;
 
-    // Load Data files
+    int bin = 3500;
+    double binsize = 3500/bin;
 
-    // const int datasets[] = {2061, 2064, 2067, 2070, 2073, 2076};
-    const int datasets[] = {2061};
-    const int nDataset = sizeof(datasets)/sizeof(int);
+    TH1D *hBkg = new TH1D("hBkg", "", bin, 0, 3500);
 
     TChain *qtree = new TChain("qtree");
     qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");
@@ -448,35 +453,11 @@ void DrawBkg()
     base_cut = base_cut && "abs(BaselineSlope)<0.1";
     base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
 
-    TH1D *hfull;
-    TH1D *hzoomed;
-    TH1D *hzoomedm1;
-    TH1D *hzoomedm2;
 
-    TCanvas *cfull = new TCanvas("cfull", "cfull", 1200, 800);
-    // gPad->SetLogy();
-    hzoomed = new TH1D("hzoomed", "Zoomed Spectra", 1250, 3000, 8000);
-    hzoomedm1 = new TH1D("hzoomedm1", "Zoomed Spectra", 1250, 3000, 8000);
-    hzoomedm2 = new TH1D("hzoomedm2", "Zoomed Spectra", 1250, 3000, 8000);
+    qtree->Project("hBkg", "Energy", base_cut && "Multiplicity_OFTime == 1");
 
-    hzoomed->SetFillColor(kBlue);
-    hzoomed->GetXaxis()->SetTitle("Energy (keV)");
-    hzoomed->GetYaxis()->SetTitle("Counts/(4 keV)");
+    // FitThPeaks(hBkg, bSavePlots);
+    FitRaPeaks(hBkg, bSavePlots);
 
-    hzoomedm1->SetFillColor(2);
-    hzoomedm2->SetFillColor(5);
 
-    qtree->Project("hzoomed", "Energy", base_cut);
-    qtree->Project("hzoomedm1", "Energy", base_cut && "Multiplicity_OFTime == 1");
-    qtree->Project("hzoomedm2", "Energy", base_cut && "Multiplicity_OFTime == 2");
-
-    hzoomed->Draw();
-    // hzoomedm1->Draw("SAME");
-    // hzoomedm2->Draw("SAME");
-
-    TLegend *leg;
-    leg = new TLegend(0.60,0.75,0.925,0.9);
-
-    leg->AddEntry(hzoomed,"Total","f");
-    
 }

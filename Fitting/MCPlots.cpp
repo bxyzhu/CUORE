@@ -11,27 +11,27 @@ TChain *LoadMC(string dLocation, string dSource, int dMult)
 // Fits all gamma peaks from Th232
 void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
 {
-    // Pb212 238.6
+    // Pb212 238.6 BR - 43.3%
     double dFitMinPb    =   230.;
     double dFitMaxPb    =   247.;
 
-    // 511
+    // 511, Tl208 510.77 BR - 22.6%
     double dFitMinE     =   495;
     double dFitMaxE     =   525;
 
-    // Tl208 583.2
+    // Tl208 583.2 BR - 84.5%
     double dFitMinTl2   =   575.;
     double dFitMaxTl2   =   590.;
 
-    // Tl208 860.56
+    // Tl208 860.56 BR - 12.42%
     double dFitMinTl3   =   854.;
     double dFitMaxTl3   =   868.;
 
-    // Ac228 - 911
+    // Ac228 - 911 BR - 25.8%
     double dFitMinAc2   =   900;
     double dFitMaxAc2   =   920;
 
-    // Ac228 - 968
+    // Ac228 - 945 BR - 4.99% ;968 BR - 15.8%
     double dFitMinAc1   =   958;
     double dFitMaxAc1   =   978;
 
@@ -43,7 +43,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     double dFitMinSE    =   2090;
     double dFitMaxSE    =   2115;
 
-    // Tl208 - 2615
+    // Tl208 - 2615 - 99%
     double dFitMinTl1   =   2600;
     double dFitMaxTl1   =   2630;
 
@@ -151,6 +151,50 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     htl1->SetAxisRange(dFitMinTl1, dFitMaxTl1);
     htl1->Fit("fFitTl1","R");
 
+
+    // Ratios
+    TCanvas *cratioth("cratioth", "cratioth", 1200, 800);
+
+    double dFitEnergy[11] = {};
+    double dFitArea[11] = {};
+    
+
+    // Mean
+    dFitEnergy[0] = fFitPb->GetParameter(1);
+    dFitEnergy[1] = fFitE->GetParameter(1);
+    dFitEnergy[2] = fFitTl2->GetParameter(1);
+    dFitEnergy[3] = fFitTl3->GetParameter(1);
+    dFitEnergy[4] = fFitAc2->GetParameter(1);
+    dFitEnergy[5] = fFitAc1->GetParameter(1);
+    dFitEnergy[6] = fFitAc1->GetParameter(4);
+    dFitEnergy[7] = fFitDE->GetParameter(1);
+    dFitEnergy[8] = fFitDE->GetParameter(4);
+    dFitEnergy[9] = fFitSE->GetParameter(1);
+    dFitEnergy[10] = fFitTl1->GetParameter(1);
+
+    // Total Area
+    double dTotArea = fFitPb->GetParameter(0)/fFitPb->GetParameter(2) + fFitE->GetParameter(0)/fFitE->GetParameter(2)
+            + fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2) + fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2)
+            + fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2) + fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2)
+            + fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5) + fFitDE->GetParameter(0)/fFitDE->GetParameter(2)
+            + fFitDE->GetParameter(3)/fFitDE->GetParameter(5) + fFitSE->GetParameter(0)/fFitSE->GetParameter(2)
+            + fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2);
+
+    // Norm/Sigma
+    dFitArea[0] = fFitPb->GetParameter(0)/fFitPb->GetParameter(2);
+    dFitArea[1] = fFitE->GetParameter(0)/fFitE->GetParameter(2);
+    dFitArea[2] = fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2);
+    dFitArea[3] = fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2);
+    dFitArea[4] = fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2);
+    dFitArea[5] = fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2);
+    dFitArea[6] = fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5);
+    dFitArea[7] = fFitDE->GetParameter(0)/fFitDE->GetParameter(2);
+    dFitArea[8] = fFitDE->GetParameter(3)/fFitDE->GetParameter(5);
+    dFitArea[9] = fFitSE->GetParameter(0)/fFitSE->GetParameter(2);
+    dFitArea[10] = fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2);
+
+
+    TGraphErrors *g1 = new TGraphErrors(11, dFitEnergy, dFitArea);
 
     if(bSavePlots)
     {
