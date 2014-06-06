@@ -146,6 +146,126 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     htl1->Fit("fFitTl1","R");
 
 
+
+
+    // Ratios
+    TCanvas *cratioth = new TCanvas(Form("Th_Ratio%s",dHisto->GetName()), Form("Th_Ratio%s",dHisto->GetName()), 1200, 800);
+
+    double dFitEnergy[11] = {};
+    double dFitEnergyErr[11] = {};
+    double dFitNorm[11] = {};
+    double dFitArea[11] = {};
+    double dFitAreaErr[11] = {};    
+
+
+    // Mean
+    dFitEnergy[0] = fFitPb->GetParameter(1);
+    dFitEnergy[1] = fFitE->GetParameter(1);
+    dFitEnergy[2] = fFitTl2->GetParameter(1);
+    dFitEnergy[3] = fFitTl3->GetParameter(1);
+    dFitEnergy[4] = fFitAc2->GetParameter(1);
+    dFitEnergy[5] = fFitAc1->GetParameter(1);
+    dFitEnergy[6] = fFitAc1->GetParameter(4);
+    dFitEnergy[7] = fFitDE->GetParameter(1);
+    dFitEnergy[8] = fFitDE->GetParameter(4);
+    dFitEnergy[9] = fFitSE->GetParameter(1);
+    dFitEnergy[10] = fFitTl1->GetParameter(1);
+
+    // Total Area
+    double dTotAreaTl = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2) 
+            + fFitE->GetParameter(0)/fFitE->GetParameter(2)
+            + fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2) + fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+
+    double dTotAreaAc = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2) + fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2)
+            + fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5) + fFitDE->GetParameter(0)/fFitDE->GetParameter(2)
+            + fFitDE->GetParameter(3)/fFitDE->GetParameter(5)); 
+
+    double dTotAreaPb = TMath::Abs(fFitPb->GetParameter(0)/fFitPb->GetParameter(2));
+
+
+    // Norm/Sigma, SE and DE just set to be 1
+    dFitNorm[0] = TMath::Abs(fFitPb->GetParameter(0)/fFitPb->GetParameter(2));
+    // dFitNorm[1] = TMath::Abs(fFitE->GetParameter(0)/fFitE->GetParameter(2));
+    dFitNorm[1] = 1;
+    dFitNorm[2] = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2));
+    dFitNorm[3] = TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2));
+    dFitNorm[4] = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2));
+    dFitNorm[5] = TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2));
+    dFitNorm[6] = TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5));
+    dFitNorm[7] = TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2));
+    dFitNorm[8] = TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5));
+    dFitNorm[9] = 1;
+    dFitNorm[10] = TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+
+
+
+    // Total Tl BR is 195.92 without e- peak, 218.52 with e-
+/*
+    // with e-
+    dFitArea[0] = dFitNorm[0]/dTotAreaPb;
+    dFitArea[1] = dFitNorm[1]/dTotAreaTl * 218.52/22.6;
+    dFitArea[2] = dFitNorm[2]/dTotAreaTl * 218.52/84.5;
+    dFitArea[3] = dFitNorm[3]/dTotAreaTl * 218.52/12.42;
+    dFitArea[4] = dFitNorm[4]/dTotAreaAc * 49.81/25.8;
+    dFitArea[5] = dFitNorm[5]/dTotAreaAc * 49.81/4.99;
+    dFitArea[6] = dFitNorm[6]/dTotAreaAc * 49.81/15.8;
+    dFitArea[7] = 1;
+    dFitArea[8] = dFitNorm[8]/dTotAreaAc * 49.81/3.22;
+    dFitArea[9] = 1;
+    dFitArea[10] = dFitNorm[10]/dTotAreaTl * 218.52/99.0;
+*/
+
+    // without e-
+    dFitArea[0] = dFitNorm[0]/dTotAreaPb;
+    dFitArea[1] = 1;
+    dFitArea[2] = dFitNorm[2]/dTotAreaTl * 195.92/84.5;
+    dFitArea[3] = dFitNorm[3]/dTotAreaTl * 195.92/12.42;
+    dFitArea[4] = dFitNorm[4]/dTotAreaAc * 50.41/25.8;
+    dFitArea[5] = dFitNorm[5]/dTotAreaAc * 50.41/4.99;
+    dFitArea[6] = dFitNorm[6]/dTotAreaAc * 50.41/15.8;
+    dFitArea[7] = dFitNorm[7]/dTotAreaAc * 50.41/0.6;
+    dFitArea[8] = dFitNorm[8]/dTotAreaAc * 50.41/3.22;
+    dFitArea[9] = 1;
+    dFitArea[10] = dFitNorm[10]/dTotAreaTl * 195.92/99.0;
+
+
+    // Error: Ratio * sqrt(Tot - Area/(Tot*Area))
+    dFitAreaErr[0] = dFitArea[0]*TMath::Sqrt((dTotAreaPb - dFitNorm[0])/(dTotAreaPb*dFitNorm[0]));
+    // dFitAreaErr[1] = dFitArea[1]*TMath::Sqrt((dTotAreaTl - dFitNorm[1])/(dTotAreaTl*dFitNorm[1]));
+    dFitAreaErr[1] = 0;
+    dFitAreaErr[2] = dFitArea[2]*TMath::Sqrt((dTotAreaTl - dFitNorm[2])/(dTotAreaTl*dFitNorm[2]));
+    dFitAreaErr[3] = dFitArea[3]*TMath::Sqrt((dTotAreaTl - dFitNorm[3])/(dTotAreaTl*dFitNorm[3]));
+    dFitAreaErr[4] = dFitArea[4]*TMath::Sqrt((dTotAreaAc - dFitNorm[4])/(dTotAreaAc*dFitNorm[4]));
+    dFitAreaErr[5] = dFitArea[5]*TMath::Sqrt((dTotAreaAc - dFitNorm[5])/(dTotAreaAc*dFitNorm[5]));
+    dFitAreaErr[6] = dFitArea[6]*TMath::Sqrt((dTotAreaAc - dFitNorm[6])/(dTotAreaAc*dFitNorm[6]));
+    dFitAreaErr[7] = dFitArea[7]*TMath::Sqrt((dTotAreaAc - dFitNorm[7])/(dTotAreaAc*dFitNorm[7]));
+    dFitAreaErr[8] = dFitArea[8]*TMath::Sqrt((dTotAreaAc - dFitNorm[8])/(dTotAreaAc*dFitNorm[8]));
+    dFitAreaErr[9] = 0;
+    dFitAreaErr[10] = dFitArea[10]*TMath::Sqrt((dTotAreaTl - dFitNorm[10])/(dTotAreaTl*dFitNorm[10]));
+
+
+
+    TGraphErrors *g1 = new TGraphErrors(11, dFitEnergy, dFitArea, dFitEnergyErr, dFitAreaErr);
+    g1->SetMarkerStyle(21);
+    g1->SetMarkerColor(4);
+    g1->Draw("AP");
+    g1->GetXaxis()->SetTitle("Energy (keV)");
+    g1->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
+
+    TLine *line = new TLine();
+    line->SetLineStyle(10);
+    line->DrawLine(100, 1, 2800, 1);
+
+    TLegend *leg;
+    leg = new TLegend(0.72,0.75,0.9,0.9);
+
+    double dSERatio = fFitSE->GetParameter(0)/fFitSE->GetParameter(2)/ (fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+
+    leg->AddEntry((TObject*)0, Form("Single Escape/(2615 keV) = %.3f", dSERatio), "");
+    // leg->AddEntry((TObject*)0, Form("Double Escape Ratio = %.3f%", dDERatio), "");
+
+    leg->Draw();
+
     if(bSavePlots)
     {
         cth->SaveAs(Form("%s-Th232.png",dHisto->GetName()));
@@ -456,8 +576,8 @@ void DrawBkg(int dMult = 1, bool bSavePlots = false)
 
     qtree->Project("hBkg", "Energy", base_cut && "Multiplicity_OFTime == 1");
 
-    // FitThPeaks(hBkg, bSavePlots);
-    FitRaPeaks(hBkg, bSavePlots);
+    FitThPeaks(hBkg, bSavePlots);
+    // FitRaPeaks(hBkg, bSavePlots);
 
 
 }

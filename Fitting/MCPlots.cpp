@@ -54,9 +54,10 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     TF1 *fFitPb = new TF1("fFitPb", "gaus(0) + pol1(3)", dFitMinPb, dFitMaxPb);
     fFitPb->SetParameters(10000., 238.6, 2.8, 0., 0.);
 
-    TF1 *fFitE = new TF1("fFitE", "gaus(0) + gaus(3) + pol1(6)", dFitMinE, dFitMaxE);
-    fFitE->SetParameters(1000., 510.77., 2.8, 100., 511, 2.8, 0., 0.);
-    // fFitE->SetParameters(1000, 510.77, 3., 0., 0.);
+    // TF1 *fFitE = new TF1("fFitE", "gaus(0) + gaus(3) + pol1(6)", dFitMinE, dFitMaxE);
+    TF1 *fFitE = new TF1("fFitE", "gaus(0) + pol1(3)", dFitMinE, dFitMaxE); // fitting only once
+    // fFitE->SetParameters(1000., 510.77., 2.8, 100., 511, 2.8, 0., 0.);
+    fFitE->SetParameters(1000, 510.77, 3., 0., 0.);
 
     TF1 *fFitTl2 = new TF1("fFitTl2","gaus(0) + pol1(3)", dFitMinTl2, dFitMaxTl2);
     fFitTl2->SetParameters(10000., 583.2, 2.8, 0., 0.);
@@ -68,8 +69,9 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     fFitAc2->SetParameters(10000., 911.2, 2.8, 0., 0.);
 
     TF1 *fFitAc1 = new TF1("fFitAc1","gaus(0) + gaus(3) + pol1(6)", dFitMinAc1, dFitMaxAc1); // Fit 968 with 2 gaussians
-    fFitAc1->SetParameters(5000., 964.77, 2.8, 10000., 968.98, 2.8, 0., 0.);
-
+    fFitAc1->SetParameters(3000., 964.77, 2.8, 10000., 968.98, 2.8, 0., 0.);
+    fFitAc1->SetParLimits(1, 964.7, 964.8);
+    fFitAc1->SetParLimits(4, 968.5, 969.5);
 
     TF1 *fFitDE = new TF1("fFitDE","gaus(0) + gaus(3) + pol1(6)", dFitMinDE, dFitMaxDE);
     // fFitDE->SetParameters(5000., 1588.19, 2.8, 10000., 1593., 2.8, 0., 0.);
@@ -156,34 +158,45 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     // Ratios
     TCanvas *cratioth = new TCanvas(Form("Th_Ratio%s",dHisto->GetName()), Form("Th_Ratio%s",dHisto->GetName()), 1200, 800);
 
-    double dFitEnergy[11] = {};
-    double dFitEnergyErr[11] = {};
-    double dFitNorm[11] = {};
-    double dFitArea[11] = {};
-    double dFitAreaErr[11] = {};    
+    double dFitEnergyTl[4] = {};
+    double dFitEnergyErrTl[4] = {};
+    double dFitNormTl[4] = {};
+    double dFitAreaTl[4] = {};
+    double dFitAreaErrTl[4] = {};    
 
+    double dFitEnergyAc[5] = {};
+    double dFitEnergyErrAc[5] = {};
+    double dFitNormAc[5] = {};
+    double dFitAreaAc[5] = {};
+    double dFitAreaErrAc[5] = {};  
+
+    double dFitEnergy[2] = {};
+    double dFitEnergyErr[2] = {};
+    double dFitNorm[2] = {};
+    double dFitArea[2] = {};
+    double dFitAreaErr[2] = {};  
 
     // Mean
     dFitEnergy[0] = fFitPb->GetParameter(1);
     dFitEnergy[1] = fFitE->GetParameter(1);
-    dFitEnergy[2] = fFitTl2->GetParameter(1);
-    dFitEnergy[3] = fFitTl3->GetParameter(1);
-    dFitEnergy[4] = fFitAc2->GetParameter(1);
-    dFitEnergy[5] = fFitAc1->GetParameter(1);
-    dFitEnergy[6] = fFitAc1->GetParameter(4);
-    dFitEnergy[7] = fFitDE->GetParameter(1);
-    dFitEnergy[8] = fFitDE->GetParameter(4);
-    dFitEnergy[9] = fFitSE->GetParameter(1);
-    dFitEnergy[10] = fFitTl1->GetParameter(1);
+    dFitEnergyTl[0] = fFitTl2->GetParameter(1);
+    dFitEnergyTl[1] = fFitTl3->GetParameter(1);
+    dFitEnergyAc[0] = fFitAc2->GetParameter(1);
+    dFitEnergyAc[1] = fFitAc1->GetParameter(1);
+    dFitEnergyAc[2] = fFitAc1->GetParameter(4);
+    dFitEnergyAc[3] = fFitDE->GetParameter(1);
+    dFitEnergyAc[4] = fFitDE->GetParameter(4);
+    dFitEnergyTl[2] = fFitSE->GetParameter(1);
+    dFitEnergyTl[3] = fFitTl1->GetParameter(1);
 
     // Total Area
-    double dTotAreaTl = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2) 
-            + fFitE->GetParameter(0)/fFitE->GetParameter(2)
-            + fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2) + fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+    double dTotAreaTl = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2)) 
+            // + fFitE->GetParameter(0)/fFitE->GetParameter(2)
+            + TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2)) + TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
 
-    double dTotAreaAc = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2) + fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2)
-            + fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5) + fFitDE->GetParameter(0)/fFitDE->GetParameter(2)
-            + fFitDE->GetParameter(3)/fFitDE->GetParameter(5)); 
+    double dTotAreaAc = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2)) + TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2))
+            + TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5)) + TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2))
+            + TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5)); 
 
     double dTotAreaPb = TMath::Abs(fFitPb->GetParameter(0)/fFitPb->GetParameter(2));
 
@@ -192,83 +205,99 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     dFitNorm[0] = TMath::Abs(fFitPb->GetParameter(0)/fFitPb->GetParameter(2));
     // dFitNorm[1] = TMath::Abs(fFitE->GetParameter(0)/fFitE->GetParameter(2));
     dFitNorm[1] = 1;
-    dFitNorm[2] = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2));
-    dFitNorm[3] = TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2));
-    dFitNorm[4] = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2));
-    dFitNorm[5] = TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2));
-    dFitNorm[6] = TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5));
-    dFitNorm[7] = TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2));
-    dFitNorm[8] = TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5));
-    dFitNorm[9] = 1;
-    dFitNorm[10] = TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+    dFitNormTl[0] = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2));
+    dFitNormTl[1] = TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2));
+    dFitNormAc[0] = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2));
+    dFitNormAc[1] = TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2));
+    dFitNormAc[2] = TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5));
+    dFitNormAc[3] = TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2));
+    dFitNormAc[4] = TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5));
+    dFitNormTl[2] = 1;
+    dFitNormTl[3] = TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
 
 
-
-    // Total Tl BR is 195.92 without e- peak, 218.52 with e-
-/*
-    // with e-
-    dFitArea[0] = dFitNorm[0]/dTotAreaPb;
-    dFitArea[1] = dFitNorm[1]/dTotAreaTl * 218.52/22.6;
-    dFitArea[2] = dFitNorm[2]/dTotAreaTl * 218.52/84.5;
-    dFitArea[3] = dFitNorm[3]/dTotAreaTl * 218.52/12.42;
-    dFitArea[4] = dFitNorm[4]/dTotAreaAc * 49.81/25.8;
-    dFitArea[5] = dFitNorm[5]/dTotAreaAc * 49.81/4.99;
-    dFitArea[6] = dFitNorm[6]/dTotAreaAc * 49.81/15.8;
-    dFitArea[7] = 1;
-    dFitArea[8] = dFitNorm[8]/dTotAreaAc * 49.81/3.22;
-    dFitArea[9] = 1;
-    dFitArea[10] = dFitNorm[10]/dTotAreaTl * 218.52/99.0;
-*/
-
-    // without e-
+    // Ratios
     dFitArea[0] = dFitNorm[0]/dTotAreaPb;
     dFitArea[1] = 1;
-    dFitArea[2] = dFitNorm[2]/dTotAreaTl * 195.92/84.5;
-    dFitArea[3] = dFitNorm[3]/dTotAreaTl * 195.92/12.42;
-    dFitArea[4] = dFitNorm[4]/dTotAreaAc * 50.41/25.8;
-    dFitArea[5] = dFitNorm[5]/dTotAreaAc * 50.41/4.99;
-    dFitArea[6] = dFitNorm[6]/dTotAreaAc * 50.41/15.8;
-    dFitArea[7] = dFitNorm[7]/dTotAreaAc * 50.41/0.6;
-    dFitArea[8] = dFitNorm[8]/dTotAreaAc * 50.41/3.22;
-    dFitArea[9] = 1;
-    dFitArea[10] = dFitNorm[10]/dTotAreaTl * 195.92/99.0;
+    dFitAreaTl[0] = dFitNormTl[0]/dTotAreaTl * 195.92/84.5;
+    dFitAreaTl[1] = dFitNormTl[1]/dTotAreaTl * 195.92/12.42;
+    dFitAreaAc[0] = dFitNormAc[0]/dTotAreaAc * 50.41/25.8;
+    dFitAreaAc[1] = dFitNormAc[1]/dTotAreaAc * 50.41/4.99;
+    dFitAreaAc[2] = dFitNormAc[2]/dTotAreaAc * 50.41/15.8;
+    dFitAreaAc[3] = dFitNormAc[3]/dTotAreaAc * 50.41/0.6;
+    dFitAreaAc[4] = dFitNormAc[4]/dTotAreaAc * 50.41/3.22;
+    dFitAreaTl[2] = 1;
+    dFitAreaTl[3] = dFitNormTl[3]/dTotAreaTl * 195.92/99.0;
 
 
     // Error: Ratio * sqrt(Tot - Area/(Tot*Area))
     dFitAreaErr[0] = dFitArea[0]*TMath::Sqrt((dTotAreaPb - dFitNorm[0])/(dTotAreaPb*dFitNorm[0]));
     // dFitAreaErr[1] = dFitArea[1]*TMath::Sqrt((dTotAreaTl - dFitNorm[1])/(dTotAreaTl*dFitNorm[1]));
     dFitAreaErr[1] = 0;
-    dFitAreaErr[2] = dFitArea[2]*TMath::Sqrt((dTotAreaTl - dFitNorm[2])/(dTotAreaTl*dFitNorm[2]));
-    dFitAreaErr[3] = dFitArea[3]*TMath::Sqrt((dTotAreaTl - dFitNorm[3])/(dTotAreaTl*dFitNorm[3]));
-    dFitAreaErr[4] = dFitArea[4]*TMath::Sqrt((dTotAreaAc - dFitNorm[4])/(dTotAreaAc*dFitNorm[4]));
-    dFitAreaErr[5] = dFitArea[5]*TMath::Sqrt((dTotAreaAc - dFitNorm[5])/(dTotAreaAc*dFitNorm[5]));
-    dFitAreaErr[6] = dFitArea[6]*TMath::Sqrt((dTotAreaAc - dFitNorm[6])/(dTotAreaAc*dFitNorm[6]));
-    dFitAreaErr[7] = dFitArea[7]*TMath::Sqrt((dTotAreaAc - dFitNorm[7])/(dTotAreaAc*dFitNorm[7]));
-    dFitAreaErr[8] = dFitArea[8]*TMath::Sqrt((dTotAreaAc - dFitNorm[8])/(dTotAreaAc*dFitNorm[8]));
-    dFitAreaErr[9] = 0;
-    dFitAreaErr[10] = dFitArea[10]*TMath::Sqrt((dTotAreaTl - dFitNorm[10])/(dTotAreaTl*dFitNorm[10]));
+    dFitAreaErrTl[0] = dFitAreaTl[0]*TMath::Sqrt((dTotAreaTl - dFitNormTl[0])/(dTotAreaTl*dFitNormTl[0]));
+    dFitAreaErrTl[1] = dFitAreaTl[1]*TMath::Sqrt((dTotAreaTl - dFitNormTl[1])/(dTotAreaTl*dFitNormTl[1]));
+    dFitAreaErrAc[0] = dFitAreaAc[0]*TMath::Sqrt((dTotAreaAc - dFitNormAc[0])/(dTotAreaAc*dFitNormAc[0]));
+    dFitAreaErrAc[1] = dFitAreaAc[1]*TMath::Sqrt((dTotAreaAc - dFitNormAc[1])/(dTotAreaAc*dFitNormAc[1]));
+    dFitAreaErrAc[2] = dFitAreaAc[2]*TMath::Sqrt((dTotAreaAc - dFitNormAc[2])/(dTotAreaAc*dFitNormAc[2]));
+    dFitAreaErrAc[3] = dFitAreaAc[3]*TMath::Sqrt((dTotAreaAc - dFitNormAc[3])/(dTotAreaAc*dFitNormAc[3]));
+    dFitAreaErrAc[4] = dFitAreaAc[4]*TMath::Sqrt((dTotAreaAc - dFitNormAc[4])/(dTotAreaAc*dFitNormAc[4]));
+    dFitAreaErrTl[2] = 0;
+    dFitAreaErrTl[3] = dFitAreaTl[3]*TMath::Sqrt((dTotAreaTl - dFitNormTl[3])/(dTotAreaTl*dFitNormTl[3]));
+
+    // Outputting for debugging
+    cout << "Tl-208 (583 keV) " << dFitNormTl[0] << " \t" << dFitAreaTl[0] << endl;
+    cout << "Tl-208 (860 keV) " << dFitNormTl[1] << " \t" << dFitAreaTl[1] << endl;
+    cout << "Ac-228 (911 keV) " << dFitNormAc[0] << " \t" << dFitAreaAc[0] << endl;
+    cout << "Ac-228 (964 keV) " << dFitNormAc[1] << " \t" << dFitAreaAc[1] << endl;
+    cout << "Ac-228 (968 keV) " << dFitNormAc[2] << " \t" << dFitAreaAc[2] << endl;
+    cout << "Ac-228 (1580 keV) " << dFitNormAc[3] << " \t" << dFitAreaAc[3] << endl;
+    cout << "Ac-228 (1588 keV) " << dFitNormAc[4] << " \t" << dFitAreaAc[4] << endl;
+    cout << "Tl-208 (2165 keV) " << dFitNormTl[3] << " \t" << dFitAreaTl[3] << endl;
 
 
 
-    TGraphErrors *g1 = new TGraphErrors(11, dFitEnergy, dFitArea, dFitEnergyErr, dFitAreaErr);
+    // Tl208
+    TGraphErrors *g1 = new TGraphErrors(4, dFitEnergyTl, dFitAreaTl, dFitEnergyErrTl, dFitAreaErrTl);
     g1->SetMarkerStyle(21);
-    g1->SetMarkerColor(4);
+    g1->SetMarkerColor(2);
     g1->Draw("AP");
+    g1->SetTitle(Form("%s Th232 chain ratios", dHisto->GetName()));
     g1->GetXaxis()->SetTitle("Energy (keV)");
     g1->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
 
+    TAxis *a1 = g1->GetXaxis();
+    a1->SetLimits(0, 2800);
+    g1->GetHistogram()->SetMaximum(1.8);
+
     TLine *line = new TLine();
     line->SetLineStyle(10);
-    line->DrawLine(100, 1, 2800, 1);
+    line->DrawLine(100, 1, 3000, 1);
+
+    // Ac228
+    TGraphErrors *g2 = new TGraphErrors(5, dFitEnergyAc, dFitAreaAc, dFitEnergyErrAc, dFitAreaErrAc);
+    g2->SetMarkerStyle(21);
+    g2->SetMarkerColor(4);
+    g2->Draw("PSAME");
+    g2->GetXaxis()->SetTitle("Energy (keV)");
+    g2->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
+
+    // Pb212 and e-
+    TGraphErrors *g3 = new TGraphErrors(2, dFitEnergy, dFitArea, dFitEnergyErr, dFitAreaErr);
+    g3->SetMarkerStyle(21);
+    g3->SetMarkerColor(1);
+    g3->Draw("PSAME");
+    g3->GetXaxis()->SetTitle("Energy (keV)");
+    g3->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
 
     TLegend *leg;
-    leg = new TLegend(0.72,0.75,0.9,0.9);
+    leg = new TLegend(0.70,0.75,0.9,0.9);
 
     double dSERatio = fFitSE->GetParameter(0)/fFitSE->GetParameter(2)/ (fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
 
     leg->AddEntry((TObject*)0, Form("Single Escape/(2615 keV) = %.3f", dSERatio), "");
-    // leg->AddEntry((TObject*)0, Form("Double Escape Ratio = %.3f%", dDERatio), "");
-
+    leg->AddEntry(g1, "Tl-208", "p");
+    leg->AddEntry(g2, "Ac-228", "p");
+    leg->AddEntry(g3, "Pb-212 and e-", "p");
     leg->Draw();
 
     if(bSavePlots)
@@ -638,14 +667,16 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     TH1D *h600mK = new TH1D("h600mK","", bin, 0, 3500);
     TH1D *hIVC = new TH1D("hIVC","", bin, 0, 3500);
     TH1D *hOVC = new TH1D("hOVC","", bin, 0, 3500);
-    TH1D *hCrystal = new TH1D("hCrystal","", bin, 0, 3500);
+    // TH1D *hCrystal = new TH1D("hCrystal","", bin, 0, 3500);
+    TH1D *hFrame = new TH1D("hFrame","", bin, 0, 3500);
 
 
     TChain *outTree50mK = LoadMC("50mK", "Th232", 1);
     TChain *outTree600mK = LoadMC("600mK", "Th232", 1);
     TChain *outTreeIVC = LoadMC("IVC", "Th232", 1);
     TChain *outTreeOVC = LoadMC("OVC", "Th232", 1);
-    TChain *outTreeCrystal = LoadMC("Crystal", "Th232", 1);
+    // TChain *outTreeCrystal = LoadMC("Crystal", "Th232", 1);
+    TChain *outTreeFrame = LoadMC("Frame", "Th232", 1);
 
     // TChain *outTree50mK = LoadMC("50mK", "Ra226", 1);
     // TChain *outTree600mK = LoadMC("600mK", "Ra226", 1);
@@ -656,7 +687,8 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     outTree600mK->Project("h600mK","Ener1");
     outTreeIVC->Project("hIVC","Ener1");
     outTreeOVC->Project("hOVC","Ener1");
-    outTreeCrystal->Project("hCrystal","Ener1");
+    // outTreeCrystal->Project("hCrystal","Ener1");
+    outTreeFrame->Project("hFrame","Ener1");
 
 /*
 
@@ -711,6 +743,7 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     FitThPeaks(h600mK, bSavePlots);
     FitThPeaks(hIVC, bSavePlots);
     FitThPeaks(hOVC, bSavePlots);
+    FitThPeaks(hFrame, bSavePlots);
     // FitThPeaks(hCrystal, bSavePlots);
     
     // FitRaPeaks(h50mK, bSavePlots);
