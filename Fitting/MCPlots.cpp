@@ -263,7 +263,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     g1->Draw("AP");
     g1->SetTitle(Form("%s Th232 chain ratios", dHisto->GetName()));
     g1->GetXaxis()->SetTitle("Energy (keV)");
-    g1->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
+    g1->GetYaxis()->SetTitle("(Area/Total Area * Total Branching Ratio/Branching Ratio)");
 
     TAxis *a1 = g1->GetXaxis();
     a1->SetLimits(0, 2800);
@@ -279,7 +279,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     g2->SetMarkerColor(4);
     g2->Draw("PSAME");
     g2->GetXaxis()->SetTitle("Energy (keV)");
-    g2->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
+    g2->GetYaxis()->SetTitle("(Area/Total Area * Total Branching Ratio/Branching Ratio)");
 
     // Pb212 and e-
     TGraphErrors *g3 = new TGraphErrors(2, dFitEnergy, dFitArea, dFitEnergyErr, dFitAreaErr);
@@ -287,7 +287,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     g3->SetMarkerColor(1);
     g3->Draw("PSAME");
     g3->GetXaxis()->SetTitle("Energy (keV)");
-    g3->GetYaxis()->SetTitle("Area/Total Area * Total Branching Ratio/Branching Ratio");
+    g3->GetYaxis()->SetTitle("(Area/Total Area * Total Branching Ratio/Branching Ratio)");
 
     TLegend *leg;
     leg = new TLegend(0.70,0.75,0.9,0.9);
@@ -315,6 +315,9 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
 void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
 {
     // Some missing peaks in data from Bi214, not included...
+
+    // Pb214 total BR: 64.33%
+    // Bi214 total BR: 112.583    
 
     // Pb214 241.997 - BR 7.43%
     double dFitMinPb1    =   234.;
@@ -564,77 +567,152 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     hbi15->Fit("fFitBi15","R");
 
 
+    // Ra Ratios
     TCanvas *cratiora = new TCanvas(Form("Ra_Ratio%s",dHisto->GetName()), Form("Ra_Ratio%s",dHisto->GetName()), 1200, 800);
 
 
-    double dFitEnergy[19] = {};
-    double dFitArea[19] = {};
+    double dFitEnergyPb[3] = {};
+    double dFitEnergyErrPb[3] = {}; 
+    double dFitEnergyBi[16] = {};
+    double dFitEnergyErrBi[16] = {};
+    double dFitAreaPb[3] = {};
+    double dFitAreaErrPb[3] = {};
+    double dFitAreaBi[16] = {};
+    double dFitAreaErrBi[16] = {};
+    double dFitNormPb[3] = {};
+    double dFitNormBi[16] = {};
 
-    double dTotAreaPb = fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2) + fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2) + fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2);
+    double dTotAreaPb = TMath::Abs(fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2)) + TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2))
+                + TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2));
     
-    double dTotAreaBi = fFitBi1->GetParameter(0)/TMath::Abs(fFitBi1->GetParameter(2)) + fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2)
-            + fFitBi3->GetParameter(0)/fFitBi3->GetParameter(2) + fFitBi4->GetParameter(0)/fFitBi4->GetParameter(2)
-            + fFitBi5->GetParameter(0)/fFitBi5->GetParameter(2) + fFitBi6->GetParameter(0)/fFitBi6->GetParameter(2)
-            + fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2) + fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2)
-            + fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2) + fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2)
-            + fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5) + fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2)
-            + fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2) + fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2)
-            + fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2) + fFitBi5->GetParameter(0)/fFitBi15->GetParameter(2);
+    double dTotAreaBi = TMath::Abs(fFitBi1->GetParameter(0)/fFitBi1->GetParameter(2)) + TMath::Abs(fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2))
+            + TMath::Abs(fFitBi3->GetParameter(0)/fFitBi3->GetParameter(2)) + TMath::Abs(fFitBi4->GetParameter(0)/fFitBi4->GetParameter(2))
+            + TMath::Abs(fFitBi5->GetParameter(0)/fFitBi5->GetParameter(2)) + TMath::Abs(fFitBi6->GetParameter(0)/fFitBi6->GetParameter(2))
+            + TMath::Abs(fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2)) + TMath::Abs(fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2))
+            + TMath::Abs(fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2)) + TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2))
+            + TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5)) + TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2))
+            + TMath::Abs(fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2)) + TMath::Abs(fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2))
+            + TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2)) + TMath::Abs(fFitBi5->GetParameter(0)/fFitBi15->GetParameter(2));
 
-    dFitEnergy[0] = fFitPb1->GetParameter(1);
-    dFitEnergy[1] = fFitPb2->GetParameter(1);
-    dFitEnergy[2] = fFitPb3->GetParameter(1);
+    dFitEnergyPb[0] = fFitPb1->GetParameter(1);
+    dFitEnergyPb[1] = fFitPb2->GetParameter(1);
+    dFitEnergyPb[2] = fFitPb3->GetParameter(1);
 
-    dFitEnergy[3] = fFitBi1->GetParameter(1);
-    dFitEnergy[4] = fFitBi2->GetParameter(1);
-    dFitEnergy[5] = fFitBi3->GetParameter(1);
-    dFitEnergy[6] = fFitBi4->GetParameter(1);
-    dFitEnergy[7] = fFitBi5->GetParameter(1);
-    dFitEnergy[8] = fFitBi6->GetParameter(1);
-    dFitEnergy[9] = fFitBi7->GetParameter(1);
-    dFitEnergy[10] = fFitBi8->GetParameter(1);
-    dFitEnergy[11] = fFitBi9->GetParameter(1);
-    dFitEnergy[12] = fFitBi10->GetParameter(1);
-    dFitEnergy[13] = fFitBi10->GetParameter(4);
-    dFitEnergy[14] = fFitBi11->GetParameter(1);
-    dFitEnergy[15] = fFitBi12->GetParameter(1);
-    dFitEnergy[16] = fFitBi13->GetParameter(1);
-    dFitEnergy[17] = fFitBi14->GetParameter(1);
-    dFitEnergy[18] = fFitBi15->GetParameter(1);
-
-
-    dFitArea[0] = fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2)/dTotAreaPb * 64.33/7.43;
-    dFitArea[1] = fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2)/dTotAreaPb * 64.33/19.3;
-    dFitArea[2] = fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2)/dTotAreaPb * 64.33/37.6;
-
-    dFitArea[3] = fFitBi1->GetParameter(0)/TMath::Abs(fFitBi1->GetParameter(2))/dTotAreaBi * 113.853/46.1;
-    dFitArea[4] = fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2)/dTotAreaBi * 113.853/1.46;
-    dFitArea[5] = fFitBi3->GetParameter(0)/fFitBi3->GetParameter(2)/dTotAreaBi * 113.853/4.94;
-    dFitArea[6] = fFitBi4->GetParameter(0)/fFitBi4->GetParameter(2)/dTotAreaBi * 113.853/1.22;
-    dFitArea[7] = fFitBi5->GetParameter(0)/fFitBi5->GetParameter(2)/dTotAreaBi * 113.853/3.09;
-    dFitArea[8] = fFitBi6->GetParameter(0)/fFitBi6->GetParameter(2)/dTotAreaBi * 113.853/15.1;
-    dFitArea[9] = fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2)/dTotAreaBi * 113.853/1.653;
-    dFitArea[10] = fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2)/dTotAreaBi * 113.853/5.79;
-    dFitArea[11] = fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2)/dTotAreaBi * 113.853/4.00;
-    dFitArea[12] = fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2)/dTotAreaBi * 113.853/1.27;
-    dFitArea[13] = fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5)/dTotAreaBi * 113.853/2.15;
-    dFitArea[14] = fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2)/dTotAreaBi * 113.853/2.92;
-    dFitArea[15] = fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2)/dTotAreaBi * 113.853/15.4;
-    dFitArea[16] = fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2)/dTotAreaBi * 113.853/2.11;
-    dFitArea[17] = fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2)/dTotAreaBi * 113.853/5.08;
-    dFitArea[18] = fFitBi15->GetParameter(0)/fFitBi15->GetParameter(2)/dTotAreaBi * 113.853/1.57;
+    dFitEnergyBi[0] = fFitBi1->GetParameter(1);
+    dFitEnergyBi[1] = fFitBi2->GetParameter(1);
+    dFitEnergyBi[2] = fFitBi3->GetParameter(1);
+    dFitEnergyBi[3] = fFitBi4->GetParameter(1);
+    dFitEnergyBi[4] = fFitBi5->GetParameter(1);
+    dFitEnergyBi[5] = fFitBi6->GetParameter(1);
+    dFitEnergyBi[6] = fFitBi7->GetParameter(1);
+    dFitEnergyBi[7] = fFitBi8->GetParameter(1);
+    dFitEnergyBi[8] = fFitBi9->GetParameter(1);
+    dFitEnergyBi[9] = fFitBi10->GetParameter(1);
+    dFitEnergyBi[10] = fFitBi10->GetParameter(4);
+    dFitEnergyBi[11] = fFitBi11->GetParameter(1);
+    dFitEnergyBi[12] = fFitBi12->GetParameter(1);
+    dFitEnergyBi[13] = fFitBi13->GetParameter(1);
+    dFitEnergyBi[14] = fFitBi14->GetParameter(1);
+    dFitEnergyBi[15] = fFitBi15->GetParameter(1);
 
 
+    dFitNormPb[0] = TMath::Abs(fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2));
+    dFitNormPb[1] = TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2));
+    dFitNormPb[2] = TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2));
 
-    TGraphErrors *g1 = new TGraphErrors(19, dFitEnergy, dFitArea);
+    dFitNormBi[0] = TMath::Abs(fFitBi1->GetParameter(0)/fFitBi1->GetParameter(2));
+    dFitNormBi[1] = TMath::Abs(fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2));
+    dFitNormBi[2] = TMath::Abs(fFitBi3->GetParameter(0)/fFitBi3->GetParameter(2));
+    dFitNormBi[3] = TMath::Abs(fFitBi4->GetParameter(0)/fFitBi4->GetParameter(2));
+    dFitNormBi[4] = TMath::Abs(fFitBi5->GetParameter(0)/fFitBi5->GetParameter(2));
+    dFitNormBi[5] = TMath::Abs(fFitBi6->GetParameter(0)/fFitBi6->GetParameter(2));
+    dFitNormBi[6] = TMath::Abs(fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2));
+    dFitNormBi[7] = TMath::Abs(fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2));
+    dFitNormBi[8] = TMath::Abs(fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2));
+    dFitNormBi[9] = TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2));
+    dFitNormBi[10] = TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5));
+    dFitNormBi[11] = TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2));
+    dFitNormBi[12] = TMath::Abs(fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2));
+    dFitNormBi[13] = TMath::Abs(fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2));
+    dFitNormBi[14] = TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2));
+    dFitNormBi[15] = TMath::Abs(fFitBi15->GetParameter(0)/fFitBi15->GetParameter(2));
+
+
+
+
+    dFitAreaPb[0] =  dFitNormPb[0]/dTotAreaPb * 64.33/7.43;
+    dFitAreaPb[1] =  dFitNormPb[1]/dTotAreaPb * 64.33/19.3;
+    dFitAreaPb[2] =  dFitNormPb[2]/dTotAreaPb * 64.33/37.6;
+
+    dFitAreaBi[0] =  dFitNormBi[0]/dTotAreaBi * 113.853/46.1;
+    dFitAreaBi[1] =  dFitNormBi[1]/dTotAreaBi * 113.853/1.46;
+    dFitAreaBi[2] =  dFitNormBi[2]/dTotAreaBi * 113.853/4.94;
+    dFitAreaBi[3] =  dFitNormBi[3]/dTotAreaBi * 113.853/1.22;
+    dFitAreaBi[4] =  dFitNormBi[4]/dTotAreaBi * 113.853/3.09;
+    dFitAreaBi[5] =  dFitNormBi[5]/dTotAreaBi * 113.853/15.1;
+    dFitAreaBi[6] =  dFitNormBi[6]/dTotAreaBi * 113.853/1.653;
+    dFitAreaBi[7] =  dFitNormBi[7]/dTotAreaBi * 113.853/5.79;
+    dFitAreaBi[8] =  dFitNormBi[8]/dTotAreaBi * 113.853/4.00;
+    dFitAreaBi[9] =  dFitNormBi[9]/dTotAreaBi * 113.853/1.27;
+    dFitAreaBi[10] =  dFitNormBi[10]/dTotAreaBi * 113.853/2.15;
+    dFitAreaBi[11] =  dFitNormBi[11]/dTotAreaBi * 113.853/2.92;
+    dFitAreaBi[12] =  dFitNormBi[12]/dTotAreaBi * 113.853/15.4;
+    dFitAreaBi[13] =  dFitNormBi[13]/dTotAreaBi * 113.853/2.11;
+    dFitAreaBi[14] =  dFitNormBi[14]/dTotAreaBi * 113.853/5.08;
+    dFitAreaBi[15] =  dFitNormBi[15]/dTotAreaBi * 113.853/1.57;
+
+
+    dFitAreaErrPb[0] = dFitAreaPb[0]*TMath::Sqrt((dTotAreaPb - dFitNormPb[0])/(dTotAreaPb*dFitNormPb[0]));
+    dFitAreaErrPb[1] = dFitAreaPb[1]*TMath::Sqrt((dTotAreaPb - dFitNormPb[1])/(dTotAreaPb*dFitNormPb[1]));
+    dFitAreaErrPb[2] = dFitAreaPb[2]*TMath::Sqrt((dTotAreaPb - dFitNormPb[2])/(dTotAreaPb*dFitNormPb[2]));
+       
+
+    dFitAreaErrBi[0] = dFitAreaBi[0]*TMath::Sqrt((dTotAreaBi - dFitNormBi[0])/(dTotAreaBi*dFitNormBi[0]));
+    dFitAreaErrBi[1] = dFitAreaBi[1]*TMath::Sqrt((dTotAreaBi - dFitNormBi[1])/(dTotAreaBi*dFitNormBi[1]));
+    dFitAreaErrBi[2] = dFitAreaBi[2]*TMath::Sqrt((dTotAreaBi - dFitNormBi[2])/(dTotAreaBi*dFitNormBi[2]));
+    dFitAreaErrBi[3] = dFitAreaBi[3]*TMath::Sqrt((dTotAreaBi - dFitNormBi[3])/(dTotAreaBi*dFitNormBi[3]));
+    dFitAreaErrBi[4] = dFitAreaBi[4]*TMath::Sqrt((dTotAreaBi - dFitNormBi[4])/(dTotAreaBi*dFitNormBi[4]));
+    dFitAreaErrBi[5] = dFitAreaBi[5]*TMath::Sqrt((dTotAreaBi - dFitNormBi[5])/(dTotAreaBi*dFitNormBi[5]));
+    dFitAreaErrBi[6] = dFitAreaBi[6]*TMath::Sqrt((dTotAreaBi - dFitNormBi[6])/(dTotAreaBi*dFitNormBi[6]));
+    dFitAreaErrBi[7] = dFitAreaBi[7]*TMath::Sqrt((dTotAreaBi - dFitNormBi[7])/(dTotAreaBi*dFitNormBi[7]));
+    dFitAreaErrBi[8] = dFitAreaBi[8]*TMath::Sqrt((dTotAreaBi - dFitNormBi[8])/(dTotAreaBi*dFitNormBi[8]));
+    dFitAreaErrBi[9] = dFitAreaBi[9]*TMath::Sqrt((dTotAreaBi - dFitNormBi[9])/(dTotAreaBi*dFitNormBi[9]));
+    dFitAreaErrBi[10] = dFitAreaBi[10]*TMath::Sqrt((dTotAreaBi - dFitNormBi[10])/(dTotAreaBi*dFitNormBi[10]));
+    dFitAreaErrBi[11] = dFitAreaBi[11]*TMath::Sqrt((dTotAreaBi - dFitNormBi[11])/(dTotAreaBi*dFitNormBi[11]));
+    dFitAreaErrBi[12] = dFitAreaBi[12]*TMath::Sqrt((dTotAreaBi - dFitNormBi[12])/(dTotAreaBi*dFitNormBi[12]));
+    dFitAreaErrBi[13] = dFitAreaBi[13]*TMath::Sqrt((dTotAreaBi - dFitNormBi[13])/(dTotAreaBi*dFitNormBi[13]));
+    dFitAreaErrBi[14] = dFitAreaBi[14]*TMath::Sqrt((dTotAreaBi - dFitNormBi[14])/(dTotAreaBi*dFitNormBi[14]));
+    dFitAreaErrBi[15] = dFitAreaBi[15]*TMath::Sqrt((dTotAreaBi - dFitNormBi[15])/(dTotAreaBi*dFitNormBi[15]));
+
+
+    TGraphErrors *g1 = new TGraphErrors(16, dFitEnergyBi, dFitAreaBi, dFitEnergyErrBi, dFitAreaErrBi);
     g1->SetMarkerStyle(21);
     g1->SetMarkerColor(4);
     g1->Draw("AP");
+    g1->SetTitle(Form("%s Ra226 chain ratios", dHisto->GetName()));
+    g1->GetXaxis()->SetTitle("Energy (keV)");
+    g1->GetYaxis()->SetTitle("(Area/Total Area) * (Total Branching Ratio/Branching Ratio)");
+
+    TAxis *a1 = g1->GetXaxis();
+    a1->SetLimits(0, 2800);
+    // g1->GetHistogram()->SetMaximum(1.8);
+
+
+    TGraphErrors *g2 = new TGraphErrors(3, dFitEnergyPb, dFitAreaPb, dFitEnergyErrPb, dFitAreaErrPb);
+    g2->SetMarkerStyle(21);
+    g2->SetMarkerColor(2);
+    g2->Draw("PSAME");
 
     TLine *line = new TLine();
     line->SetLineStyle(10);
     line->DrawLine(100, 1, 2650, 1);
 
+    TLegend *leg;
+    leg = new TLegend(0.70,0.75,0.9,0.9);
+
+    leg->AddEntry(g1, "Bi-214", "p");
+    leg->AddEntry(g2, "Pb-214", "p");
+    leg->Draw();
 
     if(bSavePlots)
     {
@@ -671,24 +749,24 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     TH1D *hFrame = new TH1D("hFrame","", bin, 0, 3500);
 
 
-    TChain *outTree50mK = LoadMC("50mK", "Th232", 1);
-    TChain *outTree600mK = LoadMC("600mK", "Th232", 1);
-    TChain *outTreeIVC = LoadMC("IVC", "Th232", 1);
-    TChain *outTreeOVC = LoadMC("OVC", "Th232", 1);
+    // TChain *outTree50mK = LoadMC("50mK", "Th232", 1);
+    // TChain *outTree600mK = LoadMC("600mK", "Th232", 1);
+    // TChain *outTreeIVC = LoadMC("IVC", "Th232", 1);
+    // TChain *outTreeOVC = LoadMC("OVC", "Th232", 1);
     // TChain *outTreeCrystal = LoadMC("Crystal", "Th232", 1);
-    TChain *outTreeFrame = LoadMC("Frame", "Th232", 1);
+    // TChain *outTreeFrame = LoadMC("Frame", "Th232", 1);
 
-    // TChain *outTree50mK = LoadMC("50mK", "Ra226", 1);
-    // TChain *outTree600mK = LoadMC("600mK", "Ra226", 1);
-    // TChain *outTreeIVC = LoadMC("IVC", "Ra226", 1);
-    // TChain *outTreeOVC = LoadMC("OVC", "Ra226", 1);
+    TChain *outTree50mK = LoadMC("50mK", "Ra226", 1);
+    TChain *outTree600mK = LoadMC("600mK", "Ra226", 1);
+    TChain *outTreeIVC = LoadMC("IVC", "Ra226", 1);
+    TChain *outTreeOVC = LoadMC("OVC", "Ra226", 1);
 
     outTree50mK->Project("h50mK","Ener1");
     outTree600mK->Project("h600mK","Ener1");
     outTreeIVC->Project("hIVC","Ener1");
     outTreeOVC->Project("hOVC","Ener1");
     // outTreeCrystal->Project("hCrystal","Ener1");
-    outTreeFrame->Project("hFrame","Ener1");
+    // outTreeFrame->Project("hFrame","Ener1");
 
 /*
 
@@ -739,15 +817,16 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     // leg->Draw();
 */
 
-    FitThPeaks(h50mK, bSavePlots);
-    FitThPeaks(h600mK, bSavePlots);
-    FitThPeaks(hIVC, bSavePlots);
-    FitThPeaks(hOVC, bSavePlots);
-    FitThPeaks(hFrame, bSavePlots);
+    // FitThPeaks(h50mK, bSavePlots);
+    // FitThPeaks(h600mK, bSavePlots);
+    // FitThPeaks(hIVC, bSavePlots);
+    // FitThPeaks(hOVC, bSavePlots);
+    // FitThPeaks(hFrame, bSavePlots);
+
     // FitThPeaks(hCrystal, bSavePlots);
     
-    // FitRaPeaks(h50mK, bSavePlots);
-    // FitRaPeaks(h600mK, bSavePlots);
-    // FitRaPeaks(hIVC, bSavePlots);
-    // FitRaPeaks(hOVC, bSavePlots);
+    FitRaPeaks(h50mK, bSavePlots);
+    FitRaPeaks(h600mK, bSavePlots);
+    FitRaPeaks(hIVC, bSavePlots);
+    FitRaPeaks(hOVC, bSavePlots);
 }
