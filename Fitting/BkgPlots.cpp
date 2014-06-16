@@ -185,14 +185,15 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     dFitEnergyTl[2] = fFitSE->GetParameter(1);
     dFitEnergyTl[3] = fFitTl1->GetParameter(1);
 
+    // Rebinned histograms need areas divided by 2!
     // Total Area
     double dTotAreaTl = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2)) 
             // + fFitE->GetParameter(0)/fFitE->GetParameter(2)
-            + TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2)) + TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+            + TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2))/2 + TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
 
-    double dTotAreaAc = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2)) + TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2))
-            + TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5)) + TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2))
-            + TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5)); 
+    double dTotAreaAc = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2)) + TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2))/2
+            + TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5))/2 + TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2))/2
+            + TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5))/2; 
 
     double dTotAreaPb = TMath::Abs(fFitPb->GetParameter(0)/fFitPb->GetParameter(2));
 
@@ -202,12 +203,12 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     // dFitNorm[1] = TMath::Abs(fFitE->GetParameter(0)/fFitE->GetParameter(2));
     dFitNorm[1] = 1;
     dFitNormTl[0] = TMath::Abs(fFitTl2->GetParameter(0)/fFitTl2->GetParameter(2));
-    dFitNormTl[1] = TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2));
+    dFitNormTl[1] = TMath::Abs(fFitTl3->GetParameter(0)/fFitTl3->GetParameter(2)) /2;
     dFitNormAc[0] = TMath::Abs(fFitAc2->GetParameter(0)/fFitAc2->GetParameter(2));
-    dFitNormAc[1] = TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2));
-    dFitNormAc[2] = TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5));
-    dFitNormAc[3] = TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2));
-    dFitNormAc[4] = TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5));
+    dFitNormAc[1] = TMath::Abs(fFitAc1->GetParameter(0)/fFitAc1->GetParameter(2)) /2;
+    dFitNormAc[2] = TMath::Abs(fFitAc1->GetParameter(3)/fFitAc1->GetParameter(5)) /2;
+    dFitNormAc[3] = TMath::Abs(fFitDE->GetParameter(0)/fFitDE->GetParameter(2)) /2;
+    dFitNormAc[4] = TMath::Abs(fFitDE->GetParameter(3)/fFitDE->GetParameter(5)) /2;
     dFitNormTl[2] = 1;
     dFitNormTl[3] = TMath::Abs(fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
 
@@ -263,7 +264,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
 
     TAxis *a1 = g1->GetXaxis();
     a1->SetLimits(0, 2800);
-    g1->GetHistogram()->SetMaximum(3.4);
+    g1->GetHistogram()->SetMaximum(2.5);
 
     TLine *line = new TLine();
     line->SetLineStyle(10);
@@ -288,7 +289,7 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     TLegend *leg;
     leg = new TLegend(0.70,0.75,0.9,0.9);
 
-    double dSERatio = fFitSE->GetParameter(0)/fFitSE->GetParameter(2)/ (fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2));
+    double dSERatio = fFitSE->GetParameter(0)/fFitSE->GetParameter(2)/ (fFitTl1->GetParameter(0)/fFitTl1->GetParameter(2))/2;
 
     leg->AddEntry((TObject*)0, Form("Single Escape/(2615 keV) = %.3f", dSERatio), "");
     leg->AddEntry(g1, "Tl-208", "p");
@@ -301,6 +302,9 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
     {
         cth->SaveAs(Form("%s-Th232.png",dHisto->GetName()));
         cth->SaveAs(Form("%s-Th232.pdf",dHisto->GetName()));
+
+        cratioth->SaveAs(Form("%s-Th232-ratio.png",dHisto->GetName()));
+        cratioth->SaveAs(Form("%s-Th232-ratio.pdf",dHisto->GetName()));
 
 
     }
@@ -460,13 +464,14 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra1->cd(2);
     TH1D *hpb2   = (TH1D*)dHisto->Clone("hpb2");
     hpb2->SetTitle("Pb214 (295.224 keV)");
-    // hpb2->Rebin();
+    hpb2->Rebin();
     hpb2->SetAxisRange(dFitMinPb2, dFitMaxPb2);
     hpb2->Fit("fFitPb2","R");
 
     cra1->cd(3);
     TH1D *hpb3   = (TH1D*)dHisto->Clone("hpb1");
     hpb3->SetTitle("Pb214 (351.932 keV)");
+    hpb3->Rebin();
     hpb3->SetAxisRange(dFitMinPb3, dFitMaxPb3);
     hpb3->Fit("fFitPb3","R");
 
@@ -497,6 +502,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra1->cd(8);
     TH1D *hbi5   = (TH1D*)dHisto->Clone("hbi5");
     hbi5->SetTitle("Bi214 (934.06 keV)");
+    // hbi5->Rebin();
     hbi5->SetAxisRange(dFitMinBi5, dFitMaxBi5);
     hbi5->Fit("fFitBi5","R");
 
@@ -535,6 +541,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra2->cd(5);
     TH1D *hbi11   = (TH1D*)dHisto->Clone("hbi11");
     hbi11->SetTitle("Bi214 (1729.6 keV)");
+    hbi11->Rebin();
     hbi11->SetAxisRange(dFitMinBi11, dFitMaxBi11);
     hbi11->Fit("fFitBi11","R");
 
@@ -553,6 +560,7 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     cra2->cd(8);
     TH1D *hbi14   = (TH1D*)dHisto->Clone("hbi14");
     hbi14->SetTitle("Bi214 (2204.21 keV)");
+    hbi14->Rebin();
     hbi14->SetAxisRange(dFitMinBi14, dFitMaxBi14);
     hbi14->Fit("fFitBi14","R");
 
@@ -579,17 +587,17 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     double dFitNormPb[3] = {};
     double dFitNormBi[16] = {};
 
-    double dTotAreaPb = TMath::Abs(fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2)) + TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2))
-                + TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2));
+    double dTotAreaPb = TMath::Abs(fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2)) + TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2))/2
+                + TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2))/2;
     
     double dTotAreaBi = TMath::Abs(fFitBi1->GetParameter(0)/fFitBi1->GetParameter(2)) + TMath::Abs(fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2))
             + TMath::Abs(fFitBi3->GetParameter(0)/fFitBi3->GetParameter(2)) + TMath::Abs(fFitBi4->GetParameter(0)/fFitBi4->GetParameter(2))
             + TMath::Abs(fFitBi5->GetParameter(0)/fFitBi5->GetParameter(2)) + TMath::Abs(fFitBi6->GetParameter(0)/fFitBi6->GetParameter(2))
             + TMath::Abs(fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2)) + TMath::Abs(fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2))
-            + TMath::Abs(fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2)) + TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2))
-            + TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5)) + TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2))
+            + TMath::Abs(fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2)) + TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2))/2
+            + TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5))/2 + TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2))/2
             + TMath::Abs(fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2)) + TMath::Abs(fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2))
-            + TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2)) + TMath::Abs(fFitBi5->GetParameter(0)/fFitBi15->GetParameter(2));
+            + TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2))/2 + TMath::Abs(fFitBi5->GetParameter(0)/fFitBi15->GetParameter(2))/2;
 
     dFitEnergyPb[0] = fFitPb1->GetParameter(1);
     dFitEnergyPb[1] = fFitPb2->GetParameter(1);
@@ -614,8 +622,8 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
 
 
     dFitNormPb[0] = TMath::Abs(fFitPb1->GetParameter(0)/fFitPb1->GetParameter(2));
-    dFitNormPb[1] = TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2));
-    dFitNormPb[2] = TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2));
+    dFitNormPb[1] = TMath::Abs(fFitPb2->GetParameter(0)/fFitPb2->GetParameter(2)) /2;
+    dFitNormPb[2] = TMath::Abs(fFitPb3->GetParameter(0)/fFitPb3->GetParameter(2)) /2;
 
     dFitNormBi[0] = TMath::Abs(fFitBi1->GetParameter(0)/fFitBi1->GetParameter(2));
     dFitNormBi[1] = TMath::Abs(fFitBi2->GetParameter(0)/fFitBi2->GetParameter(2));
@@ -626,13 +634,13 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
     dFitNormBi[6] = TMath::Abs(fFitBi7->GetParameter(0)/fFitBi7->GetParameter(2));
     dFitNormBi[7] = TMath::Abs(fFitBi8->GetParameter(0)/fFitBi8->GetParameter(2));
     dFitNormBi[8] = TMath::Abs(fFitBi9->GetParameter(0)/fFitBi9->GetParameter(2));
-    dFitNormBi[9] = TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2));
-    dFitNormBi[10] = TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5));
-    dFitNormBi[11] = TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2));
-    dFitNormBi[12] = TMath::Abs(fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2));
+    dFitNormBi[9] = TMath::Abs(fFitBi10->GetParameter(0)/fFitBi10->GetParameter(2)) /2;
+    dFitNormBi[10] = TMath::Abs(fFitBi10->GetParameter(3)/fFitBi10->GetParameter(5)) /2;
+    dFitNormBi[11] = TMath::Abs(fFitBi11->GetParameter(0)/fFitBi11->GetParameter(2)) /2;
+    dFitNormBi[12] = TMath::Abs(fFitBi12->GetParameter(0)/fFitBi12->GetParameter(2)) /2;
     dFitNormBi[13] = TMath::Abs(fFitBi13->GetParameter(0)/fFitBi13->GetParameter(2));
-    dFitNormBi[14] = TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2));
-    dFitNormBi[15] = TMath::Abs(fFitBi15->GetParameter(0)/fFitBi15->GetParameter(2));
+    dFitNormBi[14] = TMath::Abs(fFitBi14->GetParameter(0)/fFitBi14->GetParameter(2)) /2;
+    dFitNormBi[15] = TMath::Abs(fFitBi15->GetParameter(0)/fFitBi15->GetParameter(2)) /2;
 
 
 
@@ -718,6 +726,9 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
         cra1->SaveAs(Form("%s-Ra226-1.pdf",dHisto->GetName()));
         cra2->SaveAs(Form("%s-Ra226-2.png",dHisto->GetName()));
         cra2->SaveAs(Form("%s-Ra226-2.pdf",dHisto->GetName()));
+
+        cratiora->SaveAs(Form("%s-Ra226-ratio.png",dHisto->GetName()));
+        cratiora->SaveAs(Form("%s-Ra226-ratio.pdf",dHisto->GetName()));
 
     }
 

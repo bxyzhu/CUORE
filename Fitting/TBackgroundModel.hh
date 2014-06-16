@@ -4,7 +4,8 @@
 #include "TH1D.h"
 #include "TChain.h"
 #include "TCut.h"
-#include "TRandom1.h"
+#include "TRandom3.h"
+
 class TBackgroundModel : public TObject {
 
 public:
@@ -18,7 +19,10 @@ public:
 
 	bool DoTheFit();
 
+	TChain *LoadMC(std::string dLocation, std::string dSource, int dMult);
+
 	void LoadData();
+	void ReadMC();
 	void PrintParameters();
 	void UpdateModel();
 
@@ -33,16 +37,38 @@ private:
 	TH1D		*fDataHistoM2;
 
 	// Model
+	TChain		*outTree50mKTh;
+	TChain		*outTree600mKTh;
+	TChain		*outTreeIVCTh;
+	TChain		*outTreeOVCTh;
+	TChain		*outTreeFrameTh;
+
+	TChain		*outTree50mKRa;
+	TChain		*outTree600mKRa;
+	TChain		*outTreeIVCRa;
+	TChain		*outTreeOVCRa;
+	TChain		*outTreeFrameRal;
+
+	TH1D		*fModelTot;
+
 	TH1D		*fModel50mKTh;
-	TH1D		*fModelMixingTh;
 	TH1D		*fModel600mKTh;
 	TH1D		*fModelIVCTh;
 	TH1D		*fModelOVCTh;
+	TH1D		*fModelFrameTh;
+
+	TH1D		*fModel50mKRa;
+	TH1D		*fModel600mKRa;
+	TH1D		*fModelIVCRa;
+	TH1D		*fModelOVCRa;
+	TH1D		*fModelFrameRa;
+
 
 	// Smearing
 	TRandom3	*fRandomGenerator;	
 	
-	double	fParameters[2] = {0}; 
+	// Parameters
+	double	fParameters[5] = {0}; 
 
 
 

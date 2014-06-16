@@ -305,6 +305,8 @@ void FitThPeaks(TH1D *dHisto, bool bSavePlots = false)
         cth->SaveAs(Form("%s-Th232.png",dHisto->GetName()));
         cth->SaveAs(Form("%s-Th232.pdf",dHisto->GetName()));
 
+        cratioth->SaveAs(Form("%s-Th232-ratio.png",dHisto->GetName()));
+        cratioth->SaveAs(Form("%s-Th232-ratio.pdf",dHisto->GetName()));
 
     }
 
@@ -721,6 +723,8 @@ void FitRaPeaks(TH1D *dHisto, bool bSavePlots = false)
         cra2->SaveAs(Form("%s-Ra226-2.png",dHisto->GetName()));
         cra2->SaveAs(Form("%s-Ra226-2.pdf",dHisto->GetName()));
 
+        cratiora->SaveAs(Form("%s-Ra226-ratio.png",dHisto->GetName()));
+        cratiora->SaveAs(Form("%s-Ra226-ratio.pdf",dHisto->GetName()));
     }
 
 
