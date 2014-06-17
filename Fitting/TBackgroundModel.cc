@@ -25,6 +25,11 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code){
 	Obj->SetParameters(2,x[2]);
 	Obj->SetParameters(3,x[3]);
 	Obj->SetParameters(4,x[4]);
+	Obj->SetParameters(5,x[5]);   
+	Obj->SetParameters(6,x[6]);  
+	Obj->SetParameters(7,x[7]);
+	Obj->SetParameters(8,x[8]);
+	Obj->SetParameters(9,x[9]);
 
 	Obj->UpdateModel();
 
@@ -36,32 +41,6 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code){
 
 TBackgroundModel::TBackgroundModel()
 {
-	// Data
-	qtree = new TChain("qtree");
-
-    base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-    base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
-    base_cut = base_cut && "abs(BaselineSlope)<0.1";
-    base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
-
-	fDataHistoTot = new TH1D("fDataHistoTot", "Data Histogram", 3500, 0., 3500.);
-	fDataHistoM1 = new TH1D("fDataHistoM1", "Data Histogram", 3500, 0., 3500.);
-	fDataHistoM2 = new TH1D("fDataHistoM2", "Data Histogram", 3500, 0., 3500.);
-
-	// Model histograms
-	fModelFrameTh = new TH1D("fModelFrameTh", "Frame", 3500, 0., 3500.);
-	fModel50mKTh = new TH1D("fModel50mKTh", "50mK", 3500, 0., 3500.);
-	fModel600mKTh = new TH1D("fModel600mKTh", "600mK", 3500, 0., 3500.);
-	fModelIVCTh = new TH1D("fModelIVCTh", "IVC", 3500, 0., 3500.);
-	fModelOVCTh = new TH1D("fModelOVCTh", "OVC", 3500, 0., 3500.);
-
-	// fRandomGenerator = new TRandom3(0);
-	// fParameters[0] = 0.;
-	// fParameters[1] = 0.;
-
-	// Currently filling data in the constructor, good idea?
-	LoadData();	
-
 }
   
 
@@ -79,6 +58,54 @@ TBackgroundModel::~TBackgroundModel()
 
 }
 
+void TBackgroundModel::Initialize()
+{
+
+	// Data
+	qtree = new TChain("qtree");
+
+    base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+    base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+    base_cut = base_cut && "abs(BaselineSlope)<0.1";
+    base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+
+	fDataHistoTot = new TH1D("fDataHistoTot", "Data Histogram", 600, 0., 3000.);
+	fDataHistoM1 = new TH1D("fDataHistoM1", "Data Histogram", 600, 0., 3000.);
+	fDataHistoM2 = new TH1D("fDataHistoM2", "Data Histogram", 600, 0., 3000.);
+
+	// Model histograms
+	fModelTot = new TH1D("fModelTot", "Frame", 600, 0., 3000.);
+
+	fModelFrameTh = new TH1D("fModelFrameTh", "Frame", 600, 0., 3000.);
+	fModel50mKTh = new TH1D("fModel50mKTh", "50mK", 600, 0., 3000.);
+	fModel600mKTh = new TH1D("fModel600mKTh", "600mK", 600, 0., 3000.);
+	fModelIVCTh = new TH1D("fModelIVCTh", "IVC", 600, 0., 3000.);
+	fModelOVCTh = new TH1D("fModelOVCTh", "OVC", 600, 0., 3000.);
+
+	fModelFrameRa = new TH1D("fModelFrameRa", "Frame", 600, 0., 3000.);
+	fModel50mKRa = new TH1D("fModel50mKRa", "50mK", 600, 0., 3000.);
+	fModel600mKRa = new TH1D("fModel600mKRa", "600mK", 600, 0., 3000.);
+	fModelIVCRa = new TH1D("fModelIVCRa", "IVC", 600, 0., 3000.);
+	fModelOVCRa = new TH1D("fModelOVCRa", "OVC", 600, 0., 3000.);
+	// Initial Parameters
+	// fRandomGenerator = new TRandom3(0);
+	fParameters[0] = 0.;
+	fParameters[1] = 0.;
+	fParameters[2] = 0.;
+	fParameters[3] = 0.;
+	fParameters[4] = 0.;
+	fParameters[5] = 0.;
+	fParameters[6] = 0.;
+	fParameters[7] = 0.;
+	fParameters[8] = 0.;
+	fParameters[9] = 0.;
+
+	// Loading all data in Initialize, correct or no?
+	LoadData();	
+	ReadMC();
+
+}
+
 
 // Prints parameters, make sure to update
 void TBackgroundModel::PrintParameters()
@@ -88,6 +115,12 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par2 = "<< fParameters[2]<<endl;
 	cout<< "Par3 = "<< fParameters[3]<<endl;
 	cout<< "Par4 = "<< fParameters[4]<<endl;
+
+	cout<< "Par5 = "<< fParameters[5]<<endl;
+	cout<< "Par6 = "<< fParameters[6]<<endl;
+	cout<< "Par7 = "<< fParameters[7]<<endl;
+	cout<< "Par8 = "<< fParameters[8]<<endl;
+	cout<< "Par9 = "<< fParameters[9]<<endl;
 	// cout<< "Par5 = "<< fParameters[5]<<endl;
 	// cout<< "Par6 = "<< fParameters[6]<<endl;
 
@@ -139,11 +172,23 @@ void TBackgroundModel::ReadMC()
     outTreeOVCTh = LoadMC("OVC", "Th232", 1);
     outTreeFrameTh = LoadMC("Frame", "Th232", 1);
 
+    outTree50mKRa = LoadMC("50mK", "Ra226", 1);
+    outTree600mKRa = LoadMC("600mK", "Ra226", 1);
+    outTreeIVCRa = LoadMC("IVC", "Ra226", 1);
+    outTreeOVCRa = LoadMC("OVC", "Ra226", 1);
+    outTreeFrameRa = LoadMC("Frame", "Ra226", 1);
+
 	outTreeFrameTh->Project("fModelFrameTh", "Ener1");
     outTree50mKTh->Project("fModel50mKTh", "Ener1");
     outTree600mKTh->Project("fModel600mKTh", "Ener1");
     outTreeIVCTh->Project("fModelIVCTh", "Ener1");
     outTreeOVCTh->Project("fModelOVCTh", "Ener1");
+
+	outTreeFrameRa->Project("fModelFrameRa", "Ener1");
+    outTree50mKRa->Project("fModel50mKRa", "Ener1");
+    outTree600mKRa->Project("fModel600mKRa", "Ener1");
+    outTreeIVCRa->Project("fModelIVCRa", "Ener1");
+    outTreeOVCRa->Project("fModelOVCRa", "Ener1");
 
 	cout << "Loaded MC" << endl;
 
@@ -168,7 +213,11 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add(fModelIVCTh,		fParameters[3]);
 	fModelTot->Add(fModelOVCTh,		fParameters[4]);
 
-
+	fModelTot->Add(fModelFrameRa,	fParameters[5]);
+	fModelTot->Add(fModel50mKRa,	fParameters[6]);
+	fModelTot->Add(fModel600mKRa,	fParameters[7]);
+	fModelTot->Add(fModelIVCRa,		fParameters[8]);
+	fModelTot->Add(fModelOVCRa,		fParameters[9]);
 
 
 
@@ -240,7 +289,7 @@ double TBackgroundModel::GetChiSquare()
 void TBackgroundModel::SetParameters(int index, double value)
 {
 	// Change the index max depending on model
-	if(index > 7) cout << "Index too large" << endl;
+	if(index > 10) cout << "Index too large" << endl;
 	else fParameters[index] = value;
 
 }
@@ -268,8 +317,12 @@ bool TBackgroundModel::DoTheFit(){
    minuit.DefineParameter(2, "600 mK Th", 0.4, 1, 0., 10.);
    minuit.DefineParameter(3, "IVC Th", 0.4, 1, 0., 10.);
    minuit.DefineParameter(4, "OVC Th", 0.4, 1, 0., 10.);
-   // minuit.DefineParameter(5, "", 0.4, 1, -2, 2);
-   // minuit.DefineParameter(6, "", 0.4, 1, -2, 2);
+
+   minuit.DefineParameter(5, "Frame Ra", 0.4, 1, 0., 10.0);
+   minuit.DefineParameter(6, "50 mK Ra", 0.4, 1, 0., 10.0);
+   minuit.DefineParameter(7, "600 mK Ra", 0.4, 1, 0., 10.);
+   minuit.DefineParameter(8, "IVC Ra", 0.4, 1, 0., 10.);
+   minuit.DefineParameter(9, "OVC Ra", 0.4, 1, 0., 10.);
 
    
    //Tell minuit what external function to use 
@@ -292,7 +345,11 @@ bool TBackgroundModel::DoTheFit(){
 	minuit.GetParameter(2,fParameters[2],dummy);
 	minuit.GetParameter(3,fParameters[3],dummy);
 	minuit.GetParameter(4,fParameters[4],dummy);
-
+	minuit.GetParameter(5,fParameters[5],dummy);
+	minuit.GetParameter(6,fParameters[6],dummy);
+	minuit.GetParameter(7,fParameters[7],dummy);
+	minuit.GetParameter(8,fParameters[8],dummy);
+	minuit.GetParameter(9,fParameters[9],dummy);
 	UpdateModel();
 	
 	cout<<"At the end ChiSq = "<<GetChiSquare()<<endl;

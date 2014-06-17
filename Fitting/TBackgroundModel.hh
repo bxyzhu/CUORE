@@ -12,6 +12,8 @@ public:
 
 	TBackgroundModel();
 	virtual ~TBackgroundModel();
+
+	void Initialize();
   
 	double GetChiSquare();
 
@@ -68,7 +70,7 @@ private:
 	TRandom3	*fRandomGenerator;	
 	
 	// Parameters
-	double	fParameters[5] = {0}; 
+	double	fParameters[9]; 
 
 
 
