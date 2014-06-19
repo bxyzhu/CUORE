@@ -772,20 +772,6 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     // outTreeCrystal->Project("hCrystal","Ener1");
     // outTreeFrame->Project("hFrame","Ener1");
 
-/*
-
-    TChain *qtree = new TChain("qtree");
-    qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");
-
-    TCut base_cut;
-    base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-    base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
-    base_cut = base_cut && "abs(BaselineSlope)<0.1";
-    base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
-
-
-    qtree->Project("hBkg", "Energy", base_cut && "Multiplicity_OFTime == 1");
-*/
 
 /*
     TCanvas *cSmear = new TCanvas("cSmear", "cSmear", 1100, 750);
@@ -833,4 +819,53 @@ void DrawMC(int dMult = 1, bool bSavePlots = false)
     FitRaPeaks(h600mK, bSavePlots);
     FitRaPeaks(hIVC, bSavePlots);
     FitRaPeaks(hOVC, bSavePlots);
+}
+
+
+// Just to check what the different MC spectra look like
+void DrawSpectra()
+{
+    // gStyle->SetOptStat(0);
+    gStyle->SetOptFit();
+    int bin = 3500;
+    double binsize = 3500/bin;
+
+
+    TH1D *h50mK = new TH1D("h50mK","", bin, 0, 3500);
+    TH1D *h600mK = new TH1D("h600mK","", bin, 0, 3500);
+    TH1D *hIVC = new TH1D("hIVC","", bin, 0, 3500);
+    TH1D *hOVC = new TH1D("hOVC","", bin, 0, 3500);
+    // TH1D *hCrystal = new TH1D("hCrystal","", bin, 0, 3500);
+    TH1D *hFrame = new TH1D("hFrame","", bin, 0, 3500);
+
+
+    // TChain *outTree50mK = LoadMC("50mK", "Ra226", 1);
+    // TChain *outTree600mK = LoadMC("600mK", "Ra226", 1);
+    // TChain *outTreeIVC = LoadMC("IVC", "Ra226", 1);
+    // TChain *outTreeOVC = LoadMC("OVC", "Ra226", 1);
+
+    TChain *outTreeFrame = LoadMC("Frame", "K40", 1);
+
+
+    // outTree50mK->Project("h50mK","Ener1");
+    // outTree600mK->Project("h600mK","Ener1");
+    // outTreeIVC->Project("hIVC","Ener1");
+    // outTreeOVC->Project("hOVC","Ener1");
+
+    outTreeFrame->Project("hFrame", "Ener1");
+
+    TCanvas *cSpectra = new TCanvas("cSpectra", "cSpectra", 1100, 750);
+
+    TLegend *leg;
+    leg = new TLegend(0.72,0.70,0.925,0.9);
+
+    cSpectra->SetLogy();
+    hFrame->Draw();
+
+
+
+    // h50mK->SetAxisRange(0, 3500);
+    // h50mK->SetLineColor(kBlack);    
+
+
 }
