@@ -26,16 +26,28 @@ public:
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
 
+	void NormalizePDF(TH1D *h1);
+
 	void LoadData();
+
 	void ReadMC();
+
 	void PrintParameters();
+
 	void UpdateModel();
+
+
+	int 	dBinSize;
+	int 	dNBins;
+	double	dMinEnergy;
+	double 	dMaxEnergy;
 
 private:
 
 	// Data
 	TChain			*qtree;
 	TCut 			base_cut;
+	TCut			ener_cut;
 
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
@@ -55,12 +67,14 @@ private:
 	TChain			*outTreeFrameRa;
 
 	TChain			*outTreeFrameK;
+	TChain			*outTreeFrameCo;
 
-
+	// Total PDFs
 	TH1D			*fModelTot;
 	TH1D			*fModelTotTh;
 	TH1D			*fModelTotRa;
 	TH1D			*fModelTotK;
+	TH1D			*fModelTotCo;
 
 	TH1D			*fModel50mKTh;
 	TH1D			*fModel600mKTh;
@@ -75,6 +89,7 @@ private:
 	TH1D			*fModelFrameRa;
 
 	TH1D			*fModelFrameK;
+	TH1D			*fModelFrameCo;
 
 	TGraph			*gResidual;
 	// TH1D			*hResidualDist;
@@ -83,7 +98,7 @@ private:
 	TRandom3		*fRandomGenerator;	
 	
 	// Parameters
-	double			fParameters[10]; 
+	double			fParameters[11]; 
 
 
 

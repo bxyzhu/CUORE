@@ -10,7 +10,8 @@ using namespace std;
 //ClassImp(TBackgroundModel)
   
 //first set up a global function that calls your classes method that calculates the quantity to minimise
-void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code){
+void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
+{
 	// Required External Wrapper for function to be minimized by Minuit 
  
  	// This gets called for each value of the parameters minuit tries
@@ -20,22 +21,22 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code){
 	TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
 	// implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-	Obj->SetParameters(0,x[0]);   
-	Obj->SetParameters(1,x[1]);  
-	Obj->SetParameters(2,x[2]);
-	Obj->SetParameters(3,x[3]);
-	Obj->SetParameters(4,x[4]);
-	Obj->SetParameters(5,x[5]);   
-	Obj->SetParameters(6,x[6]);  
-	Obj->SetParameters(7,x[7]);
-	Obj->SetParameters(8,x[8]);
-	Obj->SetParameters(9,x[9]);
-	Obj->SetParameters(10,x[10]);
+	Obj->SetParameters(0,	x[0]);   
+	Obj->SetParameters(1,	x[1]);  
+	Obj->SetParameters(2,	x[2]);
+	Obj->SetParameters(3,	x[3]);
+	Obj->SetParameters(4,	x[4]);
+	Obj->SetParameters(5,	x[5]);   
+	Obj->SetParameters(6,	x[6]);  
+	Obj->SetParameters(7,	x[7]);
+	Obj->SetParameters(8,	x[8]);
+	Obj->SetParameters(9,	x[9]);
+	Obj->SetParameters(10,	x[10]);
+	// Obj->SetParameters(11,	x[11]);
 
 
 	Obj->UpdateModel();
 
-//  Obj->PrintParameters();
 	//implement a method in your class that calculates the quantity you want to minimise, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
 	fval = Obj->GetChiSquare();
 }
@@ -59,11 +60,28 @@ TBackgroundModel::~TBackgroundModel()
 	delete	fModelOVCTh;
 	delete 	fModelFrameTh;
 
+	delete	fModel50mKRa;
+	delete	fModel600mKRa;
+	delete 	fModelIVCRa;
+	delete	fModelOVCRa;
+	delete 	fModelFrameRa;
+
+	delete	fModelFrameK;
+	delete	fModelFrameCo;
+
+	delete 	fModelTotTh;
+	delete	fModelTotRa;
+	delete	fModelTotK;
+	delete	fModelTotCo;
 }
 
 void TBackgroundModel::Initialize()
 {
-
+	// Bin Size in KeV
+	dBinSize = 10;
+	dMaxEnergy = 2700.;
+	dMinEnergy = 0.;
+	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
 	// Data
 	qtree = new TChain("qtree");
 
@@ -71,46 +89,52 @@ void TBackgroundModel::Initialize()
     base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
     base_cut = base_cut && "abs(BaselineSlope)<0.1";
     base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+    base_cut = base_cut && Form("Energy > %f && Energy < %f", dMinEnergy, dMaxEnergy);
 
-	fDataHistoTot = new TH1D("fDataHistoTot", "Data Histogram", 600, 0., 3000.);
-	fDataHistoM1 = new TH1D("fDataHistoM1", "Data Histogram", 600, 0., 3000.);
-	fDataHistoM2 = new TH1D("fDataHistoM2", "Data Histogram", 600, 0., 3000.);
+    ener_cut = ener_cut && Form("Ener1 > %f && Ener1 < %f", dMinEnergy, dMaxEnergy);
+
+	fDataHistoTot	 = new TH1D("fDataHistoTot", 	"", dNBins, dMinEnergy, dMaxEnergy);
+	fDataHistoM1	 = new TH1D("fDataHistoM1", 	"", dNBins, dMinEnergy, dMaxEnergy);
+	fDataHistoM2	 = new TH1D("fDataHistoM2", 	"", dNBins, dMinEnergy, dMaxEnergy);
 
 	// Model histograms
 
-	fModelFrameTh = new TH1D("fModelFrameTh", "Frame", 600, 0., 3000.);
-	fModel50mKTh = new TH1D("fModel50mKTh", "50mK", 600, 0., 3000.);
-	fModel600mKTh = new TH1D("fModel600mKTh", "600mK", 600, 0., 3000.);
-	fModelIVCTh = new TH1D("fModelIVCTh", "IVC", 600, 0., 3000.);
-	fModelOVCTh = new TH1D("fModelOVCTh", "OVC", 600, 0., 3000.);
+	fModelFrameTh	 = new TH1D("fModelFrameTh", 	"Frame",		dNBins, dMinEnergy, dMaxEnergy);
+	fModel50mKTh	 = new TH1D("fModel50mKTh", 	"50mK",			dNBins, dMinEnergy, dMaxEnergy);
+	fModel600mKTh	 = new TH1D("fModel600mKTh", 	"600mK",		dNBins, dMinEnergy, dMaxEnergy);
+	fModelIVCTh		 = new TH1D("fModelIVCTh", 		"IVC", 			dNBins, dMinEnergy, dMaxEnergy);
+	fModelOVCTh		 = new TH1D("fModelOVCTh",		"OVC",	 		dNBins, dMinEnergy, dMaxEnergy);
 
-	fModelFrameRa = new TH1D("fModelFrameRa", "Frame", 600, 0., 3000.);
-	fModel50mKRa = new TH1D("fModel50mKRa", "50mK", 600, 0., 3000.);
-	fModel600mKRa = new TH1D("fModel600mKRa", "600mK", 600, 0., 3000.);
-	fModelIVCRa = new TH1D("fModelIVCRa", "IVC", 600, 0., 3000.);
-	fModelOVCRa = new TH1D("fModelOVCRa", "OVC", 600, 0., 3000.);
+	fModelFrameRa	 = new TH1D("fModelFrameRa", 	"Frame", 		dNBins, dMinEnergy, dMaxEnergy);
+	fModel50mKRa	 = new TH1D("fModel50mKRa", 	"50mK", 		dNBins, dMinEnergy, dMaxEnergy);
+	fModel600mKRa	 = new TH1D("fModel600mKRa", 	"600mK", 		dNBins, dMinEnergy, dMaxEnergy);
+	fModelIVCRa		 = new TH1D("fModelIVCRa", 		"IVC", 			dNBins, dMinEnergy, dMaxEnergy);
+	fModelOVCRa		 = new TH1D("fModelOVCRa", 		"OVC", 			dNBins, dMinEnergy, dMaxEnergy);
 
-	fModelFrameK = new TH1D("fModelFrameK", "Frame", 600, 0., 3000.);
+	fModelFrameK	 = new TH1D("fModelFrameK", 	"Frame", 		dNBins, dMinEnergy, dMaxEnergy);
+	fModelFrameCo	 = new TH1D("fModelFrameCo", 	"Frame", 		dNBins, dMinEnergy, dMaxEnergy);
 
 	// Total model histograms
-	fModelTot = new TH1D("fModelTot", "Frame", 600, 0., 3000.);	
-	fModelTotTh = new TH1D("fModelTotTh", "Total Th232", 600, 0., 3000.);
-	fModelTotRa = new TH1D("fModelTotRa", "Total Ra226", 600, 0., 3000.);
-	fModelTotK = new TH1D("fModelTotK", "Total K40", 600, 0., 3000.);
+	fModelTot 		 = new TH1D("fModelTot", 		"Frame", 		dNBins, dMinEnergy, dMaxEnergy);	
+	fModelTotTh		 = new TH1D("fModelTotTh", 		"Total Th232", 	dNBins, dMinEnergy, dMaxEnergy);
+	fModelTotRa		 = new TH1D("fModelTotRa", 		"Total Ra226", 	dNBins, dMinEnergy, dMaxEnergy);
+	fModelTotK		 = new TH1D("fModelTotK", 		"Total K40",	dNBins, dMinEnergy, dMaxEnergy);
+	fModelTotCo		 = new TH1D("fModelTotCo", 		"Total Co60", 	dNBins, dMinEnergy, dMaxEnergy);
 
 	// Initial Parameters
 	// fRandomGenerator = new TRandom3(0);
-	fParameters[0] = 0.;
-	fParameters[1] = 0.;
-	fParameters[2] = 0.;
-	fParameters[3] = 0.;
-	fParameters[4] = 0.;
-	fParameters[5] = 0.;
-	fParameters[6] = 0.;
-	fParameters[7] = 0.;
-	fParameters[8] = 0.;
-	fParameters[9] = 0.;
+	fParameters[0] 	= 0.;
+	fParameters[1] 	= 0.;
+	fParameters[2] 	= 0.;
+	fParameters[3] 	= 0.;
+	fParameters[4] 	= 0.;
+	fParameters[5] 	= 0.;
+	fParameters[6] 	= 0.;
+	fParameters[7] 	= 0.;
+	fParameters[8]	= 0.;
+	fParameters[9] 	= 0.;
 	fParameters[10] = 0.;
+	// fParameters[11] = 0.;
 
 	// Loading all data in Initialize, correct or no?
 	LoadData();	
@@ -122,21 +146,21 @@ void TBackgroundModel::Initialize()
 // Prints parameters, make sure to update
 void TBackgroundModel::PrintParameters()
 {	
-	cout<< "Par0 = "<< fParameters[0]<<endl;
-	cout<< "Par1 = "<< fParameters[1]<<endl;
-	cout<< "Par2 = "<< fParameters[2]<<endl;
-	cout<< "Par3 = "<< fParameters[3]<<endl;
-	cout<< "Par4 = "<< fParameters[4]<<endl;
+	cout<< "Par0 = "	<< fParameters[0]	<< endl;
+	cout<< "Par1 = "	<< fParameters[1]	<< endl;
+	cout<< "Par2 = "	<< fParameters[2]	<< endl;
+	cout<< "Par3 = "	<< fParameters[3]	<< endl;
+	cout<< "Par4 = "	<< fParameters[4]	<< endl;
 
-	cout<< "Par5 = "<< fParameters[5]<<endl;
-	cout<< "Par6 = "<< fParameters[6]<<endl;
-	cout<< "Par7 = "<< fParameters[7]<<endl;
-	cout<< "Par8 = "<< fParameters[8]<<endl;
-	cout<< "Par9 = "<< fParameters[9]<<endl;
-	cout<< "Par10 = "<< fParameters[10]<<endl;
+	cout<< "Par5 = "	<< fParameters[5]	<< endl;
+	cout<< "Par6 = "	<< fParameters[6]	<< endl;
+	cout<< "Par7 = "	<< fParameters[7]	<< endl;
+	cout<< "Par8 = "	<< fParameters[8]	<< endl;
+	cout<< "Par9 = "	<< fParameters[9]	<< endl;
+	cout<< "Par10 = "	<< fParameters[10]	<< endl;
+	// cout<< "Par11 = "	<< fParameters[11]	<< endl;
 
-	// cout<< "Par5 = "<< fParameters[5]<<endl;
-	// cout<< "Par6 = "<< fParameters[6]<<endl;
+	cout << "Sum = " << endl; 
 
 }
 
@@ -153,11 +177,13 @@ TChain *TBackgroundModel::LoadMC(std::string dLocation, std::string dSource, int
 // Loads the data
 void TBackgroundModel::LoadData()
 {
-	if(fDataHistoTot == NULL) {
+	if(fDataHistoTot == NULL) 
+	{
 		cout << "Data Histograms Not Created" << endl;
 		return;
 	}
-	else{
+	else
+	{
 		cout << "Data Histograms Created" << endl;
 	}
 
@@ -171,53 +197,76 @@ void TBackgroundModel::LoadData()
 
     qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedCorrectedBkg.root");	
     qtree->Project("fDataHistoTot", "Energy", base_cut);
-    qtree->Project("fDataHistoM1", "Energy", base_cut && "Multiplicity_OFTime==1");
-    qtree->Project("fDataHistoM2", "Energy", base_cut && "Multiplicity_OFTime==2");
+    qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
+    qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
 
 	cout << "Loaded Data" << endl;
+
+	NormalizePDF(fDataHistoM1);
+
+	cout << "Normalized Data" << endl;
 }
 
 void TBackgroundModel::ReadMC()
 {
     // Loads MC data
-    outTree50mKTh = LoadMC("50mK", "Th232", 1);
-    outTree600mKTh = LoadMC("600mK", "Th232", 1);
-    outTreeIVCTh = LoadMC("IVC", "Th232", 1);
-    outTreeOVCTh = LoadMC("OVC", "Th232", 1);
-    outTreeFrameTh = LoadMC("Frame", "Th232", 1);
+    outTree50mKTh 	= LoadMC("50mK",	"Th232", 1);
+    outTree600mKTh 	= LoadMC("600mK", 	"Th232", 1);
+    outTreeIVCTh 	= LoadMC("IVC", 	"Th232", 1);
+    outTreeOVCTh 	= LoadMC("OVC", 	"Th232", 1);
+    outTreeFrameTh 	= LoadMC("Frame", 	"Th232", 1);
 
-    outTree50mKRa = LoadMC("50mK", "Ra226", 1);
-    outTree600mKRa = LoadMC("600mK", "Ra226", 1);
-    outTreeIVCRa = LoadMC("IVC", "Ra226", 1);
-    outTreeOVCRa = LoadMC("OVC", "Ra226", 1);
-    outTreeFrameRa = LoadMC("Frame", "Ra226", 1);
+    outTree50mKRa 	= LoadMC("50mK", 	"Ra226", 1);
+    outTree600mKRa	= LoadMC("600mK", 	"Ra226", 1);
+    outTreeIVCRa 	= LoadMC("IVC", 	"Ra226", 1);
+    outTreeOVCRa 	= LoadMC("OVC", 	"Ra226", 1);
+    outTreeFrameRa 	= LoadMC("Frame", 	"Ra226", 1);
 
-    outTreeFrameK = LoadMC("Frame", "K40", 1);
+    outTreeFrameK 	= LoadMC("Frame", 	"K40",	 1);
+    outTreeFrameCo 	= LoadMC("Frame", 	"Co60",	 1);
 
+	outTreeFrameTh->Project("fModelFrameTh", 	"Ener1", ener_cut);
+    outTree50mKTh->Project("fModel50mKTh", 		"Ener1", ener_cut);
+    outTree600mKTh->Project("fModel600mKTh", 	"Ener1", ener_cut);
+    outTreeIVCTh->Project("fModelIVCTh", 		"Ener1", ener_cut);
+    outTreeOVCTh->Project("fModelOVCTh", 		"Ener1", ener_cut);
 
-	outTreeFrameTh->Project("fModelFrameTh", "Ener1");
-    outTree50mKTh->Project("fModel50mKTh", "Ener1");
-    outTree600mKTh->Project("fModel600mKTh", "Ener1");
-    outTreeIVCTh->Project("fModelIVCTh", "Ener1");
-    outTreeOVCTh->Project("fModelOVCTh", "Ener1");
+	outTreeFrameRa->Project("fModelFrameRa", 	"Ener1", ener_cut);
+    outTree50mKRa->Project("fModel50mKRa", 		"Ener1", ener_cut);
+    outTree600mKRa->Project("fModel600mKRa", 	"Ener1", ener_cut);
+    outTreeIVCRa->Project("fModelIVCRa", 		"Ener1", ener_cut);
+    outTreeOVCRa->Project("fModelOVCRa", 		"Ener1", ener_cut);
 
-	outTreeFrameRa->Project("fModelFrameRa", "Ener1");
-    outTree50mKRa->Project("fModel50mKRa", "Ener1");
-    outTree600mKRa->Project("fModel600mKRa", "Ener1");
-    outTreeIVCRa->Project("fModelIVCRa", "Ener1");
-    outTreeOVCRa->Project("fModelOVCRa", "Ener1");
-
-	outTreeFrameK->Project("fModelFrameK", "Ener1");
+	outTreeFrameK->Project("fModelFrameK", 		"Ener1", ener_cut);
+	outTreeFrameCo->Project("fModelFrameCo", 	"Ener1", ener_cut);
 
 
 	cout << "Loaded MC" << endl;
 
+	// Normalize all MC histograms
+	NormalizePDF(fModelFrameTh);
+	NormalizePDF(fModel50mKTh);
+	NormalizePDF(fModel600mKTh);
+	NormalizePDF(fModelIVCTh);
+	NormalizePDF(fModelOVCTh);
+
+	NormalizePDF(fModelFrameRa);
+	NormalizePDF(fModel50mKRa);
+	NormalizePDF(fModel600mKRa);
+	NormalizePDF(fModelIVCRa);
+	NormalizePDF(fModelOVCRa);
+
+	NormalizePDF(fModelFrameK);
+	NormalizePDF(fModelFrameCo);
+
+	cout << "Normalized MC PDFs" << endl;
 }
 
 // Creates/updates the background model
 void TBackgroundModel::UpdateModel()
 {
-	if(fModelTot == NULL) {
+	if(fModelTot == NULL) 
+	{
 		cout << "Model Histogram Not Created" << endl;
 		return;
 	}
@@ -227,19 +276,22 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Reset();
 
 	// Create model
-	fModelTot->Add(fModelFrameTh,	fParameters[0]);
-	fModelTot->Add(fModel50mKTh,	fParameters[1]);
-	fModelTot->Add(fModel600mKTh,	fParameters[2]);
-	fModelTot->Add(fModelIVCTh,		fParameters[3]);
-	fModelTot->Add(fModelOVCTh,		fParameters[4]);
+	fModelTot->Add(fModelFrameTh,	1-fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
+									+ fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]);
 
-	fModelTot->Add(fModelFrameRa,	fParameters[5]);
-	fModelTot->Add(fModel50mKRa,	fParameters[6]);
-	fModelTot->Add(fModel600mKRa,	fParameters[7]);
-	fModelTot->Add(fModelIVCRa,		fParameters[8]);
-	fModelTot->Add(fModelOVCRa,		fParameters[9]);
+	fModelTot->Add(fModel50mKTh,	fParameters[0]);
+	fModelTot->Add(fModel600mKTh,	fParameters[1]);
+	fModelTot->Add(fModelIVCTh,		fParameters[2]);
+	fModelTot->Add(fModelOVCTh,		fParameters[3]);
 
-	fModelTot->Add(fModelFrameK,	fParameters[10]);
+	fModelTot->Add(fModelFrameRa,	fParameters[4]);
+	fModelTot->Add(fModel50mKRa,	fParameters[5]);
+	fModelTot->Add(fModel600mKRa,	fParameters[6]);
+	fModelTot->Add(fModelIVCRa,		fParameters[7]);
+	fModelTot->Add(fModelOVCRa,		fParameters[8]);
+
+	fModelTot->Add(fModelFrameK,	fParameters[9]);
+	fModelTot->Add(fModelFrameCo, 	fParameters[10]);
 
 
 	// Smearing -> Energy resolution depends on energy of event
@@ -278,7 +330,7 @@ double TBackgroundModel::GetChiSquare()
 	double data_i, err_i, model_i;	
 
 	// Start from bin 60 (5 keV bins -> 300 keV)
-	for(int i = 60; i<fModelTot->GetNbinsX()-1; i++)
+	for(int i = 2550/dBinSize; i < fModelTot->GetNbinsX(); i++)
 	{
 		data_i = fDataHistoM1->GetBinContent(i);
 
@@ -307,22 +359,32 @@ double TBackgroundModel::GetChiSquare()
 }
 
 
+void TBackgroundModel::NormalizePDF(TH1D *h1)
+{
+	double dIntegral;
+
+	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
+	dIntegral = h1->Integral(1, dNBins);
+
+	h1->Scale(1/dIntegral);
+}
+
+
 TGraph *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 {
 
 	// Clone histograms for rebinning
-	TH1D *hCloneBkg 	= (TH1D*)h1->Clone("hCloneBkg");
-	TH1D *hCloneMC		= (TH1D*)h2->Clone("hCloneMC");
-	TGraph*g1			= new TGraph();
+	TH1D 	*hCloneBkg 		= (TH1D*)h1->Clone("hCloneBkg");
+	TH1D 	*hCloneMC		= (TH1D*)h2->Clone("hCloneMC");
+	TGraph	*g1				= new TGraph();
 	// hResidualDist = new TH1D("hResidualDist","Residual Distribution", 39, -8, 11);
 
-	int dBins = hCloneMC->GetNbinsX();
 
 	// Variables used in Residual calculations
 	double dResidualX, dResidualY, dResidualXErr = 0, dResidualYErr;
 
 	// Residual plot and distribution
-	for (int j = 60; j<dBins; j++)
+	for (int j = 300/dBinSize; j < hCloneMC->GetNbinsX(); j++)
 	{
 		dResidualX 		= hCloneBkg->GetBinCenter(j);
 		dResidualY 		= (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))/
@@ -346,6 +408,7 @@ void TBackgroundModel::SetParameters(int index, double value)
 }
 
 
+
 bool TBackgroundModel::DoTheFit()
 {
 	gStyle->SetOptStat(0);
@@ -360,29 +423,42 @@ bool TBackgroundModel::DoTheFit()
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
 
-   minuit.SetMaxIterations(10000);	
+   minuit.SetMaxIterations(10000);
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
    // How to set ranges for various parameters? 0 to ?
-   minuit.DefineParameter(0, "Frame Th", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(1, "50 mK Th", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(2, "600 mK Th", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(3, "IVC Th", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(4, "OVC Th", 0.004, 1, 0., 1.0);
+   // minuit.DefineParameter(0, "Frame Th", 	0., 1., 0., 1.0);
+   minuit.DefineParameter(0, "50 mK Th", 	0.5, 1., 0., 1.0);
+   minuit.DefineParameter(1, "600 mK Th",	0., 1., 0., 1.0);
+   minuit.DefineParameter(2, "IVC Th", 		0., 1., 0., 1.0);
+   minuit.DefineParameter(3, "OVC Th", 		0., 1., 0., 1.0);
 
-   minuit.DefineParameter(5, "Frame Ra", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(6, "50 mK Ra", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(7, "600 mK Ra", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(8, "IVC Ra", 0.004, 1, 0., 1.0);
-   minuit.DefineParameter(9, "OVC Ra", 0.004, 1, 0., 1.0);
+   minuit.DefineParameter(4, "Frame Ra", 	0., 1., 0., 1.0);
+   minuit.DefineParameter(5, "50 mK Ra", 	0., 1., 0., 1.0);
+   minuit.DefineParameter(6, "600 mK Ra", 	0., 1., 0., 1.0);
+   minuit.DefineParameter(7, "IVC Ra", 		0., 1., 0., 1.0);
+   minuit.DefineParameter(8, "OVC Ra", 		0., 1., 0., 1.0);
 
-   minuit.DefineParameter(10, "Frame K", 0.004, 1, 0., 1.0);
+   minuit.DefineParameter(9, "Frame K", 	0.5, 1., 0., 1.0);
+   minuit.DefineParameter(10, "Frame Co", 	0.5, 1., 0., 1.0);
    
+   // Fix parameters for testing
+   // minuit.FixParameter(0);
+   minuit.FixParameter(1);
+   minuit.FixParameter(2);
+   minuit.FixParameter(3);
+
+   minuit.FixParameter(5);
+   minuit.FixParameter(6);
+   minuit.FixParameter(7);
+   minuit.FixParameter(8);
+
+
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
    
-   int status=minuit.Migrad(); // this actually does the minimisation
+   int status = minuit.Migrad(); // this actually does the minimisation
    
 
    //If you want to access the fitted parameters, supposing your class has a container member called fParValues and fParErrors
@@ -391,39 +467,47 @@ bool TBackgroundModel::DoTheFit()
      minuit.GetParameter(i,fParValues[i],fParErrors[i]);
    }
 */  
-	fModelTotTh->Add(fModelFrameTh,		fParameters[0]);
-	fModelTotTh->Add(fModel50mKTh,		fParameters[1]);
-	fModelTotTh->Add(fModel600mKTh,		fParameters[2]);
-	fModelTotTh->Add(fModelIVCTh,		fParameters[3]);
-	fModelTotTh->Add(fModelOVCTh,		fParameters[4]);
+	fModelTotTh->Add(fModelFrameTh,		1 - fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
+										+ fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]);
+	fModelTotTh->Add(fModel50mKTh,		fParameters[0]);
+	fModelTotTh->Add(fModel600mKTh,		fParameters[1]);
+	fModelTotTh->Add(fModelIVCTh,		fParameters[2]);
+	fModelTotTh->Add(fModelOVCTh,		fParameters[3]);
 
-	fModelTotRa->Add(fModelFrameRa,		fParameters[5]);
-	fModelTotRa->Add(fModel50mKRa,		fParameters[6]);
-	fModelTotRa->Add(fModel600mKRa,		fParameters[7]);
-	fModelTotRa->Add(fModelIVCRa,		fParameters[8]);
-	fModelTotRa->Add(fModelOVCRa,		fParameters[9]);
+	fModelTotRa->Add(fModelFrameRa,		fParameters[4]);
+	fModelTotRa->Add(fModel50mKRa,		fParameters[5]);
+	fModelTotRa->Add(fModel600mKRa,		fParameters[6]);
+	fModelTotRa->Add(fModelIVCRa,		fParameters[7]);
+	fModelTotRa->Add(fModelOVCRa,		fParameters[8]);
 
-	fModelTotK->Add(fModelFrameK,		fParameters[10]);
+	fModelTotK->Add(fModelFrameK,		fParameters[9]);
+	fModelTotCo->Add(fModelFrameCo,		fParameters[10]);
+
 
     TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
 
    	fDataHistoM1->SetLineColor(1);
+   	fDataHistoM1->SetLineWidth(2);
 	fDataHistoM1->Draw();
+
 	double 	dummy;
-	minuit.GetParameter(0,fParameters[0],dummy);
-	minuit.GetParameter(1,fParameters[1],dummy);
-	minuit.GetParameter(2,fParameters[2],dummy);
-	minuit.GetParameter(3,fParameters[3],dummy);
-	minuit.GetParameter(4,fParameters[4],dummy);
-	minuit.GetParameter(5,fParameters[5],dummy);
-	minuit.GetParameter(6,fParameters[6],dummy);
-	minuit.GetParameter(7,fParameters[7],dummy);
-	minuit.GetParameter(8,fParameters[8],dummy);
-	minuit.GetParameter(9,fParameters[9],dummy);
-	minuit.GetParameter(10,fParameters[10],dummy);	
+
+	minuit.GetParameter(0,	fParameters[0],		dummy);
+	minuit.GetParameter(1,	fParameters[1],		dummy);
+	minuit.GetParameter(2,	fParameters[2],		dummy);
+	minuit.GetParameter(3,	fParameters[3],		dummy);
+	minuit.GetParameter(4,	fParameters[4],		dummy);
+	minuit.GetParameter(5,	fParameters[5],		dummy);
+	minuit.GetParameter(6,	fParameters[6],		dummy);
+	minuit.GetParameter(7,	fParameters[7],		dummy);
+	minuit.GetParameter(8,	fParameters[8],		dummy);
+	minuit.GetParameter(9,	fParameters[9],		dummy);
+	minuit.GetParameter(10,	fParameters[10],	dummy);	
+	// minuit.GetParameter(11,	fParameters[11],	dummy);
+
 	UpdateModel();
 	
-	cout<<"At the end ChiSq = "<<GetChiSquare()<<endl;
+	cout << "At the end ChiSq = " << GetChiSquare()<<endl;
 	
 	fModelTot->SetLineColor(2);
 	fModelTot->Draw("SAME");
@@ -434,11 +518,13 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotRa->SetLineStyle(2);
 	fModelTotK->SetLineColor(6);
 	fModelTotK->SetLineStyle(2);
+	fModelTotCo->SetLineColor(7);
+	fModelTotCo->SetLineStyle(2);
 
 	fModelTotTh->Draw("SAME");
 	fModelTotRa->Draw("SAME");
 	fModelTotK->Draw("SAME");
-
+	fModelTotCo->Draw("SAME");
 
 	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
 	gResidual = CalculateResiduals(fModelTot, fDataHistoM1);
@@ -451,8 +537,8 @@ bool TBackgroundModel::DoTheFit()
 	gResidual->GetXaxis()->SetLabelSize(0.05);
 	gResidual->GetYaxis()->SetLabelSize(0.05);
 	gResidual->GetYaxis()->SetTitleSize(0.04);
-	gResidual->SetMarkerStyle(3);
-	gResidual->SetMarkerSize(3);	
+	gResidual->SetMarkerStyle(4);
+	gResidual->SetMarkerSize(2);	
 	gResidual->GetYaxis()->SetTitle("Residuals (#sigma)");
 
 
