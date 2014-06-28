@@ -51,7 +51,8 @@ TH1D *SmearSpectra()
 
 
 	TChain *outTree = new TChain("outTree");
-	outTree->Add(Form("/Users/brian/macros/Simulations/Calib/Unsmeared/Calib-C0-M%d-T%d-r3.2537-c0.10000-Test.root", dMult, dThres));
+	// outTree->Add(Form("/Users/brian/macros/Simulations/Calib/Unsmeared/Calib-C0-M%d-T%d-r3.2537-c0.10000-Test.root", dMult, dThres));
+	outTree->Add(Form("/Users/brian/macros/Simulations/Calib/Jon/Calib-M%d-T%d-r3.2537.root", dMult, dThres));
 	outTree->Project("hMC","Ener1");
 
 
@@ -300,8 +301,11 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 				// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib2/Right-207cm-C%d-M%d-T%d-r%.4f-c%.5f.root", 
 										// *angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
 
-				outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Calib-C%d-M%d-T%d-r%.4f-c%.5f.root",
-										*angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
+				// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Calib-C%d-M%d-T%d-r%.4f-c%.5f.root",
+										// *angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
+
+				outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Jon/Calib-M%d-T50.root",
+										dMult));
 
 				hMC = new TH1D(Form("hC%d",*angle_itr), Form("MC Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
 				outTreeM1->Project(Form("hC%d",*angle_itr), "Ener1", MC_cut);
@@ -313,12 +317,12 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 				// Normalization calculation
 				dMC = outTreeM1->GetEntries(Form("Ener1 > %f && Ener1 < %f", dCutMin, dCutMax)); // 2600 to 2630 keV
 				dMC2 = outTreeM1->GetEntries(Form("Ener1 > %f && Ener1 < %f", dCutMin2, dCutMax2)); // 1000 to 2000 keV
-				// Normalization = dCal/dMC; // 2600 to 2630 keV
+				Normalization = dCal/dMC; // 2600 to 2630 keV
 				// Normalization2 = dCal2/dMC2; // 1000 to 2000 keV
 
 				// Normalization = 0.314588;
 				// Normalization = 0.294221; // for T50 using reduced calib
-				Normalization = 0.313728; // for T100
+				// Normalization = 0.313728; // for T100
 				// Normalization = 0.35293;
 
 				// Old normalization calculations

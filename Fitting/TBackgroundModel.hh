@@ -14,25 +14,27 @@ public:
 	TBackgroundModel();
 	virtual ~TBackgroundModel();
 
-	void Initialize();
+	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
   
 	double GetChiSquare();
 
-	void SetParameters(int index, double value);
-
 	bool DoTheFit();
 
-	TChain *LoadMC(std::string dLocation, std::string dSource, int dMult);
+	void DrawMC();
 
-	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
-
-	void NormalizePDF(TH1D *h1);
+	void Initialize();
 
 	void LoadData();
 
-	void ReadMC();
+	TChain *LoadMC(std::string dLocation, std::string dSource, int dMult);
+
+	void NormalizePDF(TH1D *h1);
 
 	void PrintParameters();
+
+	void ReadMC();
+
+	void SetParameters(int index, double value);
 
 	void UpdateModel();
 
@@ -48,6 +50,8 @@ private:
 	TChain			*qtree;
 	TCut 			base_cut;
 	TCut			ener_cut;
+
+	double			dDataIntegral;
 
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
@@ -98,7 +102,7 @@ private:
 	TRandom3		*fRandomGenerator;	
 	
 	// Parameters
-	double			fParameters[11]; 
+	double			fParameters[12]; 
 
 
 
