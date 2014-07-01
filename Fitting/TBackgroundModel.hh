@@ -36,6 +36,8 @@ public:
 
 	void SetParameters(int index, double value);
 
+	TH1D *SmearMC(TH1D *hMC, double resolution);
+
 	void UpdateModel();
 
 
@@ -58,20 +60,35 @@ private:
 	TH1D			*fDataHistoM2;
 
 	// Model
+	TChain			*outTreeFrameTh;
+	TChain			*outTreeTShieldTh;	
 	TChain			*outTree50mKTh;
 	TChain			*outTree600mKTh;
 	TChain			*outTreeIVCTh;
 	TChain			*outTreeOVCTh;
-	TChain			*outTreeFrameTh;
 
+	TChain			*outTreeFrameRa;
+	TChain			*outTreeTShieldRa;
 	TChain			*outTree50mKRa;
 	TChain			*outTree600mKRa;
 	TChain			*outTreeIVCRa;
 	TChain			*outTreeOVCRa;
-	TChain			*outTreeFrameRa;
 
 	TChain			*outTreeFrameK;
+	TChain			*outTreeTShieldK;
+	TChain			*outTree50mKK;
+	TChain			*outTree600mKK;
+	TChain			*outTreeIVCK;
+	TChain			*outTreeOVCK;
+
+
 	TChain			*outTreeFrameCo;
+	TChain			*outTreeTShieldCo;
+	TChain			*outTree50mKCo;
+	TChain			*outTree600mKCo;
+	TChain			*outTreeIVCCo;
+	TChain			*outTreeOVCCo;
+
 
 	// Total PDFs
 	TH1D			*fModelTot;
@@ -80,29 +97,44 @@ private:
 	TH1D			*fModelTotK;
 	TH1D			*fModelTotCo;
 
+
+	TH1D			*fModelFrameTh;
+	TH1D			*fModelTShieldTh;
 	TH1D			*fModel50mKTh;
-	TH1D			*fModel600mKTh;
+	TH1D			*fModel600mKTh;	
 	TH1D			*fModelIVCTh;
 	TH1D			*fModelOVCTh;
-	TH1D			*fModelFrameTh;
 
+	TH1D			*fModelFrameRa;
+	TH1D			*fModelTShieldRa;
 	TH1D			*fModel50mKRa;
 	TH1D			*fModel600mKRa;
 	TH1D			*fModelIVCRa;
 	TH1D			*fModelOVCRa;
-	TH1D			*fModelFrameRa;
 
 	TH1D			*fModelFrameK;
+	TH1D			*fModelTShieldK;
+	TH1D			*fModel50mKK;
+	TH1D			*fModel600mKK;
+	TH1D			*fModelIVCK;
+	TH1D			*fModelOVCK;
+
+
 	TH1D			*fModelFrameCo;
+	TH1D			*fModelTShieldCo;
+	TH1D			*fModel50mKCo;
+	TH1D			*fModel600mKCo;
+	TH1D			*fModelIVCCo;
+	TH1D			*fModelOVCCo;
 
 	TGraph			*gResidual;
-	// TH1D			*hResidualDist;
+	TH1D			*hResidualDist;
 
 	// Smearing
 	TRandom3		*fRandomGenerator;	
 	
 	// Parameters
-	double			fParameters[12]; 
+	double			fParameters[24]; 
 
 
 
