@@ -1,9 +1,13 @@
 #include "TMinuit.h"
 #include "TBackgroundModel.hh"
 #include "TRandom3.h"
+#include "TPaveText.h"
 #include <cmath>
 #include <iostream>
 #include <string>
+
+// Bookmarks: f2 = DoTheFit, GetChiSquare, Initialize
+
 
 using namespace std;
 
@@ -29,6 +33,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(5,	x[5]);   
 	Obj->SetParameters(6,	x[6]);  
 	Obj->SetParameters(7,	x[7]);
+/*
 	Obj->SetParameters(8,	x[8]);
 	Obj->SetParameters(9,	x[9]);
 	Obj->SetParameters(10,	x[10]);
@@ -45,7 +50,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(21,	x[21]);
 	Obj->SetParameters(22,	x[22]);
 	Obj->SetParameters(23,	x[23]);
-
+*/
 	Obj->UpdateModel();
 
 	//implement a method in your class that calculates the quantity you want to minimise, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
@@ -64,6 +69,7 @@ TBackgroundModel::~TBackgroundModel()
 	delete	fDataHistoTot;
 	delete	fDataHistoM1;
 	delete	fDataHistoM2;
+	delete	fToyData;
 
 	delete 	fModelFrameTh;
 	delete	fModelTShieldTh;
@@ -143,67 +149,83 @@ bool TBackgroundModel::DoTheFit()
 //   minuit.Command("SET MINImize 1000 0.001");
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
-
-   minuit.SetMaxIterations(10000);
+   minuit.SetMaxIterations(50000);
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
    // Range is from 0 to integral of the data
    // Around 60000 events in background spectrum
+
+
+   ////////////////////////////////////////////////
+   // Using less parameters
+   ////////////////////////////////////////////////
+   minuit.DefineParameter(0, "Close Th", 	2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(2, "Close Ra", 	2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",		2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(4, "Close K", 	2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(5, "Far K", 		2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co", 	2000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(7, "Far Co",	 	2000., 100.0, 0., dDataIntegral);  
+
+
+
+	//////////////////////////////////////////////
+	// All parameters
+   ///////////////////////////////////////////////
+/*
    minuit.DefineParameter(0, "Frame Th", 	1000., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(1, "TShield Th", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(2, "50 mK Th", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(3, "600 mK Th",	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "IVC Th", 		0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "OVC Th", 		0., 100.0, 0., dDataIntegral);
-
-   minuit.DefineParameter(6, "Frame Ra", 	1000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Frame Ra", 	500., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "TShield Ra", 	0., 100.0, 0., dDataIntegral);   
    minuit.DefineParameter(8, "50 mK Ra", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(9, "600 mK Ra", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(10, "IVC Ra", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(11, "OVC Ra", 	0., 100.0, 0., dDataIntegral);
-
-   minuit.DefineParameter(12, "Frame K", 	1000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(12, "Frame K", 	500., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(13, "TShield K", 	0., 100.0, 0., dDataIntegral);   
    minuit.DefineParameter(14, "50 mK K", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(15, "600 mK K", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(16, "IVC K", 		0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(17, "OVC K", 		0., 100.0, 0., dDataIntegral);   
-
-   minuit.DefineParameter(18, "Frame Co", 	100., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(18, "Frame Co", 	500., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(19, "TShield Co", 0., 100.0, 0., dDataIntegral);   
    minuit.DefineParameter(20, "50 mK Co", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(21, "600 mK Co", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(22, "IVC Co", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(23, "OVC Co", 	0., 100.0, 0., dDataIntegral);   
-
+*/
 
    // Fix parameters for testing
    // minuit.FixParameter(0);
-   minuit.FixParameter(1);
-   minuit.FixParameter(2);
-   minuit.FixParameter(3);
-   minuit.FixParameter(4);
-   minuit.FixParameter(5);
+   // minuit.FixParameter(1);
+   // minuit.FixParameter(2);
+   // minuit.FixParameter(3);
+   // minuit.FixParameter(4);
+   // minuit.FixParameter(5);
    // minuit.FixParameter(6);
-   minuit.FixParameter(7);
-   minuit.FixParameter(8);
-   minuit.FixParameter(9);
-   minuit.FixParameter(10);
-   minuit.FixParameter(11);
+   // minuit.FixParameter(7);
+   // minuit.FixParameter(8);
+   // minuit.FixParameter(9);
+   // minuit.FixParameter(10);
+   // minuit.FixParameter(11);
    // minuit.FixParameter(12);
-   minuit.FixParameter(13);
-   minuit.FixParameter(14);
-   minuit.FixParameter(15);
-   minuit.FixParameter(16);
-   minuit.FixParameter(17);
+   // minuit.FixParameter(13);
+   // minuit.FixParameter(14);
+   // minuit.FixParameter(15);
+   // minuit.FixParameter(16);
+   // minuit.FixParameter(17);
    // minuit.FixParameter(18);
-   minuit.FixParameter(19);
-   minuit.FixParameter(20);
-   minuit.FixParameter(21);
-   minuit.FixParameter(22);
-   minuit.FixParameter(23);
+   // minuit.FixParameter(19);
+   // minuit.FixParameter(20);
+   // minuit.FixParameter(21);
+   // minuit.FixParameter(22);
+   // minuit.FixParameter(23);
 
 
    //Tell minuit what external function to use 
@@ -217,7 +239,46 @@ bool TBackgroundModel::DoTheFit()
    for(Int_t i=0;i<n;i++){
      minuit.GetParameter(i,fParValues[i],fParErrors[i]);
    }
-*/  
+*/
+
+
+   ///////////////////////////////////////////
+   //// Few Parameters
+   ///////////////////////////////////////////
+
+	fModelTotTh->Add(fModelFrameTh,		fParameters[0]);
+	fModelTotTh->Add(fModelTShieldTh,	fParameters[0]);
+	fModelTotTh->Add(fModel50mKTh,		fParameters[0]);
+	fModelTotTh->Add(fModel600mKTh,		fParameters[0]);
+	fModelTotTh->Add(fModelIVCTh,		fParameters[1]);
+	fModelTotTh->Add(fModelOVCTh,		fParameters[1]);
+
+	fModelTotRa->Add(fModelFrameRa,		fParameters[2]);
+	fModelTotRa->Add(fModelTShieldRa,	fParameters[2]);
+	fModelTotRa->Add(fModel50mKRa,		fParameters[2]);
+	fModelTotRa->Add(fModel600mKRa,		fParameters[2]);
+	fModelTotRa->Add(fModelIVCRa,		fParameters[3]);
+	fModelTotRa->Add(fModelOVCRa,		fParameters[3]);
+
+	fModelTotK->Add(fModelFrameK,		fParameters[4]);
+	fModelTotK->Add(fModelTShieldK,		fParameters[4]);
+	fModelTotK->Add(fModel50mKK,		fParameters[4]);
+	fModelTotK->Add(fModel600mKK,		fParameters[4]);
+	fModelTotK->Add(fModelIVCK,			fParameters[5]);
+	fModelTotK->Add(fModelOVCK,			fParameters[5]);
+
+	fModelTotCo->Add(fModelFrameCo,		fParameters[6]);
+	fModelTotCo->Add(fModelTShieldCo,	fParameters[6]);
+	fModelTotCo->Add(fModel50mKCo,		fParameters[6]);
+	fModelTotCo->Add(fModel600mKCo,		fParameters[6]);
+	fModelTotCo->Add(fModelIVCCo,		fParameters[7]);
+	fModelTotCo->Add(fModelOVCCo,		fParameters[7]);
+
+
+	///////////////////////////////////////////
+	//// All Parameters
+	///////////////////////////////////////////
+/*
 	fModelTotTh->Add(fModelFrameTh,		fParameters[0]);
 	fModelTotTh->Add(fModelTShieldTh,	fParameters[1]);
 	fModelTotTh->Add(fModel50mKTh,		fParameters[2]);
@@ -245,7 +306,7 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->Add(fModel600mKCo,		fParameters[21]);
 	fModelTotCo->Add(fModelIVCCo,		fParameters[22]);
 	fModelTotCo->Add(fModelOVCCo,		fParameters[23]);
-
+*/
 	// fModelTotCo->Add(fModelFrameCo,		1 - (fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
 										// + fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]));
 
@@ -253,11 +314,23 @@ bool TBackgroundModel::DoTheFit()
     TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
     c1->SetLogy();
 
+
+    ///// Draw Data
    	fDataHistoM1->SetLineColor(1);
    	fDataHistoM1->SetLineWidth(2);
    	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    	fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
 	fDataHistoM1->Draw();
+
+
+/*
+	////// Draw Toy Data
+   	fToyData->SetLineColor(1);
+   	fToyData->SetLineWidth(2);
+   	fToyData->GetXaxis()->SetTitle("Energy (keV)");
+   	fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
+	fToyData->Draw();
+*/
 
 	double 	dummy;
 
@@ -269,6 +342,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(5,	fParameters[5],		dummy);
 	minuit.GetParameter(6,	fParameters[6],		dummy);
 	minuit.GetParameter(7,	fParameters[7],		dummy);
+/*	
 	minuit.GetParameter(8,	fParameters[8],		dummy);
 	minuit.GetParameter(9,	fParameters[9],		dummy);
 	minuit.GetParameter(10,	fParameters[10],	dummy);	
@@ -285,7 +359,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(21,	fParameters[21],	dummy);
 	minuit.GetParameter(22,	fParameters[22],	dummy);	
 	minuit.GetParameter(23,	fParameters[23],	dummy);
-
+*/
 
 	UpdateModel();
 	
@@ -318,6 +392,26 @@ bool TBackgroundModel::DoTheFit()
 
  	legfit->Draw();
 
+
+ 	TCanvas *ctable = new TCanvas("ctable", "ctable", 800, 1200);
+ 	TPaveText *pt = new TPaveText(.0,.0,1.,1.);
+ 	// pt->AddText("Fit Parameters");
+ 	// pt->AddBox(.0, .0, 1.0, .6);
+ 	// pt->AddText("Blah");
+ 	// pt->AddText("Blah");
+ 	// pt->AddText("Blah");
+ 	// pt->AddText("Blah");
+
+ 	// pt->AddLine(.0,.65,1.,.65);
+
+ 	pt->AddText(Form("Data Integral (Tl-208 peak): %.2f", fDataHistoM1->Integral(2600/dBinSize, 2700/dBinSize)));
+ 	// pt->AddText(Form("Toy Data Integral (Tl-208 peak): %.2f", fToyData->Integral(2600/dBinSize, 2700/dBinSize))); 	
+ 	pt->AddText(Form("Model Integral (Tl-208 peak): %.2f", fModelTot->Integral(2600/dBinSize, 2700/dBinSize)));
+ 	pt->AddText(Form("Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fDataHistoM1->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+ 	// pt->AddText(Form("Toy Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fToyData->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+ 	pt->AddText(Form("Model Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fModelTot->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+
+ 	pt->Draw();
 /*
 	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
 	gResidual = CalculateResiduals(fModelTot, fDataHistoM1);
@@ -458,6 +552,46 @@ bool TBackgroundModel::DoTheFit()
 
  }
 
+
+// Generates toy data using MC histogram
+void TBackgroundModel::GenerateToyData()
+{
+	// Create some RNG for weights?
+	// Currently just put in by hand
+
+	fToyData->Add(fModelFrameTh,	2000);
+	// fToyData->Add(fModelTShieldTh,	);	
+	// fToyData->Add(fModel50mKTh,		);
+	// fToyData->Add(fModel600mKTh,	);
+	// fToyData->Add(fModelIVCTh,		);
+	// fToyData->Add(fModelOVCTh,		);
+
+	fToyData->Add(fModelFrameRa,	550);
+	// fToyData->Add(fModelTShieldTh,	);	
+	// fToyData->Add(fModel50mKRa,		);
+	// fToyData->Add(fModel600mKRa,	);
+	// fToyData->Add(fModelIVCRa,		);
+	// fToyData->Add(fModelOVCRa,		);
+
+	fToyData->Add(fModelFrameK,		600);
+	// fToyData->Add(fModelTShieldK,	);
+	// fToyData->Add(fModel50mKK,		);
+	// fToyData->Add(fModel600mKK,		);
+	// fToyData->Add(fModelIVCK,		);
+	// fToyData->Add(fModelOVCK,		);
+
+
+	fToyData->Add(fModelFrameCo,	700);
+	// fToyData->Add(fModelTShieldCo,	);
+	// fToyData->Add(fModel50mKCo,		);
+	// fToyData->Add(fModel600mKCo,	);
+	// fToyData->Add(fModelIVCCo,		);
+	// fToyData->Add(fModelOVCCo,		);
+
+
+
+}
+
 // ChiSquare
 double TBackgroundModel::GetChiSquare()
 {
@@ -467,32 +601,31 @@ double TBackgroundModel::GetChiSquare()
 
 	// Start from bin 60 (5 keV bins -> 300 keV)
 	// for(int i = 300/dBinSize; i < fModelTot->GetNbinsX(); i++)
-	for(int i = 2000/dBinSize; i < 2650/dBinSize; i++)
+	for(int i = dFitMin/dBinSize; i < dFitMax/dBinSize; i++)
 	{
-		data_i = fDataHistoM1->GetBinContent(i);
+		// data_i = fToyData->GetBinContent(i); // For Toy data
+		data_i = fDataHistoM1->GetBinContent(i); // For real data
 
 		model_i = fModelTot->GetBinContent(i);
 
-//		err_i	=1000.;	
-		//if(data_i>0)
-		//{
-			// Ignoring errors for MC (assuming statistics are very large)
-			// data histogram already normalized (divided by integral)
-			// Want sqrt(N)/Normalization
-			err_i = sqrt(data_i);
-			// err_i = sqrt(data_i)/sqrt(dDataIntegral);
-		//}
 
-		//model_i = fModelHisto->GetBinContent(i);
+		// Log-likelihood Chi-Squared
+		chiSquare += 2 * (model_i - data_i + data_i * TMath::Log(data_i/model_i));
+
+		// Neyman chi-squared
+/*
+		err_i = sqrt(data_i);	// Assuming no bins are 0!
 		if(err_i>0)
 		{
-			chiSquare+=pow(data_i - model_i,2)/pow(err_i,2);
+			chiSquare += pow(data_i - model_i,2)/pow(err_i,2);
 		}
 		else
 		{
 
 			chiSquare+=pow(data_i - model_i,2);	
 		}
+*/
+
 
 	}
 
@@ -502,11 +635,18 @@ double TBackgroundModel::GetChiSquare()
 
 void TBackgroundModel::Initialize()
 {
-	// Bin Size in KeV
 	dDataIntegral = 0;
+
+	// Bin size (keV)
 	dBinSize = 50;
+	// Histogram range
 	dMaxEnergy = 2700.;
 	dMinEnergy = 0.;
+
+	// Fitting range
+	dFitMin = 2000.;
+	dFitMax = 2700.;
+
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
 	// Data
 	qtree = new TChain("qtree");
@@ -522,6 +662,8 @@ void TBackgroundModel::Initialize()
 	fDataHistoTot	 = new TH1D("fDataHistoTot", 	"", dNBins, dMinEnergy, dMaxEnergy);
 	fDataHistoM1	 = new TH1D("fDataHistoM1", 	"", dNBins, dMinEnergy, dMaxEnergy);
 	fDataHistoM2	 = new TH1D("fDataHistoM2", 	"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyData		 = new TH1D("fToyData",			"", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	// Model histograms
 
@@ -569,6 +711,7 @@ void TBackgroundModel::Initialize()
 	fParameters[5] 	= 0.;
 	fParameters[6] 	= 0.;
 	fParameters[7] 	= 0.;
+/*	
 	fParameters[8]	= 0.;
 	fParameters[9] 	= 0.;
 	fParameters[10] = 0.;
@@ -585,6 +728,8 @@ void TBackgroundModel::Initialize()
 	fParameters[21] = 0.;
 	fParameters[22] = 0.;
 	fParameters[23] = 0.;
+*/
+
 	// Loading all data in Initialize, correct or no?
 	LoadData();	
 	ReadMC();
@@ -623,7 +768,6 @@ void TBackgroundModel::LoadData()
 	// Normalizing data (don't!)
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
 	dDataIntegral = fDataHistoM1->Integral(1, dNBins);
-	// fDataHistoM1->Scale(1/dDataIntegral);
 	cout << "Events in background spectrum: " << dDataIntegral << endl;
 	// cout << "Normalized Data" << endl;
 }
@@ -640,12 +784,13 @@ TChain *TBackgroundModel::LoadMC(std::string dLocation, std::string dSource, int
 
 
 // Normalize histogram
-void TBackgroundModel::NormalizePDF(TH1D *h1)
+void TBackgroundModel::NormalizePDF(TH1D *h1, int minE, int maxE)
 {
 	double dIntegral;
 
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-	dIntegral = h1->Integral(1, dNBins);
+	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
+	// cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
 	h1->Scale(1/dIntegral);
 }
@@ -661,6 +806,7 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par5 = "	<< fParameters[5]	<< endl;
 	cout<< "Par6 = "	<< fParameters[6]	<< endl;
 	cout<< "Par7 = "	<< fParameters[7]	<< endl;
+/*	
 	cout<< "Par8 = "	<< fParameters[8]	<< endl;
 	cout<< "Par9 = "	<< fParameters[9]	<< endl;
 	cout<< "Par10 = "	<< fParameters[10]	<< endl;
@@ -677,13 +823,13 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par21 = "	<< fParameters[21]	<< endl;
 	cout<< "Par22 = "	<< fParameters[22]	<< endl;
 	cout<< "Par23 = "	<< fParameters[23] 	<< endl;
-
+*/
 	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
-						+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7]
-						+ fParameters[8] + fParameters[9] + fParameters[10] + fParameters[11]
-						+ fParameters[12] + fParameters[13] + fParameters[14] + fParameters[15]
-						+ fParameters[16] + fParameters[17] + fParameters[18] + fParameters[19]
-						+ fParameters[20] + fParameters[21] + fParameters[22] + fParameters[23];
+					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7];
+					// + fParameters[8] + fParameters[9] + fParameters[10] + fParameters[11]
+					// + fParameters[12] + fParameters[13] + fParameters[14] + fParameters[15]
+					// + fParameters[16] + fParameters[17] + fParameters[18] + fParameters[19]
+					// + fParameters[20] + fParameters[21] + fParameters[22] + fParameters[23];
 
 	// cout << "Par11 (1 - Sum) = " << 1 - dSum << endl;
 	cout << "Sum = " << dSum << endl; 
@@ -756,33 +902,34 @@ void TBackgroundModel::ReadMC()
 	cout << "Loaded MC" << endl;
 
 	// Normalize all MC histograms
-	NormalizePDF(fModelFrameTh);
-	NormalizePDF(fModelTShieldTh);
-	NormalizePDF(fModel50mKTh);
-	NormalizePDF(fModel600mKTh);
-	NormalizePDF(fModelIVCTh);
-	NormalizePDF(fModelOVCTh);
+	NormalizePDF(fModelFrameTh, dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldTh, dFitMin, dFitMax);
+	NormalizePDF(fModel50mKTh, dFitMin, dFitMax);
+	NormalizePDF(fModel600mKTh, dFitMin, dFitMax);
+	NormalizePDF(fModelIVCTh, dFitMin, dFitMax);
+	NormalizePDF(fModelOVCTh, dFitMin, dFitMax);
 
-	NormalizePDF(fModelFrameRa);
-	NormalizePDF(fModelTShieldRa);	
-	NormalizePDF(fModel50mKRa);
-	NormalizePDF(fModel600mKRa);
-	NormalizePDF(fModelIVCRa);
-	NormalizePDF(fModelOVCRa);
+	NormalizePDF(fModelFrameRa, dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldRa, dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKRa, dFitMin, dFitMax);
+	NormalizePDF(fModel600mKRa, dFitMin, dFitMax);
+	NormalizePDF(fModelIVCRa, dFitMin, dFitMax);
+	NormalizePDF(fModelOVCRa, dFitMin, dFitMax);
 
-	NormalizePDF(fModelFrameK);
-	NormalizePDF(fModelTShieldK);	
-	NormalizePDF(fModel50mKK);
-	NormalizePDF(fModel600mKK);
-	NormalizePDF(fModelIVCK);
-	NormalizePDF(fModelOVCK);
+	// Normalizing K-40 for full range since no peaks above 1500 keV
+	NormalizePDF(fModelFrameK, 0, 2700);
+	NormalizePDF(fModelTShieldK, 0, 2700);	
+	NormalizePDF(fModel50mKK, 0, 2700);
+	NormalizePDF(fModel600mKK, 0, 2700);
+	NormalizePDF(fModelIVCK, 0, 2700);
+	NormalizePDF(fModelOVCK, 0, 2700);
 
-	NormalizePDF(fModelFrameCo);
-	NormalizePDF(fModelTShieldCo);	
-	NormalizePDF(fModel50mKCo);
-	NormalizePDF(fModel600mKCo);
-	NormalizePDF(fModelIVCCo);
-	NormalizePDF(fModelOVCCo);
+	NormalizePDF(fModelFrameCo, dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldCo, dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKCo, dFitMin, dFitMax);
+	NormalizePDF(fModel600mKCo, dFitMin, dFitMax);
+	NormalizePDF(fModelIVCCo, dFitMin, dFitMax);
+	NormalizePDF(fModelOVCCo, dFitMin, dFitMax);
 
 
 	cout << "Normalized MC PDFs" << endl;
@@ -847,6 +994,44 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Reset();
 
 	// Create model
+
+
+	////////////////////////////////////////
+	// Few parameters
+	////////////////////////////////////////
+	fModelTot->Add(fModelFrameTh,	fParameters[0]);
+	fModelTot->Add(fModelTShieldTh,	fParameters[0]);	
+	fModelTot->Add(fModel50mKTh,	fParameters[0]);
+	fModelTot->Add(fModel600mKTh,	fParameters[0]);
+	fModelTot->Add(fModelIVCTh,		fParameters[1]);
+	fModelTot->Add(fModelOVCTh,		fParameters[1]);
+
+	fModelTot->Add(fModelFrameRa,	fParameters[2]);
+	fModelTot->Add(fModelTShieldRa,	fParameters[2]);	
+	fModelTot->Add(fModel50mKRa,	fParameters[2]);
+	fModelTot->Add(fModel600mKRa,	fParameters[2]);
+	fModelTot->Add(fModelIVCRa,		fParameters[3]);
+	fModelTot->Add(fModelOVCRa,		fParameters[3]);
+
+	fModelTot->Add(fModelFrameK,	fParameters[4]);
+	fModelTot->Add(fModelTShieldK,	fParameters[4]);
+	fModelTot->Add(fModel50mKK,		fParameters[4]);
+	fModelTot->Add(fModel600mKK,	fParameters[4]);
+	fModelTot->Add(fModelIVCK,		fParameters[5]);
+	fModelTot->Add(fModelOVCK,		fParameters[5]);
+
+
+	fModelTot->Add(fModelFrameCo,	fParameters[6]);
+	fModelTot->Add(fModelTShieldCo,	fParameters[6]);
+	fModelTot->Add(fModel50mKCo,	fParameters[6]);
+	fModelTot->Add(fModel600mKCo,	fParameters[6]);
+	fModelTot->Add(fModelIVCCo,		fParameters[7]);
+	fModelTot->Add(fModelOVCCo,		fParameters[7]);	
+
+	////////////////////////////////////////
+	// All Parameters
+	////////////////////////////////////////
+/*
 	fModelTot->Add(fModelFrameTh,	fParameters[0]);
 	fModelTot->Add(fModelTShieldTh,	fParameters[1]);	
 	fModelTot->Add(fModel50mKTh,	fParameters[2]);
@@ -855,7 +1040,7 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add(fModelOVCTh,		fParameters[5]);
 
 	fModelTot->Add(fModelFrameRa,	fParameters[6]);
-	fModelTot->Add(fModelTShieldTh,	fParameters[7]);	
+	fModelTot->Add(fModelTShieldRa,	fParameters[7]);	
 	fModelTot->Add(fModel50mKRa,	fParameters[8]);
 	fModelTot->Add(fModel600mKRa,	fParameters[9]);
 	fModelTot->Add(fModelIVCRa,		fParameters[10]);
@@ -868,20 +1053,21 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add(fModelIVCK,		fParameters[16]);
 	fModelTot->Add(fModelOVCK,		fParameters[17]);
 
-
 	fModelTot->Add(fModelFrameCo,	fParameters[18]);
 	fModelTot->Add(fModelTShieldCo,	fParameters[19]);
 	fModelTot->Add(fModel50mKCo,	fParameters[20]);
 	fModelTot->Add(fModel600mKCo,	fParameters[21]);
 	fModelTot->Add(fModelIVCCo,		fParameters[22]);
 	fModelTot->Add(fModelOVCCo,		fParameters[23]);	
+*/
+
 
 	// Don't use this
 	// fModelTot->Add(fModelFrameCo, 	1 - (fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
 									// + fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]));
 
 /*
-	// Test
+	// Test gaussian
 	TF1	gaus("mygaus","gaus(0)",-10,10);
 	gaus.SetParameters(1,fParameters[0],fParameters[1]);
 
@@ -894,7 +1080,5 @@ void TBackgroundModel::UpdateModel()
 	
 */	
 
-
-	// cout << "Filled model" << endl;	
 
 }

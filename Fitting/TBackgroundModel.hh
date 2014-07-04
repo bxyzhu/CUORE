@@ -28,7 +28,7 @@ public:
 
 	TChain *LoadMC(std::string dLocation, std::string dSource, int dMult);
 
-	void NormalizePDF(TH1D *h1);
+	void NormalizePDF(TH1D *h1, int minE, int maxE);
 
 	void PrintParameters();
 
@@ -45,6 +45,8 @@ public:
 	int 	dNBins;
 	double	dMinEnergy;
 	double 	dMaxEnergy;
+	double	dFitMin;
+	double	dFitMax;
 
 private:
 
@@ -58,6 +60,7 @@ private:
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
+	TH1D			*fToyData;
 
 	// Model
 	TChain			*outTreeFrameTh;
@@ -134,8 +137,8 @@ private:
 	TRandom3		*fRandomGenerator;	
 	
 	// Parameters
-	double			fParameters[24]; 
-
+	// double			fParameters[24]; 
+	double				fParameters[8];
 
 
 //  ClassDef(TMyFitter,1) // 
