@@ -2,6 +2,7 @@
 #define __TBackgroundModel__
 #include "TObject.h"
 #include "TH1D.h"
+#include "TF1.h"
 #include "TChain.h"
 #include "TCut.h"
 #include "TGraphErrors.h"
@@ -135,7 +136,9 @@ private:
 
 	// Smearing
 	TRandom3		*fRandomGenerator;	
-	
+	TF1				*gaus;
+
+
 	// Parameters
 	// double			fParameters[24]; 
 	double				fParameters[8];

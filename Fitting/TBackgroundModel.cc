@@ -2,6 +2,7 @@
 #include "TBackgroundModel.hh"
 #include "TRandom3.h"
 #include "TPaveText.h"
+#include "TAxis.h"
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -162,12 +163,22 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    minuit.DefineParameter(0, "Close Th", 	2000., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(1, "Far Th",	 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra", 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",		2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(4, "Close K", 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(5, "Far K", 		2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	2000., 100.0, 0., dDataIntegral);  
+   minuit.DefineParameter(2, "Close Ra", 	1000., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",		0., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(5, "Far K", 		0., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co", 	0., 100.0, 0., dDataIntegral);
+   minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., dDataIntegral);  
+
+   // Fix parameters for testing
+   // minuit.FixParameter(0);
+   // minuit.FixParameter(1);
+   // minuit.FixParameter(2);
+   minuit.FixParameter(3);
+   minuit.FixParameter(4);
+   minuit.FixParameter(5);
+   minuit.FixParameter(6);
+   minuit.FixParameter(7);
 
 
 
@@ -459,12 +470,17 @@ bool TBackgroundModel::DoTheFit()
     fModelOVCTh->SetLineColor(7);
 
 
+    // TAxis *ath = fModelFrameTh->GetXaxis();
+    // ath->SetRange(2200, 2700);
+
     fModelFrameTh->Draw();
     fModelTShieldTh->Draw("SAME");
     fModel50mKTh->Draw("SAME");
     fModel600mKTh->Draw("SAME");
     fModelIVCTh->Draw("SAME");
     fModelOVCTh->Draw("SAME");
+    fModelFrameTh->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
+
 
     legth->AddEntry(fModelFrameTh, "Frame" ,"l");
     legth->AddEntry(fModelTShieldTh, "TShield", "l");
@@ -490,6 +506,7 @@ bool TBackgroundModel::DoTheFit()
     fModel600mKRa->Draw("SAME");
     fModelIVCRa->Draw("SAME");
     fModelOVCRa->Draw("SAME");
+    fModelFrameRa->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
 
 
     legra->AddEntry(fModelFrameRa, "Frame" ,"l");
@@ -516,6 +533,8 @@ bool TBackgroundModel::DoTheFit()
     fModel600mKK->Draw("SAME");
     fModelIVCK->Draw("SAME");
     fModelOVCK->Draw("SAME");
+    fModelFrameK->GetXaxis()->SetRange(1000/dBinSize, 1600/dBinSize);
+
 
     legk->AddEntry(fModelFrameK, "Frame" ,"l");
     legk->AddEntry(fModelTShieldK, "TShield", "l");
@@ -541,6 +560,8 @@ bool TBackgroundModel::DoTheFit()
     fModel600mKCo->Draw("SAME");
     fModelIVCCo->Draw("SAME");
     fModelOVCCo->Draw("SAME");
+    fModelFrameCo->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
+
 
     legco->AddEntry(fModelFrameCo, "Frame" ,"l");
     legco->AddEntry(fModelTShieldCo, "TShield", "l");
@@ -588,9 +609,8 @@ void TBackgroundModel::GenerateToyData()
 	// fToyData->Add(fModelIVCCo,		);
 	// fToyData->Add(fModelOVCCo,		);
 
-
-
 }
+
 
 // ChiSquare
 double TBackgroundModel::GetChiSquare()
@@ -610,11 +630,16 @@ double TBackgroundModel::GetChiSquare()
 
 
 		// Log-likelihood Chi-Squared
-		chiSquare += 2 * (model_i - data_i + data_i * TMath::Log(data_i/model_i));
+
+		if(model_i != 0 && data_i != 0)
+		{
+			chiSquare += 2 * (model_i - data_i + data_i * TMath::Log(data_i/model_i));
+		}
+
 
 		// Neyman chi-squared
-/*
-		err_i = sqrt(data_i);	// Assuming no bins are 0!
+/*		
+		err_i = sqrt(data_i);	// Assuming no data bins are 0!
 		if(err_i>0)
 		{
 			chiSquare += pow(data_i - model_i,2)/pow(err_i,2);
@@ -634,17 +659,17 @@ double TBackgroundModel::GetChiSquare()
 
 
 void TBackgroundModel::Initialize()
-{
+{	
 	dDataIntegral = 0;
 
 	// Bin size (keV)
-	dBinSize = 50;
+	dBinSize = 10;
 	// Histogram range
-	dMaxEnergy = 2700.;
+	dMaxEnergy = 3500.;
 	dMinEnergy = 0.;
 
 	// Fitting range
-	dFitMin = 2000.;
+	dFitMin = 0.;
 	dFitMax = 2700.;
 
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
@@ -701,6 +726,10 @@ void TBackgroundModel::Initialize()
 	fModelTotRa		 = new TH1D("fModelTotRa", 		"Total Ra226", 	dNBins, dMinEnergy, dMaxEnergy);
 	fModelTotK		 = new TH1D("fModelTotK", 		"Total K40",	dNBins, dMinEnergy, dMaxEnergy);
 	fModelTotCo		 = new TH1D("fModelTotCo", 		"Total Co60", 	dNBins, dMinEnergy, dMaxEnergy);
+
+
+	// Smearing
+	gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
 
 	// Clear Initial Parameters
 	fParameters[0] 	= 0.;
@@ -792,7 +821,11 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, int minE, int maxE)
 	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
 	// cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
-	h1->Scale(1/dIntegral);
+	// Make sure integral isn't 0 --> Need to double check if this is the right thing to do!
+	if(dIntegral != 0)
+	{
+		h1->Scale(1/dIntegral);
+	}
 }
 
 // Prints parameters, make sure to update
@@ -917,12 +950,12 @@ void TBackgroundModel::ReadMC()
 	NormalizePDF(fModelOVCRa, dFitMin, dFitMax);
 
 	// Normalizing K-40 for full range since no peaks above 1500 keV
-	NormalizePDF(fModelFrameK, 0, 2700);
-	NormalizePDF(fModelTShieldK, 0, 2700);	
-	NormalizePDF(fModel50mKK, 0, 2700);
-	NormalizePDF(fModel600mKK, 0, 2700);
-	NormalizePDF(fModelIVCK, 0, 2700);
-	NormalizePDF(fModelOVCK, 0, 2700);
+	NormalizePDF(fModelFrameK, dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldK, dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKK, dFitMin, dFitMax);
+	NormalizePDF(fModel600mKK, dFitMin, dFitMax);
+	NormalizePDF(fModelIVCK, dFitMin, dFitMax);
+	NormalizePDF(fModelOVCK, dFitMin, dFitMax);
 
 	NormalizePDF(fModelFrameCo, dFitMin, dFitMax);
 	NormalizePDF(fModelTShieldCo, dFitMin, dFitMax);	
@@ -951,8 +984,6 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, double resolution)
 
 	TH1D *hSmeared = new TH1D("hSmeared", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TF1 *gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
-
 	double dArea;
 	double dSmearedValue;
 
@@ -961,20 +992,19 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, double resolution)
 		for(int j = 0; j<bin; j++)
 		{
 			// Normalization of gaussian = (bin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-			// dArea = binsize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*fFitRes->Eval(hMC->GetBinCenter(j)));
-			dArea = binsize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
+			// dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*fFitRes->Eval(hMC->GetBinCenter(j)));
+			dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
 
-			// Set parameters of gaussian 
+			// Set parameters of gaussian ... resolution floating in fit?
 			// gaus->SetParameters(dArea, hMC->GetBinCenter(j), fFitRes->Eval(hMC->GetBinCenter(j)));
 			gaus->SetParameters(dArea, hMC->GetBinCenter(j), resolution);
 
-			// Smeared contribution from gaussian at bin j for bin i 
+			// Smeared contribution from gaussian centered at bin j for bin i 
 			dSmearedValue = gaus->Eval(hSmeared->GetBinCenter(i));
 
+			// Fill bin i with contribution from gaussian centered at bin j
 			hSmeared->Fill(hSmeared->GetBinCenter(i), dSmearedValue);
 		}
-
-
 	}
 	
 	return hSmeared;
