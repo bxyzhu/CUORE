@@ -27,7 +27,7 @@ public:
 
 	void LoadData();
 
-	TChain *LoadMC(std::string dLocation, std::string dSource, int dMult);
+	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, int dMult);
 
 	void NormalizePDF(TH1D *h1, int minE, int maxE);
 
@@ -61,7 +61,19 @@ private:
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
+
+	// Toy data
 	TH1D			*fToyData;
+	TH1D			*fToyDataTh;
+	TH1D			*fToyDataRa;
+	TH1D			*fToyDataCo;
+	TH1D			*fToyDataK;
+
+	TChain			*outTreeToyTh;
+	TChain			*outTreeToyRa;
+	TChain			*outTreeToyCo;
+	TChain			*outTreeToyK;
+
 
 	// Model
 	TChain			*outTreeFrameTh;
@@ -92,7 +104,6 @@ private:
 	TChain			*outTree600mKCo;
 	TChain			*outTreeIVCCo;
 	TChain			*outTreeOVCCo;
-
 
 	// Total PDFs
 	TH1D			*fModelTot;
@@ -138,10 +149,12 @@ private:
 	TRandom3		*fRandomGenerator;	
 	TF1				*gaus;
 
+	std::string		dDataDir;
+	bool			bToyFit;
 
 	// Parameters
 	// double			fParameters[24]; 
-	double				fParameters[8];
+	double				fParameters[9];
 
 
 //  ClassDef(TMyFitter,1) // 

@@ -34,8 +34,9 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(5,	x[5]);   
 	Obj->SetParameters(6,	x[6]);  
 	Obj->SetParameters(7,	x[7]);
-/*
 	Obj->SetParameters(8,	x[8]);
+
+/*
 	Obj->SetParameters(9,	x[9]);
 	Obj->SetParameters(10,	x[10]);
 	Obj->SetParameters(11,	x[11]);
@@ -143,7 +144,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(2); //initialise minuit, n is the number of parameters
+   TMinuit minuit(2); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -169,6 +170,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(6, "Close Co", 	0., 100.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., dDataIntegral);  
+   minuit.DefineParameter(8, "#sigma",	 	4., 1.0, 0., 10);  
 
    // Fix parameters for testing
    // minuit.FixParameter(0);
@@ -326,23 +328,26 @@ bool TBackgroundModel::DoTheFit()
     c1->SetLogy();
 
 
-    ///// Draw Data
-   	fDataHistoM1->SetLineColor(1);
-   	fDataHistoM1->SetLineWidth(2);
-   	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-   	fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
-	fDataHistoM1->Draw();
+    if(bToyFit)
+    {
+		////// Draw Toy Data
+   		fToyData->SetLineColor(1);
+   		fToyData->SetLineWidth(2);
+   		fToyData->GetXaxis()->SetTitle("Energy (keV)");
+   		fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
+		fToyData->Draw();
+	}
+	else
+	{
+   		///// Draw Data
+  	 	fDataHistoM1->SetLineColor(1);
+  	 	fDataHistoM1->SetLineWidth(2);
+  	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+   		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
+		fDataHistoM1->Draw();
+	}
 
-
-/*
-	////// Draw Toy Data
-   	fToyData->SetLineColor(1);
-   	fToyData->SetLineWidth(2);
-   	fToyData->GetXaxis()->SetTitle("Energy (keV)");
-   	fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
-	fToyData->Draw();
-*/
-
+	// Dummy variable for error of parameter to throw away
 	double 	dummy;
 
 	minuit.GetParameter(0,	fParameters[0],		dummy);
@@ -353,8 +358,8 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(5,	fParameters[5],		dummy);
 	minuit.GetParameter(6,	fParameters[6],		dummy);
 	minuit.GetParameter(7,	fParameters[7],		dummy);
-/*	
 	minuit.GetParameter(8,	fParameters[8],		dummy);
+/*	
 	minuit.GetParameter(9,	fParameters[9],		dummy);
 	minuit.GetParameter(10,	fParameters[10],	dummy);	
 	minuit.GetParameter(11,	fParameters[11],	dummy);
@@ -405,7 +410,7 @@ bool TBackgroundModel::DoTheFit()
 
 
  	TCanvas *ctable = new TCanvas("ctable", "ctable", 800, 1200);
- 	TPaveText *pt = new TPaveText(.0,.0,1.,1.);
+ 	// TPaveText *pt = new TPaveText(.0,.0,1.,1.);
  	// pt->AddText("Fit Parameters");
  	// pt->AddBox(.0, .0, 1.0, .6);
  	// pt->AddText("Blah");
@@ -415,15 +420,24 @@ bool TBackgroundModel::DoTheFit()
 
  	// pt->AddLine(.0,.65,1.,.65);
 
- 	pt->AddText(Form("Data Integral (Tl-208 peak): %.2f", fDataHistoM1->Integral(2600/dBinSize, 2700/dBinSize)));
- 	// pt->AddText(Form("Toy Data Integral (Tl-208 peak): %.2f", fToyData->Integral(2600/dBinSize, 2700/dBinSize))); 	
- 	pt->AddText(Form("Model Integral (Tl-208 peak): %.2f", fModelTot->Integral(2600/dBinSize, 2700/dBinSize)));
- 	pt->AddText(Form("Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fDataHistoM1->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
- 	// pt->AddText(Form("Toy Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fToyData->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
- 	pt->AddText(Form("Model Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fModelTot->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+ 	if(bToyFit)
+ 	{
+ 		pt->AddText(Form("Toy Data Integral (Tl-208 peak): %.2f", fToyData->Integral(2600/dBinSize, 2700/dBinSize))); 	
+ 		pt->AddText(Form("Toy Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fToyData->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+ 	}
+ 	else
+ 	{
+ 		pt->AddText(Form("Data Integral (Tl-208 peak): %.2f", fDataHistoM1->Integral(2600/dBinSize, 2700/dBinSize)));
+	 	pt->AddText(Form("Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fDataHistoM1->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
+ 	}
 
+ 	pt->AddText(Form("Model Integral (Tl-208 peak): %.2f", fModelTot->Integral(2600/dBinSize, 2700/dBinSize)));
+ 	pt->AddText(Form("Model Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fModelTot->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
  	pt->Draw();
+
+
 /*
+	// Residuals
 	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
 	gResidual = CalculateResiduals(fModelTot, fDataHistoM1);
 
@@ -469,9 +483,6 @@ bool TBackgroundModel::DoTheFit()
     fModelIVCTh->SetLineColor(6);
     fModelOVCTh->SetLineColor(7);
 
-
-    // TAxis *ath = fModelFrameTh->GetXaxis();
-    // ath->SetRange(2200, 2700);
 
     fModelFrameTh->Draw();
     fModelTShieldTh->Draw("SAME");
@@ -577,54 +588,55 @@ bool TBackgroundModel::DoTheFit()
 // Generates toy data using MC histogram
 void TBackgroundModel::GenerateToyData()
 {
+
+	bToyFit = true;
 	// Create some RNG for weights?
 	// Currently just put in by hand
+	std::string dToyDir = "/Users/brian/macros/Simulations/Bkg/";
 
-	fToyData->Add(fModelFrameTh,	2000);
-	// fToyData->Add(fModelTShieldTh,	);	
-	// fToyData->Add(fModel50mKTh,		);
-	// fToyData->Add(fModel600mKTh,	);
-	// fToyData->Add(fModelIVCTh,		);
-	// fToyData->Add(fModelOVCTh,		);
+	// Load g2tas smeared data:
+    outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
+    outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
+    outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
+    outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
 
-	fToyData->Add(fModelFrameRa,	550);
-	// fToyData->Add(fModelTShieldTh,	);	
-	// fToyData->Add(fModel50mKRa,		);
-	// fToyData->Add(fModel600mKRa,	);
-	// fToyData->Add(fModelIVCRa,		);
-	// fToyData->Add(fModelOVCRa,		);
+	outTreeToyTh->Project("fToyDataTh", 	"Ener1", ener_cut);
+	outTreeToyRa->Project("fToyDataRa", 	"Ener1", ener_cut);
+	outTreeToyCo->Project("fToyDataCo", 	"Ener1", ener_cut);
+	outTreeToyK->Project("fToyDataK",	 	"Ener1", ener_cut);
 
-	fToyData->Add(fModelFrameK,		600);
-	// fToyData->Add(fModelTShieldK,	);
-	// fToyData->Add(fModel50mKK,		);
-	// fToyData->Add(fModel600mKK,		);
-	// fToyData->Add(fModelIVCK,		);
-	// fToyData->Add(fModelOVCK,		);
+	NormalizePDF(fToyDataTh, 	dFitMin, dFitMax);
+	NormalizePDF(fToyDataRa, 	dFitMin, dFitMax);
+	NormalizePDF(fToyDataCo, 	dFitMin, dFitMax);
+	NormalizePDF(fToyDataK, 	dFitMin, dFitMax);
 
 
-	fToyData->Add(fModelFrameCo,	700);
-	// fToyData->Add(fModelTShieldCo,	);
-	// fToyData->Add(fModel50mKCo,		);
-	// fToyData->Add(fModel600mKCo,	);
-	// fToyData->Add(fModelIVCCo,		);
-	// fToyData->Add(fModelOVCCo,		);
+
+	fToyData->Add(fToyDataTh,	2000);
+	fToyData->Add(fToyDataRa,	550);
+	fToyData->Add(fToyDataCo,	600);
+	fToyData->Add(fToyDataK,	700);
 
 }
 
 
-// ChiSquare
+// Calculates ChiSquare... model parameters not set here!
 double TBackgroundModel::GetChiSquare()
 {
 	//cout<<"Calling GetChiSquare()"<<endl;
 	double chiSquare = 0.;
 	double data_i, err_i, model_i;	
 
-	// Start from bin 60 (5 keV bins -> 300 keV)
-	// for(int i = 300/dBinSize; i < fModelTot->GetNbinsX(); i++)
 	for(int i = dFitMin/dBinSize; i < dFitMax/dBinSize; i++)
 	{
-		// data_i = fToyData->GetBinContent(i); // For Toy data
-		data_i = fDataHistoM1->GetBinContent(i); // For real data
+		if(bToyFit)
+		{
+			data_i = fToyData->GetBinContent(i); // For Toy data
+		}
+		else 
+		{
+			data_i = fDataHistoM1->GetBinContent(i); // For real data
+		}
 
 		model_i = fModelTot->GetBinContent(i);
 
@@ -660,7 +672,10 @@ double TBackgroundModel::GetChiSquare()
 
 void TBackgroundModel::Initialize()
 {	
+
+	dDataDir = 	"/Users/brian/macros/Simulations/Bkg/Unsmeared/";
 	dDataIntegral = 0;
+	bToyFit = false;
 
 	// Bin size (keV)
 	dBinSize = 10;
@@ -671,6 +686,7 @@ void TBackgroundModel::Initialize()
 	// Fitting range
 	dFitMin = 0.;
 	dFitMax = 2700.;
+
 
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
 	// Data
@@ -740,6 +756,7 @@ void TBackgroundModel::Initialize()
 	fParameters[5] 	= 0.;
 	fParameters[6] 	= 0.;
 	fParameters[7] 	= 0.;
+	fParameters[8]	= 0.;
 /*	
 	fParameters[8]	= 0.;
 	fParameters[9] 	= 0.;
@@ -803,10 +820,10 @@ void TBackgroundModel::LoadData()
 
 
 // Loads MC files into Trees
-TChain *TBackgroundModel::LoadMC(std::string dLocation, std::string dSource, int dMult)
+TChain *TBackgroundModel::LoadMC(std::string dDir, std::string dLocation, std::string dSource, int dMult)
 {
     TChain *outTree = new TChain("outTree");
-    outTree->Add(Form("/Users/brian/macros/Simulations/Bkg/%s-%s-B-M%d-T50-r0.0425.root", dLocation.c_str(), dSource.c_str(), dMult));
+    outTree->Add(Form("%s%s-%s-B-M%d-T50-r0.0425.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dMult));
 
     return outTree;
 }
@@ -839,6 +856,7 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par5 = "	<< fParameters[5]	<< endl;
 	cout<< "Par6 = "	<< fParameters[6]	<< endl;
 	cout<< "Par7 = "	<< fParameters[7]	<< endl;
+	cout<< "Par8 = "	<< fParameters[8]	<< endl;
 /*	
 	cout<< "Par8 = "	<< fParameters[8]	<< endl;
 	cout<< "Par9 = "	<< fParameters[9]	<< endl;
@@ -873,35 +891,36 @@ void TBackgroundModel::PrintParameters()
 // Fills MC histograms
 void TBackgroundModel::ReadMC()
 {
+
     // Loads MC data
-    outTreeFrameTh 		= LoadMC("Frame", 	"Th232", 1);
-    outTreeTShieldTh 	= LoadMC("TShield", "Th232", 1);
-    outTree50mKTh 		= LoadMC("50mK",	"Th232", 1);
-    outTree600mKTh 		= LoadMC("600mK", 	"Th232", 1);
-    outTreeIVCTh 		= LoadMC("IVC", 	"Th232", 1);
-    outTreeOVCTh 		= LoadMC("OVC", 	"Th232", 1);
+    outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", 1);
+    outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Th232", 1);
+    outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", 1);
+    outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", 1);
+    outTreeIVCTh 		= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", 1);
+    outTreeOVCTh 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", 1);
 
-    outTreeFrameRa	 	= LoadMC("Frame", 	"Ra226", 1);
-    outTreeTShieldRa 	= LoadMC("TShield", "Ra226", 1);    
-    outTree50mKRa	 	= LoadMC("50mK", 	"Ra226", 1);
-    outTree600mKRa		= LoadMC("600mK", 	"Ra226", 1);
-    outTreeIVCRa	 	= LoadMC("IVC", 	"Ra226", 1);
-    outTreeOVCRa 		= LoadMC("OVC", 	"Ra226", 1);
+    outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", 1);
+    outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Ra226", 1);    
+    outTree50mKRa	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", 1);
+    outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", 1);
+    outTreeIVCRa	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", 1);
+    outTreeOVCRa 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", 1);
 
-    outTreeFrameK 		= LoadMC("Frame", 	"K40",	 1);
-    outTreeTShieldK 	= LoadMC("TShield", "K40", 1);    
-    outTree50mKK	 	= LoadMC("50mK", 	"K40", 1);
-    outTree600mKK		= LoadMC("600mK", 	"K40", 1);
-    outTreeIVCK		 	= LoadMC("IVC", 	"K40", 1);
-    outTreeOVCK 		= LoadMC("OVC", 	"K40", 1);
+    outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", 1);
+    outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield", 	"K40", 1);    
+    outTree50mKK	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", 1);
+    outTree600mKK		= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", 1);
+    outTreeIVCK		 	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", 1);
+    outTreeOVCK 		= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", 1);
 
 
-    outTreeFrameCo 		= LoadMC("Frame", 	"Co60",	 1);
-    outTreeTShieldCo 	= LoadMC("TShield", "Co60", 1);    
-    outTree50mKCo	 	= LoadMC("50mK", 	"Co60", 1);
-    outTree600mKCo		= LoadMC("600mK", 	"Co60", 1);
-    outTreeIVCCo	 	= LoadMC("IVC", 	"Co60", 1);
-    outTreeOVCCo 		= LoadMC("OVC", 	"Co60", 1);
+    outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	1);
+    outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Co60", 1);    
+    outTree50mKCo	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", 1);
+    outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", 1);
+    outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
+    outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
 
 
 	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
@@ -935,34 +954,34 @@ void TBackgroundModel::ReadMC()
 	cout << "Loaded MC" << endl;
 
 	// Normalize all MC histograms
-	NormalizePDF(fModelFrameTh, dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldTh, dFitMin, dFitMax);
-	NormalizePDF(fModel50mKTh, dFitMin, dFitMax);
-	NormalizePDF(fModel600mKTh, dFitMin, dFitMax);
-	NormalizePDF(fModelIVCTh, dFitMin, dFitMax);
-	NormalizePDF(fModelOVCTh, dFitMin, dFitMax);
+	NormalizePDF(fModelFrameTh, 	dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldTh, 	dFitMin, dFitMax);
+	NormalizePDF(fModel50mKTh, 		dFitMin, dFitMax);
+	NormalizePDF(fModel600mKTh, 	dFitMin, dFitMax);
+	NormalizePDF(fModelIVCTh, 		dFitMin, dFitMax);
+	NormalizePDF(fModelOVCTh, 		dFitMin, dFitMax);
 
-	NormalizePDF(fModelFrameRa, dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldRa, dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKRa, dFitMin, dFitMax);
-	NormalizePDF(fModel600mKRa, dFitMin, dFitMax);
-	NormalizePDF(fModelIVCRa, dFitMin, dFitMax);
-	NormalizePDF(fModelOVCRa, dFitMin, dFitMax);
+	NormalizePDF(fModelFrameRa, 	dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldRa, 	dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKRa, 		dFitMin, dFitMax);
+	NormalizePDF(fModel600mKRa, 	dFitMin, dFitMax);
+	NormalizePDF(fModelIVCRa, 		dFitMin, dFitMax);
+	NormalizePDF(fModelOVCRa, 		dFitMin, dFitMax);
 
 	// Normalizing K-40 for full range since no peaks above 1500 keV
-	NormalizePDF(fModelFrameK, dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldK, dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKK, dFitMin, dFitMax);
-	NormalizePDF(fModel600mKK, dFitMin, dFitMax);
-	NormalizePDF(fModelIVCK, dFitMin, dFitMax);
-	NormalizePDF(fModelOVCK, dFitMin, dFitMax);
+	NormalizePDF(fModelFrameK, 		dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldK, 	dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKK, 		dFitMin, dFitMax);
+	NormalizePDF(fModel600mKK, 		dFitMin, dFitMax);
+	NormalizePDF(fModelIVCK, 		dFitMin, dFitMax);
+	NormalizePDF(fModelOVCK, 		dFitMin, dFitMax);
 
-	NormalizePDF(fModelFrameCo, dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldCo, dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKCo, dFitMin, dFitMax);
-	NormalizePDF(fModel600mKCo, dFitMin, dFitMax);
-	NormalizePDF(fModelIVCCo, dFitMin, dFitMax);
-	NormalizePDF(fModelOVCCo, dFitMin, dFitMax);
+	NormalizePDF(fModelFrameCo, 	dFitMin, dFitMax);
+	NormalizePDF(fModelTShieldCo, 	dFitMin, dFitMax);	
+	NormalizePDF(fModel50mKCo, 		dFitMin, dFitMax);
+	NormalizePDF(fModel600mKCo, 	dFitMin, dFitMax);
+	NormalizePDF(fModelIVCCo, 		dFitMin, dFitMax);
+	NormalizePDF(fModelOVCCo, 		dFitMin, dFitMax);
 
 
 	cout << "Normalized MC PDFs" << endl;
@@ -987,16 +1006,15 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, double resolution)
 	double dArea;
 	double dSmearedValue;
 
-	for(int i = 0; i<bin; i++)
+	// If i only goes through fit range, saves time?
+	for(int i = 0; i<dNBins; i++)
 	{
-		for(int j = 0; j<bin; j++)
+		for(int j = 0; j<dNBins; j++)
 		{
 			// Normalization of gaussian = (bin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-			// dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*fFitRes->Eval(hMC->GetBinCenter(j)));
 			dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
 
-			// Set parameters of gaussian ... resolution floating in fit?
-			// gaus->SetParameters(dArea, hMC->GetBinCenter(j), fFitRes->Eval(hMC->GetBinCenter(j)));
+			// Set parameters of gaussian ... resolution floating in fit
 			gaus->SetParameters(dArea, hMC->GetBinCenter(j), resolution);
 
 			// Smeared contribution from gaussian centered at bin j for bin i 
@@ -1029,37 +1047,37 @@ void TBackgroundModel::UpdateModel()
 	////////////////////////////////////////
 	// Few parameters
 	////////////////////////////////////////
-	fModelTot->Add(fModelFrameTh,	fParameters[0]);
-	fModelTot->Add(fModelTShieldTh,	fParameters[0]);	
-	fModelTot->Add(fModel50mKTh,	fParameters[0]);
-	fModelTot->Add(fModel600mKTh,	fParameters[0]);
-	fModelTot->Add(fModelIVCTh,		fParameters[1]);
-	fModelTot->Add(fModelOVCTh,		fParameters[1]);
+	fModelTot->Add(SmearMC(fModelFrameTh,	fParameters[8]), fParameters[0]);
+	fModelTot->Add(SmearMC(fModelTShieldTh,	fParameters[8]), fParameters[0]);	
+	fModelTot->Add(SmearMC(fModel50mKTh,	fParameters[8]), fParameters[0]);
+	fModelTot->Add(SmearMC(fModel600mKTh,	fParameters[8]), fParameters[0]);
+	fModelTot->Add(SmearMC(fModelIVCTh, 	fParameters[8]), fParameters[1]);
+	fModelTot->Add(SmearMC(fModelOVCTh, 	fParameters[8]), fParameters[1]);
 
-	fModelTot->Add(fModelFrameRa,	fParameters[2]);
-	fModelTot->Add(fModelTShieldRa,	fParameters[2]);	
-	fModelTot->Add(fModel50mKRa,	fParameters[2]);
-	fModelTot->Add(fModel600mKRa,	fParameters[2]);
-	fModelTot->Add(fModelIVCRa,		fParameters[3]);
-	fModelTot->Add(fModelOVCRa,		fParameters[3]);
+	fModelTot->Add(SmearMC(fModelFrameRa,	fParameters[8]), fParameters[2]);
+	fModelTot->Add(SmearMC(fModelTShieldRa,	fParameters[8]), fParameters[2]);	
+	fModelTot->Add(SmearMC(fModel50mKRa, 	fParameters[8]), fParameters[2]);
+	fModelTot->Add(SmearMC(fModel600mKRa, 	fParameters[8]), fParameters[2]);
+	fModelTot->Add(SmearMC(fModelIVCRa, 	fParameters[8]), fParameters[3]);
+	fModelTot->Add(SmearMC(fModelOVCRa, 	fParameters[8]), fParameters[3]);
 
-	fModelTot->Add(fModelFrameK,	fParameters[4]);
-	fModelTot->Add(fModelTShieldK,	fParameters[4]);
-	fModelTot->Add(fModel50mKK,		fParameters[4]);
-	fModelTot->Add(fModel600mKK,	fParameters[4]);
-	fModelTot->Add(fModelIVCK,		fParameters[5]);
-	fModelTot->Add(fModelOVCK,		fParameters[5]);
+	fModelTot->Add(SmearMC(fModelFrameK, 	fParameters[8]), fParameters[4]);
+	fModelTot->Add(SmearMC(fModelTShieldK, 	fParameters[8]), fParameters[4]);
+	fModelTot->Add(SmearMC(fModel50mKK, 	fParameters[8]), fParameters[4]);
+	fModelTot->Add(SmearMC(fModel600mKK, 	fParameters[8]), fParameters[4]);
+	fModelTot->Add(SmearMC(fModelIVCK, 		fParameters[8]), fParameters[5]);
+	fModelTot->Add(SmearMC(fModelOVCK, 		fParameters[8]), fParameters[5]);
 
+	fModelTot->Add(SmearMC(fModelFrameCo, 	fParameters[8]), fParameters[6]);
+	fModelTot->Add(SmearMC(fModelTShieldCo, fParameters[8]), fParameters[6]);
+	fModelTot->Add(SmearMC(fModel50mKCo, 	fParameters[8]), fParameters[6]);
+	fModelTot->Add(SmearMC(fModel600mKCo, 	fParameters[8]), fParameters[6]);
+	fModelTot->Add(SmearMC(fModelIVCCo, 	fParameters[8]), fParameters[7]);
+	fModelTot->Add(SmearMC(fModelOVCCo, 	fParameters[8]), fParameters[7]);	
 
-	fModelTot->Add(fModelFrameCo,	fParameters[6]);
-	fModelTot->Add(fModelTShieldCo,	fParameters[6]);
-	fModelTot->Add(fModel50mKCo,	fParameters[6]);
-	fModelTot->Add(fModel600mKCo,	fParameters[6]);
-	fModelTot->Add(fModelIVCCo,		fParameters[7]);
-	fModelTot->Add(fModelOVCCo,		fParameters[7]);	
 
 	////////////////////////////////////////
-	// All Parameters
+	// All Parameters ... probably won't use this
 	////////////////////////////////////////
 /*
 	fModelTot->Add(fModelFrameTh,	fParameters[0]);
