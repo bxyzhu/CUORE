@@ -144,14 +144,14 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(2); //initialize minuit, n is the number of parameters
+   TMinuit minuit(9); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
 //   minuit.Command("SET MINImize 1000 0.001");
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
-   minuit.SetMaxIterations(50000);
+   minuit.SetMaxIterations(1000);
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
@@ -162,25 +162,25 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th", 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	2000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra", 	1000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",		0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(5, "Far K", 		0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., dDataIntegral);  
-   minuit.DefineParameter(8, "#sigma",	 	4., 1.0, 0., 10);  
+   minuit.DefineParameter(0, "Close Th", 	1000., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	1000., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(2, "Close Ra", 	200., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",		200., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(4, "Close K", 	100., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(5, "Far K", 		100., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co", 	100., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(7, "Far Co",	 	100., 50.0, 0., dDataIntegral);  
+   minuit.DefineParameter(8, "Resolution",	4., 0.5, 0., 10);  
 
    // Fix parameters for testing
    // minuit.FixParameter(0);
    // minuit.FixParameter(1);
    // minuit.FixParameter(2);
-   minuit.FixParameter(3);
-   minuit.FixParameter(4);
-   minuit.FixParameter(5);
-   minuit.FixParameter(6);
-   minuit.FixParameter(7);
+   // minuit.FixParameter(3);
+   // minuit.FixParameter(4);
+   // minuit.FixParameter(5);
+   // minuit.FixParameter(6);
+   // minuit.FixParameter(7);
 
 
 
@@ -410,7 +410,7 @@ bool TBackgroundModel::DoTheFit()
 
 
  	TCanvas *ctable = new TCanvas("ctable", "ctable", 800, 1200);
- 	// TPaveText *pt = new TPaveText(.0,.0,1.,1.);
+ 	TPaveText *pt = new TPaveText(.0,.0,1.,1.);
  	// pt->AddText("Fit Parameters");
  	// pt->AddBox(.0, .0, 1.0, .6);
  	// pt->AddText("Blah");
@@ -585,7 +585,7 @@ bool TBackgroundModel::DoTheFit()
  }
 
 
-// Generates toy data using MC histogram
+// Generates Toy Data using MC histograms
 void TBackgroundModel::GenerateToyData()
 {
 
@@ -605,11 +605,14 @@ void TBackgroundModel::GenerateToyData()
 	outTreeToyCo->Project("fToyDataCo", 	"Ener1", ener_cut);
 	outTreeToyK->Project("fToyDataK",	 	"Ener1", ener_cut);
 
+	cout << "Loaded Toy Histograms" << endl;
+
 	NormalizePDF(fToyDataTh, 	dFitMin, dFitMax);
 	NormalizePDF(fToyDataRa, 	dFitMin, dFitMax);
 	NormalizePDF(fToyDataCo, 	dFitMin, dFitMax);
 	NormalizePDF(fToyDataK, 	dFitMin, dFitMax);
 
+	cout << "Normalized Toy Data" << endl;
 
 
 	fToyData->Add(fToyDataTh,	2000);
@@ -703,7 +706,13 @@ void TBackgroundModel::Initialize()
 	fDataHistoTot	 = new TH1D("fDataHistoTot", 	"", dNBins, dMinEnergy, dMaxEnergy);
 	fDataHistoM1	 = new TH1D("fDataHistoM1", 	"", dNBins, dMinEnergy, dMaxEnergy);
 	fDataHistoM2	 = new TH1D("fDataHistoM2", 	"", dNBins, dMinEnergy, dMaxEnergy);
+
+	// Toy Data
 	fToyData		 = new TH1D("fToyData",			"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyDataTh		 = new TH1D("fToyDataTh",		"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyDataRa		 = new TH1D("fToyDataRa",		"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyDataCo		 = new TH1D("fToyDataCo",		"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyDataK		 = new TH1D("fToyDataK",		"", dNBins, dMinEnergy, dMaxEnergy);
 
 
 	// Model histograms
@@ -1003,6 +1012,7 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, double resolution)
 
 	TH1D *hSmeared = new TH1D("hSmeared", "", dNBins, dMinEnergy, dMaxEnergy);
 
+
 	double dArea;
 	double dSmearedValue;
 
@@ -1011,7 +1021,7 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, double resolution)
 	{
 		for(int j = 0; j<dNBins; j++)
 		{
-			// Normalization of gaussian = (bin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
 			dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
 
 			// Set parameters of gaussian ... resolution floating in fit
@@ -1066,7 +1076,7 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add(SmearMC(fModel50mKK, 	fParameters[8]), fParameters[4]);
 	fModelTot->Add(SmearMC(fModel600mKK, 	fParameters[8]), fParameters[4]);
 	fModelTot->Add(SmearMC(fModelIVCK, 		fParameters[8]), fParameters[5]);
-	fModelTot->Add(SmearMC(fModelOVCK, 		fParameters[8]), fParameters[5]);
+	fModelTot->Add(SmearMC(fModelOVCK, 		fParameters[8]), fParameters[5]); 
 
 	fModelTot->Add(SmearMC(fModelFrameCo, 	fParameters[8]), fParameters[6]);
 	fModelTot->Add(SmearMC(fModelTShieldCo, fParameters[8]), fParameters[6]);
