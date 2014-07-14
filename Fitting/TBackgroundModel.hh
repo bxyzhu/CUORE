@@ -29,7 +29,7 @@ public:
 
 	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, int dMult);
 
-	void NormalizePDF(TH1D *h1, int minE, int maxE);
+	void NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE);
 
 	void PrintParameters();
 
@@ -37,7 +37,7 @@ public:
 
 	void SetParameters(int index, double value);
 
-	TH1D *SmearMC(TH1D *hMC, double resolution);
+	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution);
 
 	void UpdateModel();
 
@@ -141,6 +141,39 @@ private:
 	TH1D			*fModel600mKCo;
 	TH1D			*fModelIVCCo;
 	TH1D			*fModelOVCCo;
+
+
+	// Smeared PDFs
+	TH1D			*fSmearDummy;
+
+	TH1D			*fSmearFrameTh;
+	TH1D			*fSmearTShieldTh;
+	TH1D			*fSmear50mKTh;
+	TH1D			*fSmear600mKTh;	
+	TH1D			*fSmearIVCTh;
+	TH1D			*fSmearOVCTh;
+
+	TH1D			*fSmearFrameRa;
+	TH1D			*fSmearTShieldRa;
+	TH1D			*fSmear50mKRa;
+	TH1D			*fSmear600mKRa;
+	TH1D			*fSmearIVCRa;
+	TH1D			*fSmearOVCRa;
+
+	TH1D			*fSmearFrameK;
+	TH1D			*fSmearTShieldK;
+	TH1D			*fSmear50mKK;
+	TH1D			*fSmear600mKK;
+	TH1D			*fSmearIVCK;
+	TH1D			*fSmearOVCK;
+
+
+	TH1D			*fSmearFrameCo;
+	TH1D			*fSmearTShieldCo;
+	TH1D			*fSmear50mKCo;
+	TH1D			*fSmear600mKCo;
+	TH1D			*fSmearIVCCo;
+	TH1D			*fSmearOVCCo;
 
 	TGraph			*gResidual;
 	TH1D			*hResidualDist;
