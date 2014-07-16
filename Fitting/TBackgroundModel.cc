@@ -248,13 +248,6 @@ bool TBackgroundModel::DoTheFit()
    int status = minuit.Migrad(); // this actually does the minimisation
    
 
-   //If you want to access the fitted parameters, supposing your class has a container member called fParValues and fParErrors
-/* 
-   for(Int_t i=0;i<n;i++){
-     minuit.GetParameter(i,fParValues[i],fParErrors[i]);
-   }
-*/
-
 
    ///////////////////////////////////////////
    //// Few Parameters
@@ -458,6 +451,16 @@ bool TBackgroundModel::DoTheFit()
    
  }
 
+void TBackgroundModel::DrawBkg()
+{
+ 	gStyle->SetOptStat(0);
+ 	// gStyle->SetOptTitle(0);	
+    TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
+    cBkg->SetLogy();
+    fDataHistoM1->Draw();
+
+
+}
 
 // Draws all MC spectra
  void TBackgroundModel::DrawMC()
@@ -699,6 +702,7 @@ double TBackgroundModel::GetChiSquare()
 
 void TBackgroundModel::Initialize()
 {	
+	dSecToYears = 1./(60*60*24*365);
 
 	dDataDir = 	"/Users/brian/macros/Simulations/Bkg/Unsmeared/";
 	dDataIntegral = 0;
@@ -711,7 +715,7 @@ void TBackgroundModel::Initialize()
 	dMaxEnergy = 3500.;
 
 	// Fitting range
-	dFitMin = 50.;
+	dFitMin = 2000.;
 	dFitMax = 2700.;
 
 
@@ -965,12 +969,15 @@ void TBackgroundModel::LoadData()
 	}
 */	
 
-    qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedCorrectedBkg.root");	
+    qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");	
     qtree->Project("fDataHistoTot", "Energy", base_cut);
     qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
     qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
 
 	cout << "Loaded Data" << endl;
+
+	// Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
+	fDataHistoM1->Scale(1/(14647393.0 * dSecToYears));
 
 	// Normalizing data (don't!)
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
@@ -1008,7 +1015,7 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
 	// Make sure integral isn't 0 --> Need to double check if this is the right thing to do!
 	if(dIntegral != 0)
 	{
-		h1->Scale(1/dIntegral/Time);
+		h1->Scale(1/dIntegral/(Time * dSecToYears));
 	}
 }
 

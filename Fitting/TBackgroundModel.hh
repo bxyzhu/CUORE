@@ -21,6 +21,7 @@ public:
 
 	bool DoTheFit();
 
+	void DrawBkg();
 	void DrawMC();
 
 	void Initialize();
@@ -186,9 +187,8 @@ private:
 	bool			bToyFit;
 
 	// Parameters
-	// double			fParameters[24]; 
 	double				fParameters[9];
-
+	double				dSecToYears;
 
 //  ClassDef(TMyFitter,1) // 
     };
