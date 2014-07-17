@@ -444,7 +444,7 @@ bool TBackgroundModel::DoTheFit()
 	// hResidualDist->GetYaxis()->SetTitleSize(0.04);	
 	hResidualDist->GetYaxis()->SetTitle("Residuals (#sigma)");
 
-
+	hResidualDist->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
 	hResidualDist->Draw("E");
 
 	return true;
@@ -1015,7 +1015,8 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
 	// Make sure integral isn't 0 --> Need to double check if this is the right thing to do!
 	if(dIntegral != 0)
 	{
-		h1->Scale(1/dIntegral/(Time * dSecToYears));
+		// h1->Scale(1/dIntegral/(Time * dSecToYears));
+		h1->Scale(1/dIntegral);
 	}
 }
 
