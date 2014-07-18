@@ -147,16 +147,16 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th", 	10., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	1000., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra", 	200., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",		200., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(4, "Close K", 	0., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(5, "Far K", 		0., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	100., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	0., 50.0, 0., dDataIntegral);  
+   minuit.DefineParameter(0, "Close Th", 	200., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(2, "Close Ra", 	400., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",		10., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 1.0, 10);  
-   minuit.DefineParameter(9, "NDBD",	 	10., 50.0, 0., dDataIntegral);  
+   minuit.DefineParameter(9, "NDBD",	 	5., 1.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
    // minuit.FixParameter(0);
@@ -167,6 +167,8 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(5);
    // minuit.FixParameter(6);
    minuit.FixParameter(7);
+   // minuit.FixParameter(8);
+   // minuit.FixParameter(9);
 
 
    //Tell minuit what external function to use 
@@ -221,7 +223,7 @@ bool TBackgroundModel::DoTheFit()
   ///////////////////////////////////////////
   //// Few Parameters
   ///////////////////////////////////////////
-  /// Add Histograms after chi-squared minimization done
+  /// Add Histograms after chi-squared minimization
 
   fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
   fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
