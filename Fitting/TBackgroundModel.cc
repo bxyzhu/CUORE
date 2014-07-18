@@ -715,7 +715,7 @@ void TBackgroundModel::Initialize()
 	fParameters[6] 	= 0.;
 	fParameters[7] 	= 0.;
 	fParameters[8]	= 0.;
-	fParameters[9x]	= 0.;
+	fParameters[9]	= 0.;
 
 	// Loading all data in Initialize, correct or no?
 	LoadData();	
@@ -751,7 +751,7 @@ void TBackgroundModel::Initialize()
     outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
     outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
 
-    outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"NDBD", 1);
+    outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", 1);
 
 
     outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
