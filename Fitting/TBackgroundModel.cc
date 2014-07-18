@@ -173,42 +173,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.SetFCN(myExternal_FCN);
    
    int status = minuit.Migrad(); // this actually does the minimisation
-   
-
-
-   ///////////////////////////////////////////
-   //// Few Parameters
-   ///////////////////////////////////////////
-
-	fModelTotTh->Add(fSmearFrameTh,		fParameters[0]);
-	fModelTotTh->Add(fSmearTShieldTh,	fParameters[0]);
-	fModelTotTh->Add(fSmear50mKTh,		fParameters[0]);
-	fModelTotTh->Add(fSmear600mKTh,		fParameters[0]);
-	fModelTotTh->Add(fSmearIVCTh,		fParameters[1]);
-	fModelTotTh->Add(fSmearOVCTh,		fParameters[1]);
-
-	fModelTotRa->Add(fSmearFrameRa,		fParameters[2]);
-	fModelTotRa->Add(fSmearTShieldRa,	fParameters[2]);
-	fModelTotRa->Add(fSmear50mKRa,		fParameters[2]);
-	fModelTotRa->Add(fSmear600mKRa,		fParameters[2]);
-	fModelTotRa->Add(fSmearIVCRa,		fParameters[3]);
-	fModelTotRa->Add(fSmearOVCRa,		fParameters[3]);
-
-	fModelTotK->Add(fSmearFrameK,		fParameters[4]);
-	fModelTotK->Add(fSmearTShieldK,		fParameters[4]);
-	fModelTotK->Add(fSmear50mKK,		fParameters[4]);
-	fModelTotK->Add(fSmear600mKK,		fParameters[4]);
-	fModelTotK->Add(fSmearIVCK,			fParameters[5]);
-	fModelTotK->Add(fSmearOVCK,			fParameters[5]);
-
-	fModelTotCo->Add(fSmearFrameCo,		fParameters[6]);
-	fModelTotCo->Add(fSmearTShieldCo,	fParameters[6]);
-	fModelTotCo->Add(fSmear50mKCo,		fParameters[6]);
-	fModelTotCo->Add(fSmear600mKCo,		fParameters[6]);
-	fModelTotCo->Add(fSmearIVCCo,		fParameters[7]);
-	fModelTotCo->Add(fSmearOVCCo,		fParameters[7]);
-
-	fModelTotNDBD->Add(fSmearNDBD,		fParameters[9]);
 
 
     TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
@@ -252,6 +216,42 @@ bool TBackgroundModel::DoTheFit()
 	UpdateModel();
 	
 	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 9) <<endl;
+
+
+  ///////////////////////////////////////////
+  //// Few Parameters
+  ///////////////////////////////////////////
+  /// Add Histograms after chi-squared minimization done
+
+  fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
+  fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
+  fModelTotTh->Add(fSmear50mKTh,    fParameters[0]);
+  fModelTotTh->Add(fSmear600mKTh,   fParameters[0]);
+  fModelTotTh->Add(fSmearIVCTh,     fParameters[1]);
+  fModelTotTh->Add(fSmearOVCTh,     fParameters[1]);
+
+  fModelTotRa->Add(fSmearFrameRa,   fParameters[2]);
+  fModelTotRa->Add(fSmearTShieldRa, fParameters[2]);
+  fModelTotRa->Add(fSmear50mKRa,    fParameters[2]);
+  fModelTotRa->Add(fSmear600mKRa,   fParameters[2]);
+  fModelTotRa->Add(fSmearIVCRa,     fParameters[3]);
+  fModelTotRa->Add(fSmearOVCRa,     fParameters[3]);
+
+  fModelTotK->Add(fSmearFrameK,     fParameters[4]);
+  fModelTotK->Add(fSmearTShieldK,   fParameters[4]);
+  fModelTotK->Add(fSmear50mKK,      fParameters[4]);
+  fModelTotK->Add(fSmear600mKK,     fParameters[4]);
+  fModelTotK->Add(fSmearIVCK,       fParameters[5]);
+  fModelTotK->Add(fSmearOVCK,       fParameters[5]);
+
+  fModelTotCo->Add(fSmearFrameCo,   fParameters[6]);
+  fModelTotCo->Add(fSmearTShieldCo, fParameters[6]);
+  fModelTotCo->Add(fSmear50mKCo,    fParameters[6]);
+  fModelTotCo->Add(fSmear600mKCo,   fParameters[6]);
+  fModelTotCo->Add(fSmearIVCCo,     fParameters[7]);
+  fModelTotCo->Add(fSmearOVCCo,     fParameters[7]);
+
+  fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
 
 	
 	fModelTot->SetLineColor(2);
