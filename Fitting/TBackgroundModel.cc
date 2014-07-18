@@ -36,23 +36,6 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(7,	x[7]);
 	Obj->SetParameters(8,	x[8]);
 
-/*
-	Obj->SetParameters(9,	x[9]);
-	Obj->SetParameters(10,	x[10]);
-	Obj->SetParameters(11,	x[11]);
-	Obj->SetParameters(12,	x[12]);   
-	Obj->SetParameters(13,	x[13]);  
-	Obj->SetParameters(14,	x[14]);
-	Obj->SetParameters(15,	x[15]);
-	Obj->SetParameters(16,	x[16]);
-	Obj->SetParameters(17,	x[17]);   
-	Obj->SetParameters(18,	x[18]);  
-	Obj->SetParameters(19,	x[19]);
-	Obj->SetParameters(20,	x[20]);
-	Obj->SetParameters(21,	x[21]);
-	Obj->SetParameters(22,	x[22]);
-	Obj->SetParameters(23,	x[23]);
-*/
 	Obj->UpdateModel();
 
 	//implement a method in your class that calculates the quantity you want to minimise, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
@@ -184,64 +167,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(7);
 
 
-
-	//////////////////////////////////////////////
-	// All parameters
-   ///////////////////////////////////////////////
-/*
-   minuit.DefineParameter(0, "Frame Th", 	1000., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "TShield Th", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "50 mK Th", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "600 mK Th",	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(4, "IVC Th", 		0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(5, "OVC Th", 		0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Frame Ra", 	500., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "TShield Ra", 	0., 100.0, 0., dDataIntegral);   
-   minuit.DefineParameter(8, "50 mK Ra", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(9, "600 mK Ra", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(10, "IVC Ra", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(11, "OVC Ra", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(12, "Frame K", 	500., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(13, "TShield K", 	0., 100.0, 0., dDataIntegral);   
-   minuit.DefineParameter(14, "50 mK K", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(15, "600 mK K", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(16, "IVC K", 		0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(17, "OVC K", 		0., 100.0, 0., dDataIntegral);   
-   minuit.DefineParameter(18, "Frame Co", 	500., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(19, "TShield Co", 0., 100.0, 0., dDataIntegral);   
-   minuit.DefineParameter(20, "50 mK Co", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(21, "600 mK Co", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(22, "IVC Co", 	0., 100.0, 0., dDataIntegral);
-   minuit.DefineParameter(23, "OVC Co", 	0., 100.0, 0., dDataIntegral);   
-*/
-
-   // Fix parameters for testing
-   // minuit.FixParameter(0);
-   // minuit.FixParameter(1);
-   // minuit.FixParameter(2);
-   // minuit.FixParameter(3);
-   // minuit.FixParameter(4);
-   // minuit.FixParameter(5);
-   // minuit.FixParameter(6);
-   // minuit.FixParameter(7);
-   // minuit.FixParameter(8);
-   // minuit.FixParameter(9);
-   // minuit.FixParameter(10);
-   // minuit.FixParameter(11);
-   // minuit.FixParameter(12);
-   // minuit.FixParameter(13);
-   // minuit.FixParameter(14);
-   // minuit.FixParameter(15);
-   // minuit.FixParameter(16);
-   // minuit.FixParameter(17);
-   // minuit.FixParameter(18);
-   // minuit.FixParameter(19);
-   // minuit.FixParameter(20);
-   // minuit.FixParameter(21);
-   // minuit.FixParameter(22);
-   // minuit.FixParameter(23);
-
-
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
    
@@ -282,42 +207,6 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->Add(fSmearOVCCo,		fParameters[7]);
 
 
-	///////////////////////////////////////////
-	//// All Parameters
-	///////////////////////////////////////////
-/*
-	fModelTotTh->Add(fModelFrameTh,		fParameters[0]);
-	fModelTotTh->Add(fModelTShieldTh,	fParameters[1]);
-	fModelTotTh->Add(fModel50mKTh,		fParameters[2]);
-	fModelTotTh->Add(fModel600mKTh,		fParameters[3]);
-	fModelTotTh->Add(fModelIVCTh,		fParameters[4]);
-	fModelTotTh->Add(fModelOVCTh,		fParameters[5]);
-
-	fModelTotRa->Add(fModelFrameRa,		fParameters[6]);
-	fModelTotRa->Add(fModelTShieldRa,	fParameters[7]);
-	fModelTotRa->Add(fModel50mKRa,		fParameters[8]);
-	fModelTotRa->Add(fModel600mKRa,		fParameters[9]);
-	fModelTotRa->Add(fModelIVCRa,		fParameters[10]);
-	fModelTotRa->Add(fModelOVCRa,		fParameters[11]);
-
-	fModelTotK->Add(fModelFrameK,		fParameters[12]);
-	fModelTotK->Add(fModelTShieldK,		fParameters[13]);
-	fModelTotK->Add(fModel50mKK,		fParameters[14]);
-	fModelTotK->Add(fModel600mKK,		fParameters[15]);
-	fModelTotK->Add(fModelIVCK,			fParameters[16]);
-	fModelTotK->Add(fModelOVCK,			fParameters[17]);
-
-	fModelTotCo->Add(fModelFrameCo,		fParameters[18]);
-	fModelTotCo->Add(fModelTShieldCo,	fParameters[19]);
-	fModelTotCo->Add(fModel50mKCo,		fParameters[20]);
-	fModelTotCo->Add(fModel600mKCo,		fParameters[21]);
-	fModelTotCo->Add(fModelIVCCo,		fParameters[22]);
-	fModelTotCo->Add(fModelOVCCo,		fParameters[23]);
-*/
-	// fModelTotCo->Add(fModelFrameCo,		1 - (fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
-										// + fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]));
-
-
     TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
     c1->SetLogy();
 
@@ -353,23 +242,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(6,	fParameters[6],		dummy);
 	minuit.GetParameter(7,	fParameters[7],		dummy);
 	minuit.GetParameter(8,	fParameters[8],		dummy);
-/*	
-	minuit.GetParameter(9,	fParameters[9],		dummy);
-	minuit.GetParameter(10,	fParameters[10],	dummy);	
-	minuit.GetParameter(11,	fParameters[11],	dummy);
-	minuit.GetParameter(12,	fParameters[12],	dummy);
-	minuit.GetParameter(13,	fParameters[13],	dummy);
-	minuit.GetParameter(14,	fParameters[14],	dummy);
-	minuit.GetParameter(15,	fParameters[15],	dummy);
-	minuit.GetParameter(16,	fParameters[16],	dummy);
-	minuit.GetParameter(17,	fParameters[17],	dummy);
-	minuit.GetParameter(18,	fParameters[18],	dummy);
-	minuit.GetParameter(19,	fParameters[19],	dummy);
-	minuit.GetParameter(20,	fParameters[20],	dummy);
-	minuit.GetParameter(21,	fParameters[21],	dummy);
-	minuit.GetParameter(22,	fParameters[22],	dummy);	
-	minuit.GetParameter(23,	fParameters[23],	dummy);
-*/
+
 
 	UpdateModel();
 	
@@ -825,24 +698,6 @@ void TBackgroundModel::Initialize()
 	fParameters[6] 	= 0.;
 	fParameters[7] 	= 0.;
 	fParameters[8]	= 0.;
-/*	
-	fParameters[8]	= 0.;
-	fParameters[9] 	= 0.;
-	fParameters[10] = 0.;
-	fParameters[11] = 0.;
-	fParameters[12] = 0.;
-	fParameters[13] = 0.;
-	fParameters[14] = 0.;
-	fParameters[15] = 0.;
-	fParameters[16] = 0.;
-	fParameters[17] = 0.;
-	fParameters[18] = 0.;
-	fParameters[19] = 0.;
-	fParameters[20]	= 0.;
-	fParameters[21] = 0.;
-	fParameters[22] = 0.;
-	fParameters[23] = 0.;
-*/
 
 	// Loading all data in Initialize, correct or no?
 	LoadData();	
@@ -1032,24 +887,7 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par6 = "	<< fParameters[6]	<< endl;
 	cout<< "Par7 = "	<< fParameters[7]	<< endl;
 	cout<< "Par8 = "	<< fParameters[8]	<< endl;
-/*	
-	cout<< "Par8 = "	<< fParameters[8]	<< endl;
-	cout<< "Par9 = "	<< fParameters[9]	<< endl;
-	cout<< "Par10 = "	<< fParameters[10]	<< endl;
-	cout<< "Par11 = "	<< fParameters[11] 	<< endl;
-	cout<< "Par12 = "	<< fParameters[12]	<< endl;
-	cout<< "Par13 = "	<< fParameters[13]	<< endl;
-	cout<< "Par14 = "	<< fParameters[14]	<< endl;
-	cout<< "Par15 = "	<< fParameters[15]	<< endl;
-	cout<< "Par16 = "	<< fParameters[16]	<< endl;
-	cout<< "Par17 = "	<< fParameters[17]	<< endl;
-	cout<< "Par18 = "	<< fParameters[18]	<< endl;
-	cout<< "Par19 = "	<< fParameters[19]	<< endl;
-	cout<< "Par20 = "	<< fParameters[20]	<< endl;
-	cout<< "Par21 = "	<< fParameters[21]	<< endl;
-	cout<< "Par22 = "	<< fParameters[22]	<< endl;
-	cout<< "Par23 = "	<< fParameters[23] 	<< endl;
-*/
+
 	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
 					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7];
 					// + fParameters[8] + fParameters[9] + fParameters[10] + fParameters[11]
@@ -1153,44 +991,6 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModelIVCCo, fSmearIVCCo, fParameters[8]), 			fParameters[7]);
 	fModelTot->Add( SmearMC(fModelOVCCo, fSmearOVCCo, fParameters[8]), 			fParameters[7]);	
 
-
-	////////////////////////////////////////
-	// All Parameters ... probably won't use this
-	////////////////////////////////////////
-/*
-	fModelTot->Add(fModelFrameTh,	fParameters[0]);
-	fModelTot->Add(fModelTShieldTh,	fParameters[1]);	
-	fModelTot->Add(fModel50mKTh,	fParameters[2]);
-	fModelTot->Add(fModel600mKTh,	fParameters[3]);
-	fModelTot->Add(fModelIVCTh,		fParameters[4]);
-	fModelTot->Add(fModelOVCTh,		fParameters[5]);
-
-	fModelTot->Add(fModelFrameRa,	fParameters[6]);
-	fModelTot->Add(fModelTShieldRa,	fParameters[7]);	
-	fModelTot->Add(fModel50mKRa,	fParameters[8]);
-	fModelTot->Add(fModel600mKRa,	fParameters[9]);
-	fModelTot->Add(fModelIVCRa,		fParameters[10]);
-	fModelTot->Add(fModelOVCRa,		fParameters[11]);
-
-	fModelTot->Add(fModelFrameK,	fParameters[12]);
-	fModelTot->Add(fModelTShieldK,	fParameters[13]);
-	fModelTot->Add(fModel50mKK,		fParameters[14]);
-	fModelTot->Add(fModel600mKK,	fParameters[15]);
-	fModelTot->Add(fModelIVCK,		fParameters[16]);
-	fModelTot->Add(fModelOVCK,		fParameters[17]);
-
-	fModelTot->Add(fModelFrameCo,	fParameters[18]);
-	fModelTot->Add(fModelTShieldCo,	fParameters[19]);
-	fModelTot->Add(fModel50mKCo,	fParameters[20]);
-	fModelTot->Add(fModel600mKCo,	fParameters[21]);
-	fModelTot->Add(fModelIVCCo,		fParameters[22]);
-	fModelTot->Add(fModelOVCCo,		fParameters[23]);	
-*/
-
-
-	// Don't use this
-	// fModelTot->Add(fModelFrameCo, 	1 - (fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3] + fParameters[4] + fParameters[5]
-									// + fParameters[6] + fParameters[7] + fParameters[8] + fParameters[9] + fParameters[10]));
 
 /*
 	// Test gaussian
