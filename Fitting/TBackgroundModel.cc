@@ -35,6 +35,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(6,	x[6]);  
 	Obj->SetParameters(7,	x[7]);
 	Obj->SetParameters(8,	x[8]);
+	Obj->SetParameters(9,	x[9]);
 
 	Obj->UpdateModel();
 
@@ -128,7 +129,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(9); //initialize minuit, n is the number of parameters
+   TMinuit minuit(10); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -155,6 +156,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(6, "Close Co", 	100., 50.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 50.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 1.0, 10);  
+   minuit.DefineParameter(9, "NDBD",	 	10., 50.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
    // minuit.FixParameter(0);
@@ -206,6 +208,8 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->Add(fSmearIVCCo,		fParameters[7]);
 	fModelTotCo->Add(fSmearOVCCo,		fParameters[7]);
 
+	fModelTotNDBD->Add(fSmearNDBD,		fParameters[9]);
+
 
     TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
     c1->SetLogy();
@@ -242,6 +246,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(6,	fParameters[6],		dummy);
 	minuit.GetParameter(7,	fParameters[7],		dummy);
 	minuit.GetParameter(8,	fParameters[8],		dummy);
+	minuit.GetParameter(9,	fParameters[9],		dummy);
 
 
 	UpdateModel();
@@ -260,11 +265,14 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotK->SetLineStyle(2);
 	fModelTotCo->SetLineColor(7);
 	fModelTotCo->SetLineStyle(2);
+	fModelTotNDBD->SetLineColor(42);
+	fModelTotNDBD->SetLineStyle(2);
 
 	fModelTotTh->Draw("SAME");
 	fModelTotRa->Draw("SAME");
 	fModelTotK->Draw("SAME");
 	fModelTotCo->Draw("SAME");
+	fModelTotNDBD->Draw("SAME");
 
 
  	TLegend *legfit = new TLegend(0.82,0.82,0.95,0.95);
@@ -273,6 +281,7 @@ bool TBackgroundModel::DoTheFit()
   	legfit->AddEntry(fModelTotRa, "Total Ra-226", "l");
  	legfit->AddEntry(fModelTotK, "Total K-40", "l");
  	legfit->AddEntry(fModelTotCo, "Total Co-60", "l");
+ 	legfit->AddEntry(fModelTotNDBD, "NDBD", "l");
 
  	legfit->Draw();
 
@@ -614,6 +623,7 @@ void TBackgroundModel::Initialize()
 	fToyDataRa		 = new TH1D("fToyDataRa",		"", dNBins, dMinEnergy, dMaxEnergy);
 	fToyDataCo		 = new TH1D("fToyDataCo",		"", dNBins, dMinEnergy, dMaxEnergy);
 	fToyDataK		 = new TH1D("fToyDataK",		"", dNBins, dMinEnergy, dMaxEnergy);
+	fToyDataNDBD	 = new TH1D("fToyDataNDBD",		"", dNBins, dMinEnergy, dMaxEnergy);
 
 
 	// Model histograms
@@ -646,12 +656,17 @@ void TBackgroundModel::Initialize()
 	fModelIVCCo		 = new TH1D("fModelIVCCo", 		"IVC", 			dNBins, dMinEnergy, dMaxEnergy);
 	fModelOVCCo		 = new TH1D("fModelOVCCo",		"OVC",	 		dNBins, dMinEnergy, dMaxEnergy);
 
+	fModelNDBD		 = new TH1D("fModelNDBD", 		"NDBD", 			dNBins, dMinEnergy, dMaxEnergy);
+
+
 	// Total model histograms
 	fModelTot 		 = new TH1D("fModelTot", 		"Frame", 		dNBins, dMinEnergy, dMaxEnergy);	
 	fModelTotTh		 = new TH1D("fModelTotTh", 		"Total Th232", 	dNBins, dMinEnergy, dMaxEnergy);
 	fModelTotRa		 = new TH1D("fModelTotRa", 		"Total Ra226", 	dNBins, dMinEnergy, dMaxEnergy);
 	fModelTotK		 = new TH1D("fModelTotK", 		"Total K40",	dNBins, dMinEnergy, dMaxEnergy);
 	fModelTotCo		 = new TH1D("fModelTotCo", 		"Total Co60", 	dNBins, dMinEnergy, dMaxEnergy);
+
+	fModelTotNDBD	 = new TH1D("fModelTotNDBD", 	"Total NDBD", 	dNBins, dMinEnergy, dMaxEnergy);
 
 
 	// Smearing
@@ -688,6 +703,8 @@ void TBackgroundModel::Initialize()
 	fSmearIVCCo		 = new TH1D("fSmearIVCCo", 		"IVC", 			dNBins, dMinEnergy, dMaxEnergy);
 	fSmearOVCCo		 = new TH1D("fSmearOVCCo",		"OVC",	 		dNBins, dMinEnergy, dMaxEnergy);
 
+	fSmearNDBD		 = new TH1D("fSmearNDBD",		"NDBD",	 		dNBins, dMinEnergy, dMaxEnergy);
+
 	// Clear Initial Parameters
 	fParameters[0] 	= 0.;
 	fParameters[1] 	= 0.;
@@ -698,6 +715,7 @@ void TBackgroundModel::Initialize()
 	fParameters[6] 	= 0.;
 	fParameters[7] 	= 0.;
 	fParameters[8]	= 0.;
+	fParameters[9x]	= 0.;
 
 	// Loading all data in Initialize, correct or no?
 	LoadData();	
@@ -733,7 +751,10 @@ void TBackgroundModel::Initialize()
     outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
     outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
 
+    outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"NDBD", 1);
 
+
+    outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
 	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
 	outTreeTShieldTh->Project("fModelTShieldTh",	"Ener1", ener_cut);
     outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
@@ -765,6 +786,8 @@ void TBackgroundModel::Initialize()
 	cout << "Loaded MC" << endl;
 
 	// Normalize all MC histograms
+	NormalizePDF(fModelNDBD, outTreeNDBD,			dFitMin, dFitMax);
+
 	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	dFitMin, dFitMax);
 	NormalizePDF(fModelTShieldTh, outTreeTShieldTh,	dFitMin, dFitMax);
 	NormalizePDF(fModel50mKTh, outTree50mKTh,		dFitMin, dFitMax);
@@ -887,9 +910,11 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par6 = "	<< fParameters[6]	<< endl;
 	cout<< "Par7 = "	<< fParameters[7]	<< endl;
 	cout<< "Par8 = "	<< fParameters[8]	<< endl;
+	cout<< "Par9 = "	<< fParameters[9]	<< endl;
+
 
 	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
-					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7];
+					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7] + fParameters[9];
 					// + fParameters[8] + fParameters[9] + fParameters[10] + fParameters[11]
 					// + fParameters[12] + fParameters[13] + fParameters[14] + fParameters[15]
 					// + fParameters[16] + fParameters[17] + fParameters[18] + fParameters[19]
@@ -990,6 +1015,8 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModel600mKCo, fSmear600mKCo, fParameters[8]), 		fParameters[6]);
 	fModelTot->Add( SmearMC(fModelIVCCo, fSmearIVCCo, fParameters[8]), 			fParameters[7]);
 	fModelTot->Add( SmearMC(fModelOVCCo, fSmearOVCCo, fParameters[8]), 			fParameters[7]);	
+
+	fModelTot->Add( SmearMC(fModelNDBD, fSmearNDBD, fParameters[8]), 			fParameters[9]);	
 
 
 /*
