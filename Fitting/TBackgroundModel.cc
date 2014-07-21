@@ -107,7 +107,7 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 	double dResidualX, dResidualY, dResidualXErr = 0, dResidualYErr;
 
 	// Residual plot and distribution
-	for (int j = dFitMin/dBinSize; j <= dFitMax/dBinSize; j++)
+	for (int j = dFitMin/dBinSize+1; j <= dFitMax/dBinSize; j++)
 	{
 		dResidualX 		= hCloneBkg->GetBinCenter(j);
 		dResidualY 		= (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j)) /
@@ -147,10 +147,14 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th", 	200., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra", 	400., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",		10., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(0, "Close Th",  200., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
+   // minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., dDataIntegral);   
+   minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
@@ -159,10 +163,10 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(9, "NDBD",	 	5., 1.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
-   // minuit.FixParameter(0);
-   // minuit.FixParameter(1);
-   // minuit.FixParameter(2);
-   // minuit.FixParameter(3);
+   minuit.FixParameter(0);
+   minuit.FixParameter(1);
+   minuit.FixParameter(2);
+   minuit.FixParameter(3);
    minuit.FixParameter(4);
    minuit.FixParameter(5);
    // minuit.FixParameter(6);
@@ -541,7 +545,7 @@ double TBackgroundModel::GetChiSquare()
 	double chiSquare = 0.;
 	double data_i, err_i, model_i;	
 
-	for(int i = dFitMin/dBinSize; i < dFitMax/dBinSize; i++)
+	for(int i = dFitMin/dBinSize+1; i <= dFitMax/dBinSize; i++)
 	{
 		if(bToyFit)
 		{
@@ -599,8 +603,8 @@ void TBackgroundModel::Initialize()
 	dMaxEnergy = 3500.;
 
 	// Fitting range
-	dFitMin = 2000.;
-	dFitMax = 2700.;
+	dFitMin = 2480.;
+	dFitMax = 2550.;
 
 
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
