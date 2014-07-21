@@ -192,7 +192,7 @@ bool TBackgroundModel::DoTheFit()
    		fToyData->SetLineWidth(2);
    		fToyData->GetXaxis()->SetTitle("Energy (keV)");
    		fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
-		fToyData->Draw();
+		  fToyData->Draw();
 	}
 	else
 	{
@@ -201,7 +201,7 @@ bool TBackgroundModel::DoTheFit()
   	 	fDataHistoM1->SetLineWidth(2);
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
-		fDataHistoM1->Draw();
+		  fDataHistoM1->Draw();
 	}
 
 	// Dummy variable for error of parameter to throw away
@@ -221,7 +221,7 @@ bool TBackgroundModel::DoTheFit()
 
 	UpdateModel();
 	
-	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 9) <<endl;
+	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 3) <<endl;
 
 
   ///////////////////////////////////////////
@@ -292,6 +292,7 @@ bool TBackgroundModel::DoTheFit()
  	legfit->Draw();
 
 
+/*
  	TCanvas *ctable = new TCanvas("ctable", "ctable", 800, 1200);
  	TPaveText *pt = new TPaveText(.0,.0,1.,1.);
  	// pt->AddText("Fit Parameters");
@@ -302,6 +303,7 @@ bool TBackgroundModel::DoTheFit()
  	// pt->AddText("Blah");
 
  	// pt->AddLine(.0,.65,1.,.65);
+
 
  	if(bToyFit)
  	{
@@ -317,7 +319,7 @@ bool TBackgroundModel::DoTheFit()
  	pt->AddText(Form("Model Integral (Tl-208 peak): %.2f", fModelTot->Integral(2600/dBinSize, 2700/dBinSize)));
  	pt->AddText(Form("Model Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fModelTot->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
  	pt->Draw();
-
+*/
 
 
 	// Residuals
