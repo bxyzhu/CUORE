@@ -192,6 +192,8 @@ private:
 
 	std::string		dDataDir;
 	bool			bToyFit;
+	
+	int 			dNumCalls;
 
 	// Parameters
 	double				fParameters[10];

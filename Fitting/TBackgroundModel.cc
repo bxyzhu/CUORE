@@ -46,7 +46,6 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 TBackgroundModel::TBackgroundModel()
 {
-	Initialize();
 }
   
 
@@ -125,6 +124,8 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 
 bool TBackgroundModel::DoTheFit()
 {
+  Initialize();
+
 	gStyle->SetOptStat(0);
    // This method actually sets up minuit and does the fit
 
@@ -222,7 +223,7 @@ bool TBackgroundModel::DoTheFit()
 	UpdateModel();
 	
 	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 3) <<endl;
-
+  cout << "Total number of calls = " << dNumCalls << endl;
 
   ///////////////////////////////////////////
   //// Few Parameters
@@ -592,6 +593,7 @@ double TBackgroundModel::GetChiSquare()
 
 void TBackgroundModel::Initialize()
 {	
+  dNumCalls = 0;
 	dSecToYears = 1./(60*60*24*365);
 
 	dDataDir = 	"/Users/brian/macros/Simulations/Bkg/Unsmeared/";
@@ -996,6 +998,9 @@ void TBackgroundModel::UpdateModel()
 	////////////////////////////////////////
 	// Few parameters
 	////////////////////////////////////////
+
+  dNumCalls++;
+
 	fModelTot->Add( SmearMC(fModelFrameTh, fSmearFrameTh, fParameters[8]), 		fParameters[0]);
 	fModelTot->Add( SmearMC(fModelTShieldTh, fSmearTShieldTh, fParameters[8]), 	fParameters[0]);	
 	fModelTot->Add( SmearMC(fModel50mKTh, fSmear50mKTh, fParameters[8]), 		fParameters[0]);
