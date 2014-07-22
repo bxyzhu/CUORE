@@ -148,26 +148,26 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(0, "Close Th",  200., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
-   // minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., dDataIntegral);   
-   minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(0, "Close Th",  200., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
+   // minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., dDataIntegral);   
+   // minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
-   minuit.DefineParameter(8, "Resolution",	6., 1, 3, 8);  
-   minuit.DefineParameter(9, "NDBD",	 	5., 1.0, 0., dDataIntegral);  
+   minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
+   minuit.DefineParameter(9, "NDBD",	 	50., 10.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
-   minuit.FixParameter(0);
-   minuit.FixParameter(1);
-   minuit.FixParameter(2);
-   minuit.FixParameter(3);
+   // minuit.FixParameter(0);
+   // minuit.FixParameter(1);
+   // minuit.FixParameter(2);
+   // minuit.FixParameter(3);
    minuit.FixParameter(4);
    minuit.FixParameter(5);
    // minuit.FixParameter(6);
@@ -201,7 +201,7 @@ bool TBackgroundModel::DoTheFit()
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-   		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
+   		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
 		  fDataHistoM1->Draw();
 	 }
 
@@ -222,7 +222,7 @@ bool TBackgroundModel::DoTheFit()
 
 	UpdateModel();
 	
-	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 3) << endl;
+	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 7) << endl;
   cout << "Total number of calls = " << dNumCalls << endl;
 
   ///////////////////////////////////////////
@@ -607,8 +607,8 @@ void TBackgroundModel::Initialize()
 	dMaxEnergy = 3500.;
 
 	// Fitting range
-	dFitMin = 2480.;
-	dFitMax = 2550.;
+	dFitMin = 2000.;
+	dFitMax = 2700.;
 
 
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
