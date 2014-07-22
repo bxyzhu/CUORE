@@ -46,6 +46,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 TBackgroundModel::TBackgroundModel()
 {
+    Initialize();
 }
   
 
@@ -124,7 +125,6 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 
 bool TBackgroundModel::DoTheFit()
 {
-  Initialize();
 
 	gStyle->SetOptStat(0);
    // This method actually sets up minuit and does the fit
@@ -160,7 +160,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
-   minuit.DefineParameter(8, "Resolution",	6., 1, 1.0, 10);  
+   minuit.DefineParameter(8, "Resolution",	6., 1, 3, 8);  
    minuit.DefineParameter(9, "NDBD",	 	5., 1.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
@@ -194,16 +194,16 @@ bool TBackgroundModel::DoTheFit()
    		fToyData->GetXaxis()->SetTitle("Energy (keV)");
    		fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
 		  fToyData->Draw();
-	}
-	else
-	{
+	 }
+	 else
+	 {
    		///// Draw Data
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
 		  fDataHistoM1->Draw();
-	}
+	 }
 
 	// Dummy variable for error of parameter to throw away
 	double 	dummy;
@@ -222,7 +222,7 @@ bool TBackgroundModel::DoTheFit()
 
 	UpdateModel();
 	
-	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 3) <<endl;
+	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 3) << endl;
   cout << "Total number of calls = " << dNumCalls << endl;
 
   ///////////////////////////////////////////
@@ -285,7 +285,7 @@ bool TBackgroundModel::DoTheFit()
  	TLegend *legfit = new TLegend(0.82,0.82,0.95,0.95);
  	legfit->AddEntry(fModelTot, "Total PDF", "l");
  	legfit->AddEntry(fModelTotTh, "Total Th-232", "l");
-  	legfit->AddEntry(fModelTotRa, "Total Ra-226", "l");
+  legfit->AddEntry(fModelTotRa, "Total Ra-226", "l");
  	legfit->AddEntry(fModelTotK, "Total K-40", "l");
  	legfit->AddEntry(fModelTotCo, "Total Co-60", "l");
  	legfit->AddEntry(fModelTotNDBD, "NDBD", "l");
