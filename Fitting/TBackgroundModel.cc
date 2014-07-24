@@ -7,8 +7,6 @@
 #include <iostream>
 #include <string>
 
-// Bookmarks: f2 = DoTheFit, GetChiSquare, Initialize
-
 
 using namespace std;
 
@@ -159,6 +157,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",	 	50., 10.0, 0., dDataIntegral);  
@@ -200,6 +199,7 @@ bool TBackgroundModel::DoTheFit()
    		///// Draw Data
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
+      fDataHistoM1->SetTitle(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
 		  fDataHistoM1->Draw();
@@ -608,7 +608,7 @@ void TBackgroundModel::Initialize()
 
 	// Fitting range
 	dFitMin = 2000.;
-	dFitMax = 2700.;
+	dFitMax = 2650.;
 
 
 	dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
@@ -731,67 +731,67 @@ void TBackgroundModel::Initialize()
 	LoadData();	
 
 
-    // Fills and Loads MC data
-    outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", 1);
-    outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Th232", 1);
-    outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", 1);
-    outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", 1);
-    outTreeIVCTh 		= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", 1);
-    outTreeOVCTh 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", 1);
+  // Fills and Loads MC data
+  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", 1);
+  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Th232", 1);
+  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", 1);
+  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", 1);
+  outTreeIVCTh 		= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", 1);
+  outTreeOVCTh 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", 1);
 
-    outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", 1);
-    outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Ra226", 1);    
-    outTree50mKRa	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", 1);
-    outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", 1);
-    outTreeIVCRa	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", 1);
-    outTreeOVCRa 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", 1);
+  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", 1);
+  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Ra226", 1);    
+  outTree50mKRa	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", 1);
+  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", 1);
+  outTreeIVCRa	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", 1);
+  outTreeOVCRa 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", 1);
 
-    outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", 1);
-    outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield", 	"K40", 1);    
-    outTree50mKK	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", 1);
-    outTree600mKK		= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", 1);
-    outTreeIVCK		 	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", 1);
-    outTreeOVCK 		= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", 1);
-
-
-    outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	1);
-    outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Co60", 1);    
-    outTree50mKCo	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", 1);
-    outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", 1);
-    outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
-    outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
-
-    outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", 1);
+  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", 1);
+  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield", 	"K40", 1);    
+  outTree50mKK	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", 1);
+  outTree600mKK		= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", 1);
+  outTreeIVCK		 	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", 1);
+  outTreeOVCK 		= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", 1);
 
 
-    outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
+  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	1);
+  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Co60", 1);    
+  outTree50mKCo	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", 1);
+  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", 1);
+  outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
+  outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
+
+  outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", 1);
+
+
+  outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
 	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
 	outTreeTShieldTh->Project("fModelTShieldTh",	"Ener1", ener_cut);
-    outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
-    outTree600mKTh->Project("fModel600mKTh", 		"Ener1", ener_cut);
-    outTreeIVCTh->Project("fModelIVCTh", 			"Ener1", ener_cut);
-    outTreeOVCTh->Project("fModelOVCTh", 			"Ener1", ener_cut);
+  outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
+  outTree600mKTh->Project("fModel600mKTh", 		"Ener1", ener_cut);
+  outTreeIVCTh->Project("fModelIVCTh", 			"Ener1", ener_cut);
+  outTreeOVCTh->Project("fModelOVCTh", 			"Ener1", ener_cut);
 
 	outTreeFrameRa->Project("fModelFrameRa", 		"Ener1", ener_cut);
 	outTreeTShieldRa->Project("fModelTShieldRa",	"Ener1", ener_cut);	
-    outTree50mKRa->Project("fModel50mKRa", 			"Ener1", ener_cut);
-    outTree600mKRa->Project("fModel600mKRa", 		"Ener1", ener_cut);
-    outTreeIVCRa->Project("fModelIVCRa", 			"Ener1", ener_cut);
-    outTreeOVCRa->Project("fModelOVCRa", 			"Ener1", ener_cut);
+  outTree50mKRa->Project("fModel50mKRa", 			"Ener1", ener_cut);
+  outTree600mKRa->Project("fModel600mKRa", 		"Ener1", ener_cut);
+  outTreeIVCRa->Project("fModelIVCRa", 			"Ener1", ener_cut);
+  outTreeOVCRa->Project("fModelOVCRa", 			"Ener1", ener_cut);
 
 	outTreeFrameK->Project("fModelFrameK", 			"Ener1", ener_cut);
 	outTreeTShieldK->Project("fModelTShieldK",		"Ener1", ener_cut);	
-    outTree50mKK->Project("fModel50mKK", 			"Ener1", ener_cut);
-    outTree600mKK->Project("fModel600mKK", 			"Ener1", ener_cut);
-    outTreeIVCK->Project("fModelIVCK", 				"Ener1", ener_cut);
-    outTreeOVCK->Project("fModelOVCK", 				"Ener1", ener_cut);	
+  outTree50mKK->Project("fModel50mKK", 			"Ener1", ener_cut);
+  outTree600mKK->Project("fModel600mKK", 			"Ener1", ener_cut);
+  outTreeIVCK->Project("fModelIVCK", 				"Ener1", ener_cut);
+  outTreeOVCK->Project("fModelOVCK", 				"Ener1", ener_cut);	
 
 	outTreeFrameCo->Project("fModelFrameCo", 		"Ener1", ener_cut);
 	outTreeTShieldCo->Project("fModelTShieldCo",	"Ener1", ener_cut);	
-    outTree50mKCo->Project("fModel50mKCo", 			"Ener1", ener_cut);
-    outTree600mKCo->Project("fModel600mKCo", 		"Ener1", ener_cut);
-    outTreeIVCCo->Project("fModelIVCCo", 			"Ener1", ener_cut);
-    outTreeOVCCo->Project("fModelOVCCo", 			"Ener1", ener_cut);
+  outTree50mKCo->Project("fModel50mKCo", 			"Ener1", ener_cut);
+  outTree600mKCo->Project("fModel600mKCo", 		"Ener1", ener_cut);
+  outTreeIVCCo->Project("fModelIVCCo", 			"Ener1", ener_cut);
+  outTreeOVCCo->Project("fModelOVCCo", 			"Ener1", ener_cut);
 
 	cout << "Loaded MC" << endl;
 
@@ -998,8 +998,11 @@ void TBackgroundModel::UpdateModel()
 	////////////////////////////////////////
 	// Few parameters
 	////////////////////////////////////////
-
   dNumCalls++;
+  if(dNumCalls%50==0)
+  {
+    cout << "Call #: "<< dNumCalls << endl;
+  }
 
 	fModelTot->Add( SmearMC(fModelFrameTh, fSmearFrameTh, fParameters[8]), 		fParameters[0]);
 	fModelTot->Add( SmearMC(fModelTShieldTh, fSmearTShieldTh, fParameters[8]), 	fParameters[0]);	
