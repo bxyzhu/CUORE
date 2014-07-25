@@ -84,7 +84,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fToyDataRa     = new TH1D("fToyDataRa",   "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataCo     = new TH1D("fToyDataCo",   "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataK      = new TH1D("fToyDataK",    "", dNBins, dMinEnergy, dMaxEnergy);
-  fToyDataNDBD   = new TH1D("fToyDataNDBD",   "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataNDBD   = new TH1D("fToyDataNDBD", "", dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Model histograms
@@ -257,8 +257,10 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 
 bool TBackgroundModel::DoTheFit()
 {
-  Initialize();
-
+  if(!bToyFit)
+  {
+    Initialize();
+  }
 	gStyle->SetOptStat(0);
    // This method actually sets up minuit and does the fit
 
@@ -291,22 +293,22 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",	 	50., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(9, "NDBD",	 	0., 10.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
-   minuit.FixParameter(0);
-   minuit.FixParameter(1);
-   minuit.FixParameter(2);
-   minuit.FixParameter(3);
+   // minuit.FixParameter(0);
+   // minuit.FixParameter(1);
+   // minuit.FixParameter(2);
+   // minuit.FixParameter(3);
    minuit.FixParameter(4);
    minuit.FixParameter(5);
    minuit.FixParameter(6);
    minuit.FixParameter(7);
-   minuit.FixParameter(8);
+   // minuit.FixParameter(8);
    minuit.FixParameter(9);
 
 
@@ -439,38 +441,6 @@ bool TBackgroundModel::DoTheFit()
 
  	legfit->Draw();
 
-  // pt->AddLine(.0,.65,1.,.65);
-
-
-/*
- 	TCanvas *ctable = new TCanvas("ctable", "ctable", 800, 1200);
- 	TPaveText *pt = new TPaveText(.0,.0,1.,1.);
- 	// pt->AddText("Fit Parameters");
- 	// pt->AddBox(.0, .0, 1.0, .6);
- 	// pt->AddText("Blah");
- 	// pt->AddText("Blah");
- 	// pt->AddText("Blah");
- 	// pt->AddText("Blah");
-
- 	// pt->AddLine(.0,.65,1.,.65);
-
-
- 	if(bToyFit)
- 	{
- 		pt->AddText(Form("Toy Data Integral (Tl-208 peak): %.2f", fToyData->Integral(2600/dBinSize, 2700/dBinSize))); 	
- 		pt->AddText(Form("Toy Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fToyData->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
- 	}
- 	else
- 	{
- 		pt->AddText(Form("Data Integral (Tl-208 peak): %.2f", fDataHistoM1->Integral(2600/dBinSize, 2700/dBinSize)));
-	 	pt->AddText(Form("Data Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fDataHistoM1->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
- 	}
-
- 	pt->AddText(Form("Model Integral (Tl-208 peak): %.2f", fModelTot->Integral(2600/dBinSize, 2700/dBinSize)));
- 	pt->AddText(Form("Model Integral (Fit Range %.0f to %.0f): %.2f", dFitMin, dFitMax, fModelTot->Integral(dFitMin/dBinSize, dFitMax/dBinSize)));
- 	pt->Draw();
-*/
-
 
 	// Residuals
 	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
@@ -493,11 +463,15 @@ bool TBackgroundModel::DoTheFit()
 
 void TBackgroundModel::DrawBkg()
 {
+
  	gStyle->SetOptStat(0);
  	// gStyle->SetOptTitle(0);	
-    TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
-    cBkg->SetLogy();
-    fDataHistoM1->Draw();
+  TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
+  cBkg->SetLogy();
+  fDataHistoM1->SetLineColor(1);
+  fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+  fDataHistoM1->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
+  fDataHistoM1->Draw();
 
 
 }
@@ -512,6 +486,7 @@ void TBackgroundModel::DrawBkg()
  	TLegend *legra = new TLegend(0.75,0.80,0.925,0.925);
  	TLegend *legk = new TLegend(0.75,0.80,0.925,0.925);
  	TLegend *legco = new TLegend(0.75,0.80,0.925,0.925);
+  TLegend *legndbd = new TLegend(0.8,0.890,0.925,0.925);
 
 
     TCanvas *cTh232 = new TCanvas("cTh232", "cTh232", 1200, 800);
@@ -531,7 +506,7 @@ void TBackgroundModel::DrawBkg()
     fModel600mKTh->Draw("SAME");
     fModelIVCTh->Draw("SAME");
     fModelOVCTh->Draw("SAME");
-    fModelFrameTh->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
+    fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
     legth->AddEntry(fModelFrameTh, "Frame" ,"l");
@@ -558,7 +533,7 @@ void TBackgroundModel::DrawBkg()
     fModel600mKRa->Draw("SAME");
     fModelIVCRa->Draw("SAME");
     fModelOVCRa->Draw("SAME");
-    fModelFrameRa->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
+    fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
     legra->AddEntry(fModelFrameRa, "Frame" ,"l");
@@ -585,7 +560,7 @@ void TBackgroundModel::DrawBkg()
     fModel600mKK->Draw("SAME");
     fModelIVCK->Draw("SAME");
     fModelOVCK->Draw("SAME");
-    fModelFrameK->GetXaxis()->SetRange(1000/dBinSize, 1600/dBinSize);
+    fModelFrameK->GetXaxis()->SetRange(0/dBinSize, 1600/dBinSize);
 
 
     legk->AddEntry(fModelFrameK, "Frame" ,"l");
@@ -612,7 +587,7 @@ void TBackgroundModel::DrawBkg()
     fModel600mKCo->Draw("SAME");
     fModelIVCCo->Draw("SAME");
     fModelOVCCo->Draw("SAME");
-    fModelFrameCo->GetXaxis()->SetRange(2200/dBinSize, 2700/dBinSize);
+    fModelFrameCo->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
     legco->AddEntry(fModelFrameCo, "Frame" ,"l");
@@ -623,69 +598,62 @@ void TBackgroundModel::DrawBkg()
     legco->AddEntry(fModelOVCCo, "OVC" ,"l");
     legco->Draw();
 
+
+
+    TCanvas *cNDBD = new TCanvas("cNDBD", "cNDBD", 1200, 800);
+    cNDBD->SetLogy();
+    fModelNDBD->SetLineColor(1);
+    fModelNDBD->Draw();
+    fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
+    legndbd->Draw();
+
  }
 
 
 // Generates Toy Data using MC histograms
 void TBackgroundModel::GenerateToyData()
 {
-
 	bToyFit = true;
+  Initialize();
 	// Create some RNG for weights?
 	// Currently just put in by hand
-	std::string dToyDir = "/Users/brian/macros/Simulations/Bkg/";
 
-	// Load g2tas smeared data:
-    outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
-    // outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
-    // outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
-    // outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
-    // outTreeToyTh 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Th232", 1);
+  fToyDataThTot->Add( SmearMC(fModelFrameTh, fToyDataTh, 5),   3000);
+  fToyDataThTot->Add( SmearMC(fModelTShieldTh, fToyDataTh, 5), 3000);  
+  fToyDataThTot->Add( SmearMC(fModel50mKTh, fToyDataTh, 5),    3000);
+  fToyDataThTot->Add( SmearMC(fModel600mKTh, fToyDataTh, 5),   3000;
+  fToyDataThTot->Add( SmearMC(fModelIVCTh, fToyDataTh, 5),     1500);
+  fToyDataThTot->Add( SmearMC(fModelOVCTh, fToyDataTh, 5),     1500);
 
+  fToyDataRaTot->Add( SmearMC(fModelFrameRa, fToyDataRa, 5),    500);
+  fToyDataRaTot->Add( SmearMC(fModelTShieldRa, fToyDataRa, 5),  500);  
+  fToyDataRaTot->Add( SmearMC(fModel50mKRa, fToyDataRa, 5),     500);
+  fToyDataRaTot->Add( SmearMC(fModel600mKRa, fToyDataRa, 5),    500);
+  fToyDataRaTot->Add( SmearMC(fModelIVCRa, fToyDataRa, 5),      100);
+  fToyDataRaTot->Add( SmearMC(fModelOVCRa, fToyDataRa, 5),      100);
 
+  fToyDataCoTot->Add( SmearMC(fModelFrameK, fToyDataCo, 5),     900);
+  fToyDataCoTot->Add( SmearMC(fModelTShieldK, fToyDataCo, 5),   900);
+  fToyDataCoTot->Add( SmearMC(fModel50mKK, fToyDataCo, 5),      900);
+  fToyDataCoTot->Add( SmearMC(fModel600mKK, fToyDataCo, 5),     900);
+  fToyDataCoTot->Add( SmearMC(fModelIVCK, fToyDataCo, 5),       50);
+  fToyDataCoTot->Add( SmearMC(fModelOVCK, fToyDataCo, 5),       50); 
 
-    outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
-    // outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
-    // outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
-    // outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
-    // outTreeToyRa 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Ra226", 1);
-    
-
-
-    outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
-    // outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
-    // outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
-    // outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
-    // outTreeToyCo 		= LoadMC(dToyDir.c_str(),	"Frame", 	"Co60", 1);
-    
-
-
-    outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
-    // outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
-    // outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
-    // outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
-    // outTreeToyK 		= LoadMC(dToyDir.c_str(),	"Frame", 	"K40", 1);
-
-
-	outTreeToyTh->Project("fToyDataTh", 	"Ener1", ener_cut);
-	outTreeToyRa->Project("fToyDataRa", 	"Ener1", ener_cut);
-	outTreeToyCo->Project("fToyDataCo", 	"Ener1", ener_cut);
-	outTreeToyK->Project("fToyDataK",	 	"Ener1", ener_cut);
+  fToyDataKTot->Add( SmearMC(fModelFrameCo, fToyDataK, 5),      400);
+  fToyDataKTot->Add( SmearMC(fModelTShieldCo, fToyDataK, 5),    400);
+  fToyDataKTot->Add( SmearMC(fModel50mKCo, fToyDataK, 5),       400);
+  fToyDataKTot->Add( SmearMC(fModel600mKCo, fToyDataK, 5),      400);
+  fToyDataKTot->Add( SmearMC(fModelIVCCo, fToyDataK, 5),        800);
+  fToyDataKTot->Add( SmearMC(fModelOVCCo, fToyDataK, 5),        800);  
 
 	cout << "Loaded Toy Histograms" << endl;
 
-	NormalizePDF(fToyDataTh, 	dFitMin, dFitMax);
-	NormalizePDF(fToyDataRa, 	dFitMin, dFitMax);
-	NormalizePDF(fToyDataCo, 	dFitMin, dFitMax);
-	NormalizePDF(fToyDataK, 	dFitMin, dFitMax);
 
-	cout << "Normalized Toy Data" << endl;
-
-
-	fToyData->Add(fToyDataTh,	2000);
-	fToyData->Add(fToyDataRa,	550);
-	fToyData->Add(fToyDataCo,	600);
-	fToyData->Add(fToyDataK,	700);
+	fToyData->Add(fToyDataTh,	1);
+	fToyData->Add(fToyDataRa,	1);
+	fToyData->Add(fToyDataCo,	1);
+	fToyData->Add(fToyDataK,	1);
 
 }
 
@@ -940,10 +908,6 @@ void TBackgroundModel::PrintParameters()
 
 	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
 					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7] + fParameters[9];
-					// + fParameters[8] + fParameters[9] + fParameters[10] + fParameters[11]
-					// + fParameters[12] + fParameters[13] + fParameters[14] + fParameters[15]
-					// + fParameters[16] + fParameters[17] + fParameters[18] + fParameters[19]
-					// + fParameters[20] + fParameters[21] + fParameters[22] + fParameters[23];
 
 	// cout << "Par11 (1 - Sum) = " << 1 - dSum << endl;
 	cout << "Sum = " << dSum << endl; 
