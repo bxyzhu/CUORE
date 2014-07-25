@@ -13,7 +13,7 @@ class TBackgroundModel : public TObject {
 public:
 
 	TBackgroundModel();
-	virtual ~TBackgroundModel();
+	virtual ~TBackgroundModel(double fFitMin, double fFitMax);
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
   
