@@ -79,7 +79,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fDataHistoM2   = new TH1D("fDataHistoM2",   "", dNBins, dMinEnergy, dMaxEnergy);
 
   // Toy Data
-  fToyData       = new TH1D("fToyData",     "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyData       = new TH1D("fToyData",        "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataThTot  = new TH1D("fToyDataThTot",   "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataRaTot  = new TH1D("fToyDataRaTot",   "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataCoTot  = new TH1D("fToyDataCoTot",   "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataKTot   = new TH1D("fToyDataKTot",    "", dNBins, dMinEnergy, dMaxEnergy);
+
   fToyDataTh     = new TH1D("fToyDataTh",   "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataRa     = new TH1D("fToyDataRa",   "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataCo     = new TH1D("fToyDataCo",   "", dNBins, dMinEnergy, dMaxEnergy);
@@ -424,7 +429,7 @@ bool TBackgroundModel::DoTheFit()
   pt->AddText(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
   pt->AddText("Fit Parameters (counts/yr):");
   pt->AddText(Form("Close Th: %0.3E --- Far Th: %0.3E", fParameters[0], fParameters[1]));
-  pt->AddText(Form("Close Ra: %0.3f --- Far Ra: %0.3E", fParameters[2], fParameters[3]));
+  pt->AddText(Form("Close Ra: %0.3E --- Far Ra: %0.3E", fParameters[2], fParameters[3]));
   pt->AddText(Form("Close K: %0.3E --- Far K: %0.3E", fParameters[4], fParameters[5]));
   pt->AddText(Form("Close Co: %0.3E --- Far Co: %0.3E", fParameters[6], fParameters[7]));
   pt->AddText(Form("NDBD: %0.3E", fParameters[9]));
@@ -622,7 +627,7 @@ void TBackgroundModel::GenerateToyData()
   fToyDataThTot->Add( SmearMC(fModelFrameTh, fToyDataTh, 5),   3000);
   fToyDataThTot->Add( SmearMC(fModelTShieldTh, fToyDataTh, 5), 3000);  
   fToyDataThTot->Add( SmearMC(fModel50mKTh, fToyDataTh, 5),    3000);
-  fToyDataThTot->Add( SmearMC(fModel600mKTh, fToyDataTh, 5),   3000;
+  fToyDataThTot->Add( SmearMC(fModel600mKTh, fToyDataTh, 5),   3000);
   fToyDataThTot->Add( SmearMC(fModelIVCTh, fToyDataTh, 5),     1500);
   fToyDataThTot->Add( SmearMC(fModelOVCTh, fToyDataTh, 5),     1500);
 
@@ -650,10 +655,10 @@ void TBackgroundModel::GenerateToyData()
 	cout << "Loaded Toy Histograms" << endl;
 
 
-	fToyData->Add(fToyDataTh,	1);
-	fToyData->Add(fToyDataRa,	1);
-	fToyData->Add(fToyDataCo,	1);
-	fToyData->Add(fToyDataK,	1);
+	fToyData->Add(fToyDataThTot);
+	fToyData->Add(fToyDataRaTot);
+	// fToyData->Add(fToyDataCo,	1);
+	// fToyData->Add(fToyDataK,	1);
 
 }
 

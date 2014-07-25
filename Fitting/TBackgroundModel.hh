@@ -65,6 +65,11 @@ private:
 
 	// Toy data
 	TH1D			*fToyData;
+	TH1D			*fToyDataThTot;
+	TH1D			*fToyDataRaTot;
+	TH1D			*fToyDataCoTot;
+	TH1D			*fToyDataKTot;
+
 	TH1D			*fToyDataTh;
 	TH1D			*fToyDataRa;
 	TH1D			*fToyDataCo;
