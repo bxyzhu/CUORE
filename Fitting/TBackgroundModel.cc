@@ -199,9 +199,11 @@ bool TBackgroundModel::DoTheFit()
    		///// Draw Data
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
-      fDataHistoM1->SetTitle(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
+      // fDataHistoM1->SetTitle(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+      fDataHistoM1->GetYaxis()->SetRange(0, 50000);
+      fDataHistoM1->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
 		  fDataHistoM1->Draw();
 	 }
 
@@ -281,6 +283,16 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->Draw("SAME");
 	fModelTotNDBD->Draw("SAME");
 
+  TPaveText *pt = new TPaveText(0.4,0.8,0.6,0.98,"NB NDC");
+  pt->AddText(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
+  pt->AddText("Fit Parameters (counts/yr):");
+  pt->AddText(Form("Close Th: %0.5f -- Far Th: %0.5f", fParameters[0], fParameters[1]));
+  pt->AddText(Form("Close Ra: %0.5f -- Far Ra: %0.5f", fParameters[2], fParameters[3]));
+  pt->AddText(Form("Close K: %0.5f -- Far K: %0.5f", fParameters[4], fParameters[5]));
+  pt->AddText(Form("Close Co: %0.5f -- Far Co: %0.5f", fParameters[6], fParameters[7]));
+  pt->AddText(Form("NDBD: %0.5f", fParameters[9]));
+  pt->AddText(Form("Resolution: %0.5f", fParameters[8]));
+  pt->Draw();
 
  	TLegend *legfit = new TLegend(0.82,0.82,0.95,0.95);
  	legfit->AddEntry(fModelTot, "Total PDF", "l");
@@ -291,6 +303,8 @@ bool TBackgroundModel::DoTheFit()
  	legfit->AddEntry(fModelTotNDBD, "NDBD", "l");
 
  	legfit->Draw();
+
+  // pt->AddLine(.0,.65,1.,.65);
 
 
 /*
