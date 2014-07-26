@@ -94,42 +94,42 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   // Model histograms
 
-  fModelFrameTh  = new TH1D("fModelFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldTh  = new TH1D("fModelTShieldTh",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKTh   = new TH1D("fModel50mKTh",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKTh  = new TH1D("fModel600mKTh",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCTh    = new TH1D("fModelIVCTh",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCTh    = new TH1D("fModelOVCTh",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameTh    = new TH1D("fModelFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldTh  = new TH1D("fModelTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fModel50mKTh     = new TH1D("fModel50mKTh",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fModel600mKTh    = new TH1D("fModel600mKTh",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelIVCTh      = new TH1D("fModelIVCTh",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCTh      = new TH1D("fModelOVCTh",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fModelFrameRa  = new TH1D("fModelFrameRa",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldRa  = new TH1D("fModelTShieldRa",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);  
-  fModel50mKRa   = new TH1D("fModel50mKRa",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKRa  = new TH1D("fModel600mKRa",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCRa    = new TH1D("fModelIVCRa",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCRa    = new TH1D("fModelOVCRa",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameRa    = new TH1D("fModelFrameRa",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldRa  = new TH1D("fModelTShieldRa","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
+  fModel50mKRa     = new TH1D("fModel50mKRa",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fModel600mKRa    = new TH1D("fModel600mKRa",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelIVCRa      = new TH1D("fModelIVCRa",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCRa      = new TH1D("fModelOVCRa",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fModelFrameK   = new TH1D("fModelFrameK",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldK   = new TH1D("fModelTShieldK",   "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKK    = new TH1D("fModel50mKK",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKK   = new TH1D("fModel600mKK",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCK     = new TH1D("fModelIVCK",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCK     = new TH1D("fModelOVCK",   "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameK     = new TH1D("fModelFrameK",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldK   = new TH1D("fModelTShieldK", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fModel50mKK      = new TH1D("fModel50mKK",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fModel600mKK     = new TH1D("fModel600mKK",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelIVCK       = new TH1D("fModelIVCK",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCK       = new TH1D("fModelOVCK",   "OVC",        dNBins, dMinEnergy, dMaxEnergy);
 
-  fModelFrameCo  = new TH1D("fModelFrameCo",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldCo  = new TH1D("fModelTShieldCo",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKCo   = new TH1D("fModel50mKCo",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKCo  = new TH1D("fModel600mKCo",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCCo    = new TH1D("fModelIVCCo",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCCo    = new TH1D("fModelOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameCo    = new TH1D("fModelFrameCo",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldCo  = new TH1D("fModelTShieldCo","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fModel50mKCo     = new TH1D("fModel50mKCo",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fModel600mKCo    = new TH1D("fModel600mKCo",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelIVCCo      = new TH1D("fModelIVCCo",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCCo      = new TH1D("fModelOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fModelNDBD     = new TH1D("fModelNDBD",     "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  fModelNDBD       = new TH1D("fModelNDBD",     "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Total model histograms
-  fModelTot      = new TH1D("fModelTot",    "Frame",    dNBins, dMinEnergy, dMaxEnergy);  
+  fModelTot      = new TH1D("fModelTot",      "Frame",        dNBins, dMinEnergy, dMaxEnergy);  
   fModelTotTh    = new TH1D("fModelTotTh",    "Total Th232",  dNBins, dMinEnergy, dMaxEnergy);
   fModelTotRa    = new TH1D("fModelTotRa",    "Total Ra226",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotK     = new TH1D("fModelTotK",     "Total K40",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotK     = new TH1D("fModelTotK",     "Total K40",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTotCo    = new TH1D("fModelTotCo",    "Total Co60",   dNBins, dMinEnergy, dMaxEnergy);
 
   fModelTotNDBD  = new TH1D("fModelTotNDBD",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
