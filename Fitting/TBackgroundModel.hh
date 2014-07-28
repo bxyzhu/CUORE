@@ -12,8 +12,8 @@ class TBackgroundModel : public TObject {
 
 public:
 
-	TBackgroundModel();
-	virtual ~TBackgroundModel(double fFitMin, double fFitMax);
+	TBackgroundModel(double fFitMin, double fFitMax, int fMult);
+	virtual ~TBackgroundModel();
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
   
@@ -199,6 +199,7 @@ private:
 	bool			bToyFit;
 	
 	int 			dNumCalls;
+	int 			dMult;
 
 	// Parameters
 	double				fParameters[10];

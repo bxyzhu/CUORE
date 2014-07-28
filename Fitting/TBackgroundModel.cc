@@ -42,8 +42,9 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 }
 
 
-TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
+TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
 {
+
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -57,9 +58,16 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dMinEnergy = 0.;
   dMaxEnergy = 3500.;
 
+  if(fFitMin >= fFitMax)
+  {
+    cout << "Trouble's a brewing: Fit Min >= Fit Max!" << endl;
+  }
+
   // Fitting range
   dFitMin = fFitMin;
   dFitMax = fFitMax;
+
+  dMult = fMult;
 
 
   dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
@@ -122,7 +130,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelIVCCo      = new TH1D("fModelIVCCo",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   fModelOVCCo      = new TH1D("fModelOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fModelNDBD       = new TH1D("fModelNDBD",     "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  fModelNDBD       = new TH1D("fModelNDBD",     "NDBD",     dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Total model histograms
@@ -139,37 +147,37 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
 
   // Smeared Histograms
-  fSmearDummy    = new TH1D("fSmearDummy",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmearDummy      = new TH1D("fSmearDummy",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearFrameTh  = new TH1D("fSmearFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearTShieldTh  = new TH1D("fSmearTShieldTh",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmear50mKTh   = new TH1D("fSmear50mKTh",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fSmear600mKTh  = new TH1D("fSmear600mKTh",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearIVCTh    = new TH1D("fSmearIVCTh",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fSmearOVCTh    = new TH1D("fSmearOVCTh",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameTh    = new TH1D("fSmearFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldTh  = new TH1D("fSmearTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKTh     = new TH1D("fSmear50mKTh",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKTh    = new TH1D("fSmear600mKTh",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCTh      = new TH1D("fSmearIVCTh",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCTh      = new TH1D("fSmearOVCTh",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearFrameRa  = new TH1D("fSmearFrameRa",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearTShieldRa  = new TH1D("fSmearTShieldRa",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);  
-  fSmear50mKRa   = new TH1D("fSmear50mKRa",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fSmear600mKRa  = new TH1D("fSmear600mKRa",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearIVCRa    = new TH1D("fSmearIVCRa",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fSmearOVCRa    = new TH1D("fSmearOVCRa",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRa    = new TH1D("fSmearFrameRa",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldRa  = new TH1D("fSmearTShieldRa","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
+  fSmear50mKRa     = new TH1D("fSmear50mKRa",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKRa    = new TH1D("fSmear600mKRa",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCRa      = new TH1D("fSmearIVCRa",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCRa      = new TH1D("fSmearOVCRa",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearFrameK   = new TH1D("fSmearFrameK",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearTShieldK   = new TH1D("fSmearTShieldK",   "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmear50mKK    = new TH1D("fSmear50mKK",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fSmear600mKK   = new TH1D("fSmear600mKK",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearIVCK     = new TH1D("fSmearIVCK",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fSmearOVCK     = new TH1D("fSmearOVCK",   "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameK     = new TH1D("fSmearFrameK",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldK   = new TH1D("fSmearTShieldK", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKK      = new TH1D("fSmear50mKK",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKK     = new TH1D("fSmear600mKK",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCK       = new TH1D("fSmearIVCK",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCK       = new TH1D("fSmearOVCK",   "OVC",        dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearFrameCo  = new TH1D("fSmearFrameCo",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearTShieldCo  = new TH1D("fSmearTShieldCo",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmear50mKCo   = new TH1D("fSmear50mKCo",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fSmear600mKCo  = new TH1D("fSmear600mKCo",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearIVCCo    = new TH1D("fSmearIVCCo",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fSmearOVCCo    = new TH1D("fSmearOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameCo    = new TH1D("fSmearFrameCo",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldCo  = new TH1D("fSmearTShieldCo","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKCo     = new TH1D("fSmear50mKCo",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKCo    = new TH1D("fSmear600mKCo",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCCo      = new TH1D("fSmearIVCCo",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCCo      = new TH1D("fSmearOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearNDBD     = new TH1D("fSmearNDBD",   "NDBD",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmearNDBD       = new TH1D("fSmearNDBD",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
 
   // Clear Initial Parameters
   fParameters[0]  = 0.;
@@ -338,15 +346,30 @@ bool TBackgroundModel::DoTheFit()
 	 }
 	 else
 	 {
+
+    if(dMult ==1 )
+    {
    		///// Draw Data
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
-      // fDataHistoM1->SetTitle(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
       fDataHistoM1->GetYaxis()->SetRange(0, 50000);
       fDataHistoM1->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
 		  fDataHistoM1->Draw();
+    }
+    else if(dMult == 2)
+    {
+      ///// Draw Data
+      fDataHistoM2->SetLineColor(1);
+      fDataHistoM2->SetLineWidth(2);
+      fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+      fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+      fDataHistoM2->GetYaxis()->SetRange(0, 50000);
+      fDataHistoM2->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
+      fDataHistoM2->Draw();
+
+    }
 	 }
 
 	// Dummy variable for error of parameter to throw away
@@ -473,11 +496,21 @@ void TBackgroundModel::DrawBkg()
  	// gStyle->SetOptTitle(0);	
   TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
   cBkg->SetLogy();
-  fDataHistoM1->SetLineColor(1);
-  fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-  fDataHistoM1->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
-  fDataHistoM1->Draw();
 
+  if(dMult == 1)
+  {
+    fDataHistoM1->SetLineColor(1);
+    fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+    fDataHistoM1->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
+    fDataHistoM1->Draw();
+  }
+  else if(dMult == 2)
+  {
+    fDataHistoM2->SetLineColor(1);
+    fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+    fDataHistoM2->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
+    fDataHistoM2->Draw();
+  }
 
 }
 
@@ -678,7 +711,14 @@ double TBackgroundModel::GetChiSquare()
 		}
 		else 
 		{
-			data_i = fDataHistoM1->GetBinContent(i); // For real data
+      if(dMult == 1)
+      {
+			 data_i = fDataHistoM1->GetBinContent(i); // For real data
+      }
+      else if(dMult == 2)
+      {
+       data_i = fDataHistoM2->GetBinContent(i); // For real data
+      }      
 		}
 
 		model_i = fModelTot->GetBinContent(i);
@@ -720,36 +760,36 @@ void TBackgroundModel::Initialize()
 
 
   // Fills and Loads MC data
-  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", 1);
-  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Th232", 1);
-  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", 1);
-  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", 1);
-  outTreeIVCTh 		= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", 1);
-  outTreeOVCTh 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", 1);
+  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", dMult);
+  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", dMult);
+  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", dMult);
+  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", dMult);
+  outTreeIVCTh 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", dMult);
+  outTreeOVCTh 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", dMult);
 
-  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", 1);
-  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Ra226", 1);    
-  outTree50mKRa	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", 1);
-  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", 1);
-  outTreeIVCRa	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", 1);
-  outTreeOVCRa 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", 1);
+  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", dMult);
+  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", dMult);    
+  outTree50mKRa	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", dMult);
+  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", dMult);
+  outTreeIVCRa	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", dMult);
+  outTreeOVCRa 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", dMult);
 
-  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", 1);
-  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield", 	"K40", 1);    
-  outTree50mKK	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", 1);
-  outTree600mKK		= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", 1);
-  outTreeIVCK		 	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", 1);
-  outTreeOVCK 		= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", 1);
+  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", dMult);
+  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield","K40", dMult);    
+  outTree50mKK	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", dMult);
+  outTree600mKK	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", dMult);
+  outTreeIVCK		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", dMult);
+  outTreeOVCK 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", dMult);
 
 
-  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	1);
-  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield", 	"Co60", 1);    
-  outTree50mKCo	 	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", 1);
-  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", 1);
-  outTreeIVCCo	 	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", 1);
-  outTreeOVCCo 		= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", 1);
+  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	dMult);
+  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", dMult);    
+  outTree50mKCo	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", dMult);
+  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", dMult);
+  outTreeIVCCo	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", dMult);
+  outTreeOVCCo 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", dMult);
 
-  outTreeNDBD 		= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", 1);
+  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", dMult);
 
 
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
@@ -837,28 +877,29 @@ void TBackgroundModel::LoadData()
 		cout << "Data Histograms Created" << endl;
 	}
 
-/*
-	// Test
-	for(int i =0; i<10000; i++)
-	{
-		fDataHisto->Fill(gRandom->Gaus(2.0,1.0));
-	}
-*/	
-
-    qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");	
-    qtree->Project("fDataHistoTot", "Energy", base_cut);
-    qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
-    qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");	
+  qtree->Project("fDataHistoTot", "Energy", base_cut);
+  qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
+  qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
 
 	cout << "Loaded Data" << endl;
 
 	// Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
 	fDataHistoM1->Scale(1/(14647393.0 * dSecToYears));
+  fDataHistoM2->Scale(1/(14647393.0 * dSecToYears));
 
 	// Normalizing data (don't!)
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-	dDataIntegral = fDataHistoM1->Integral(1, dNBins);
-	cout << "Events in background spectrum: " << dDataIntegral << endl;
+  if(dMult == 1)
+  {
+	  dDataIntegral = fDataHistoM1->Integral(1, dNBins);
+  }
+  else if (dMult == 2)
+  {
+    dDataIntegral = fDataHistoM2->Integral(1, dNBins);
+  }  
+
+	cout << "Events in background spectrum: " << dDataIntegral << " Multiplicity: " << dMult << endl;
 	// cout << "Normalized Data" << endl;
 }
 
@@ -940,7 +981,6 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution)
 	double dArea;
 	double dSmearedValue;
 
-	// If i only goes through fit range, saves time?
 	for(int i = 0; i<dNBins; i++)
 	{
 		for(int j = 0; j<dNBins; j++)
@@ -1017,21 +1057,6 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModelOVCCo, fSmearOVCCo, fParameters[8]), 			fParameters[7]);	
 
 	fModelTot->Add( SmearMC(fModelNDBD, fSmearNDBD, fParameters[8]), 			fParameters[9]);	
-
-
-/*
-	// Test gaussian
-	TF1	gaus("mygaus","gaus(0)",-10,10);
-	gaus.SetParameters(1,fParameters[0],fParameters[1]);
-
-	for(int i =1;i<fModelHisto->GetNbinsX(); i++)
-	{
-		fModelHisto->SetBinContent(i,gaus.Eval(fModelHisto->GetBinCenter(i)));
-	}
-	
-	fModelHisto->Scale(fDataHisto->Integral()/fModelHisto->Integral());
-	
-*/	
 
 
 }
