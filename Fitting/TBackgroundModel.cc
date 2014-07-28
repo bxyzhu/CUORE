@@ -306,23 +306,30 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",	 	0., 10.0, 0., dDataIntegral);  
+   // minuit.DefineParameter(9, "NDBD",    0., 10.0, 0., dDataIntegral);     
+   minuit.DefineParameter(9, "NDBD",	 	100., 10.0, 0., dDataIntegral);  
+
+
 
    // Fix parameters for testing
-   minuit.FixParameter(0);
-   minuit.FixParameter(1);
-   minuit.FixParameter(2);
-   minuit.FixParameter(3);
-   minuit.FixParameter(4);
-   minuit.FixParameter(5);
-   minuit.FixParameter(6);
-   minuit.FixParameter(7);
-   minuit.FixParameter(8);
-   minuit.FixParameter(9);
+   // minuit.FixParameter(0); // Close Th
+   // minuit.FixParameter(1); // Far Th
+   // minuit.FixParameter(2); // Close Ra
+   // minuit.FixParameter(3); // Far Ra
+   minuit.FixParameter(4); // Close K
+   minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(6); // Close Co
+   minuit.FixParameter(7); // Far Co
+   // minuit.FixParameter(8); // Resolution
+   // minuit.FixParameter(9); // NDBD
+
+  // Number of Parameters! (for Chi-squared/NDF calculation)
+  int dNumParameters = 7;
+
 
 
    //Tell minuit what external function to use 
@@ -389,7 +396,7 @@ bool TBackgroundModel::DoTheFit()
 
 	UpdateModel();
 	
-	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - 7) << endl;
+	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;
   cout << "Total number of calls = " << dNumCalls << endl;
 
   ///////////////////////////////////////////
@@ -449,14 +456,14 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotNDBD->Draw("SAME");
 
   TPaveText *pt = new TPaveText(0.4,0.75,0.65,0.98,"NB NDC");
-  pt->AddText(Form("Fit Range: %.0f to %.0f", dFitMin, dFitMax));
-  pt->AddText("Fit Parameters (counts/yr):");
+  pt->AddText(Form("Fit Range: %.0f to %.0f keV", dFitMin, dFitMax));
+  pt->AddText("Fit Parameters (counts/(10 keV)/yr):");
   pt->AddText(Form("Close Th: %0.3E --- Far Th: %0.3E", fParameters[0], fParameters[1]));
   pt->AddText(Form("Close Ra: %0.3E --- Far Ra: %0.3E", fParameters[2], fParameters[3]));
   pt->AddText(Form("Close K: %0.3E --- Far K: %0.3E", fParameters[4], fParameters[5]));
   pt->AddText(Form("Close Co: %0.3E --- Far Co: %0.3E", fParameters[6], fParameters[7]));
-  pt->AddText(Form("NDBD: %0.3E", fParameters[9]));
-  pt->AddText(Form("Resolution: %0.4f", fParameters[8]));
+  pt->AddText(Form("NDBD: %0.3E --- Resolution %0.4f", fParameters[9], fParameters[8]));
+  pt->AddText(Form("#chi^{2}/NDF: %0.3f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt->Draw();
 
  	TLegend *legfit = new TLegend(0.82,0.82,0.95,0.95);
