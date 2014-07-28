@@ -313,15 +313,15 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(9, "NDBD",	 	0., 10.0, 0., dDataIntegral);  
 
    // Fix parameters for testing
-   // minuit.FixParameter(0);
-   // minuit.FixParameter(1);
-   // minuit.FixParameter(2);
-   // minuit.FixParameter(3);
+   minuit.FixParameter(0);
+   minuit.FixParameter(1);
+   minuit.FixParameter(2);
+   minuit.FixParameter(3);
    minuit.FixParameter(4);
    minuit.FixParameter(5);
    minuit.FixParameter(6);
    minuit.FixParameter(7);
-   // minuit.FixParameter(8);
+   minuit.FixParameter(8);
    minuit.FixParameter(9);
 
 
