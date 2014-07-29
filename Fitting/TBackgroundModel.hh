@@ -75,13 +75,14 @@ private:
 	TH1D			*fToyDataCo;
 	TH1D			*fToyDataK;
 	TH1D			*fToyDataNDBD;
+	TH1D			*fToyDataBi;
 
 	TChain			*outTreeToyTh;
 	TChain			*outTreeToyRa;
 	TChain			*outTreeToyCo;
 	TChain			*outTreeToyK;
 	TChain			*outTreeToyNDBD;
-
+	TChain			*outTreeToyBi;
 
 	// Model
 	TChain			*outTreeFrameTh;
@@ -113,6 +114,7 @@ private:
 	TChain			*outTreeOVCCo;
 
 	TChain			*outTreeNDBD;
+	TChain			*outTreeBi;
 
 	// Total PDFs
 	TH1D			*fModelTot;
@@ -122,7 +124,9 @@ private:
 	TH1D			*fModelTotCo;
 
 	TH1D			*fModelTotNDBD;
+	TH1D			*fModelTotBi;
 	TH1D			*fModelNDBD;
+	TH1D			*fModelBi;
 
 	TH1D			*fModelFrameTh;
 	TH1D			*fModelTShieldTh;
@@ -158,6 +162,7 @@ private:
 	TH1D			*fSmearDummy;
 
 	TH1D			*fSmearNDBD;
+	TH1D			*fSmearBi;
 
 	TH1D			*fSmearFrameTh;
 	TH1D			*fSmearTShieldTh;
@@ -202,7 +207,7 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[10];
+	double				fParameters[11];
 	double				dSecToYears;
 
 //  ClassDef(TMyFitter,1) // 

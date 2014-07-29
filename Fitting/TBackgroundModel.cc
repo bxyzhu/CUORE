@@ -98,6 +98,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fToyDataCo     = new TH1D("fToyDataCo",   "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataK      = new TH1D("fToyDataK",    "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataNDBD   = new TH1D("fToyDataNDBD", "", dNBins, dMinEnergy, dMaxEnergy);
+  fToyDataBi     = new TH1D("fToyDataBi",   "", dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Model histograms
@@ -131,6 +132,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fModelOVCCo      = new TH1D("fModelOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fModelNDBD       = new TH1D("fModelNDBD",     "NDBD",     dNBins, dMinEnergy, dMaxEnergy);
+  fModelBi         = new TH1D("fModelBi",       "Bi207",    dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Total model histograms
@@ -141,6 +143,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fModelTotCo    = new TH1D("fModelTotCo",    "Total Co60",   dNBins, dMinEnergy, dMaxEnergy);
 
   fModelTotNDBD  = new TH1D("fModelTotNDBD",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotBi    = new TH1D("fModelTotBi",   "Total Bi207",   dNBins, dMinEnergy, dMaxEnergy);
 
 
   // Smearing
@@ -168,7 +171,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fSmear50mKK      = new TH1D("fSmear50mKK",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
   fSmear600mKK     = new TH1D("fSmear600mKK",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearIVCK       = new TH1D("fSmearIVCK",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fSmearOVCK       = new TH1D("fSmearOVCK",   "OVC",        dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCK       = new TH1D("fSmearOVCK",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fSmearFrameCo    = new TH1D("fSmearFrameCo",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearTShieldCo  = new TH1D("fSmearTShieldCo","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -178,6 +181,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fSmearOVCCo      = new TH1D("fSmearOVCCo",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fSmearNDBD       = new TH1D("fSmearNDBD",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  fSmearBi         = new TH1D("fSmearBi",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
+
 
   // Clear Initial Parameters
   fParameters[0]  = 0.;
@@ -306,12 +311,12 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   // minuit.DefineParameter(9, "NDBD",    0., 10.0, 0., dDataIntegral);     
-   minuit.DefineParameter(9, "NDBD",	 	100., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(9, "NDBD",    0., 10.0, 0., dDataIntegral);     
+   // minuit.DefineParameter(9, "NDBD",	 	100., 10.0, 0., dDataIntegral);  
 
 
 
@@ -322,13 +327,13 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(3); // Far Ra
    minuit.FixParameter(4); // Close K
    minuit.FixParameter(5); // Far K
-   // minuit.FixParameter(6); // Close Co
+   minuit.FixParameter(6); // Close Co
    minuit.FixParameter(7); // Far Co
    // minuit.FixParameter(8); // Resolution
-   // minuit.FixParameter(9); // NDBD
+   minuit.FixParameter(9); // NDBD
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 7;
+  int dNumParameters = 5;
 
 
 
@@ -796,10 +801,12 @@ void TBackgroundModel::Initialize()
   outTreeIVCCo	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", dMult);
   outTreeOVCCo 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", dMult);
 
-  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", 	"0NDBD", dMult);
+  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", dMult);
+  outTreeBi         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", dMult);
 
 
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
+  outTreeBi->Project("fModelBi",            "Ener1", ener_cut);  
 	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
 	outTreeTShieldTh->Project("fModelTShieldTh",	"Ener1", ener_cut);
   outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
@@ -832,6 +839,7 @@ void TBackgroundModel::Initialize()
 
 	// Normalize all MC histograms
 	NormalizePDF(fModelNDBD, outTreeNDBD,			dFitMin, dFitMax);
+  NormalizePDF(fModelBi, outTreeBi,         dFitMin, dFitMax);
 
 	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	dFitMin, dFitMax);
 	NormalizePDF(fModelTShieldTh, outTreeTShieldTh,	dFitMin, dFitMax);
@@ -927,10 +935,10 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
 	double dIntegral = 0;
 	double Time = 0;
 
-	hChain->SetBranchAddress("Time", &Time);
+	// hChain->SetBranchAddress("Time", &Time);
 
-	int dEvents = hChain->GetEntries();
-	hChain->GetEntry(dEvents - 1);
+	// int dEvents = hChain->GetEntries();
+	// hChain->GetEntry(dEvents - 1);
 
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
 	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
