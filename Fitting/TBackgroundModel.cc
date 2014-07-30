@@ -34,6 +34,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(7,	x[7]);
 	Obj->SetParameters(8,	x[8]);
 	Obj->SetParameters(9,	x[9]);
+  Obj->SetParameters(10, x[10]);
 
 	Obj->UpdateModel();
 
@@ -195,6 +196,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fParameters[7]  = 0.;
   fParameters[8]  = 0.;
   fParameters[9]  = 0.;
+  fParameters[10]  = 0.;
 
 }
   
@@ -283,7 +285,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(10); //initialize minuit, n is the number of parameters
+   TMinuit minuit(11); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -316,7 +318,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",    0., 10.0, 0., dDataIntegral);     
-   // minuit.DefineParameter(9, "NDBD",	 	100., 10.0, 0., dDataIntegral);  
+   // minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
 
 
 
@@ -331,6 +333,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(7); // Far Co
    // minuit.FixParameter(8); // Resolution
    minuit.FixParameter(9); // NDBD
+   minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
   int dNumParameters = 5;
@@ -367,7 +370,7 @@ bool TBackgroundModel::DoTheFit()
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
       fDataHistoM1->GetYaxis()->SetRange(0, 50000);
-      fDataHistoM1->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
+      fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
 		  fDataHistoM1->Draw();
     }
     else if(dMult == 2)
@@ -397,6 +400,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(7,	fParameters[7],		dummy);
 	minuit.GetParameter(8,	fParameters[8],		dummy);
 	minuit.GetParameter(9,	fParameters[9],		dummy);
+  minuit.GetParameter(10,  fParameters[10],   dummy);
 
 
 	UpdateModel();
@@ -438,6 +442,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotCo->Add(fSmearOVCCo,     fParameters[7]);
 
   fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
+  fModelTotNDBD->Add(fSmearBi,      fParameters[10]);
 
 	
 	fModelTot->SetLineColor(2);
@@ -453,21 +458,24 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->SetLineStyle(2);
 	fModelTotNDBD->SetLineColor(42);
 	fModelTotNDBD->SetLineStyle(2);
+  fModelTotBi->SetLineColor(8);
+  fModelTotBi->SetLineStyle(2);
 
 	fModelTotTh->Draw("SAME");
 	fModelTotRa->Draw("SAME");
 	fModelTotK->Draw("SAME");
 	fModelTotCo->Draw("SAME");
 	fModelTotNDBD->Draw("SAME");
+  fModelTotBi->Draw("SAME");
 
   TPaveText *pt = new TPaveText(0.4,0.75,0.65,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV", dFitMin, dFitMax));
-  pt->AddText("Fit Parameters (counts/(10 keV)/yr):");
+  pt->AddText(Form("Fit Parameters (counts/(10 keV)/yr) --  Resolution %0.4f",fParameters[8]));
   pt->AddText(Form("Close Th: %0.3E --- Far Th: %0.3E", fParameters[0], fParameters[1]));
   pt->AddText(Form("Close Ra: %0.3E --- Far Ra: %0.3E", fParameters[2], fParameters[3]));
   pt->AddText(Form("Close K: %0.3E --- Far K: %0.3E", fParameters[4], fParameters[5]));
   pt->AddText(Form("Close Co: %0.3E --- Far Co: %0.3E", fParameters[6], fParameters[7]));
-  pt->AddText(Form("NDBD: %0.3E --- Resolution %0.4f", fParameters[9], fParameters[8]));
+  pt->AddText(Form("Bi-207: %0.3E --- NDBD: %0.3E", fParameters[10], fParameters[9]));
   pt->AddText(Form("#chi^{2}/NDF: %0.3f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt->Draw();
 
@@ -478,6 +486,7 @@ bool TBackgroundModel::DoTheFit()
  	legfit->AddEntry(fModelTotK, "Total K-40", "l");
  	legfit->AddEntry(fModelTotCo, "Total Co-60", "l");
  	legfit->AddEntry(fModelTotNDBD, "NDBD", "l");
+  legfit->AddEntry(fModelTotBi, "Bi-207", "l");
 
  	legfit->Draw();
 
@@ -537,6 +546,7 @@ void TBackgroundModel::DrawBkg()
  	TLegend *legk = new TLegend(0.75,0.80,0.925,0.925);
  	TLegend *legco = new TLegend(0.75,0.80,0.925,0.925);
   TLegend *legndbd = new TLegend(0.8,0.890,0.925,0.925);
+  TLegend *legbi = new TLegend(0.8,0.890,0.925,0.925);
 
 
     TCanvas *cTh232 = new TCanvas("cTh232", "cTh232", 1200, 800);
@@ -657,6 +667,15 @@ void TBackgroundModel::DrawBkg()
     fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
     legndbd->Draw();
+
+    TCanvas *cBi = new TCanvas("cBi", "cBi", 1200, 800);
+    cBi->SetLogy();
+    fModelBi->SetLineColor(1);
+    fModelBi->Draw();
+    fModelBi->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    legbi->AddEntry(fModelBi, "Bi-207" ,"l");
+    legbi->Draw();
+
 
  }
 
@@ -807,6 +826,7 @@ void TBackgroundModel::Initialize()
 
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
   outTreeBi->Project("fModelBi",            "Ener1", ener_cut);  
+
 	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
 	outTreeTShieldTh->Project("fModelTShieldTh",	"Ener1", ener_cut);
   outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
@@ -965,13 +985,14 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par7 = "	<< fParameters[7]	<< endl;
 	cout<< "Par8 = "	<< fParameters[8]	<< endl;
 	cout<< "Par9 = "	<< fParameters[9]	<< endl;
+  cout<< "Par10 = "  << fParameters[10] << endl;
 
 
-	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
-					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7] + fParameters[9];
+//	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
+//					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7] + fParameters[9];
 
 	// cout << "Par11 (1 - Sum) = " << 1 - dSum << endl;
-	cout << "Sum = " << dSum << endl; 
+//	cout << "Sum = " << dSum << endl; 
 
 
 }
@@ -1072,6 +1093,7 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModelOVCCo, fSmearOVCCo, fParameters[8]), 			fParameters[7]);	
 
 	fModelTot->Add( SmearMC(fModelNDBD, fSmearNDBD, fParameters[8]), 			fParameters[9]);	
+  fModelTot->Add( SmearMC(fModelBi, fSmearBi, fParameters[8]),      fParameters[10]);  
 
 
 }
