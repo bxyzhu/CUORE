@@ -208,6 +208,7 @@ private:
 
 	// Parameters
 	double				fParameters[11];
+	double				fParError[11];
 	double				dSecToYears;
 
 //  ClassDef(TMyFitter,1) // 

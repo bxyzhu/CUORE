@@ -185,7 +185,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fSmearBi         = new TH1D("fSmearBi",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
 
 
-  // Clear Initial Parameters
+  // Set Initial Parameters/Errors to 0
   fParameters[0]  = 0.;
   fParameters[1]  = 0.;
   fParameters[2]  = 0.;
@@ -196,7 +196,19 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fParameters[7]  = 0.;
   fParameters[8]  = 0.;
   fParameters[9]  = 0.;
-  fParameters[10]  = 0.;
+  fParameters[10] = 0.;
+
+  fParError[0]  = 0.;
+  fParError[1]  = 0.;
+  fParError[2]  = 0.;
+  fParError[3]  = 0.;
+  fParError[4]  = 0.;
+  fParError[5]  = 0.;
+  fParError[6]  = 0.;
+  fParError[7]  = 0.;
+  fParError[8]  = 0.;
+  fParError[9]  = 0.;
+  fParError[10] = 0.;
 
 }
   
@@ -304,21 +316,21 @@ bool TBackgroundModel::DoTheFit()
    // Using less parameters
    ////////////////////////////////////////////////
    // minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(0, "Close Th",  200., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(0, "Close Th",  800., 10.0, 0., dDataIntegral);
    // minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	2000., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	2500., 50.0, 0., dDataIntegral);
    // minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., dDataIntegral);   
    // minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
-   // minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(7, "Far Co",	 	100., 10.0, 0., dDataIntegral);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",    0., 10.0, 0., dDataIntegral);     
-   // minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(9, "NDBD",      50., 10.0, 0., dDataIntegral);     
+   minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
 
 
 
@@ -327,16 +339,16 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   minuit.FixParameter(4); // Close K
-   minuit.FixParameter(5); // Far K
-   minuit.FixParameter(6); // Close Co
-   minuit.FixParameter(7); // Far Co
+   // minuit.FixParameter(4); // Close K
+   // minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(6); // Close Co
+   // minuit.FixParameter(7); // Far Co
    // minuit.FixParameter(8); // Resolution
-   minuit.FixParameter(9); // NDBD
-   minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(9); // NDBD
+   // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 5;
+  int dNumParameters = 11;
 
 
 
@@ -387,20 +399,18 @@ bool TBackgroundModel::DoTheFit()
     }
 	 }
 
-	// Dummy variable for error of parameter to throw away
-	double 	dummy;
 
-	minuit.GetParameter(0,	fParameters[0],		dummy);
-	minuit.GetParameter(1,	fParameters[1],		dummy);
-	minuit.GetParameter(2,	fParameters[2],		dummy);
-	minuit.GetParameter(3,	fParameters[3],		dummy);
-	minuit.GetParameter(4,	fParameters[4],		dummy);
-	minuit.GetParameter(5,	fParameters[5],		dummy);
-	minuit.GetParameter(6,	fParameters[6],		dummy);
-	minuit.GetParameter(7,	fParameters[7],		dummy);
-	minuit.GetParameter(8,	fParameters[8],		dummy);
-	minuit.GetParameter(9,	fParameters[9],		dummy);
-  minuit.GetParameter(10,  fParameters[10],   dummy);
+	minuit.GetParameter(0,	fParameters[0],		fParError[0]);
+	minuit.GetParameter(1,	fParameters[1],		fParError[1]);
+	minuit.GetParameter(2,	fParameters[2],		fParError[2]);
+	minuit.GetParameter(3,	fParameters[3],		fParError[3]);
+	minuit.GetParameter(4,	fParameters[4],		fParError[4]);
+	minuit.GetParameter(5,	fParameters[5],		fParError[5]);
+	minuit.GetParameter(6,	fParameters[6],		fParError[6]);
+	minuit.GetParameter(7,	fParameters[7],		fParError[7]);
+	minuit.GetParameter(8,	fParameters[8],		fParError[8]);
+	minuit.GetParameter(9,	fParameters[9],		fParError[9]);
+  minuit.GetParameter(10,  fParameters[10],   fParError[10]);
 
 
 	UpdateModel();
@@ -975,17 +985,17 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
 // Prints parameters, make sure to update
 void TBackgroundModel::PrintParameters()
 {	
-	cout<< "Par0 = "	<< fParameters[0]	<< endl;
-	cout<< "Par1 = "	<< fParameters[1]	<< endl;
-	cout<< "Par2 = "	<< fParameters[2]	<< endl;
-	cout<< "Par3 = "	<< fParameters[3]	<< endl;
-	cout<< "Par4 = "	<< fParameters[4]	<< endl;
-	cout<< "Par5 = "	<< fParameters[5]	<< endl;
-	cout<< "Par6 = "	<< fParameters[6]	<< endl;
-	cout<< "Par7 = "	<< fParameters[7]	<< endl;
-	cout<< "Par8 = "	<< fParameters[8]	<< endl;
-	cout<< "Par9 = "	<< fParameters[9]	<< endl;
-  cout<< "Par10 = "  << fParameters[10] << endl;
+	cout<< "Par0 = "	<< fParameters[0]	<< " +/- " << fParError[0] << endl;
+	cout<< "Par1 = "	<< fParameters[1]	<< " +/- " << fParError[1] << endl;
+	cout<< "Par2 = "	<< fParameters[2]	<< " +/- " << fParError[2] << endl;
+	cout<< "Par3 = "	<< fParameters[3]	<< " +/- " << fParError[3] << endl;
+	cout<< "Par4 = "	<< fParameters[4]	<< " +/- " << fParError[4] << endl;
+	cout<< "Par5 = "	<< fParameters[5]	<< " +/- " << fParError[5] << endl;
+	cout<< "Par6 = "	<< fParameters[6]	<< " +/- " << fParError[6] << endl;
+	cout<< "Par7 = "	<< fParameters[7]	<< " +/- " << fParError[7] << endl;
+	cout<< "Par8 = "	<< fParameters[8]	<< " +/- " << fParError[8] << endl;
+	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
+  cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
 
 
 //	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
