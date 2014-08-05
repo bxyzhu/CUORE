@@ -394,7 +394,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., 8000);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., 2000);
    // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	5., 10.0, 0., 1000);  
+   minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., 1000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      50., 10.0, 0., dDataIntegral);     
    minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
@@ -415,7 +415,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 11;
+  int dNumParameters = 7;
 
 
 
@@ -548,11 +548,11 @@ bool TBackgroundModel::DoTheFit()
   TPaveText *pt = new TPaveText(0.4,0.75,0.65,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV", dFitMin, dFitMax));
   pt->AddText(Form("Fit Parameters (counts/(10 keV)/yr) --  Resolution %0.4f",fParameters[8]));
-  pt->AddText(Form("Close Th: %0.3E --- Far Th: %0.3E", fParameters[0], fParameters[1]));
-  pt->AddText(Form("Close Ra: %0.3E --- Far Ra: %0.3E", fParameters[2], fParameters[3]));
-  pt->AddText(Form("Close K: %0.3E --- Far K: %0.3E", fParameters[4], fParameters[5]));
-  pt->AddText(Form("Close Co: %0.3E --- Far Co: %0.3E", fParameters[6], fParameters[7]));
-  pt->AddText(Form("Bi-207: %0.3E --- NDBD: %0.3E", fParameters[10], fParameters[9]));
+  pt->AddText(Form("Close Th: %0.2E #pm %0.2E --- Far Th: %0.2E #pm %0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+  pt->AddText(Form("Close Ra: %0.2E #pm %0.2E --- Far Ra: %0.2E #pm %0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+  pt->AddText(Form("Close K: %0.2E #pm %0.2E --- Far K: %0.2E #pm %0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+  pt->AddText(Form("Close Co: %0.2E #pm %0.2E --- Far Co: %0.2E #pm %0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+  pt->AddText(Form("Bi-207: %0.2E #pm %0.2E --- NDBD: %0.2E #pm %0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
   pt->AddText(Form("#chi^{2}/NDF: %0.3f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt->Draw();
 
