@@ -40,6 +40,10 @@ public:
 
 	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution);
 
+	TH1D *SmearChannel(TChain *fChain, TH1D *fMC, TH1D *fSMC, int channel, double resolution);
+
+	void TestSmear();
+
 	void UpdateModel();
 
 
@@ -209,6 +213,7 @@ private:
 	// Parameters
 	double				fParameters[11];
 	double				fParError[11];
+	double				fResolution[52];
 	double				dSecToYears;
 
 //  ClassDef(TMyFitter,1) // 

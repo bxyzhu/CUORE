@@ -210,6 +210,72 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   fParError[9]  = 0.;
   fParError[10] = 0.;
 
+  // Resolutions of individual channels
+  fResolution[0] = 5.0/2.355;
+  fResolution[1] = 6.0/2.355;
+  fResolution[2] = 9.8/2.355;
+  fResolution[3] = 5.3/2.355;
+
+  fResolution[4] = 5.6/2.355;
+  fResolution[5] = 10.0/2.355;
+  fResolution[6] = 4.8/2.355;
+  fResolution[7] = 4.5/2.355;
+
+  fResolution[8] = 4.3/2.355;
+  fResolution[9] = 7.5/2.355;
+  fResolution[10] = 6.8/2.355;
+  fResolution[11] = 5.2/2.355;
+
+  fResolution[12] = 5.4/2.355;
+  fResolution[13] = 4.3/2.355;
+  fResolution[14] = 6.3/2.355;
+  fResolution[15] = 5.9/2.355;
+
+  fResolution[16] = 10.3/2.355;
+  fResolution[17] = 5.0/2.355;
+  fResolution[18] = 7.4/2.355;
+  fResolution[19] = 5.2/2.355;
+
+  fResolution[20] = 4.5/2.355;
+  fResolution[21] = 4.5/2.355;
+  fResolution[22] = 5.5/2.355;
+  fResolution[23] = 4.7/2.355;
+
+  fResolution[24] = 5.9/2.355;
+  fResolution[25] = 8.0/2.355;
+  fResolution[26] = 8.4/2.355;
+  fResolution[27] = 6.4/2.355;
+
+  fResolution[28] = 6.4/2.355;
+  fResolution[29] = 4.7/2.355;
+  fResolution[30] = 7.2/2.355;
+  fResolution[31] = 6.1/2.355;
+
+  fResolution[32] = 4.5/2.355;
+  fResolution[33] = 11.9/2.355;
+  fResolution[34] = 13.0/2.355;
+  fResolution[35] = 6.7/2.355;
+
+  fResolution[36] = 5.0/2.355;
+  fResolution[37] = 4.9/2.355;
+  fResolution[38] = 5.3/2.355;
+  fResolution[39] = 5.0/2.355;
+
+  fResolution[40] = 5.1/2.355;
+  fResolution[41] = 6.5/2.355;
+  fResolution[42] = 9.2/2.355;
+  fResolution[43] = 12.0/2.355;
+
+  fResolution[44] = 5.4/2.355;
+  fResolution[45] = 5.5/2.355;
+  fResolution[46] = 6.3/2.355;
+  fResolution[47] = 6.6/2.355;
+
+  fResolution[48] = 5.2/2.355;
+  fResolution[49] = 6.4/2.355;
+  fResolution[50] = 6.8/2.355;
+  fResolution[51] = 7.8/2.355;
+
 }
   
 
@@ -315,6 +381,7 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
+   ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
    // minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(0, "Close Th",  800., 10.0, 0., 4000);
    // minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
@@ -327,7 +394,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., 8000);
    minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., 2000);
    // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	100., 10.0, 0., 2000);  
+   minuit.DefineParameter(7, "Far Co",	 	5., 10.0, 0., 1000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      50., 10.0, 0., dDataIntegral);     
    minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
@@ -335,17 +402,17 @@ bool TBackgroundModel::DoTheFit()
 
 
    // Fix parameters for testing
-   // minuit.FixParameter(0); // Close Th
-   // minuit.FixParameter(1); // Far Th
-   // minuit.FixParameter(2); // Close Ra
-   // minuit.FixParameter(3); // Far Ra
-   // minuit.FixParameter(4); // Close K
-   // minuit.FixParameter(5); // Far K
-   // minuit.FixParameter(6); // Close Co
-   // minuit.FixParameter(7); // Far Co
-   // minuit.FixParameter(8); // Resolution
-   // minuit.FixParameter(9); // NDBD
-   // minuit.FixParameter(10); // Bi207
+   minuit.FixParameter(0); // Close Th
+   minuit.FixParameter(1); // Far Th
+   minuit.FixParameter(2); // Close Ra
+   minuit.FixParameter(3); // Far Ra
+   minuit.FixParameter(4); // Close K
+   minuit.FixParameter(5); // Far K
+   minuit.FixParameter(6); // Close Co
+   minuit.FixParameter(7); // Far Co
+   minuit.FixParameter(8); // Resolution
+   minuit.FixParameter(9); // NDBD
+   minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
   int dNumParameters = 11;
@@ -1106,3 +1173,62 @@ void TBackgroundModel::UpdateModel()
 
 
 }
+
+/*
+
+
+////////////// Just testing
+TH1D *TBackgroundModel::SmearChannel(TChain *fChain, TH1D *fMC, TH1D *fSMC, int channel, double resolution)
+{
+  // Reset previously smeared histogram
+  // fMC->Reset(); 
+  fSMC->Reset();
+
+  fChain->Project(fMC->GetName() , "Ener1", Form("Channel==%d", channel));
+
+  double dArea = 0;
+  double dSmearedValue = 0;
+
+  for(int i = 0; i<dBin; i++)
+  {
+    for(int j = 0; j<dBin; j++)
+    {
+      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+      dArea = dBinSize*fMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
+
+      // Set parameters of gaussian ... resolution floating in fit
+      gaus->SetParameters(dArea, fMC->GetBinCenter(j), resolution);
+
+      // Smeared contribution from gaussian centered at bin j for bin i 
+      dSmearedValue = gaus->Eval(fSMC->GetBinCenter(i));
+
+      // Fill bin i with contribution from gaussian centered at bin j
+      fSMC->Fill(fSMC->GetBinCenter(i), dSmearedValue);
+    }
+  }
+
+  return fSMC;
+}
+
+
+void TBackgroundModel::TestSmear()
+{
+  // int i = 1;
+  for (int i = 0; i<52; i++)
+  {
+    cout << "Channel: " << i << endl;
+    hDummy = new TH1D(Form("hC%d", i), "", dBin, dEMin, dEMax);
+
+    hMC->Add( SmearChannel(outTree, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+  } 
+
+  // TCanvas *ctest2 = new TCanvas ("ctest2");
+  hMC->Draw();
+
+}
+
+*/
+
+
+
+
