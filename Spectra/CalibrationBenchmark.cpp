@@ -98,6 +98,9 @@ TH1D *SmearSpectra()
 	return hSmeared;
 }
 
+
+
+
 // Choose multiplicity, saving plots, and energy range for plots
 void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 0, double dEMax = 3500)
 {

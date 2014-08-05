@@ -316,18 +316,18 @@ bool TBackgroundModel::DoTheFit()
    // Using less parameters
    ////////////////////////////////////////////////
    // minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(0, "Close Th",  800., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(0, "Close Th",  800., 10.0, 0., 4000);
    // minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	2500., 50.0, 0., dDataIntegral);
+   minuit.DefineParameter(1, "Far Th",	 	2500., 50.0, 0., 4000);
    // minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., dDataIntegral);   
+   minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., 3000);   
    // minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., dDataIntegral);
+   minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., 3000);
+   minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., 8000);
+   minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., 8000);
+   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., 2000);
    // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	100., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(7, "Far Co",	 	100., 10.0, 0., 2000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      50., 10.0, 0., dDataIntegral);     
    minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
@@ -524,6 +524,7 @@ void TBackgroundModel::DrawBkg()
 {
 
  	gStyle->SetOptStat(0);
+  gStyle->SetOptFit();
  	// gStyle->SetOptTitle(0);	
   TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
   cBkg->SetLogy();
@@ -900,8 +901,6 @@ void TBackgroundModel::Initialize()
 	NormalizePDF(fModelIVCCo, outTreeIVCCo,			dFitMin, dFitMax);
 	NormalizePDF(fModelOVCCo, outTreeOVCCo,			dFitMin, dFitMax);
 
-
-	// Change to rate instead of a number... need to divide by livetime of run. 
 
 
 	cout << "Normalized MC PDFs" << endl;
