@@ -392,26 +392,26 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., 3000);
    minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., 8000);
    minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., 8000);
-   minuit.DefineParameter(6, "Close Co", 	250., 10.0, 0., 2000);
+   minuit.DefineParameter(6, "Close Co", 	50., 10.0, 0., 2000);
    // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., 1000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      50., 10.0, 0., dDataIntegral);     
-   minuit.DefineParameter(10, "Lead Bi",	 	100., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(10, "Lead Bi",	 	0., 10.0, 0., dDataIntegral);  
 
 
 
    // Fix parameters for testing
-   minuit.FixParameter(0); // Close Th
-   minuit.FixParameter(1); // Far Th
-   minuit.FixParameter(2); // Close Ra
-   minuit.FixParameter(3); // Far Ra
+   // minuit.FixParameter(0); // Close Th
+   // minuit.FixParameter(1); // Far Th
+   // minuit.FixParameter(2); // Close Ra
+   // minuit.FixParameter(3); // Far Ra
    minuit.FixParameter(4); // Close K
    minuit.FixParameter(5); // Far K
-   minuit.FixParameter(6); // Close Co
+   // minuit.FixParameter(6); // Close Co
    minuit.FixParameter(7); // Far Co
-   minuit.FixParameter(8); // Resolution
-   minuit.FixParameter(9); // NDBD
+   // minuit.FixParameter(8); // Resolution
+   // minuit.FixParameter(9); // NDBD
    minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
@@ -519,7 +519,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotCo->Add(fSmearOVCCo,     fParameters[7]);
 
   fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
-  fModelTotNDBD->Add(fSmearBi,      fParameters[10]);
+  fModelTotBi->Add(fSmearBi,      fParameters[10]);
 
 	
 	fModelTot->SetLineColor(2);
@@ -547,13 +547,13 @@ bool TBackgroundModel::DoTheFit()
 
   TPaveText *pt = new TPaveText(0.4,0.75,0.65,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV", dFitMin, dFitMax));
-  pt->AddText(Form("Fit Parameters (counts/(10 keV)/yr) --  Resolution %0.4f",fParameters[8]));
-  pt->AddText(Form("Close Th: %0.2E #pm %0.2E --- Far Th: %0.2E #pm %0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-  pt->AddText(Form("Close Ra: %0.2E #pm %0.2E --- Far Ra: %0.2E #pm %0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
-  pt->AddText(Form("Close K: %0.2E #pm %0.2E --- Far K: %0.2E #pm %0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
-  pt->AddText(Form("Close Co: %0.2E #pm %0.2E --- Far Co: %0.2E #pm %0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
-  pt->AddText(Form("Bi-207: %0.2E #pm %0.2E --- NDBD: %0.2E #pm %0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-  pt->AddText(Form("#chi^{2}/NDF: %0.3f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+  pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
+  pt->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+  pt->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+  pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+  pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+  pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+  // pt->AddText(Form(,  ));
   pt->Draw();
 
  	TLegend *legfit = new TLegend(0.82,0.82,0.95,0.95);
@@ -937,6 +937,7 @@ void TBackgroundModel::Initialize()
 
 	// Normalize all MC histograms
 	NormalizePDF(fModelNDBD, outTreeNDBD,			dFitMin, dFitMax);
+
   NormalizePDF(fModelBi, outTreeBi,         dFitMin, dFitMax);
 
 	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	dFitMin, dFitMax);
@@ -1039,6 +1040,9 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
 	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
 	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
 	// cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
+
+  // How to apply as efficiency...
+  // Integrate full range... 
 
 	// Make sure integral isn't 0 --> Need to double check if this is the right thing to do!
 	if(dIntegral != 0)
@@ -1169,6 +1173,7 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModelOVCCo, fSmearOVCCo, fParameters[8]), 			fParameters[7]);	
 
 	fModelTot->Add( SmearMC(fModelNDBD, fSmearNDBD, fParameters[8]), 			fParameters[9]);	
+
   fModelTot->Add( SmearMC(fModelBi, fSmearBi, fParameters[8]),      fParameters[10]);  
 
 
@@ -1210,7 +1215,7 @@ TH1D *TBackgroundModel::SmearChannel(TChain *fChain, TH1D *fMC, TH1D *fSMC, int 
   return fSMC;
 }
 
-
+// Test to see how long the initial smearing takes
 void TBackgroundModel::TestSmear()
 {
   // int i = 1;
@@ -1219,15 +1224,22 @@ void TBackgroundModel::TestSmear()
     cout << "Channel: " << i << endl;
     hDummy = new TH1D(Form("hC%d", i), "", dBin, dEMin, dEMax);
 
-    hMC->Add( SmearChannel(outTree, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+    fSmearFrameTh->Add( SmearChannel(outTreeFrameTh, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+    fSmearFrameRa->Add( SmearChannel(outTreeFrameRa, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+    fSmearFrameCo->Add( SmearChannel(outTreeFrameCo, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+    fSmearFrameK->Add( SmearChannel(outTreeFrameK, hDummy, hSmearDummy, i, fResolution[i]), 1 );
+
+
+
+
   } 
 
   // TCanvas *ctest2 = new TCanvas ("ctest2");
   hMC->Draw();
 
 }
-
 */
+
 
 
 
