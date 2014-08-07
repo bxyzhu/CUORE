@@ -402,20 +402,20 @@ bool TBackgroundModel::DoTheFit()
 
 
    // Fix parameters for testing
-   minuit.FixParameter(0); // Close Th
-   minuit.FixParameter(1); // Far Th
-   minuit.FixParameter(2); // Close Ra
-   minuit.FixParameter(3); // Far Ra
+   // minuit.FixParameter(0); // Close Th
+   // minuit.FixParameter(1); // Far Th
+   // minuit.FixParameter(2); // Close Ra
+   // minuit.FixParameter(3); // Far Ra
    minuit.FixParameter(4); // Close K
    minuit.FixParameter(5); // Far K
-   minuit.FixParameter(6); // Close Co
+   // minuit.FixParameter(6); // Close Co
    minuit.FixParameter(7); // Far Co
    minuit.FixParameter(8); // Resolution
-   minuit.FixParameter(9); // NDBD
+   // minuit.FixParameter(9); // NDBD
    minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 7;
+  int dNumParameters = 6;
 
 
 
