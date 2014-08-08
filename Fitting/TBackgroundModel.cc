@@ -52,6 +52,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
   dDataIntegral = 0;
   bToyFit = false;
+  bFixedRes = true;
 
   // Bin size (keV)
   dBinSize = 10;
@@ -390,8 +391,8 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., 3000);   
    // minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., 3000);
-   minuit.DefineParameter(4, "Close K", 	0., 10.0, 0., 8000);
-   minuit.DefineParameter(5, "Far K", 		0., 10.0, 0., 8000);
+   minuit.DefineParameter(4, "Close K", 	1000., 10.0, 0., 8000);
+   minuit.DefineParameter(5, "Far K", 		1000., 10.0, 0., 8000);
    minuit.DefineParameter(6, "Close Co", 	50., 10.0, 0., 2000);
    // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
    minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., 1000);  
@@ -406,8 +407,8 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   minuit.FixParameter(4); // Close K
-   minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(4); // Close K
+   // minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    minuit.FixParameter(7); // Far Co
    minuit.FixParameter(8); // Resolution
@@ -415,7 +416,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 6;
+  int dNumParameters = 8;
 
 
 
@@ -1044,10 +1045,15 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
   // How to apply as efficiency...
   // Integrate full range... 
 
-	// Make sure integral isn't 0 --> Need to double check if this is the right thing to do!
+	// Make sure integral isn't 0
+  // If it is 0, clear model... 
+  if(dIntegral == 0)
+  {
+    h1->Reset();
+  }
+
 	if(dIntegral != 0)
 	{
-		// h1->Scale(1/dIntegral/(Time * dSecToYears));
 		h1->Scale(1/dIntegral);
 	}
 }
