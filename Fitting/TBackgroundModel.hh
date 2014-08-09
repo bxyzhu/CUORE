@@ -12,7 +12,7 @@ class TBackgroundModel : public TObject {
 
 public:
 
-	TBackgroundModel(double fFitMin, double fFitMax, int fMult);
+	TBackgroundModel(double fFitMin, double fFitMax, int fMult, bool fFixedRes);
 	virtual ~TBackgroundModel();
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
@@ -206,6 +206,7 @@ private:
 
 	std::string		dDataDir;
 	bool			bToyFit;
+	bool			bFixedRes;
 	
 	int 			dNumCalls;
 	int 			dMult;

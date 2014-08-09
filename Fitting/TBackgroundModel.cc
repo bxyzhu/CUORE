@@ -43,7 +43,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 }
 
 
-TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
+TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bool fFixedRes)
 {
 
   dNumCalls = 0;
@@ -52,7 +52,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult)
   dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
   dDataIntegral = 0;
   bToyFit = false;
-  bFixedRes = true;
+  bFixedRes = fFixedRes;
 
   // Bin size (keV)
   dBinSize = 10;
@@ -974,6 +974,47 @@ void TBackgroundModel::Initialize()
 
 	cout << "Normalized MC PDFs" << endl;
 
+  if(bFixedRes)
+  {
+    // cout << "Fixed resolution: " << endl;
+    cout << "Smearing histograms with constant 5 keV resolution" << endl;
+
+    SmearMC(fModelFrameTh, fSmearFrameTh, 5);
+    SmearMC(fModelTShieldTh, fSmearTShieldTh, 5);  
+    SmearMC(fModel50mKTh, fSmear50mKTh, 5);
+    SmearMC(fModel600mKTh, fSmear600mKTh, 5);
+    SmearMC(fModelIVCTh, fSmearIVCTh, 5);
+    SmearMC(fModelOVCTh, fSmearOVCTh, 5);
+
+    SmearMC(fModelFrameRa, fSmearFrameRa, 5);
+    SmearMC(fModelTShieldRa, fSmearTShieldRa, 5);  
+    SmearMC(fModel50mKRa, fSmear50mKRa, 5);
+    SmearMC(fModel600mKRa, fSmear600mKRa, 5);
+    SmearMC(fModelIVCRa, fSmearIVCRa, 5);
+    SmearMC(fModelOVCRa, fSmearOVCRa, 5);
+
+    SmearMC(fModelFrameK, fSmearFrameK, 5);
+    SmearMC(fModelTShieldK, fSmearTShieldK, 5);
+    SmearMC(fModel50mKK, fSmear50mKK, 5);
+    SmearMC(fModel600mKK, fSmear600mKK, 5);
+    SmearMC(fModelIVCK, fSmearIVCK, 5);
+    SmearMC(fModelOVCK, fSmearOVCK, 5); 
+
+    SmearMC(fModelFrameCo, fSmearFrameCo, 5);
+    SmearMC(fModelTShieldCo, fSmearTShieldCo, 5);
+    SmearMC(fModel50mKCo, fSmear50mKCo, 5);
+    SmearMC(fModel600mKCo, fSmear600mKCo, 5);
+    SmearMC(fModelIVCCo, fSmearIVCCo, 5);
+    SmearMC(fModelOVCCo, fSmearOVCCo, 5);  
+
+    SmearMC(fModelNDBD, fSmearNDBD, 5);  
+
+    SmearMC(fModelBi, fSmearBi, 5);  
+
+    cout << "Finished smearing MC histograms" << endl;
+
+  }
+
 }
 
 
@@ -1049,6 +1090,7 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE
   // If it is 0, clear model... 
   if(dIntegral == 0)
   {
+    cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
     h1->Reset();
   }
 
@@ -1150,6 +1192,45 @@ void TBackgroundModel::UpdateModel()
     cout << "Call #: "<< dNumCalls << endl;
   }
 
+
+  if(bFixedRes)
+  {
+  fModelTot->Add( fSmearFrameTh,    fParameters[0]);
+  fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
+  fModelTot->Add( fSmear50mKTh,     fParameters[0]);
+  fModelTot->Add( fSmear600mKTh,     fParameters[0]);
+  fModelTot->Add( fSmearIVCTh,      fParameters[1]);
+  fModelTot->Add( fSmearOVCTh,      fParameters[1]);
+
+  fModelTot->Add( fSmearFrameRa,    fParameters[2]);
+  fModelTot->Add( fSmearTShieldRa,  fParameters[2]);  
+  fModelTot->Add( fSmear50mKRa,     fParameters[2]);
+  fModelTot->Add( fSmear600mKRa,    fParameters[2]);
+  fModelTot->Add( fSmearIVCRa,      fParameters[3]);
+  fModelTot->Add( fSmearOVCRa,      fParameters[3]);
+
+  fModelTot->Add( fSmearFrameK,    fParameters[4]);
+  fModelTot->Add( fSmearTShieldK,  fParameters[4]);
+  fModelTot->Add( fSmear50mKK,     fParameters[4]);
+  fModelTot->Add( fSmear600mKK,    fParameters[4]);
+  fModelTot->Add( fSmearIVCK,      fParameters[5]);
+  fModelTot->Add( fSmearOVCK,      fParameters[5]); 
+
+  fModelTot->Add( fSmearFrameCo,    fParameters[6]);
+  fModelTot->Add( fSmearTShieldCo,  fParameters[6]);
+  fModelTot->Add( fSmear50mKCo,     fParameters[6]);
+  fModelTot->Add( fSmear600mKCo,    fParameters[6]);
+  fModelTot->Add( fSmearIVCCo,      fParameters[7]);
+  fModelTot->Add( fSmearOVCCo,      fParameters[7]);  
+
+  fModelTot->Add( fSmearNDBD,      fParameters[9]);  
+
+  fModelTot->Add( fSmearBi,      fParameters[10]);  
+  }
+
+
+  else
+  {
 	fModelTot->Add( SmearMC(fModelFrameTh, fSmearFrameTh, fParameters[8]), 		fParameters[0]);
 	fModelTot->Add( SmearMC(fModelTShieldTh, fSmearTShieldTh, fParameters[8]), 	fParameters[0]);	
 	fModelTot->Add( SmearMC(fModel50mKTh, fSmear50mKTh, fParameters[8]), 		fParameters[0]);
@@ -1181,6 +1262,8 @@ void TBackgroundModel::UpdateModel()
 	fModelTot->Add( SmearMC(fModelNDBD, fSmearNDBD, fParameters[8]), 			fParameters[9]);	
 
   fModelTot->Add( SmearMC(fModelBi, fSmearBi, fParameters[8]),      fParameters[10]);  
+  }
+
 
 
 }
