@@ -383,22 +383,19 @@ bool TBackgroundModel::DoTheFit()
    // Using less parameters
    ////////////////////////////////////////////////
    ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
-   // minuit.DefineParameter(0, "Close Th", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(0, "Close Th",  800., 10.0, 0., 4000);
-   // minuit.DefineParameter(1, "Far Th",    0., 50.0, 0., dDataIntegral);
-   minuit.DefineParameter(1, "Far Th",	 	2500., 50.0, 0., 4000);
-   // minuit.DefineParameter(2, "Close Ra", 	0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(2, "Close Ra",  400., 10.0, 0., 3000);   
-   // minuit.DefineParameter(3, "Far Ra",		0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(3, "Far Ra",    10., 10.0, 0., 3000);
-   minuit.DefineParameter(4, "Close K", 	1000., 10.0, 0., 8000);
-   minuit.DefineParameter(5, "Far K", 		1000., 10.0, 0., 8000);
-   minuit.DefineParameter(6, "Close Co", 	50., 10.0, 0., 2000);
-   // minuit.DefineParameter(6, "Close Co",   0., 10.0, 0., dDataIntegral);
-   minuit.DefineParameter(7, "Far Co",	 	0., 10.0, 0., 1000);  
+   // minuit.DefineParameter(0, "Close Th",  23.8., 10.0, 0., 4000);
+   minuit.DefineParameter(0, "Close Th",  100, 100.0, 0., 60000);   
+   // minuit.DefineParameter(1, "Far Th",	 	2830., 50.0, 0., 4000);
+   minuit.DefineParameter(1, "Far Th",   70000., 100.0, 0., 100000);
+   minuit.DefineParameter(2, "Close Ra",  100., 100.0, 0., 50000);   
+   minuit.DefineParameter(3, "Far Ra",    55000., 100.0, 0., 80000);
+   minuit.DefineParameter(4, "Close K", 	100., 100.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K", 		30000., 100.0, 0., 500000);
+   minuit.DefineParameter(6, "Close Co", 	3000., 100.0, 0., 50000); 
+   minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 20000);  
    minuit.DefineParameter(8, "Resolution",	5., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",      100., 10.0, 0., dDataIntegral);     
-   minuit.DefineParameter(10, "Lead Bi",	 	0., 10.0, 0., dDataIntegral);  
+   minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
+   minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
 
 
 
@@ -416,10 +413,10 @@ bool TBackgroundModel::DoTheFit()
     minuit.FixParameter(8); // Resolution
    }
    // minuit.FixParameter(9); // NDBD
-   minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 8;
+  int dNumParameters = 9;
 
 
 
@@ -549,9 +546,9 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotNDBD->Draw("SAME");
   fModelTotBi->Draw("SAME");
 
-  TPaveText *pt = new TPaveText(0.4,0.75,0.65,0.98,"NB NDC");
-  pt->AddText(Form("Fit Range: %.0f to %.0f keV", dFitMin, dFitMax));
-  pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
+  TPaveText *pt = new TPaveText(0.4,0.78,0.65,0.98,"NB NDC");
+  pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+  // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
   pt->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
   pt->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
@@ -865,6 +862,21 @@ double TBackgroundModel::GetChiSquare()
 	return chiSquare;
 }
 
+// Gets efficiency of MC as fraction of normalization
+double TBackgroundModel::GetMCEff(TH1D *h1)
+{
+  double fIntTotal;
+  double fIntRange;
+  double dEff;
+
+  fIntTotal = h1->GetIntegral(500/dBinSize, 2650/dBinSize);
+  fIntRange = h1->GetIntegral(dFitMin/dBinSize, dFitMax/dBinSize);
+
+  dEff = fIntRange/fIntTotal;
+
+  return dEff;
+}
+
 
 void TBackgroundModel::Initialize()
 {	
@@ -939,41 +951,75 @@ void TBackgroundModel::Initialize()
 
 	cout << "Loaded MC" << endl;
 
+
+  // Will be for detector efficiencies... not added yet
+/*  
+  fMCEff[0] = GetMCEff(fModelFrameTh);
+  fMCEff[1] = GetMCEff(fModelTShieldTh);
+  fMCEff[2] = GetMCEff(fModel50mKTh);
+  fMCEff[3] = GetMCEff(fModel600mKTh);
+  fMCEff[4] = GetMCEff(fModelIVCTh);
+  fMCEff[5] = GetMCEff(fModelOVCTh);
+
+  fMCEff[6] = GetMCEff(fModelFrameRa);
+  fMCEff[7] = GetMCEff(fModelTShieldRa);
+  fMCEff[8] = GetMCEff(fModel50mKRa);
+  fMCEff[9] = GetMCEff(fModel600mKRa);
+  fMCEff[10] = GetMCEff(fModelIVCRa);
+  fMCEff[11] = GetMCEff(fModelOVCRa);
+
+  fMCEff[12] = GetMCEff(fModelFrameK);
+  fMCEff[13] = GetMCEff(fModelTShieldK);
+  fMCEff[14] = GetMCEff(fModel50mKK);
+  fMCEff[15] = GetMCEff(fModel600mKK);
+  fMCEff[16] = GetMCEff(fModelIVCK);
+  fMCEff[17] = GetMCEff(fModelOVCK);
+
+  fMCEff[18] = GetMCEff(fModelFrameCo);
+  fMCEff[19] = GetMCEff(fModelTShieldCo);
+  fMCEff[20] = GetMCEff(fModel50mKCo);
+  fMCEff[21] = GetMCEff(fModel600mKCo);
+  fMCEff[22] = GetMCEff(fModelIVCCo);
+  fMCEff[23] = GetMCEff(fModelOVCCo);
+
+  fMCEff[24] = GetMCEff(fModelNDBD);
+  fMCEff[25] = GetMCEff(fModelBi);
+*/
+
 	// Normalize all MC histograms
-	NormalizePDF(fModelNDBD, outTreeNDBD,			dFitMin, dFitMax);
+  // Fixing normalization of NDBD from 2000 to 2650
+	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	50, 2700);
+	NormalizePDF(fModelTShieldTh, outTreeTShieldTh,	50, 2700);
+	NormalizePDF(fModel50mKTh, outTree50mKTh,		50, 2700);
+	NormalizePDF(fModel600mKTh, outTree600mKTh,		50, 2700);
+	NormalizePDF(fModelIVCTh, outTreeIVCTh,			50, 2700);
+	NormalizePDF(fModelOVCTh, outTreeOVCTh,			50, 2700);
 
-  NormalizePDF(fModelBi, outTreeBi,         dFitMin, dFitMax);
-
-	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldTh, outTreeTShieldTh,	dFitMin, dFitMax);
-	NormalizePDF(fModel50mKTh, outTree50mKTh,		dFitMin, dFitMax);
-	NormalizePDF(fModel600mKTh, outTree600mKTh,		dFitMin, dFitMax);
-	NormalizePDF(fModelIVCTh, outTreeIVCTh,			dFitMin, dFitMax);
-	NormalizePDF(fModelOVCTh, outTreeOVCTh,			dFitMin, dFitMax);
-
-	NormalizePDF(fModelFrameRa,  outTreeFrameRa,	dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldRa, outTreeTShieldRa,	dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKRa, outTree50mKRa,		dFitMin, dFitMax);
-	NormalizePDF(fModel600mKRa, outTree600mKRa,		dFitMin, dFitMax);
-	NormalizePDF(fModelIVCRa, outTreeIVCRa,			dFitMin, dFitMax);
-	NormalizePDF(fModelOVCRa, outTreeOVCRa,			dFitMin, dFitMax);
+	NormalizePDF(fModelFrameRa,  outTreeFrameRa,	50, 2700);
+	NormalizePDF(fModelTShieldRa, outTreeTShieldRa,	50, 2700);	
+	NormalizePDF(fModel50mKRa, outTree50mKRa,		50, 2700);
+	NormalizePDF(fModel600mKRa, outTree600mKRa,		50, 2700);
+	NormalizePDF(fModelIVCRa, outTreeIVCRa,			50, 2700);
+	NormalizePDF(fModelOVCRa, outTreeOVCRa,			50, 2700);
 
 	// Normalizing K-40 for full range since no peaks above 1500 keV
-	NormalizePDF(fModelFrameK, 	outTreeFrameK,		dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldK, outTreeTShieldK,	dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKK, outTree50mKK,			dFitMin, dFitMax);
-	NormalizePDF(fModel600mKK, outTree600mKK,		dFitMin, dFitMax);
-	NormalizePDF(fModelIVCK, outTreeIVCK,			dFitMin, dFitMax);
-	NormalizePDF(fModelOVCK, outTreeOVCK,			dFitMin, dFitMax);
+	NormalizePDF(fModelFrameK, 	outTreeFrameK,		50, 2700);
+	NormalizePDF(fModelTShieldK, outTreeTShieldK,	50, 2700);	
+	NormalizePDF(fModel50mKK, outTree50mKK,			50, 2700);
+	NormalizePDF(fModel600mKK, outTree600mKK,		50, 2700);
+	NormalizePDF(fModelIVCK, outTreeIVCK,			50, 2700);
+	NormalizePDF(fModelOVCK, outTreeOVCK,			50, 2700);
 
-	NormalizePDF(fModelFrameCo, outTreeFrameCo,		dFitMin, dFitMax);
-	NormalizePDF(fModelTShieldCo, outTreeTShieldCo,	dFitMin, dFitMax);	
-	NormalizePDF(fModel50mKCo, outTree50mKCo,		dFitMin, dFitMax);
-	NormalizePDF(fModel600mKCo, outTree600mKCo,		dFitMin, dFitMax);
-	NormalizePDF(fModelIVCCo, outTreeIVCCo,			dFitMin, dFitMax);
-	NormalizePDF(fModelOVCCo, outTreeOVCCo,			dFitMin, dFitMax);
+	NormalizePDF(fModelFrameCo, outTreeFrameCo,		50, 2700);
+	NormalizePDF(fModelTShieldCo, outTreeTShieldCo,	50, 2700);	
+	NormalizePDF(fModel50mKCo, outTree50mKCo,		50, 2700);
+	NormalizePDF(fModel600mKCo, outTree600mKCo,		50, 2700);
+	NormalizePDF(fModelIVCCo, outTreeIVCCo,			50, 2700);
+	NormalizePDF(fModelOVCCo, outTreeOVCCo,			50, 2700);
 
+  NormalizePDF(fModelNDBD, outTreeNDBD,     50, 2700);
 
+  NormalizePDF(fModelBi, outTreeBi,         50, 2700);
 
 	cout << "Normalized MC PDFs" << endl;
 
@@ -1199,6 +1245,7 @@ void TBackgroundModel::UpdateModel()
   }
 
 
+  // Efficiency = Integral over fit range/integral over entire range -> Normalize 
   if(bFixedRes)
   {
   fModelTot->Add( fSmearFrameTh,    fParameters[0]);

@@ -19,9 +19,12 @@ public:
   
 	double GetChiSquare();
 
+	double GetMCEff(TH1D *h1);
+
 	bool DoTheFit();
 
 	void DrawBkg();
+
 	void DrawMC();
 
 	void Initialize();
@@ -216,6 +219,7 @@ private:
 	double				fParError[11];
 	double				fResolution[52];
 	double				dSecToYears;
+	double				fMCEff[26];
 
 //  ClassDef(TMyFitter,1) // 
     };
