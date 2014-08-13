@@ -811,34 +811,38 @@ double TBackgroundModel::GetChiSquare()
 {
 	//cout<<"Calling GetChiSquare()"<<endl;
 	double chiSquare = 0.;
-	double data_i, err_i, model_i;	
+	double datam1_i, errm1_i;
+  double datam2_i, errm2_i;
+  double modelm1_i, modelm2_i;	
 
 	for(int i = dFitMin/dBinSize+1; i <= dFitMax/dBinSize; i++)
 	{
 		if(bToyFit)
 		{
-			data_i = fToyData->GetBinContent(i); // For Toy data
+			datam1_i = fToyData->GetBinContent(i); // For Toy data
 		}
 		else 
 		{
       if(dMult == 1)
       {
-			 data_i = fDataHistoM1->GetBinContent(i); // For real data
+			 datam1_i = fDataHistoM1->GetBinContent(i); // For real data
       }
       else if(dMult == 2)
       {
-       data_i = fDataHistoM2->GetBinContent(i); // For real data
+       datam2_i = fDataHistoM2->GetBinContent(i); // For real data
       }      
 		}
 
-		model_i = fModelTot->GetBinContent(i);
+		modelm1_i = fModelTot->GetBinContent(i);
 
 
 		// Log-likelihood Chi-Squared
-
-		if(model_i != 0 && data_i != 0)
+    // Avoiding 0's... correct or no?
+		if(modelm1_i != 0 && datam1_i != 0)
 		{
-			chiSquare += 2 * (model_i - data_i + data_i * TMath::Log(data_i/model_i));
+			chiSquare += 2 * (modelm1_i - datam1_i + datam1_i * TMath::Log(datam1_i/modelm1_i));
+      // Adding on M2 portion
+
 		}
 
 
