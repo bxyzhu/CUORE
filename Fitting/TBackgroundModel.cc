@@ -392,7 +392,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(4, "Close K", 	100., 100.0, 0., 500000);
    minuit.DefineParameter(5, "Far K", 		30000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	3000., 100.0, 0., 50000); 
-   minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 20000);  
+   minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	5., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
    minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
@@ -407,7 +407,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(4); // Close K
    // minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
-   minuit.FixParameter(7); // Far Co
+   // minuit.FixParameter(7); // Far Co
    if(bFixedRes)
    {
     minuit.FixParameter(8); // Resolution
@@ -416,7 +416,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 9;
+  int dNumParameters = 10;
 
 
 
