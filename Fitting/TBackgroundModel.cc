@@ -104,6 +104,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
 
 
   // Model histograms
+  fModelFrameTh-S01   = new TH1D("fModelFrameTh-S01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameTh-S1    = new TH1D("fModelFrameTh-S1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameTh-S10   = new TH1D("fModelFrameTh-S10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameTh-S100  = new TH1D("fModelFrameTh-S100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
 
   fModelFrameTh    = new TH1D("fModelFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTShieldTh  = new TH1D("fModelTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -153,6 +157,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
 
   // Smeared Histograms
   fSmearDummy      = new TH1D("fSmearDummy",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameTh-S01   = new TH1D("fSmearFrameTh-S01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameTh-S1    = new TH1D("fSmearFrameTh-S1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameTh-S10   = new TH1D("fSmearFrameTh-S10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameTh-S100  = new TH1D("fSmearFrameTh-S100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
 
   fSmearFrameTh    = new TH1D("fSmearFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearTShieldTh  = new TH1D("fSmearTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -588,6 +597,7 @@ bool TBackgroundModel::DoTheFit()
    
  }
 
+// Draws background data, must Initialize first!
 void TBackgroundModel::DrawBkg()
 {
 
@@ -614,7 +624,7 @@ void TBackgroundModel::DrawBkg()
 
 }
 
-// Draws all MC spectra
+// Draws all MC spectra, must Initialize first!
  void TBackgroundModel::DrawMC()
  {
  	gStyle->SetOptStat(0);

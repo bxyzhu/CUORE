@@ -135,6 +135,12 @@ private:
 	TH1D			*fModelNDBD;
 	TH1D			*fModelBi;
 
+	TH1D			*fModelFrameTh-S01;
+	TH1D			*fModelFrameTh-S1;
+	TH1D			*fModelFrameTh-S10;
+	TH1D			*fModelFrameTh-S100;
+
+
 	TH1D			*fModelFrameTh;
 	TH1D			*fModelTShieldTh;
 	TH1D			*fModel50mKTh;
@@ -170,6 +176,11 @@ private:
 
 	TH1D			*fSmearNDBD;
 	TH1D			*fSmearBi;
+
+	TH1D			*fSmearFrameTh-S01;
+	TH1D			*fSmearFrameTh-S1;
+	TH1D			*fSmearFrameTh-S10;
+	TH1D			*fSmearFrameTh-S100;
 
 	TH1D			*fSmearFrameTh;
 	TH1D			*fSmearTShieldTh;
