@@ -639,12 +639,12 @@ void TBackgroundModel::DrawBkg()
     fModelOVCTh->SetLineColor(7);
 
 
-    fModelFrameTh->Draw();
-    fModelTShieldTh->Draw("SAME");
-    fModel50mKTh->Draw("SAME");
-    fModel600mKTh->Draw("SAME");
-    fModelIVCTh->Draw("SAME");
-    fModelOVCTh->Draw("SAME");
+    fModelFrameTh->DrawNormalized();
+    fModelTShieldTh->DrawNormalized("SAME");
+    fModel50mKTh->DrawNormalized("SAME");
+    fModel600mKTh->DrawNormalized("SAME");
+    fModelIVCTh->DrawNormalized("SAME");
+    fModelOVCTh->DrawNormalized("SAME");
     fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -666,12 +666,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCRa->SetLineColor(6);
     fModelOVCRa->SetLineColor(7);
 
-    fModelFrameRa->Draw();
-    fModelTShieldRa->Draw("SAME");
-    fModel50mKRa->Draw("SAME");
-    fModel600mKRa->Draw("SAME");
-    fModelIVCRa->Draw("SAME");
-    fModelOVCRa->Draw("SAME");
+    fModelFrameRa->DrawNormalized();
+    fModelTShieldRa->DrawNormalized("SAME");
+    fModel50mKRa->DrawNormalized("SAME");
+    fModel600mKRa->DrawNormalized("SAME");
+    fModelIVCRa->DrawNormalized("SAME");
+    fModelOVCRa->DrawNormalized("SAME");
     fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -693,12 +693,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCK->SetLineColor(6);
     fModelOVCK->SetLineColor(7);
 
-    fModelFrameK->Draw();
-    fModelTShieldK->Draw("SAME");
-    fModel50mKK->Draw("SAME");
-    fModel600mKK->Draw("SAME");
-    fModelIVCK->Draw("SAME");
-    fModelOVCK->Draw("SAME");
+    fModelFrameK->DrawNormalized();
+    fModelTShieldK->DrawNormalized("SAME");
+    fModel50mKK->DrawNormalized("SAME");
+    fModel600mKK->DrawNormalized("SAME");
+    fModelIVCK->DrawNormalized("SAME");
+    fModelOVCK->DrawNormalized("SAME");
     fModelFrameK->GetXaxis()->SetRange(0/dBinSize, 1600/dBinSize);
 
 
@@ -720,12 +720,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCCo->SetLineColor(6);
     fModelOVCCo->SetLineColor(7);
 
-    fModelFrameCo->Draw();
-    fModelTShieldCo->Draw("SAME");
-    fModel50mKCo->Draw("SAME");
-    fModel600mKCo->Draw("SAME");
-    fModelIVCCo->Draw("SAME");
-    fModelOVCCo->Draw("SAME");
+    fModelFrameCo->DrawNormalized();
+    fModelTShieldCo->DrawNormalized("SAME");
+    fModel50mKCo->DrawNormalized("SAME");
+    fModel600mKCo->DrawNormalized("SAME");
+    fModelIVCCo->DrawNormalized("SAME");
+    fModelOVCCo->DrawNormalized("SAME");
     fModelFrameCo->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -745,7 +745,7 @@ void TBackgroundModel::DrawBkg()
     fModelNDBD->Draw();
     fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
-    legndbd->Draw();
+    legndbd->DrawNormalized();
 
     TCanvas *cBi = new TCanvas("cBi", "cBi", 1200, 800);
     cBi->SetLogy();
@@ -753,7 +753,7 @@ void TBackgroundModel::DrawBkg()
     fModelBi->Draw();
     fModelBi->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legbi->AddEntry(fModelBi, "Bi-207" ,"l");
-    legbi->Draw();
+    legbi->DrawNormalized();
 
 
  }
