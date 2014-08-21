@@ -104,10 +104,15 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
 
 
   // Model histograms
-  fModelFrameTh-S01   = new TH1D("fModelFrameTh-S01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameTh-S1    = new TH1D("fModelFrameTh-S1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameTh-S10   = new TH1D("fModelFrameTh-S10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameTh-S100  = new TH1D("fModelFrameTh-S100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameThS01   = new TH1D("fModelFrameThS01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameThS1    = new TH1D("fModelFrameThS1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameThS10   = new TH1D("fModelFrameThS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameThS100  = new TH1D("fModelFrameThS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fModelFrameRaS01   = new TH1D("fModelFrameRaS01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameRaS1    = new TH1D("fModelFrameRaS1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameRaS10   = new TH1D("fModelFrameRaS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameRaS100  = new TH1D("fModelFrameRaS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
 
   fModelFrameTh    = new TH1D("fModelFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTShieldTh  = new TH1D("fModelTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -158,10 +163,15 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   // Smeared Histograms
   fSmearDummy      = new TH1D("fSmearDummy",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
 
-  fSmearFrameTh-S01   = new TH1D("fSmearFrameTh-S01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearFrameTh-S1    = new TH1D("fSmearFrameTh-S1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearFrameTh-S10   = new TH1D("fSmearFrameTh-S10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fSmearFrameTh-S100  = new TH1D("fSmearFrameTh-S100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS01   = new TH1D("fSmearFrameThS01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS1    = new TH1D("fSmearFrameThS1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS10   = new TH1D("fSmearFrameThS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS100  = new TH1D("fSmearFrameThS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameRaS01   = new TH1D("fSmearFrameRaS01",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS1    = new TH1D("fSmearFrameRaS1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS10   = new TH1D("fSmearFrameRaS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS100  = new TH1D("fSmearFrameRaS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
 
   fSmearFrameTh    = new TH1D("fSmearFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearTShieldTh  = new TH1D("fSmearTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -636,6 +646,60 @@ void TBackgroundModel::DrawBkg()
  	TLegend *legco = new TLegend(0.75,0.80,0.925,0.925);
   TLegend *legndbd = new TLegend(0.8,0.890,0.925,0.925);
   TLegend *legbi = new TLegend(0.8,0.890,0.925,0.925);
+  TLegend *legths = new TLegend(0.75,0.80,0.925,0.925);
+  TLegend *legras = new TLegend(0.75,0.80,0.925,0.925);
+
+
+    TCanvas *cThSurf = new TCanvas("cThSurf", "cThSurf", 1200, 800);
+    cThSurf->SetLogy();
+
+    fModelFrameTh->SetLineColor(1);
+    fModelFrameThS01->SetLineColor(2);
+    fModelFrameThS1->SetLineColor(3);
+    fModelFrameThS10->SetLineColor(4);
+    fModelFrameThS100->SetLineColor(6);
+
+    fModelFrameTh->Draw();
+    fModelFrameThS01->Draw("SAME");
+    fModelFrameThS1->Draw("SAME");
+    fModelFrameThS10->Draw("SAME");
+    fModelFrameThS100->Draw("SAME");
+    fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+
+
+    legths->AddEntry(fModelFrameTh, "Frame Bulk" ,"l");
+    legths->AddEntry(fModelFrameThS01, "Frame Surface 0.1 #mum", "l");
+    legths->AddEntry(fModelFrameThS1, "Frame Surface 1 #mum" ,"l");
+    legths->AddEntry(fModelFrameThS10, "Frame Surface 10 #mum" ,"l");
+    legths->AddEntry(fModelFrameThS100, "Frame Surface 100 #mum" ,"l");
+    legths->Draw();
+
+
+
+    TCanvas *cRaSurf = new TCanvas("cRaSurf", "cRaSurf", 1200, 800);
+    cRaSurf->SetLogy();
+
+    fModelFrameRa->SetLineColor(1);
+    fModelFrameRaS01->SetLineColor(2);
+    fModelFrameRaS1->SetLineColor(3);
+    fModelFrameRaS10->SetLineColor(4);
+    fModelFrameRaS100->SetLineColor(6);
+
+    fModelFrameRa->Draw();
+    fModelFrameRaS01->Draw("SAME");
+    fModelFrameRaS1->Draw("SAME");
+    fModelFrameRaS10->Draw("SAME");
+    fModelFrameRaS100->Draw("SAME");
+    fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+
+
+    legras->AddEntry(fModelFrameRa, "Frame Bulk" ,"l");
+    legras->AddEntry(fModelFrameRaS01, "Frame Surface 0.1 #mum", "l");
+    legras->AddEntry(fModelFrameRaS1, "Frame Surface 1 #mum" ,"l");
+    legras->AddEntry(fModelFrameRaS10, "Frame Surface 10 #mum" ,"l");
+    legras->AddEntry(fModelFrameRaS100, "Frame Surface 100 #mum" ,"l");
+    legras->Draw();
+
 
 
     TCanvas *cTh232 = new TCanvas("cTh232", "cTh232", 1200, 800);
@@ -649,12 +713,12 @@ void TBackgroundModel::DrawBkg()
     fModelOVCTh->SetLineColor(7);
 
 
-    fModelFrameTh->DrawNormalized();
-    fModelTShieldTh->DrawNormalized("SAME");
-    fModel50mKTh->DrawNormalized("SAME");
-    fModel600mKTh->DrawNormalized("SAME");
-    fModelIVCTh->DrawNormalized("SAME");
-    fModelOVCTh->DrawNormalized("SAME");
+    fModelFrameTh->Draw();
+    fModelTShieldTh->Draw("SAME");
+    fModel50mKTh->Draw("SAME");
+    fModel600mKTh->Draw("SAME");
+    fModelIVCTh->Draw("SAME");
+    fModelOVCTh->Draw("SAME");
     fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -676,12 +740,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCRa->SetLineColor(6);
     fModelOVCRa->SetLineColor(7);
 
-    fModelFrameRa->DrawNormalized();
-    fModelTShieldRa->DrawNormalized("SAME");
-    fModel50mKRa->DrawNormalized("SAME");
-    fModel600mKRa->DrawNormalized("SAME");
-    fModelIVCRa->DrawNormalized("SAME");
-    fModelOVCRa->DrawNormalized("SAME");
+    fModelFrameRa->Draw();
+    fModelTShieldRa->Draw("SAME");
+    fModel50mKRa->Draw("SAME");
+    fModel600mKRa->Draw("SAME");
+    fModelIVCRa->Draw("SAME");
+    fModelOVCRa->Draw("SAME");
     fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -703,12 +767,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCK->SetLineColor(6);
     fModelOVCK->SetLineColor(7);
 
-    fModelFrameK->DrawNormalized();
-    fModelTShieldK->DrawNormalized("SAME");
-    fModel50mKK->DrawNormalized("SAME");
-    fModel600mKK->DrawNormalized("SAME");
-    fModelIVCK->DrawNormalized("SAME");
-    fModelOVCK->DrawNormalized("SAME");
+    fModelFrameK->Draw();
+    fModelTShieldK->Draw("SAME");
+    fModel50mKK->Draw("SAME");
+    fModel600mKK->Draw("SAME");
+    fModelIVCK->Draw("SAME");
+    fModelOVCK->Draw("SAME");
     fModelFrameK->GetXaxis()->SetRange(0/dBinSize, 1600/dBinSize);
 
 
@@ -730,12 +794,12 @@ void TBackgroundModel::DrawBkg()
     fModelIVCCo->SetLineColor(6);
     fModelOVCCo->SetLineColor(7);
 
-    fModelFrameCo->DrawNormalized();
-    fModelTShieldCo->DrawNormalized("SAME");
-    fModel50mKCo->DrawNormalized("SAME");
-    fModel600mKCo->DrawNormalized("SAME");
-    fModelIVCCo->DrawNormalized("SAME");
-    fModelOVCCo->DrawNormalized("SAME");
+    fModelFrameCo->Draw();
+    fModelTShieldCo->Draw("SAME");
+    fModel50mKCo->Draw("SAME");
+    fModel600mKCo->Draw("SAME");
+    fModelIVCCo->Draw("SAME");
+    fModelOVCCo->Draw("SAME");
     fModelFrameCo->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
@@ -755,7 +819,7 @@ void TBackgroundModel::DrawBkg()
     fModelNDBD->Draw();
     fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
-    legndbd->DrawNormalized();
+    legndbd->Draw();
 
     TCanvas *cBi = new TCanvas("cBi", "cBi", 1200, 800);
     cBi->SetLogy();
@@ -763,7 +827,7 @@ void TBackgroundModel::DrawBkg()
     fModelBi->Draw();
     fModelBi->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legbi->AddEntry(fModelBi, "Bi-207" ,"l");
-    legbi->DrawNormalized();
+    legbi->Draw();
 
 
  }
@@ -899,37 +963,48 @@ void TBackgroundModel::Initialize()
 
 
   // Fills and Loads MC data
-  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", dMult);
-  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", dMult);
-  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", dMult);
-  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", dMult);
-  outTreeIVCTh 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", dMult);
-  outTreeOVCTh 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", dMult);
+  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", "B", dMult);
+  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", "B", dMult);
+  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", "B", dMult);
+  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", "B", dMult);
+  outTreeIVCTh 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", "B", dMult);
+  outTreeOVCTh 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", "B", dMult);
 
-  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", dMult);
-  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", dMult);    
-  outTree50mKRa	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", dMult);
-  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", dMult);
-  outTreeIVCRa	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", dMult);
-  outTreeOVCRa 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", dMult);
+  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", "B", dMult);
+  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", "B", dMult);    
+  outTree50mKRa	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", "B", dMult);
+  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", "B", dMult);
+  outTreeIVCRa	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", "B", dMult);
+  outTreeOVCRa 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", "B", dMult);
 
-  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", dMult);
-  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield","K40", dMult);    
-  outTree50mKK	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", dMult);
-  outTree600mKK	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", dMult);
-  outTreeIVCK		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", dMult);
-  outTreeOVCK 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", dMult);
+  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", "B", dMult);
+  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield","K40", "B", dMult);    
+  outTree50mKK	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", "B", dMult);
+  outTree600mKK	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", "B", dMult);
+  outTreeIVCK		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", "B", dMult);
+  outTreeOVCK 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", "B", dMult);
 
 
-  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	dMult);
-  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", dMult);    
-  outTree50mKCo	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", dMult);
-  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", dMult);
-  outTreeIVCCo	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", dMult);
-  outTreeOVCCo 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", dMult);
+  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	"B", dMult);
+  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", "B", dMult);    
+  outTree50mKCo	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", "B", dMult);
+  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", "B", dMult);
+  outTreeIVCCo	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", "B", dMult);
+  outTreeOVCCo 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", "B", dMult);
 
-  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", dMult);
-  outTreeBi         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", dMult);
+  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", "B", dMult);
+  outTreeBi         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", "B", dMult);
+
+  outTreeFrameThS01   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S01", dMult);
+  outTreeFrameThS1    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S1", dMult);
+  outTreeFrameThS10   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S10", dMult);
+  outTreeFrameThS100  = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S100", dMult);
+
+  outTreeFrameRaS01   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S01", dMult);
+  outTreeFrameRaS1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", dMult);
+  outTreeFrameRaS10   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", dMult);
+  outTreeFrameRaS100  = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", dMult);
+
 
 
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
@@ -962,6 +1037,20 @@ void TBackgroundModel::Initialize()
   outTree600mKCo->Project("fModel600mKCo", 		"Ener1", ener_cut);
   outTreeIVCCo->Project("fModelIVCCo", 			"Ener1", ener_cut);
   outTreeOVCCo->Project("fModelOVCCo", 			"Ener1", ener_cut);
+
+
+  // Surface
+  outTreeFrameThS01->Project("fModelFrameThS01", "Ener1", ener_cut);
+  outTreeFrameThS1->Project("fModelFrameThS1", "Ener1", ener_cut);
+  outTreeFrameThS10->Project("fModelFrameThS10", "Ener1", ener_cut);
+  outTreeFrameThS100->Project("fModelFrameThS100", "Ener1", ener_cut);
+
+  outTreeFrameRaS01->Project("fModelFrameRaS01", "Ener1", ener_cut);
+  outTreeFrameRaS1->Project("fModelFrameRaS1", "Ener1", ener_cut);
+  outTreeFrameRaS10->Project("fModelFrameRaS10", "Ener1", ener_cut);
+  outTreeFrameRaS100->Project("fModelFrameRaS100", "Ener1", ener_cut);
+
+
 
 	cout << "Loaded MC" << endl;
 
@@ -1034,6 +1123,18 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelNDBD, outTreeNDBD,     50, 2700);
 
   NormalizePDF(fModelBi, outTreeBi,         50, 2700);
+
+  NormalizePDF(fModelFrameThS01,   outTreeFrameThS01, 50, 2700);
+  NormalizePDF(fModelFrameThS1,    outTreeFrameThS1, 50, 2700);
+  NormalizePDF(fModelFrameThS10,   outTreeFrameThS10, 50, 2700);
+  NormalizePDF(fModelFrameThS100,  outTreeFrameThS100, 50, 2700);
+
+  NormalizePDF(fModelFrameRaS01,   outTreeFrameRaS01, 50, 2700);
+  NormalizePDF(fModelFrameRaS1,    outTreeFrameRaS1, 50, 2700);
+  NormalizePDF(fModelFrameRaS10,   outTreeFrameRaS10, 50, 2700);
+  NormalizePDF(fModelFrameRaS100,  outTreeFrameRaS100, 50, 2700);
+
+
 
 	cout << "Normalized MC PDFs" << endl;
 
@@ -1124,10 +1225,10 @@ void TBackgroundModel::LoadData()
 
 
 // Loads MC files into Trees
-TChain *TBackgroundModel::LoadMC(std::string dDir, std::string dLocation, std::string dSource, int dMult)
+TChain *TBackgroundModel::LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult)
 {
     TChain *outTree = new TChain("outTree");
-    outTree->Add(Form("%s%s-%s-B-M%d-T50-r0.0425.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dMult));
+    outTree->Add(Form("%s%s-%s-%s-M%d-T50-r0.0425.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
 
     return outTree;
 }

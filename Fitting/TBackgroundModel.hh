@@ -31,7 +31,7 @@ public:
 
 	void LoadData();
 
-	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, int dMult);
+	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult);
 
 	void NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE);
 
@@ -92,6 +92,18 @@ private:
 	TChain			*outTreeToyBi;
 
 	// Model
+	TChain			*outTreeFrameThS01;
+	TChain			*outTreeFrameThS1;
+	TChain			*outTreeFrameThS10;
+	TChain			*outTreeFrameThS100;
+
+	TChain			*outTreeFrameRaS01;
+	TChain			*outTreeFrameRaS1;
+	TChain			*outTreeFrameRaS10;
+	TChain			*outTreeFrameRaS100;
+
+
+
 	TChain			*outTreeFrameTh;
 	TChain			*outTreeTShieldTh;	
 	TChain			*outTree50mKTh;
@@ -135,10 +147,16 @@ private:
 	TH1D			*fModelNDBD;
 	TH1D			*fModelBi;
 
-	TH1D			*fModelFrameTh-S01;
-	TH1D			*fModelFrameTh-S1;
-	TH1D			*fModelFrameTh-S10;
-	TH1D			*fModelFrameTh-S100;
+	TH1D			*fModelFrameThS01;
+	TH1D			*fModelFrameThS1;
+	TH1D			*fModelFrameThS10;
+	TH1D			*fModelFrameThS100;
+
+
+	TH1D			*fModelFrameRaS01;
+	TH1D			*fModelFrameRaS1;
+	TH1D			*fModelFrameRaS10;
+	TH1D			*fModelFrameRaS100;
 
 
 	TH1D			*fModelFrameTh;
@@ -177,10 +195,16 @@ private:
 	TH1D			*fSmearNDBD;
 	TH1D			*fSmearBi;
 
-	TH1D			*fSmearFrameTh-S01;
-	TH1D			*fSmearFrameTh-S1;
-	TH1D			*fSmearFrameTh-S10;
-	TH1D			*fSmearFrameTh-S100;
+	TH1D			*fSmearFrameThS01;
+	TH1D			*fSmearFrameThS1;
+	TH1D			*fSmearFrameThS10;
+	TH1D			*fSmearFrameThS100;
+
+	TH1D			*fSmearFrameRaS01;
+	TH1D			*fSmearFrameRaS1;
+	TH1D			*fSmearFrameRaS10;
+	TH1D			*fSmearFrameRaS100;
+
 
 	TH1D			*fSmearFrameTh;
 	TH1D			*fSmearTShieldTh;
