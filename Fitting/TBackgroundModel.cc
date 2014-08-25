@@ -41,6 +41,8 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
   Obj->SetParameters(14, x[14]);
   Obj->SetParameters(15, x[15]);
   Obj->SetParameters(16, x[16]);
+  Obj->SetParameters(16, x[17]);
+  Obj->SetParameters(16, x[18]);
 
 
 	Obj->UpdateModel();
@@ -230,6 +232,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fParameters[14] = 0.;
   fParameters[15] = 0.;
   fParameters[16] = 0.;
+  fParameters[17] = 0.;
+  fParameters[18] = 0.;
 
 
   fParError[0]  = 0.;
@@ -249,6 +253,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fParError[14] = 0.;
   fParError[15] = 0.;
   fParError[16] = 0.;
+  fParError[17] = 0.;
+  fParError[18] = 0.;
 
 
 
@@ -405,7 +411,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(17); //initialize minuit, n is the number of parameters
+   TMinuit minuit(19); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -452,9 +458,9 @@ bool TBackgroundModel::DoTheFit()
    // minuit.DefineParameter(0, "Close Th",  0., 100.0, 0., 60000);
    minuit.DefineParameter(0, "Frame Th",  3380, 100.0, 0., 100000);   
    // minuit.DefineParameter(1, "Far Th",   2830., 50.0, 0., 4000);
-   minuit.DefineParameter(1, "Far Th",   70000., 100.0, 0., 100000);
+   minuit.DefineParameter(1, "IVC Th",   40000., 100.0, 0., 100000);
    minuit.DefineParameter(2, "Frame Ra",  100., 100.0, 0., 50000);   
-   minuit.DefineParameter(3, "Far Ra",    55000., 100.0, 0., 80000);
+   minuit.DefineParameter(3, "IVC Ra",    55000., 100.0, 0., 80000);
    minuit.DefineParameter(4, "Close K",   100., 100.0, 0., 500000);
    minuit.DefineParameter(5, "Far K",     30000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co",  3000., 100.0, 0., 50000); 
@@ -468,6 +474,9 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(14, "TShield Ra",  100, 100.0, 0., 60000);   
    minuit.DefineParameter(15, "50mK Ra",  100, 100.0, 0., 60000);   
    minuit.DefineParameter(16, "600mK Ra",  100, 100.0, 0., 60000);   
+   minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 100000);   
+   minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 100000);   
+
 
 
 
@@ -490,7 +499,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 16;
+  int dNumParameters = 18;
 
 
 
@@ -560,6 +569,8 @@ bool TBackgroundModel::DoTheFit()
   minuit.GetParameter(14,  fParameters[14],   fParError[14]);
   minuit.GetParameter(15,  fParameters[15],   fParError[15]);
   minuit.GetParameter(16,  fParameters[16],   fParError[16]);
+  minuit.GetParameter(17,  fParameters[17],   fParError[17]);
+  minuit.GetParameter(18,  fParameters[18],   fParError[18]);
 
 
 	UpdateModel();
@@ -580,14 +591,14 @@ bool TBackgroundModel::DoTheFit()
   fModelTotTh->Add(fSmear50mKTh,    fParameters[12]);
   fModelTotTh->Add(fSmear600mKTh,   fParameters[13]);
   fModelTotTh->Add(fSmearIVCTh,     fParameters[1]);
-  fModelTotTh->Add(fSmearOVCTh,     fParameters[1]);
+  fModelTotTh->Add(fSmearOVCTh,     fParameters[17]);
 
   fModelTotRa->Add(fSmearFrameRa,   fParameters[2]);
   fModelTotRa->Add(fSmearTShieldRa, fParameters[14]);
   fModelTotRa->Add(fSmear50mKRa,    fParameters[15]);
   fModelTotRa->Add(fSmear600mKRa,   fParameters[16]);
   fModelTotRa->Add(fSmearIVCRa,     fParameters[3]);
-  fModelTotRa->Add(fSmearOVCRa,     fParameters[3]);
+  fModelTotRa->Add(fSmearOVCRa,     fParameters[18]);
 
   fModelTotK->Add(fSmearFrameK,     fParameters[4]);
   fModelTotK->Add(fSmearTShieldK,   fParameters[4]);
@@ -630,17 +641,36 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotNDBD->Draw("SAME");
   fModelTotBi->Draw("SAME");
 
-  TPaveText *pt = new TPaveText(0.4,0.78,0.65,0.98,"NB NDC");
+
+/*
+  TPaveText *pt = new TPaveText(0.35,0.75,0.70,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
-  pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-  pt->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+  pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- IVC Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+  pt->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- IVC Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
   pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
   pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
   pt->AddText(Form("TShield Th: %0.2E#pm%0.2E --- 50mK Th: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
   pt->AddText(Form("600mK Th: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[13], fParError[13], fParameters[14], fParError[14] ));
   pt->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
+  pt->AddText(Form("OVC Th: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[17], fParError[17], fParameters[18], fParError[18] ));
+*/
+
+  TPaveText *pt = new TPaveText(0.35,0.75,0.70,0.98,"NB NDC");
+  pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+  // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
+  pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[11], fParError[11] ));
+  pt->AddText(Form("50mK Th: %0.2E#pm%0.2E --- 600mK Th: %0.2E#pm%0.2E", fParameters[12], fParError[12], fParameters[13], fParError[13] ));
+  pt->AddText(Form("IVC Th: %0.2E#pm%0.2E --- OVC Th: %0.2E#pm%0.2E", fParameters[1], fParError[1], fParameters[17], fParError[17] ));
+  pt->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[14], fParError[14] ));
+  pt->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
+  pt->AddText(Form("IVC Ra: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[3], fParError[3], fParameters[18], fParError[18] ));
+  pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+  pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+  pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+
+
 
 
 
@@ -1495,14 +1525,14 @@ void TBackgroundModel::UpdateModel()
   fModelTot->Add( fSmear50mKTh,     fParameters[12]);
   fModelTot->Add( fSmear600mKTh,    fParameters[13]);
   fModelTot->Add( fSmearIVCTh,      fParameters[1]);
-  fModelTot->Add( fSmearOVCTh,      fParameters[1]);
+  fModelTot->Add( fSmearOVCTh,      fParameters[17]);
 
   fModelTot->Add( fSmearFrameRa,    fParameters[2]);
   fModelTot->Add( fSmearTShieldRa,  fParameters[14]);  
   fModelTot->Add( fSmear50mKRa,     fParameters[15]);
   fModelTot->Add( fSmear600mKRa,    fParameters[16]);
   fModelTot->Add( fSmearIVCRa,      fParameters[3]);
-  fModelTot->Add( fSmearOVCRa,      fParameters[3]);
+  fModelTot->Add( fSmearOVCRa,      fParameters[18]);
 
   fModelTot->Add( fSmearFrameK,    fParameters[4]);
   fModelTot->Add( fSmearTShieldK,  fParameters[4]);
