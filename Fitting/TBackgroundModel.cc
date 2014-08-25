@@ -35,6 +35,8 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(8,	x[8]);
 	Obj->SetParameters(9,	x[9]);
   Obj->SetParameters(10, x[10]);
+  Obj->SetParameters(11, x[11]);
+
 
 	Obj->UpdateModel();
 
@@ -217,6 +219,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fParameters[8]  = 0.;
   fParameters[9]  = 0.;
   fParameters[10] = 0.;
+  fParameters[11] = 0.;
+
 
   fParError[0]  = 0.;
   fParError[1]  = 0.;
@@ -229,6 +233,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fParError[8]  = 0.;
   fParError[9]  = 0.;
   fParError[10] = 0.;
+  fParError[11] = 0.;
+
+
 
   // Resolutions of individual channels
   fResolution[0] = 5.0/2.355;
@@ -383,7 +390,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(11); //initialize minuit, n is the number of parameters
+   TMinuit minuit(12); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -403,7 +410,7 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
    // minuit.DefineParameter(0, "Close Th",  23.8., 10.0, 0., 4000);
-   minuit.DefineParameter(0, "Close Th",  100, 100.0, 0., 60000);   
+   minuit.DefineParameter(0, "Close Th",  0, 100.0, 0., 60000);   
    // minuit.DefineParameter(1, "Far Th",	 	2830., 50.0, 0., 4000);
    minuit.DefineParameter(1, "Far Th",   70000., 100.0, 0., 100000);
    minuit.DefineParameter(2, "Close Ra",  100., 100.0, 0., 50000);   
@@ -415,11 +422,12 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(8, "Resolution",	5., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
    minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
+   minuit.DefineParameter(11, "Surface Th",  100, 100.0, 0., 60000);   
 
 
 
    // Fix parameters for testing
-   // minuit.FixParameter(0); // Close Th
+   minuit.FixParameter(0); // Close Th
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
@@ -435,7 +443,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 10;
+  int dNumParameters = 11;
 
 
 
@@ -461,14 +469,14 @@ bool TBackgroundModel::DoTheFit()
 	 else
 	 {
 
-    if(dMult ==1 )
+    if(dMult == 1)
     {
    		///// Draw Data
   	 	fDataHistoM1->SetLineColor(1);
   	 	fDataHistoM1->SetLineWidth(2);
   	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
    		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-      fDataHistoM1->GetYaxis()->SetRange(0, 50000);
+      fDataHistoM1->SetMaximum(90000);
       fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
 		  fDataHistoM1->Draw();
     }
@@ -498,6 +506,7 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(8,	fParameters[8],		fParError[8]);
 	minuit.GetParameter(9,	fParameters[9],		fParError[9]);
   minuit.GetParameter(10,  fParameters[10],   fParError[10]);
+  minuit.GetParameter(11,  fParameters[11],   fParError[11]);
 
 
 	UpdateModel();
@@ -509,6 +518,9 @@ bool TBackgroundModel::DoTheFit()
   //// Few Parameters
   ///////////////////////////////////////////
   /// Add Histograms after chi-squared minimization
+
+  // Surface....
+  fModelTotTh->Add(fSmearFrameThS1,   fParameters[11]);
 
   fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
   fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
@@ -634,9 +646,10 @@ void TBackgroundModel::DrawBkg()
 
 }
 
+void TBackgroundModel::DrawMC()
+{
 // Draws all MC spectra, must Initialize first!
- void TBackgroundModel::DrawMC()
- {
+
  	gStyle->SetOptStat(0);
  	gStyle->SetOptTitle(0);
 
@@ -829,8 +842,7 @@ void TBackgroundModel::DrawBkg()
     legbi->AddEntry(fModelBi, "Bi-207" ,"l");
     legbi->Draw();
 
-
- }
+}
 
 
 // Generates Toy Data using MC histograms
@@ -958,7 +970,7 @@ double TBackgroundModel::GetMCEff(TH1D *h1)
 
 void TBackgroundModel::Initialize()
 {	
-	// Loading all data in Initialize, correct or no?
+	// Loading background data
 	LoadData();	
 
 
@@ -1007,6 +1019,17 @@ void TBackgroundModel::Initialize()
 
 
 
+  // Surface
+  outTreeFrameThS01->Project("fModelFrameThS01", "Ener1", ener_cut);
+  outTreeFrameThS1->Project("fModelFrameThS1", "Ener1", ener_cut);
+  outTreeFrameThS10->Project("fModelFrameThS10", "Ener1", ener_cut);
+  outTreeFrameThS100->Project("fModelFrameThS100", "Ener1", ener_cut);
+
+  outTreeFrameRaS01->Project("fModelFrameRaS01", "Ener1", ener_cut);
+  outTreeFrameRaS1->Project("fModelFrameRaS1", "Ener1", ener_cut);
+  outTreeFrameRaS10->Project("fModelFrameRaS10", "Ener1", ener_cut);
+  outTreeFrameRaS100->Project("fModelFrameRaS100", "Ener1", ener_cut);
+
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
   outTreeBi->Project("fModelBi",            "Ener1", ener_cut);  
 
@@ -1038,17 +1061,6 @@ void TBackgroundModel::Initialize()
   outTreeIVCCo->Project("fModelIVCCo", 			"Ener1", ener_cut);
   outTreeOVCCo->Project("fModelOVCCo", 			"Ener1", ener_cut);
 
-
-  // Surface
-  outTreeFrameThS01->Project("fModelFrameThS01", "Ener1", ener_cut);
-  outTreeFrameThS1->Project("fModelFrameThS1", "Ener1", ener_cut);
-  outTreeFrameThS10->Project("fModelFrameThS10", "Ener1", ener_cut);
-  outTreeFrameThS100->Project("fModelFrameThS100", "Ener1", ener_cut);
-
-  outTreeFrameRaS01->Project("fModelFrameRaS01", "Ener1", ener_cut);
-  outTreeFrameRaS1->Project("fModelFrameRaS1", "Ener1", ener_cut);
-  outTreeFrameRaS10->Project("fModelFrameRaS10", "Ener1", ener_cut);
-  outTreeFrameRaS100->Project("fModelFrameRaS100", "Ener1", ener_cut);
 
 
 
@@ -1124,6 +1136,7 @@ void TBackgroundModel::Initialize()
 
   NormalizePDF(fModelBi, outTreeBi,         50, 2700);
 
+
   NormalizePDF(fModelFrameThS01,   outTreeFrameThS01, 50, 2700);
   NormalizePDF(fModelFrameThS1,    outTreeFrameThS1, 50, 2700);
   NormalizePDF(fModelFrameThS10,   outTreeFrameThS10, 50, 2700);
@@ -1142,6 +1155,10 @@ void TBackgroundModel::Initialize()
   {
     // cout << "Fixed resolution: " << endl;
     cout << "Smearing histograms with constant 5 keV resolution" << endl;
+
+    // Adding the 10 micron distribution for now...
+    SmearMC(fModelFrameThS10, fSmearFrameThS10, 5);
+    // SmearMC();
 
     SmearMC(fModelFrameTh, fSmearFrameTh, 5);
     SmearMC(fModelTShieldTh, fSmearTShieldTh, 5);  
@@ -1281,6 +1298,7 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par8 = "	<< fParameters[8]	<< " +/- " << fParError[8] << endl;
 	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
   cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
+  cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
 
 
 //	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
@@ -1363,6 +1381,10 @@ void TBackgroundModel::UpdateModel()
   // Efficiency = Integral over fit range/integral over entire range -> Normalize 
   if(bFixedRes)
   {
+
+  // Testing 10 micron Frame for now
+  fModelTot->Add( fSmearFrameThS1,    fParameters[11]);
+
   fModelTot->Add( fSmearFrameTh,    fParameters[0]);
   fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
   fModelTot->Add( fSmear50mKTh,     fParameters[0]);
