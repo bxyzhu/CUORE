@@ -41,8 +41,8 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
   Obj->SetParameters(14, x[14]);
   Obj->SetParameters(15, x[15]);
   Obj->SetParameters(16, x[16]);
-  Obj->SetParameters(16, x[17]);
-  Obj->SetParameters(16, x[18]);
+  Obj->SetParameters(17, x[17]);
+  Obj->SetParameters(18, x[18]);
 
 
 	Obj->UpdateModel();
@@ -657,7 +657,7 @@ bool TBackgroundModel::DoTheFit()
   pt->AddText(Form("OVC Th: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[17], fParError[17], fParameters[18], fParError[18] ));
 */
 
-  TPaveText *pt = new TPaveText(0.35,0.75,0.70,0.98,"NB NDC");
+  TPaveText *pt = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
   pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[11], fParError[11] ));
