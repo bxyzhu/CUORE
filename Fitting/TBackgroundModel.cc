@@ -64,7 +64,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   bFixedRes = fFixedRes;
 
   // Bin size (keV)
-  dBinSize = 10;
+  dBinSize = 5;
   // Histogram range
   dMinEnergy = 0.;
   dMaxEnergy = 3500.;
@@ -431,22 +431,24 @@ bool TBackgroundModel::DoTheFit()
    // Using less parameters
    ////////////////////////////////////////////////
    ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
-   minuit.DefineParameter(0, "Close Th",  0., 100.0, 0., 60000);
+   minuit.DefineParameter(0, "Close Th",  3000., 100.0, 0., 60000);
    // minuit.DefineParameter(0, "Close Th",  20000, 100.0, 0., 60000);   
    // minuit.DefineParameter(1, "Far Th",	 	2830., 50.0, 0., 4000);
-   minuit.DefineParameter(1, "Far Th",   70000., 100.0, 0., 100000);
+   minuit.DefineParameter(1, "Far Th",   35000., 100.0, 0., 100000);
    minuit.DefineParameter(2, "Close Ra",  100., 100.0, 0., 50000);   
-   minuit.DefineParameter(3, "Far Ra",    55000., 100.0, 0., 80000);
-   minuit.DefineParameter(4, "Close K", 	100., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K", 		30000., 100.0, 0., 500000);
+   minuit.DefineParameter(3, "Far Ra",    50000., 100.0, 0., 80000);
+   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 100.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K", 		25000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	3000., 100.0, 0., 50000); 
    minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
    minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
+   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 200000);  
+
    // minuit.DefineParameter(11, "Surface Th",  100, 100.0, 0., 60000);   
-
-
 
 
 
@@ -479,7 +481,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 150000);   
    minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 150000);   
 */
-
 
 
 
@@ -691,7 +692,7 @@ bool TBackgroundModel::DoTheFit()
 
 
   // Few Parameters
-  TPaveText *pt = new TPaveText(0.35,0.75,0.70,0.98,"NB NDC");
+  TPaveText *pt = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
   pt->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
@@ -1250,7 +1251,6 @@ void TBackgroundModel::Initialize()
 	NormalizePDF(fModelIVCRa, outTreeIVCRa,			50, 2700);
 	NormalizePDF(fModelOVCRa, outTreeOVCRa,			50, 2700);
 
-	// Normalizing K-40 for full range since no peaks above 1500 keV
 	NormalizePDF(fModelFrameK, 	outTreeFrameK,		50, 2700);
 	NormalizePDF(fModelTShieldK, outTreeTShieldK,	50, 2700);	
 	NormalizePDF(fModel50mKK, outTree50mKK,			50, 2700);
@@ -1287,43 +1287,46 @@ void TBackgroundModel::Initialize()
   if(bFixedRes)
   {
     // cout << "Fixed resolution: " << endl;
-    cout << "Smearing histograms with constant 5 keV resolution" << endl;
+    cout << "Smearing histograms with constant 6 keV resolution" << endl;
+
+    // double dRes = 4;
+    double dRes = 6.0/2.355;
 
     // Adding the 10 micron distribution for now...
-    SmearMC(fModelFrameThS10, fSmearFrameThS10, 6.0/2.355);
+    SmearMC(fModelFrameThS10, fSmearFrameThS10, dRes);
     // SmearMC();
 
-    SmearMC(fModelFrameTh, fSmearFrameTh, 6.0/2.355);
-    SmearMC(fModelTShieldTh, fSmearTShieldTh, 6.0/2.355);  
-    SmearMC(fModel50mKTh, fSmear50mKTh, 6.0/2.355);
-    SmearMC(fModel600mKTh, fSmear600mKTh, 6.0/2.355);
-    SmearMC(fModelIVCTh, fSmearIVCTh, 6.0/2.355);
-    SmearMC(fModelOVCTh, fSmearOVCTh, 6.0/2.355);
+    SmearMC(fModelFrameTh, fSmearFrameTh, dRes);
+    SmearMC(fModelTShieldTh, fSmearTShieldTh, dRes);  
+    SmearMC(fModel50mKTh, fSmear50mKTh, dRes);
+    SmearMC(fModel600mKTh, fSmear600mKTh, dRes);
+    SmearMC(fModelIVCTh, fSmearIVCTh, dRes);
+    SmearMC(fModelOVCTh, fSmearOVCTh, dRes);
 
-    SmearMC(fModelFrameRa, fSmearFrameRa, 6.0/2.355);
-    SmearMC(fModelTShieldRa, fSmearTShieldRa, 6.0/2.355);  
-    SmearMC(fModel50mKRa, fSmear50mKRa, 6.0/2.355);
-    SmearMC(fModel600mKRa, fSmear600mKRa, 6.0/2.355);
-    SmearMC(fModelIVCRa, fSmearIVCRa, 6.0/2.355);
-    SmearMC(fModelOVCRa, fSmearOVCRa, 6.0/2.355);
+    SmearMC(fModelFrameRa, fSmearFrameRa, dRes);
+    SmearMC(fModelTShieldRa, fSmearTShieldRa, dRes);  
+    SmearMC(fModel50mKRa, fSmear50mKRa, dRes);
+    SmearMC(fModel600mKRa, fSmear600mKRa, dRes);
+    SmearMC(fModelIVCRa, fSmearIVCRa, dRes);
+    SmearMC(fModelOVCRa, fSmearOVCRa, dRes);
 
-    SmearMC(fModelFrameK, fSmearFrameK, 6.0/2.355);
-    SmearMC(fModelTShieldK, fSmearTShieldK, 6.0/2.355);
-    SmearMC(fModel50mKK, fSmear50mKK, 6.0/2.355);
-    SmearMC(fModel600mKK, fSmear600mKK, 6.0/2.355);
-    SmearMC(fModelIVCK, fSmearIVCK, 6.0/2.355);
-    SmearMC(fModelOVCK, fSmearOVCK, 6.0/2.355); 
+    SmearMC(fModelFrameK, fSmearFrameK, dRes);
+    SmearMC(fModelTShieldK, fSmearTShieldK, dRes);
+    SmearMC(fModel50mKK, fSmear50mKK, dRes);
+    SmearMC(fModel600mKK, fSmear600mKK, dRes);
+    SmearMC(fModelIVCK, fSmearIVCK, dRes);
+    SmearMC(fModelOVCK, fSmearOVCK, dRes); 
 
-    SmearMC(fModelFrameCo, fSmearFrameCo, 6.0/2.355);
-    SmearMC(fModelTShieldCo, fSmearTShieldCo, 6.0/2.355);
-    SmearMC(fModel50mKCo, fSmear50mKCo, 6.0/2.355);
-    SmearMC(fModel600mKCo, fSmear600mKCo, 6.0/2.355);
-    SmearMC(fModelIVCCo, fSmearIVCCo, 6.0/2.355);
-    SmearMC(fModelOVCCo, fSmearOVCCo, 6.0/2.355);  
+    SmearMC(fModelFrameCo, fSmearFrameCo, dRes);
+    SmearMC(fModelTShieldCo, fSmearTShieldCo, dRes);
+    SmearMC(fModel50mKCo, fSmear50mKCo, dRes);
+    SmearMC(fModel600mKCo, fSmear600mKCo, dRes);
+    SmearMC(fModelIVCCo, fSmearIVCCo, dRes);
+    SmearMC(fModelOVCCo, fSmearOVCCo, dRes);  
 
-    SmearMC(fModelNDBD, fSmearNDBD, 6.0/2.355);  
+    SmearMC(fModelNDBD, fSmearNDBD, dRes);  
 
-    SmearMC(fModelBi, fSmearBi, 6.0/2.355);  
+    SmearMC(fModelBi, fSmearBi, dRes);  
 
     cout << "Finished smearing MC histograms" << endl;
 
