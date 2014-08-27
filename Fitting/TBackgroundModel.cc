@@ -35,14 +35,14 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(8,	x[8]);
 	Obj->SetParameters(9,	x[9]);
   Obj->SetParameters(10, x[10]);
-  // Obj->SetParameters(11, x[11]);
-  // Obj->SetParameters(12, x[12]);
-  // Obj->SetParameters(13, x[13]);
-  // Obj->SetParameters(14, x[14]);
-  // Obj->SetParameters(15, x[15]);
-  // Obj->SetParameters(16, x[16]);
-  // Obj->SetParameters(17, x[17]);
-  // Obj->SetParameters(18, x[18]);
+  Obj->SetParameters(11, x[11]);
+  Obj->SetParameters(12, x[12]);
+  Obj->SetParameters(13, x[13]);
+  Obj->SetParameters(14, x[14]);
+  Obj->SetParameters(15, x[15]);
+  Obj->SetParameters(16, x[16]);
+  Obj->SetParameters(17, x[17]);
+  Obj->SetParameters(18, x[18]);
 
 
 	Obj->UpdateModel();
@@ -411,7 +411,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(11); //initialize minuit, n is the number of parameters
+   TMinuit minuit(19); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -426,61 +426,61 @@ bool TBackgroundModel::DoTheFit()
    // Around 60000 events in background spectrum
 
 
-
+/*
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
-   minuit.DefineParameter(0, "Close Th",  3000., 100.0, 0., 60000);
-   // minuit.DefineParameter(0, "Close Th",  20000, 100.0, 0., 60000);   
-   // minuit.DefineParameter(1, "Far Th",	 	2830., 50.0, 0., 4000);
-   minuit.DefineParameter(1, "Far Th",   35000., 100.0, 0., 100000);
-   minuit.DefineParameter(2, "Close Ra",  100., 100.0, 0., 50000);   
-   minuit.DefineParameter(3, "Far Ra",    50000., 100.0, 0., 80000);
+   // minuit.DefineParameter(0, "Close Th",  100., 10.0, 0., 60000);
+   minuit.DefineParameter(0, "Close Th",  3000, 100.0, 0., 80000);   
+   // minuit.DefineParameter(1, "Far Th",	 	100., 50.0, 0., 100000);
+   minuit.DefineParameter(1, "Far Th",    45000., 10.0, 0., 100000);
+   minuit.DefineParameter(2, "Close Ra",  600., 10.0, 0., 80000);   
+   // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
+   minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
+   // minuit.DefineParameter(3, "Far Ra",    100., 100.0, 0., 80000);
    // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   minuit.DefineParameter(4, "Close K",   100., 100.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
    // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K", 		25000., 100.0, 0., 500000);
-   minuit.DefineParameter(6, "Close Co", 	3000., 100.0, 0., 50000); 
-   minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
+   minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
+   minuit.DefineParameter(6, "Close Co", 	100., 100.0, 0., 80000); 
+   minuit.DefineParameter(7, "Far Co",    11000, 100.0, 0., 80000);  
+   // minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
-   minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
-   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 200000);  
-
+   minuit.DefineParameter(9, "NDBD",       65., 10.0, 0., 1000);     
+   minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
+   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
    // minuit.DefineParameter(11, "Surface Th",  100, 100.0, 0., 60000);   
+*/
 
 
 
 
-/*
    // Close Th and Close Ra now split into its various sections, far Th and Ra still the same
+   // This step after previous step full fit converges, just to see if any differences show up
    ////////////////////////////////////////////////
    // Using more parameters
    ////////////////////////////////////////////////
-   ///// Maximum values are typically 1.5x to 2x measured rate of background just to be sure
-   // minuit.DefineParameter(0, "Close Th",  0., 100.0, 0., 60000);
-   minuit.DefineParameter(0, "Frame Th",  3380, 100.0, 0., 100000);   
-   // minuit.DefineParameter(1, "Far Th",   2830., 50.0, 0., 4000);
-   minuit.DefineParameter(1, "IVC Th",   40000., 100.0, 0., 100000);
-   minuit.DefineParameter(2, "Frame Ra",  100., 100.0, 0., 50000);   
-   minuit.DefineParameter(3, "IVC Ra",    55000., 100.0, 0., 80000);
-   minuit.DefineParameter(4, "Close K",   100., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K",     30000., 100.0, 0., 500000);
-   minuit.DefineParameter(6, "Close Co",  3000., 100.0, 0., 50000); 
-   minuit.DefineParameter(7, "Far Co",    100., 100.0, 0., 50000);  
-   minuit.DefineParameter(8, "Resolution",  5., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
-   minuit.DefineParameter(10, "Lead Bi",    5000., 100.0, 0., 200000);  
-   minuit.DefineParameter(11, "TShield Th",  3380, 100.0, 0., 100000);   
-   minuit.DefineParameter(12, "50mK Th",  3380, 100.0, 0., 100000);   
-   minuit.DefineParameter(13, "600mK Th",  3380, 100.0, 0., 100000);   
-   minuit.DefineParameter(14, "TShield Ra",  100, 100.0, 0., 60000);   
-   minuit.DefineParameter(15, "50mK Ra",  100, 100.0, 0., 60000);   
-   minuit.DefineParameter(16, "600mK Ra",  100, 100.0, 0., 60000);   
-   minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 150000);   
-   minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 150000);   
-*/
+
+   minuit.DefineParameter(0, "Frame Th",  100, 10.0, 0., 100000);   
+   minuit.DefineParameter(1, "IVC Th",    100., 10.0, 0., 100000);
+   minuit.DefineParameter(2, "Frame Ra",  100., 10.0, 0., 50000);   
+   minuit.DefineParameter(3, "IVC Ra",    100., 10.0, 0., 80000);
+   minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K",     38000., 100.0, 0., 500000);
+   minuit.DefineParameter(6, "Close Co",  100., 10.0, 0., 50000); 
+   minuit.DefineParameter(7, "Far Co",    11000., 100.0, 0., 50000);  
+   minuit.DefineParameter(8, "Resolution",  6., 1, 3, 10);  
+   minuit.DefineParameter(9, "NDBD",      65., 100.0, 0., 1000);     
+   minuit.DefineParameter(10, "Lead Bi",    6700., 100.0, 0., 200000);  
+   minuit.DefineParameter(11, "TShield Th",  3200, 100.0, 0., 100000);   
+   minuit.DefineParameter(12, "50mK Th",  100, 10.0, 0., 100000);   
+   minuit.DefineParameter(13, "600mK Th",  20000, 100.0, 0., 100000);   
+   minuit.DefineParameter(14, "TShield Ra",  3600, 100.0, 0., 60000);   
+   minuit.DefineParameter(15, "50mK Ra",  100, 10.0, 0., 60000);   
+   minuit.DefineParameter(16, "600mK Ra",  100, 10.0, 0., 60000);   
+   minuit.DefineParameter(17, "OVC Th",  83000, 100.0, 0., 150000);   
+   minuit.DefineParameter(18, "OVC Ra",  110000, 100.0, 0., 150000);   
+
 
 
 
@@ -502,7 +502,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 10;
+  int dNumParameters = 18;
 
 
 
@@ -566,14 +566,14 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(8,	fParameters[8],		fParError[8]);
 	minuit.GetParameter(9,	fParameters[9],		fParError[9]);
   minuit.GetParameter(10,  fParameters[10],   fParError[10]);
-  // minuit.GetParameter(11,  fParameters[11],   fParError[11]);
-  // minuit.GetParameter(12,  fParameters[12],   fParError[12]);
-  // minuit.GetParameter(13,  fParameters[13],   fParError[13]);
-  // minuit.GetParameter(14,  fParameters[14],   fParError[14]);
-  // minuit.GetParameter(15,  fParameters[15],   fParError[15]);
-  // minuit.GetParameter(16,  fParameters[16],   fParError[16]);
-  // minuit.GetParameter(17,  fParameters[17],   fParError[17]);
-  // minuit.GetParameter(18,  fParameters[18],   fParError[18]);
+  minuit.GetParameter(11,  fParameters[11],   fParError[11]);
+  minuit.GetParameter(12,  fParameters[12],   fParError[12]);
+  minuit.GetParameter(13,  fParameters[13],   fParError[13]);
+  minuit.GetParameter(14,  fParameters[14],   fParError[14]);
+  minuit.GetParameter(15,  fParameters[15],   fParError[15]);
+  minuit.GetParameter(16,  fParameters[16],   fParError[16]);
+  minuit.GetParameter(17,  fParameters[17],   fParError[17]);
+  minuit.GetParameter(18,  fParameters[18],   fParError[18]);
 
 
 	UpdateModel();
@@ -581,6 +581,7 @@ bool TBackgroundModel::DoTheFit()
 	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;
   cout << "Total number of calls = " << dNumCalls << endl;
 
+/*
   ///////////////////////////////////////////
   //// Few Parameters
   ///////////////////////////////////////////
@@ -619,14 +620,14 @@ bool TBackgroundModel::DoTheFit()
 
   fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
   fModelTotBi->Add(fSmearBi,      fParameters[10]);
+*/
 
 
 
-/*
   ///////////////////////////////////////////
   //// Many Parameters
   ///////////////////////////////////////////
-  /// Add Histograms after chi-squared minimization
+  /// Use only after previous step converges!
 
   // Surface....
   // fModelTotTh->Add(fSmearFrameThS1,   fParameters[11]);
@@ -663,7 +664,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotBi->Add(fSmearBi,      fParameters[10]);
 
   ////////////////////////////////////////////////////////
-*/
+
 
 	
 	fModelTot->SetLineColor(2);
@@ -690,7 +691,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotBi->Draw("SAME");
 
 
-
+/*
   // Few Parameters
   TPaveText *pt = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
@@ -699,8 +700,8 @@ bool TBackgroundModel::DoTheFit()
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
   pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
   pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+*/
 
-/*
   // Many Parameters
   TPaveText *pt = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
@@ -714,7 +715,7 @@ bool TBackgroundModel::DoTheFit()
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
   pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
   pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-*/
+
 
 
 
@@ -767,14 +768,14 @@ void TBackgroundModel::DrawBkg()
   {
     fDataHistoM1->SetLineColor(1);
     fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM1->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
+    fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
     fDataHistoM1->Draw();
   }
   else if(dMult == 2)
   {
     fDataHistoM2->SetLineColor(1);
     fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM2->GetYaxis()->SetTitle("Counts/(10 keV)/yr");
+    fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
     fDataHistoM2->Draw();
   }
 
@@ -801,6 +802,8 @@ void TBackgroundModel::DrawMC()
     cThSurf->SetLogy();
 
     fModelFrameTh->SetLineColor(1);
+    fModelFrameTh->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameTh->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));    
     fModelFrameThS01->SetLineColor(2);
     fModelFrameThS1->SetLineColor(3);
     fModelFrameThS10->SetLineColor(4);
@@ -827,6 +830,8 @@ void TBackgroundModel::DrawMC()
     cRaSurf->SetLogy();
 
     fModelFrameRa->SetLineColor(1);
+    fModelFrameRa->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameRa->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
     fModelFrameRaS01->SetLineColor(2);
     fModelFrameRaS1->SetLineColor(3);
     fModelFrameRaS10->SetLineColor(4);
@@ -853,6 +858,8 @@ void TBackgroundModel::DrawMC()
     cTh232->SetLogy();
 
     fModelFrameTh->SetLineColor(1);
+    fModelFrameTh->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameTh->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
     fModelTShieldTh->SetLineColor(2);
     fModel50mKTh->SetLineColor(3);
     fModel600mKTh->SetLineColor(4);
@@ -881,6 +888,8 @@ void TBackgroundModel::DrawMC()
     cRa226->SetLogy();
 
     fModelFrameRa->SetLineColor(1);
+    fModelFrameRa->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameRa->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
     fModelTShieldRa->SetLineColor(2);
     fModel50mKRa->SetLineColor(3);
     fModel600mKRa->SetLineColor(4);
@@ -908,6 +917,8 @@ void TBackgroundModel::DrawMC()
     cK40->SetLogy();
 
     fModelFrameK->SetLineColor(1);
+    fModelFrameK->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameK->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
     fModelTShieldK->SetLineColor(2);
     fModel50mKK->SetLineColor(3);
     fModel600mKK->SetLineColor(4);
@@ -935,6 +946,8 @@ void TBackgroundModel::DrawMC()
     cCo60->SetLogy();
 
     fModelFrameCo->SetLineColor(1);
+    fModelFrameCo->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameCo->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
     fModelTShieldCo->SetLineColor(2);
     fModel50mKCo->SetLineColor(3);
     fModel600mKCo->SetLineColor(4);
@@ -963,6 +976,8 @@ void TBackgroundModel::DrawMC()
     TCanvas *cNDBD = new TCanvas("cNDBD", "cNDBD", 1200, 800);
     cNDBD->SetLogy();
     fModelNDBD->SetLineColor(1);
+    fModelNDBD->GetXaxis()->SetTitle("Energy (keV)");
+    fModelNDBD->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
     fModelNDBD->Draw();
     fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
@@ -971,6 +986,8 @@ void TBackgroundModel::DrawMC()
     TCanvas *cBi = new TCanvas("cBi", "cBi", 1200, 800);
     cBi->SetLogy();
     fModelBi->SetLineColor(1);
+    fModelBi->GetXaxis()->SetTitle("Energy (keV)");
+    fModelBi->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
     fModelBi->Draw();
     fModelBi->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
     legbi->AddEntry(fModelBi, "Bi-207" ,"l");
@@ -1064,22 +1081,6 @@ double TBackgroundModel::GetChiSquare()
       // Adding on M2 portion
 
 		}
-
-
-		// Neyman chi-squared
-/*		
-		err_i = sqrt(data_i);	// Assuming no data bins are 0!
-		if(err_i>0)
-		{
-			chiSquare += pow(data_i - model_i,2)/pow(err_i,2);
-		}
-		else
-		{
-
-			chiSquare+=pow(data_i - model_i,2);	
-		}
-*/
-
 
 	}
 
@@ -1529,12 +1530,11 @@ void TBackgroundModel::UpdateModel()
   {
 
 
-
+/*
   /////////////////////////////////////
   //// Few Parameters ////////////////
   ////////////////////////////////////
-  // Testing 10 micron Frame for now
-  fModelTot->Add( fSmearFrameThS1,    fParameters[11]);
+  // fModelTot->Add( fSmearFrameThS1,    fParameters[11]);
 
   fModelTot->Add( fSmearFrameTh,    fParameters[0]);
   fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
@@ -1566,9 +1566,9 @@ void TBackgroundModel::UpdateModel()
 
   fModelTot->Add( fSmearNDBD,      fParameters[9]);  
   fModelTot->Add( fSmearBi,      fParameters[10]);  
+*/
 
 
-/*
   /////////////////////////////////////
   //// Many parameters
   ////////////////////////////////////
@@ -1587,12 +1587,12 @@ void TBackgroundModel::UpdateModel()
   fModelTot->Add( fSmearIVCRa,      fParameters[3]);
   fModelTot->Add( fSmearOVCRa,      fParameters[18]);
 
-  fModelTot->Add( fSmearFrameK,    fParameters[4]);
-  fModelTot->Add( fSmearTShieldK,  fParameters[4]);
-  fModelTot->Add( fSmear50mKK,     fParameters[4]);
-  fModelTot->Add( fSmear600mKK,    fParameters[4]);
-  fModelTot->Add( fSmearIVCK,      fParameters[5]);
-  fModelTot->Add( fSmearOVCK,      fParameters[5]); 
+  fModelTot->Add( fSmearFrameK,     fParameters[4]);
+  fModelTot->Add( fSmearTShieldK,   fParameters[4]);
+  fModelTot->Add( fSmear50mKK,      fParameters[4]);
+  fModelTot->Add( fSmear600mKK,     fParameters[4]);
+  fModelTot->Add( fSmearIVCK,       fParameters[5]);
+  fModelTot->Add( fSmearOVCK,       fParameters[5]); 
 
   fModelTot->Add( fSmearFrameCo,    fParameters[6]);
   fModelTot->Add( fSmearTShieldCo,  fParameters[6]);
@@ -1601,10 +1601,9 @@ void TBackgroundModel::UpdateModel()
   fModelTot->Add( fSmearIVCCo,      fParameters[7]);
   fModelTot->Add( fSmearOVCCo,      fParameters[7]);  
 
-  fModelTot->Add( fSmearNDBD,      fParameters[9]);  
+  fModelTot->Add( fSmearNDBD,       fParameters[9]);  
 
-  fModelTot->Add( fSmearBi,      fParameters[10]);  
-*/
+  fModelTot->Add( fSmearBi,         fParameters[10]);  
 
 
   }
