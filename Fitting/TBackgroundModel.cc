@@ -85,13 +85,13 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   // Data
   qtree = new TChain("qtree");
 
-  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
-  base_cut = base_cut && "abs(BaselineSlope)<0.1";
-  base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
-  base_cut = base_cut && Form("Energy > %f && Energy < %f", dMinEnergy, dMaxEnergy);
+ base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+ base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+ base_cut = base_cut && "abs(BaselineSlope)<0.1";
+ base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+//  base_cut = base_cut && Form("Energy > %f && Energy < %f", dMinEnergy, dMaxEnergy);
 
-  ener_cut = ener_cut && Form("Ener1 > %f && Ener1 < %f", dMinEnergy, dMaxEnergy);
+//  ener_cut = ener_cut && Form("Ener1 > %f && Ener1 < %f", dMinEnergy, dMaxEnergy);
 
   fDataHistoTot  = new TH1D("fDataHistoTot",  "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM1   = new TH1D("fDataHistoM1",   "", dNBins, dMinEnergy, dMaxEnergy);
@@ -474,8 +474,8 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(14, "TShield Ra",  100, 100.0, 0., 60000);   
    minuit.DefineParameter(15, "50mK Ra",  100, 100.0, 0., 60000);   
    minuit.DefineParameter(16, "600mK Ra",  100, 100.0, 0., 60000);   
-   minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 100000);   
-   minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 100000);   
+   minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 150000);   
+   minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 150000);   
 
 
 
@@ -631,7 +631,7 @@ bool TBackgroundModel::DoTheFit()
 	fModelTotCo->SetLineStyle(2);
 	fModelTotNDBD->SetLineColor(42);
 	fModelTotNDBD->SetLineStyle(2);
-  fModelTotBi->SetLineColor(8);
+  fModelTotBi->SetLineColor(5);
   fModelTotBi->SetLineStyle(2);
 
 	fModelTotTh->Draw("SAME");
@@ -1246,40 +1246,40 @@ void TBackgroundModel::Initialize()
     cout << "Smearing histograms with constant 5 keV resolution" << endl;
 
     // Adding the 10 micron distribution for now...
-    SmearMC(fModelFrameThS10, fSmearFrameThS10, 5);
+    SmearMC(fModelFrameThS10, fSmearFrameThS10, 6.0/2.355);
     // SmearMC();
 
-    SmearMC(fModelFrameTh, fSmearFrameTh, 5);
-    SmearMC(fModelTShieldTh, fSmearTShieldTh, 5);  
-    SmearMC(fModel50mKTh, fSmear50mKTh, 5);
-    SmearMC(fModel600mKTh, fSmear600mKTh, 5);
-    SmearMC(fModelIVCTh, fSmearIVCTh, 5);
-    SmearMC(fModelOVCTh, fSmearOVCTh, 5);
+    SmearMC(fModelFrameTh, fSmearFrameTh, 6.0/2.355);
+    SmearMC(fModelTShieldTh, fSmearTShieldTh, 6.0/2.355);  
+    SmearMC(fModel50mKTh, fSmear50mKTh, 6.0/2.355);
+    SmearMC(fModel600mKTh, fSmear600mKTh, 6.0/2.355);
+    SmearMC(fModelIVCTh, fSmearIVCTh, 6.0/2.355);
+    SmearMC(fModelOVCTh, fSmearOVCTh, 6.0/2.355);
 
-    SmearMC(fModelFrameRa, fSmearFrameRa, 5);
-    SmearMC(fModelTShieldRa, fSmearTShieldRa, 5);  
-    SmearMC(fModel50mKRa, fSmear50mKRa, 5);
-    SmearMC(fModel600mKRa, fSmear600mKRa, 5);
-    SmearMC(fModelIVCRa, fSmearIVCRa, 5);
-    SmearMC(fModelOVCRa, fSmearOVCRa, 5);
+    SmearMC(fModelFrameRa, fSmearFrameRa, 6.0/2.355);
+    SmearMC(fModelTShieldRa, fSmearTShieldRa, 6.0/2.355);  
+    SmearMC(fModel50mKRa, fSmear50mKRa, 6.0/2.355);
+    SmearMC(fModel600mKRa, fSmear600mKRa, 6.0/2.355);
+    SmearMC(fModelIVCRa, fSmearIVCRa, 6.0/2.355);
+    SmearMC(fModelOVCRa, fSmearOVCRa, 6.0/2.355);
 
-    SmearMC(fModelFrameK, fSmearFrameK, 5);
-    SmearMC(fModelTShieldK, fSmearTShieldK, 5);
-    SmearMC(fModel50mKK, fSmear50mKK, 5);
-    SmearMC(fModel600mKK, fSmear600mKK, 5);
-    SmearMC(fModelIVCK, fSmearIVCK, 5);
-    SmearMC(fModelOVCK, fSmearOVCK, 5); 
+    SmearMC(fModelFrameK, fSmearFrameK, 6.0/2.355);
+    SmearMC(fModelTShieldK, fSmearTShieldK, 6.0/2.355);
+    SmearMC(fModel50mKK, fSmear50mKK, 6.0/2.355);
+    SmearMC(fModel600mKK, fSmear600mKK, 6.0/2.355);
+    SmearMC(fModelIVCK, fSmearIVCK, 6.0/2.355);
+    SmearMC(fModelOVCK, fSmearOVCK, 6.0/2.355); 
 
-    SmearMC(fModelFrameCo, fSmearFrameCo, 5);
-    SmearMC(fModelTShieldCo, fSmearTShieldCo, 5);
-    SmearMC(fModel50mKCo, fSmear50mKCo, 5);
-    SmearMC(fModel600mKCo, fSmear600mKCo, 5);
-    SmearMC(fModelIVCCo, fSmearIVCCo, 5);
-    SmearMC(fModelOVCCo, fSmearOVCCo, 5);  
+    SmearMC(fModelFrameCo, fSmearFrameCo, 6.0/2.355);
+    SmearMC(fModelTShieldCo, fSmearTShieldCo, 6.0/2.355);
+    SmearMC(fModel50mKCo, fSmear50mKCo, 6.0/2.355);
+    SmearMC(fModel600mKCo, fSmear600mKCo, 6.0/2.355);
+    SmearMC(fModelIVCCo, fSmearIVCCo, 6.0/2.355);
+    SmearMC(fModelOVCCo, fSmearOVCCo, 6.0/2.355);  
 
-    SmearMC(fModelNDBD, fSmearNDBD, 5);  
+    SmearMC(fModelNDBD, fSmearNDBD, 6.0/2.355);  
 
-    SmearMC(fModelBi, fSmearBi, 5);  
+    SmearMC(fModelBi, fSmearBi, 6.0/2.355);  
 
     cout << "Finished smearing MC histograms" << endl;
 
@@ -1319,6 +1319,9 @@ void TBackgroundModel::LoadData()
     dDataIntegral = fDataHistoM2->Integral(1, dNBins);
   }  
 
+  int dDataIntegralTot = qtree->GetEntries();
+
+  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
 	cout << "Events in background spectrum: " << dDataIntegral << " Multiplicity: " << dMult << endl;
 
   // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
