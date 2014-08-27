@@ -35,14 +35,14 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	Obj->SetParameters(8,	x[8]);
 	Obj->SetParameters(9,	x[9]);
   Obj->SetParameters(10, x[10]);
-  Obj->SetParameters(11, x[11]);
-  Obj->SetParameters(12, x[12]);
-  Obj->SetParameters(13, x[13]);
-  Obj->SetParameters(14, x[14]);
-  Obj->SetParameters(15, x[15]);
-  Obj->SetParameters(16, x[16]);
-  Obj->SetParameters(17, x[17]);
-  Obj->SetParameters(18, x[18]);
+  // Obj->SetParameters(11, x[11]);
+  // Obj->SetParameters(12, x[12]);
+  // Obj->SetParameters(13, x[13]);
+  // Obj->SetParameters(14, x[14]);
+  // Obj->SetParameters(15, x[15]);
+  // Obj->SetParameters(16, x[16]);
+  // Obj->SetParameters(17, x[17]);
+  // Obj->SetParameters(18, x[18]);
 
 
 	Obj->UpdateModel();
@@ -411,7 +411,7 @@ bool TBackgroundModel::DoTheFit()
    // This method actually sets up minuit and does the fit
 
  
-   TMinuit minuit(19); //initialize minuit, n is the number of parameters
+   TMinuit minuit(11); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
@@ -426,7 +426,7 @@ bool TBackgroundModel::DoTheFit()
    // Around 60000 events in background spectrum
 
 
-/*
+
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
@@ -441,15 +441,17 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		30000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	3000., 100.0, 0., 50000); 
    minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
-   minuit.DefineParameter(8, "Resolution",	5., 1, 3, 10);  
+   minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",      91.7., 100.0, 0., 1000);     
    minuit.DefineParameter(10, "Lead Bi",	 	5000., 100.0, 0., 200000);  
-   minuit.DefineParameter(11, "Surface Th",  100, 100.0, 0., 60000);   
-
-*/
+   // minuit.DefineParameter(11, "Surface Th",  100, 100.0, 0., 60000);   
 
 
 
+
+
+
+/*
    // Close Th and Close Ra now split into its various sections, far Th and Ra still the same
    ////////////////////////////////////////////////
    // Using more parameters
@@ -476,7 +478,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(16, "600mK Ra",  100, 100.0, 0., 60000);   
    minuit.DefineParameter(17, "OVC Th",  40000, 100.0, 0., 150000);   
    minuit.DefineParameter(18, "OVC Ra",  55000, 100.0, 0., 150000);   
-
+*/
 
 
 
@@ -499,7 +501,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 18;
+  int dNumParameters = 10;
 
 
 
@@ -563,14 +565,14 @@ bool TBackgroundModel::DoTheFit()
 	minuit.GetParameter(8,	fParameters[8],		fParError[8]);
 	minuit.GetParameter(9,	fParameters[9],		fParError[9]);
   minuit.GetParameter(10,  fParameters[10],   fParError[10]);
-  minuit.GetParameter(11,  fParameters[11],   fParError[11]);
-  minuit.GetParameter(12,  fParameters[12],   fParError[12]);
-  minuit.GetParameter(13,  fParameters[13],   fParError[13]);
-  minuit.GetParameter(14,  fParameters[14],   fParError[14]);
-  minuit.GetParameter(15,  fParameters[15],   fParError[15]);
-  minuit.GetParameter(16,  fParameters[16],   fParError[16]);
-  minuit.GetParameter(17,  fParameters[17],   fParError[17]);
-  minuit.GetParameter(18,  fParameters[18],   fParError[18]);
+  // minuit.GetParameter(11,  fParameters[11],   fParError[11]);
+  // minuit.GetParameter(12,  fParameters[12],   fParError[12]);
+  // minuit.GetParameter(13,  fParameters[13],   fParError[13]);
+  // minuit.GetParameter(14,  fParameters[14],   fParError[14]);
+  // minuit.GetParameter(15,  fParameters[15],   fParError[15]);
+  // minuit.GetParameter(16,  fParameters[16],   fParError[16]);
+  // minuit.GetParameter(17,  fParameters[17],   fParError[17]);
+  // minuit.GetParameter(18,  fParameters[18],   fParError[18]);
 
 
 	UpdateModel();
@@ -580,6 +582,48 @@ bool TBackgroundModel::DoTheFit()
 
   ///////////////////////////////////////////
   //// Few Parameters
+  ///////////////////////////////////////////
+  /// Add Histograms after chi-squared minimization
+
+  // Surface....
+  // fModelTotTh->Add(fSmearFrameThS1,   fParameters[11]);
+
+  fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
+  fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
+  fModelTotTh->Add(fSmear50mKTh,    fParameters[0]);
+  fModelTotTh->Add(fSmear600mKTh,   fParameters[0]);
+  fModelTotTh->Add(fSmearIVCTh,     fParameters[1]);
+  fModelTotTh->Add(fSmearOVCTh,     fParameters[1]);
+
+  fModelTotRa->Add(fSmearFrameRa,   fParameters[2]);
+  fModelTotRa->Add(fSmearTShieldRa, fParameters[2]);
+  fModelTotRa->Add(fSmear50mKRa,    fParameters[2]);
+  fModelTotRa->Add(fSmear600mKRa,   fParameters[2]);
+  fModelTotRa->Add(fSmearIVCRa,     fParameters[3]);
+  fModelTotRa->Add(fSmearOVCRa,     fParameters[3]);
+
+  fModelTotK->Add(fSmearFrameK,     fParameters[4]);
+  fModelTotK->Add(fSmearTShieldK,   fParameters[4]);
+  fModelTotK->Add(fSmear50mKK,      fParameters[4]);
+  fModelTotK->Add(fSmear600mKK,     fParameters[4]);
+  fModelTotK->Add(fSmearIVCK,       fParameters[5]);
+  fModelTotK->Add(fSmearOVCK,       fParameters[5]);
+
+  fModelTotCo->Add(fSmearFrameCo,   fParameters[6]);
+  fModelTotCo->Add(fSmearTShieldCo, fParameters[6]);
+  fModelTotCo->Add(fSmear50mKCo,    fParameters[6]);
+  fModelTotCo->Add(fSmear600mKCo,   fParameters[6]);
+  fModelTotCo->Add(fSmearIVCCo,     fParameters[7]);
+  fModelTotCo->Add(fSmearOVCCo,     fParameters[7]);
+
+  fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
+  fModelTotBi->Add(fSmearBi,      fParameters[10]);
+
+
+
+/*
+  ///////////////////////////////////////////
+  //// Many Parameters
   ///////////////////////////////////////////
   /// Add Histograms after chi-squared minimization
 
@@ -617,6 +661,9 @@ bool TBackgroundModel::DoTheFit()
   fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
   fModelTotBi->Add(fSmearBi,      fParameters[10]);
 
+  ////////////////////////////////////////////////////////
+*/
+
 	
 	fModelTot->SetLineColor(2);
 	fModelTot->Draw("SAME");
@@ -642,21 +689,18 @@ bool TBackgroundModel::DoTheFit()
   fModelTotBi->Draw("SAME");
 
 
-/*
+
+  // Few Parameters
   TPaveText *pt = new TPaveText(0.35,0.75,0.70,0.98,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
-  // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
-  pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- IVC Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-  pt->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- IVC Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+  pt->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+  pt->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
   pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
   pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-  pt->AddText(Form("TShield Th: %0.2E#pm%0.2E --- 50mK Th: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
-  pt->AddText(Form("600mK Th: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[13], fParError[13], fParameters[14], fParError[14] ));
-  pt->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
-  pt->AddText(Form("OVC Th: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[17], fParError[17], fParameters[18], fParError[18] ));
-*/
 
+/*
+  // Many Parameters
   TPaveText *pt = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
   pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
@@ -669,7 +713,7 @@ bool TBackgroundModel::DoTheFit()
   pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
   pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
   pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-
+*/
 
 
 
@@ -1391,6 +1435,13 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
   cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
   cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
+  cout<< "Par11 = "  << fParameters[12] << " +/- " << fParError[12] << endl;
+  cout<< "Par11 = "  << fParameters[13] << " +/- " << fParError[13] << endl;
+  cout<< "Par11 = "  << fParameters[14] << " +/- " << fParError[14] << endl;
+  cout<< "Par11 = "  << fParameters[15] << " +/- " << fParError[15] << endl;
+  cout<< "Par11 = "  << fParameters[16] << " +/- " << fParError[16] << endl;
+  cout<< "Par11 = "  << fParameters[17] << " +/- " << fParError[17] << endl;
+  cout<< "Par11 = "  << fParameters[18] << " +/- " << fParError[18] << endl;
 
 
 //	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
@@ -1475,7 +1526,7 @@ void TBackgroundModel::UpdateModel()
   {
 
 
-/*
+
   /////////////////////////////////////
   //// Few Parameters ////////////////
   ////////////////////////////////////
@@ -1511,17 +1562,13 @@ void TBackgroundModel::UpdateModel()
   fModelTot->Add( fSmearOVCCo,      fParameters[7]);  
 
   fModelTot->Add( fSmearNDBD,      fParameters[9]);  
-
   fModelTot->Add( fSmearBi,      fParameters[10]);  
-*/
 
 
+/*
   /////////////////////////////////////
-  //// More parameters
+  //// Many parameters
   ////////////////////////////////////
-    
-  // Testing 10 micron Frame for now
-  // fModelTot->Add( fSmearFrameThS1,    fParameters[11]);
 
   fModelTot->Add( fSmearFrameTh,    fParameters[0]);
   fModelTot->Add( fSmearTShieldTh,  fParameters[11]);  
@@ -1554,6 +1601,8 @@ void TBackgroundModel::UpdateModel()
   fModelTot->Add( fSmearNDBD,      fParameters[9]);  
 
   fModelTot->Add( fSmearBi,      fParameters[10]);  
+*/
+
 
   }
 
@@ -1565,7 +1614,7 @@ void TBackgroundModel::UpdateModel()
   else
   {
 
-  // Not updated!
+  // Not updated! (as of 8/27/2014)
 
 	fModelTot->Add( SmearMC(fModelFrameTh, fSmearFrameTh, fParameters[8]), 		fParameters[0]);
 	fModelTot->Add( SmearMC(fModelTShieldTh, fSmearTShieldTh, fParameters[8]), 	fParameters[0]);	
@@ -1603,6 +1652,20 @@ void TBackgroundModel::UpdateModel()
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 
