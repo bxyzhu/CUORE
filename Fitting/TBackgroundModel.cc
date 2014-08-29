@@ -123,6 +123,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fModelFrameRaS10   = new TH1D("fModelFrameRaS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
   fModelFrameRaS100  = new TH1D("fModelFrameRaS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
 
+  fModelTShieldThS01   = new TH1D("fModelTShieldThS01",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldThS1    = new TH1D("fModelTShieldThS1",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldThS10   = new TH1D("fModelTShieldThS10",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTShieldThS100  = new TH1D("fModelTShieldThS100",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
   fModelFrameTh    = new TH1D("fModelFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTShieldTh  = new TH1D("fModelTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
   fModel50mKTh     = new TH1D("fModel50mKTh",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
@@ -181,6 +186,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fMult, bo
   fSmearFrameRaS1    = new TH1D("fSmearFrameRaS1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearFrameRaS10   = new TH1D("fSmearFrameRaS10",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearFrameRaS100  = new TH1D("fSmearFrameRaS100",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearTShieldThS01   = new TH1D("fSmearTShieldThS01",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS1    = new TH1D("fSmearTShieldThS1",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS10   = new TH1D("fSmearTShieldThS10",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS100  = new TH1D("fSmearTShieldThS100",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
 
   fSmearFrameTh    = new TH1D("fSmearFrameTh",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fSmearTShieldTh  = new TH1D("fSmearTShieldTh","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -430,7 +441,7 @@ bool TBackgroundModel::DoTheFit()
    // Using less parameters
    ////////////////////////////////////////////////
    // minuit.DefineParameter(0, "Close Th",  100., 10.0, 0., 60000);
-   minuit.DefineParameter(0, "Close Th",  3000, 100.0, 0., 80000);   
+   minuit.DefineParameter(0, "Close Surface Th",  3000, 100.0, 0., 80000);   
    // minuit.DefineParameter(1, "Far Th",	 	100., 50.0, 0., 100000);
    minuit.DefineParameter(1, "Far Th",    45000., 10.0, 0., 100000);
    minuit.DefineParameter(2, "Close Ra",  600., 10.0, 0., 80000);   
@@ -587,12 +598,12 @@ bool TBackgroundModel::DoTheFit()
   /// Add Histograms after chi-squared minimization
 
   // Surface....
-  // fModelTotTh->Add(fSmearFrameThS1,   fParameters[11]);
+  fModelTotTh->Add(fSmearTShieldThS01,   fParameters[0]);
 
-  fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
-  fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
-  fModelTotTh->Add(fSmear50mKTh,    fParameters[0]);
-  fModelTotTh->Add(fSmear600mKTh,   fParameters[0]);
+  // fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
+  // fModelTotTh->Add(fSmearTShieldTh, fParameters[0]);
+  // fModelTotTh->Add(fSmear50mKTh,    fParameters[0]);
+  // fModelTotTh->Add(fSmear600mKTh,   fParameters[0]);
   fModelTotTh->Add(fSmearIVCTh,     fParameters[1]);
   fModelTotTh->Add(fSmearOVCTh,     fParameters[1]);
 
@@ -1152,6 +1163,10 @@ void TBackgroundModel::Initialize()
   outTreeFrameRaS10   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", dMult);
   outTreeFrameRaS100  = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", dMult);
 
+  outTreeTShieldThS01   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S01", dMult);
+  outTreeTShieldThS1    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", dMult);
+  outTreeTShieldThS10   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", dMult);
+  outTreeTShieldThS100  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", dMult);
 
 
   // Surface
@@ -1164,6 +1179,11 @@ void TBackgroundModel::Initialize()
   outTreeFrameRaS1->Project("fModelFrameRaS1", "Ener1", ener_cut);
   outTreeFrameRaS10->Project("fModelFrameRaS10", "Ener1", ener_cut);
   outTreeFrameRaS100->Project("fModelFrameRaS100", "Ener1", ener_cut);
+
+  outTreeTShieldThS01->Project("fModelTShieldThS01", "Ener1", ener_cut);
+  outTreeTShieldThS1->Project("fModelTShieldThS1", "Ener1", ener_cut);
+  outTreeTShieldThS10->Project("fModelTShieldThS10", "Ener1", ener_cut);
+  outTreeTShieldThS100->Project("fModelTShieldThS100", "Ener1", ener_cut);
 
   outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
   outTreeBi->Project("fModelBi",            "Ener1", ener_cut);  
@@ -1281,6 +1301,10 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelFrameRaS10,   outTreeFrameRaS10, 50, 2700);
   NormalizePDF(fModelFrameRaS100,  outTreeFrameRaS100, 50, 2700);
 
+  NormalizePDF(fModelTShieldThS01,   outTreeTShieldThS01, 50, 2700);
+  NormalizePDF(fModelTShieldThS1,    outTreeTShieldThS1, 50, 2700);
+  NormalizePDF(fModelTShieldThS10,   outTreeTShieldThS10, 50, 2700);
+  NormalizePDF(fModelTShieldThS100,  outTreeTShieldThS100, 50, 2700);
 
 
 	cout << "Normalized MC PDFs" << endl;
@@ -1295,6 +1319,8 @@ void TBackgroundModel::Initialize()
 
     // Adding the 10 micron distribution for now...
     SmearMC(fModelFrameThS10, fSmearFrameThS10, dRes);
+    SmearMC(fModelTShieldThS01, fSmearTShieldThS01, dRes);
+
     // SmearMC();
 
     SmearMC(fModelFrameTh, fSmearFrameTh, dRes);
@@ -1534,12 +1560,12 @@ void TBackgroundModel::UpdateModel()
   /////////////////////////////////////
   //// Few Parameters ////////////////
   ////////////////////////////////////
-  // fModelTot->Add( fSmearFrameThS1,    fParameters[11]);
+  fModelTot->Add( fSmearTShieldThS01,    fParameters[0]);
 
-  fModelTot->Add( fSmearFrameTh,    fParameters[0]);
-  fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
-  fModelTot->Add( fSmear50mKTh,     fParameters[0]);
-  fModelTot->Add( fSmear600mKTh,    fParameters[0]);
+  // fModelTot->Add( fSmearFrameTh,    fParameters[0]);
+  // fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
+  // fModelTot->Add( fSmear50mKTh,     fParameters[0]);
+  // fModelTot->Add( fSmear600mKTh,    fParameters[0]);
   fModelTot->Add( fSmearIVCTh,      fParameters[1]);
   fModelTot->Add( fSmearOVCTh,      fParameters[1]);
 

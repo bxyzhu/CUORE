@@ -102,7 +102,10 @@ private:
 	TChain			*outTreeFrameRaS10;
 	TChain			*outTreeFrameRaS100;
 
-
+	TChain			*outTreeTShieldThS01;
+	TChain			*outTreeTShieldThS1;
+	TChain			*outTreeTShieldThS10;
+	TChain			*outTreeTShieldThS100;
 
 	TChain			*outTreeFrameTh;
 	TChain			*outTreeTShieldTh;	
@@ -152,11 +155,15 @@ private:
 	TH1D			*fModelFrameThS10;
 	TH1D			*fModelFrameThS100;
 
-
 	TH1D			*fModelFrameRaS01;
 	TH1D			*fModelFrameRaS1;
 	TH1D			*fModelFrameRaS10;
 	TH1D			*fModelFrameRaS100;
+
+	TH1D			*fModelTShieldThS01;
+	TH1D			*fModelTShieldThS1;
+	TH1D			*fModelTShieldThS10;
+	TH1D			*fModelTShieldThS100;
 
 
 	TH1D			*fModelFrameTh;
@@ -204,6 +211,11 @@ private:
 	TH1D			*fSmearFrameRaS1;
 	TH1D			*fSmearFrameRaS10;
 	TH1D			*fSmearFrameRaS100;
+
+	TH1D			*fSmearTShieldThS01;
+	TH1D			*fSmearTShieldThS1;
+	TH1D			*fSmearTShieldThS10;
+	TH1D			*fSmearTShieldThS100;
 
 
 	TH1D			*fSmearFrameTh;
