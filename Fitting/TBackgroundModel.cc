@@ -1254,190 +1254,301 @@ void TBackgroundModel::Initialize()
 
 
   // Fills and Loads MC data
-  outTreeFrameTh 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", "B", dMult);
-  outTreeTShieldTh 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", "B", dMult);
-  outTree50mKTh 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", "B", dMult);
-  outTree600mKTh 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", "B", dMult);
-  outTreeIVCTh 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", "B", dMult);
-  outTreeOVCTh 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", "B", dMult);
+  // Bulk M1
+  outTreeFrameThM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", "B", 1);
+  outTreeTShieldThM1 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", "B", 1);
+  outTree50mKThM1 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", "B", 1);
+  outTree600mKThM1 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", "B", 1);
+  outTreeIVCThM1 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", "B", 1);
+  outTreeOVCThM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", "B", 1);
 
-  outTreeFrameRa	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", "B", dMult);
-  outTreeTShieldRa 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", "B", dMult);    
-  outTree50mKRa	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", "B", dMult);
-  outTree600mKRa		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", "B", dMult);
-  outTreeIVCRa	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", "B", dMult);
-  outTreeOVCRa 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", "B", dMult);
+  outTreeFrameRaM1	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", "B", 1);
+  outTreeTShieldRaM1 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", "B", 1);    
+  outTree50mKRaM1	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", "B", 1);
+  outTree600mKRaM1		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", "B", 1);
+  outTreeIVCRaM1	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", "B", 1);
+  outTreeOVCRaM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", "B", 1);
 
-  outTreeFrameK 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", "B", dMult);
-  outTreeTShieldK 	= LoadMC(dDataDir.c_str(),	"TShield","K40", "B", dMult);    
-  outTree50mKK	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", "B", dMult);
-  outTree600mKK	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", "B", dMult);
-  outTreeIVCK		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", "B", dMult);
-  outTreeOVCK 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", "B", dMult);
-
-
-  outTreeFrameCo 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	"B", dMult);
-  outTreeTShieldCo 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", "B", dMult);    
-  outTree50mKCo	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", "B", dMult);
-  outTree600mKCo		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", "B", dMult);
-  outTreeIVCCo	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", "B", dMult);
-  outTreeOVCCo 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", "B", dMult);
-
-  outTreeNDBD 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", "B", dMult);
-  outTreeBi         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", "B", dMult);
-
-  outTreeFrameThS01   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S01", dMult);
-  outTreeFrameThS1    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S1", dMult);
-  outTreeFrameThS10   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S10", dMult);
-  outTreeFrameThS100  = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S100", dMult);
-
-  outTreeFrameRaS01   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S01", dMult);
-  outTreeFrameRaS1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", dMult);
-  outTreeFrameRaS10   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", dMult);
-  outTreeFrameRaS100  = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", dMult);
-
-  outTreeTShieldThS01   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S01", dMult);
-  outTreeTShieldThS1    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", dMult);
-  outTreeTShieldThS10   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", dMult);
-  outTreeTShieldThS100  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", dMult);
+  outTreeFrameKM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", "B", 1);
+  outTreeTShieldKM1 	= LoadMC(dDataDir.c_str(),	"TShield","K40", "B", 1);    
+  outTree50mKKM1	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", "B", 1);
+  outTree600mKKM1	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", "B", 1);
+  outTreeIVCKM1		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", "B", 1);
+  outTreeOVCKM1 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", "B", 1);
 
 
-  // Surface
-  outTreeFrameThS01->Project("fModelFrameThS01", "Ener1", ener_cut);
-  outTreeFrameThS1->Project("fModelFrameThS1", "Ener1", ener_cut);
-  outTreeFrameThS10->Project("fModelFrameThS10", "Ener1", ener_cut);
-  outTreeFrameThS100->Project("fModelFrameThS100", "Ener1", ener_cut);
+  outTreeFrameCoM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	"B", 1);
+  outTreeTShieldCoM1 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", "B", 1);    
+  outTree50mKCoM1	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", "B", 1);
+  outTree600mKCoM1		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", "B", 1);
+  outTreeIVCCoM1	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", "B", 1);
+  outTreeOVCCoM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", "B", 1);
 
-  outTreeFrameRaS01->Project("fModelFrameRaS01", "Ener1", ener_cut);
-  outTreeFrameRaS1->Project("fModelFrameRaS1", "Ener1", ener_cut);
-  outTreeFrameRaS10->Project("fModelFrameRaS10", "Ener1", ener_cut);
-  outTreeFrameRaS100->Project("fModelFrameRaS100", "Ener1", ener_cut);
+  outTreeNDBDM1 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", "B", 1);
+  outTreeBiM1         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", "B", 1);
 
-  outTreeTShieldThS01->Project("fModelTShieldThS01", "Ener1", ener_cut);
-  outTreeTShieldThS1->Project("fModelTShieldThS1", "Ener1", ener_cut);
-  outTreeTShieldThS10->Project("fModelTShieldThS10", "Ener1", ener_cut);
-  outTreeTShieldThS100->Project("fModelTShieldThS100", "Ener1", ener_cut);
+  outTreeFrameThS01M1   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S01", 1);
+  outTreeFrameThS1M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S1", 1);
+  outTreeFrameThS10M1   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S10", 1);
+  outTreeFrameThS100M1  = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S100", 1);
 
-  outTreeNDBD->Project("fModelNDBD",				"Ener1", ener_cut);
-  outTreeBi->Project("fModelBi",            "Ener1", ener_cut);  
+  outTreeFrameRaS01M1   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S01", 1);
+  outTreeFrameRaS1M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", 1);
+  outTreeFrameRaS10M1   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", 1);
+  outTreeFrameRaS100M1  = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", 1);
 
-	outTreeFrameTh->Project("fModelFrameTh", 		"Ener1", ener_cut);
-	outTreeTShieldTh->Project("fModelTShieldTh",	"Ener1", ener_cut);
-  outTree50mKTh->Project("fModel50mKTh", 			"Ener1", ener_cut);
-  outTree600mKTh->Project("fModel600mKTh", 		"Ener1", ener_cut);
-  outTreeIVCTh->Project("fModelIVCTh", 			"Ener1", ener_cut);
-  outTreeOVCTh->Project("fModelOVCTh", 			"Ener1", ener_cut);
-
-	outTreeFrameRa->Project("fModelFrameRa", 		"Ener1", ener_cut);
-	outTreeTShieldRa->Project("fModelTShieldRa",	"Ener1", ener_cut);	
-  outTree50mKRa->Project("fModel50mKRa", 			"Ener1", ener_cut);
-  outTree600mKRa->Project("fModel600mKRa", 		"Ener1", ener_cut);
-  outTreeIVCRa->Project("fModelIVCRa", 			"Ener1", ener_cut);
-  outTreeOVCRa->Project("fModelOVCRa", 			"Ener1", ener_cut);
-
-	outTreeFrameK->Project("fModelFrameK", 			"Ener1", ener_cut);
-	outTreeTShieldK->Project("fModelTShieldK",		"Ener1", ener_cut);	
-  outTree50mKK->Project("fModel50mKK", 			"Ener1", ener_cut);
-  outTree600mKK->Project("fModel600mKK", 			"Ener1", ener_cut);
-  outTreeIVCK->Project("fModelIVCK", 				"Ener1", ener_cut);
-  outTreeOVCK->Project("fModelOVCK", 				"Ener1", ener_cut);	
-
-	outTreeFrameCo->Project("fModelFrameCo", 		"Ener1", ener_cut);
-	outTreeTShieldCo->Project("fModelTShieldCo",	"Ener1", ener_cut);	
-  outTree50mKCo->Project("fModel50mKCo", 			"Ener1", ener_cut);
-  outTree600mKCo->Project("fModel600mKCo", 		"Ener1", ener_cut);
-  outTreeIVCCo->Project("fModelIVCCo", 			"Ener1", ener_cut);
-  outTreeOVCCo->Project("fModelOVCCo", 			"Ener1", ener_cut);
+  outTreeTShieldThS01M1   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S01", 1);
+  outTreeTShieldThS1M1    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", 1);
+  outTreeTShieldThS10M1   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 1);
+  outTreeTShieldThS100M1  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 1);
 
 
+  // Bulk M2
+  outTreeFrameThM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 2);
+  outTreeTShieldThM2  = LoadMC(dDataDir.c_str(),  "TShield","Th232", "B", 2);
+  outTree50mKThM2     = LoadMC(dDataDir.c_str(),  "50mK",   "Th232", "B", 2);
+  outTree600mKThM2    = LoadMC(dDataDir.c_str(),  "600mK",  "Th232", "B", 2);
+  outTreeIVCThM2      = LoadMC(dDataDir.c_str(),  "IVC",    "Th232", "B", 2);
+  outTreeOVCThM2      = LoadMC(dDataDir.c_str(),  "OVC",    "Th232", "B", 2);
+
+  outTreeFrameRaM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "B", 2);
+  outTreeTShieldRaM2  = LoadMC(dDataDir.c_str(),  "TShield","Ra226", "B", 2);    
+  outTree50mKRaM2     = LoadMC(dDataDir.c_str(),  "50mK",   "Ra226", "B", 2);
+  outTree600mKRaM2    = LoadMC(dDataDir.c_str(),  "600mK",  "Ra226", "B", 2);
+  outTreeIVCRaM2      = LoadMC(dDataDir.c_str(),  "IVC",    "Ra226", "B", 2);
+  outTreeOVCRaM2      = LoadMC(dDataDir.c_str(),  "OVC",    "Ra226", "B", 2);
+
+  outTreeFrameKM2     = LoadMC(dDataDir.c_str(),  "Frame",  "K40", "B", 2);
+  outTreeTShieldKM2   = LoadMC(dDataDir.c_str(),  "TShield","K40", "B", 2);    
+  outTree50mKKM2      = LoadMC(dDataDir.c_str(),  "50mK",   "K40", "B", 2);
+  outTree600mKKM2     = LoadMC(dDataDir.c_str(),  "600mK",  "K40", "B", 2);
+  outTreeIVCKM2       = LoadMC(dDataDir.c_str(),  "IVC",    "K40", "B", 2);
+  outTreeOVCKM2       = LoadMC(dDataDir.c_str(),  "OVC",    "K40", "B", 2);
+
+  outTreeFrameCoM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Co60", "B", 2);
+  outTreeTShieldCoM2  = LoadMC(dDataDir.c_str(),  "TShield","Co60", "B", 2);    
+  outTree50mKCoM2     = LoadMC(dDataDir.c_str(),  "50mK",   "Co60", "B", 2);
+  outTree600mKCoM2    = LoadMC(dDataDir.c_str(),  "600mK",  "Co60", "B", 2);
+  outTreeIVCCoM2      = LoadMC(dDataDir.c_str(),  "IVC",    "Co60", "B", 2);
+  outTreeOVCCoM2      = LoadMC(dDataDir.c_str(),  "OVC",    "Co60", "B", 2);
+
+  outTreeNDBDM2       = LoadMC(dDataDir.c_str(),  "Crystal", "0NDBD", "B", 2);
+  outTreeBiM2         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", "B", 2);
+
+  outTreeFrameThS01M2   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S01", 2);
+  outTreeFrameThS1M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S1", 2);
+  outTreeFrameThS10M2   = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S10", 2);
+  outTreeFrameThS100M2  = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "S100", 2);
+
+  outTreeFrameRaS01M2   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S01", 2);
+  outTreeFrameRaS1M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", 2);
+  outTreeFrameRaS10M2   = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", 2);
+  outTreeFrameRaS100M2  = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", 2);
+
+  outTreeTShieldThS01M2   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S01", 2);
+  outTreeTShieldThS1M2    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", 2);
+  outTreeTShieldThS10M2   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 2);
+  outTreeTShieldThS100M2  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 2);
+
+
+  // Projecting to histograms
+  // M1
+  outTreeNDBDM1->Project("fModelNDBDM1",				"Ener1", ener_cut);
+  outTreeBiM1->Project("fModelBiM1",            "Ener1", ener_cut);  
+
+	outTreeFrameThM1->Project("fModelFrameThM1", 	   	"Ener1", ener_cut);
+	outTreeTShieldThM1->Project("fModelTShieldThM1",	"Ener1", ener_cut);
+  outTree50mKThM1->Project("fModel50mKThM1", 		   	"Ener1", ener_cut);
+  outTree600mKThM1->Project("fModel600mKThM1", 	  	"Ener1", ener_cut);
+  outTreeIVCThM1->Project("fModelIVCThM1", 		    	"Ener1", ener_cut);
+  outTreeOVCThM1->Project("fModelOVCThM1", 		     	"Ener1", ener_cut);
+
+	outTreeFrameRaM1->Project("fModelFrameRaM1", 	   	"Ener1", ener_cut);
+	outTreeTShieldRaM1->Project("fModelTShieldRaM1",	"Ener1", ener_cut);	
+  outTree50mKRaM1->Project("fModel50mKRaM1", 			  "Ener1", ener_cut);
+  outTree600mKRaM1->Project("fModel600mKRaM1", 		  "Ener1", ener_cut);
+  outTreeIVCRaM1->Project("fModelIVCRaM1", 		     	"Ener1", ener_cut);
+  outTreeOVCRaM1->Project("fModelOVCRaM1", 		     	"Ener1", ener_cut);
+
+	outTreeFrameKM1->Project("fModelFrameKM1", 		  	"Ener1", ener_cut);
+	outTreeTShieldKM1->Project("fModelTShieldKM1",		"Ener1", ener_cut);	
+  outTree50mKKM1->Project("fModel50mKKM1", 		     	"Ener1", ener_cut);
+  outTree600mKKM1->Project("fModel600mKKM1", 		   	"Ener1", ener_cut);
+  outTreeIVCKM1->Project("fModelIVCKM1", 			    	"Ener1", ener_cut);
+  outTreeOVCKM1->Project("fModelOVCKM1", 			    	"Ener1", ener_cut);	
+
+	outTreeFrameCoM1->Project("fModelFrameCoM1", 	   	"Ener1", ener_cut);
+	outTreeTShieldCoM1->Project("fModelTShieldCoM1",	"Ener1", ener_cut);	
+  outTree50mKCoM1->Project("fModel50mKCoM1", 		   	"Ener1", ener_cut);
+  outTree600mKCoM1->Project("fModel600mKCoM1", 	  	"Ener1", ener_cut);
+  outTreeIVCCoM1->Project("fModelIVCCoM1", 		     	"Ener1", ener_cut);
+  outTreeOVCCoM1->Project("fModelOVCCoM1", 		     	"Ener1", ener_cut);
+
+  outTreeFrameThS01M1->Project("fModelFrameThS01M1",   "Ener1", ener_cut);
+  outTreeFrameThS1M1->Project("fModelFrameThS1M1",     "Ener1", ener_cut);
+  outTreeFrameThS10M1->Project("fModelFrameThS10M1",   "Ener1", ener_cut);
+  outTreeFrameThS100M1->Project("fModelFrameThS100M1", "Ener1", ener_cut);
+
+  outTreeFrameRaS01M1->Project("fModelFrameRaS01M1",   "Ener1", ener_cut);
+  outTreeFrameRaS1M1->Project("fModelFrameRaS1M1",     "Ener1", ener_cut);
+  outTreeFrameRaS10M1->Project("fModelFrameRaS10M1",   "Ener1", ener_cut);
+  outTreeFrameRaS100M1->Project("fModelFrameRaS100M1", "Ener1", ener_cut);
+
+  outTreeTShieldThS01M1->Project("fModelTShieldThS01M1",   "Ener1", ener_cut);
+  outTreeTShieldThS1M1->Project("fModelTShieldThS1M1",     "Ener1", ener_cut);
+  outTreeTShieldThS10M1->Project("fModelTShieldThS10M1",   "Ener1", ener_cut);
+  outTreeTShieldThS100M1->Project("fModelTShieldThS100M1", "Ener1", ener_cut);
+  
+  // M1
+  outTreeNDBDM2->Project("fModelNDBDM2",        "Ener1", ener_cut);
+  outTreeBiM2->Project("fModelBiM2",            "Ener1", ener_cut);  
+
+  outTreeFrameThM2->Project("fModelFrameThM2",      "Ener1", ener_cut);
+  outTreeTShieldThM2->Project("fModelTShieldThM2",  "Ener1", ener_cut);
+  outTree50mKThM2->Project("fModel50mKThM2",        "Ener1", ener_cut);
+  outTree600mKThM2->Project("fModel600mKThM2",      "Ener1", ener_cut);
+  outTreeIVCThM2->Project("fModelIVCThM2",          "Ener1", ener_cut);
+  outTreeOVCThM2->Project("fModelOVCThM2",          "Ener1", ener_cut);
+
+  outTreeFrameRaM2->Project("fModelFrameRaM2",      "Ener1", ener_cut);
+  outTreeTShieldRaM2->Project("fModelTShieldRaM2",  "Ener1", ener_cut); 
+  outTree50mKRaM2->Project("fModel50mKRaM2",        "Ener1", ener_cut);
+  outTree600mKRaM2->Project("fModel600mKRaM2",      "Ener1", ener_cut);
+  outTreeIVCRaM2->Project("fModelIVCRaM2",          "Ener1", ener_cut);
+  outTreeOVCRaM2->Project("fModelOVCRaM2",          "Ener1", ener_cut);
+
+  outTreeFrameKM2->Project("fModelFrameKM2",        "Ener1", ener_cut);
+  outTreeTShieldKM2->Project("fModelTShieldKM2",    "Ener1", ener_cut); 
+  outTree50mKKM2->Project("fModel50mKKM2",          "Ener1", ener_cut);
+  outTree600mKKM2->Project("fModel600mKKM2",        "Ener1", ener_cut);
+  outTreeIVCKM2->Project("fModelIVCKM2",            "Ener1", ener_cut);
+  outTreeOVCKM2->Project("fModelOVCKM2",            "Ener1", ener_cut); 
+
+  outTreeFrameCoM2->Project("fModelFrameCoM2",      "Ener1", ener_cut);
+  outTreeTShieldCoM2->Project("fModelTShieldCoM2",  "Ener1", ener_cut); 
+  outTree50mKCoM2->Project("fModel50mKCoM2",        "Ener1", ener_cut);
+  outTree600mKCoM2->Project("fModel600mKCoM2",      "Ener1", ener_cut);
+  outTreeIVCCoM2->Project("fModelIVCCoM2",          "Ener1", ener_cut);
+  outTreeOVCCoM2->Project("fModelOVCCoM2",          "Ener1", ener_cut);
+
+  outTreeFrameThS01M2->Project("fModelFrameThS01M2",   "Ener1", ener_cut);
+  outTreeFrameThS1M2->Project("fModelFrameThS1M2",     "Ener1", ener_cut);
+  outTreeFrameThS10M2->Project("fModelFrameThS10M2",   "Ener1", ener_cut);
+  outTreeFrameThS100M2->Project("fModelFrameThS100M2", "Ener1", ener_cut);
+
+  outTreeFrameRaS01M2->Project("fModelFrameRaS01M2",   "Ener1", ener_cut);
+  outTreeFrameRaS1M2->Project("fModelFrameRaS1M2",     "Ener1", ener_cut);
+  outTreeFrameRaS10M2->Project("fModelFrameRaS10M2",   "Ener1", ener_cut);
+  outTreeFrameRaS100M2->Project("fModelFrameRaS100M2", "Ener1", ener_cut);
+
+  outTreeTShieldThS01M2->Project("fModelTShieldThS01M2",   "Ener1", ener_cut);
+  outTreeTShieldThS1M2->Project("fModelTShieldThS1M2",     "Ener1", ener_cut);
+  outTreeTShieldThS10M2->Project("fModelTShieldThS10M2",   "Ener1", ener_cut);
+  outTreeTShieldThS100M2->Project("fModelTShieldThS100M2", "Ener1", ener_cut);
 
 
 	cout << "Loaded MC" << endl;
 
 
-  // Will be for detector efficiencies... not added yet
-/*  
-  fMCEff[0] = GetMCEff(fModelFrameTh);
-  fMCEff[1] = GetMCEff(fModelTShieldTh);
-  fMCEff[2] = GetMCEff(fModel50mKTh);
-  fMCEff[3] = GetMCEff(fModel600mKTh);
-  fMCEff[4] = GetMCEff(fModelIVCTh);
-  fMCEff[5] = GetMCEff(fModelOVCTh);
-
-  fMCEff[6] = GetMCEff(fModelFrameRa);
-  fMCEff[7] = GetMCEff(fModelTShieldRa);
-  fMCEff[8] = GetMCEff(fModel50mKRa);
-  fMCEff[9] = GetMCEff(fModel600mKRa);
-  fMCEff[10] = GetMCEff(fModelIVCRa);
-  fMCEff[11] = GetMCEff(fModelOVCRa);
-
-  fMCEff[12] = GetMCEff(fModelFrameK);
-  fMCEff[13] = GetMCEff(fModelTShieldK);
-  fMCEff[14] = GetMCEff(fModel50mKK);
-  fMCEff[15] = GetMCEff(fModel600mKK);
-  fMCEff[16] = GetMCEff(fModelIVCK);
-  fMCEff[17] = GetMCEff(fModelOVCK);
-
-  fMCEff[18] = GetMCEff(fModelFrameCo);
-  fMCEff[19] = GetMCEff(fModelTShieldCo);
-  fMCEff[20] = GetMCEff(fModel50mKCo);
-  fMCEff[21] = GetMCEff(fModel600mKCo);
-  fMCEff[22] = GetMCEff(fModelIVCCo);
-  fMCEff[23] = GetMCEff(fModelOVCCo);
-
-  fMCEff[24] = GetMCEff(fModelNDBD);
-  fMCEff[25] = GetMCEff(fModelBi);
-*/
-
 	// Normalize all MC histograms
   // Fixing normalization of NDBD from 2000 to 2650
-	NormalizePDF(fModelFrameTh, outTreeFrameTh, 	50, 2700);
-	NormalizePDF(fModelTShieldTh, outTreeTShieldTh,	50, 2700);
-	NormalizePDF(fModel50mKTh, outTree50mKTh,		50, 2700);
-	NormalizePDF(fModel600mKTh, outTree600mKTh,		50, 2700);
-	NormalizePDF(fModelIVCTh, outTreeIVCTh,			50, 2700);
-	NormalizePDF(fModelOVCTh, outTreeOVCTh,			50, 2700);
+  // M1
+	NormalizePDF(fModelFrameThM1, outTreeFrameThM1, 	50, 2700);
+	NormalizePDF(fModelTShieldThM1, outTreeTShieldThM1,	50, 2700);
+	NormalizePDF(fModel50mKThM1, outTree50mKThM1,		50, 2700);
+	NormalizePDF(fModel600mKThM1, outTree600mKThM1,		50, 2700);
+	NormalizePDF(fModelIVCThM1, outTreeIVCThM1,			50, 2700);
+	NormalizePDF(fModelOVCThM1, outTreeOVCThM1,			50, 2700);
 
-	NormalizePDF(fModelFrameRa,  outTreeFrameRa,	50, 2700);
-	NormalizePDF(fModelTShieldRa, outTreeTShieldRa,	50, 2700);	
-	NormalizePDF(fModel50mKRa, outTree50mKRa,		50, 2700);
-	NormalizePDF(fModel600mKRa, outTree600mKRa,		50, 2700);
-	NormalizePDF(fModelIVCRa, outTreeIVCRa,			50, 2700);
-	NormalizePDF(fModelOVCRa, outTreeOVCRa,			50, 2700);
+	NormalizePDF(fModelFrameRaM1,  outTreeFrameRaM1,	50, 2700);
+	NormalizePDF(fModelTShieldRaM1, outTreeTShieldRaM1,	50, 2700);	
+	NormalizePDF(fModel50mKRaM1, outTree50mKRaM1,		50, 2700);
+	NormalizePDF(fModel600mKRaM1, outTree600mKRaM1,		50, 2700);
+	NormalizePDF(fModelIVCRaM1, outTreeIVCRaM1,			50, 2700);
+	NormalizePDF(fModelOVCRaM1, outTreeOVCRaM1,			50, 2700);
 
-	NormalizePDF(fModelFrameK, 	outTreeFrameK,		50, 2700);
-	NormalizePDF(fModelTShieldK, outTreeTShieldK,	50, 2700);	
-	NormalizePDF(fModel50mKK, outTree50mKK,			50, 2700);
-	NormalizePDF(fModel600mKK, outTree600mKK,		50, 2700);
-	NormalizePDF(fModelIVCK, outTreeIVCK,			50, 2700);
-	NormalizePDF(fModelOVCK, outTreeOVCK,			50, 2700);
+	NormalizePDF(fModelFrameKM1, 	outTreeFrameKM1,		50, 2700);
+	NormalizePDF(fModelTShieldKM1, outTreeTShieldKM1,	50, 2700);	
+	NormalizePDF(fModel50mKKM1, outTree50mKKM1,			50, 2700);
+	NormalizePDF(fModel600mKKM1, outTree600mKKM1,		50, 2700);
+	NormalizePDF(fModelIVCKM1, outTreeIVCKM1,			50, 2700);
+	NormalizePDF(fModelOVCKM1, outTreeOVCKM1,			50, 2700);
 
-	NormalizePDF(fModelFrameCo, outTreeFrameCo,		50, 2700);
-	NormalizePDF(fModelTShieldCo, outTreeTShieldCo,	50, 2700);	
-	NormalizePDF(fModel50mKCo, outTree50mKCo,		50, 2700);
-	NormalizePDF(fModel600mKCo, outTree600mKCo,		50, 2700);
-	NormalizePDF(fModelIVCCo, outTreeIVCCo,			50, 2700);
-	NormalizePDF(fModelOVCCo, outTreeOVCCo,			50, 2700);
+	NormalizePDF(fModelFrameCoM1, outTreeFrameCoM1,		50, 2700);
+	NormalizePDF(fModelTShieldCoM1, outTreeTShieldCoM1,	50, 2700);	
+	NormalizePDF(fModel50mKCoM1, outTree50mKCoM1,		50, 2700);
+	NormalizePDF(fModel600mKCoM1, outTree600mKCoM1,		50, 2700);
+	NormalizePDF(fModelIVCCoM1, outTreeIVCCoM1,			50, 2700);
+	NormalizePDF(fModelOVCCoM1, outTreeOVCCoM1,			50, 2700);
 
-  NormalizePDF(fModelNDBD, outTreeNDBD,     50, 2700);
+  NormalizePDF(fModelNDBDM1, outTreeNDBDM1,     50, 2700);
+  NormalizePDF(fModelBiM1, outTreeBiM1,         50, 2700);
 
-  NormalizePDF(fModelBi, outTreeBi,         50, 2700);
+
+  NormalizePDF(fModelFrameThS01M1,   outTreeFrameThS01M1, 50, 2700);
+  NormalizePDF(fModelFrameThS1M1,    outTreeFrameThS1M1, 50, 2700);
+  NormalizePDF(fModelFrameThS10M1,   outTreeFrameThS10M1, 50, 2700);
+  NormalizePDF(fModelFrameThS100M1,  outTreeFrameThS100M1, 50, 2700);
+
+  NormalizePDF(fModelFrameRaS01M1,   outTreeFrameRaS01M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS1M1,    outTreeFrameRaS1M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS10M1,   outTreeFrameRaS10M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS100M1,  outTreeFrameRaS100M1, 50, 2700);
+
+  NormalizePDF(fModelTShieldThS01M1,   outTreeTShieldThS01M1, 50, 2700);
+  NormalizePDF(fModelTShieldThS1M1,    outTreeTShieldThS1M1, 50, 2700);
+  NormalizePDF(fModelTShieldThS10M1,   outTreeTShieldThS10M1, 50, 2700);
+  NormalizePDF(fModelTShieldThS100M1,  outTreeTShieldThS100M1, 50, 2700);
+
+  // M2
+  NormalizePDF(fModelFrameThM2, outTreeFrameThM2,   50, 2700);
+  NormalizePDF(fModelTShieldThM2, outTreeTShieldThM2, 50, 2700);
+  NormalizePDF(fModel50mKThM2, outTree50mKThM2,   50, 2700);
+  NormalizePDF(fModel600mKThM2, outTree600mKThM2,   50, 2700);
+  NormalizePDF(fModelIVCThM2, outTreeIVCThM2,     50, 2700);
+  NormalizePDF(fModelOVCThM2, outTreeOVCThM2,     50, 2700);
+
+  NormalizePDF(fModelFrameRaM2,  outTreeFrameRaM2,  50, 2700);
+  NormalizePDF(fModelTShieldRaM2, outTreeTShieldRaM2, 50, 2700);  
+  NormalizePDF(fModel50mKRaM2, outTree50mKRaM2,   50, 2700);
+  NormalizePDF(fModel600mKRaM2, outTree600mKRaM2,   50, 2700);
+  NormalizePDF(fModelIVCRaM2, outTreeIVCRaM2,     50, 2700);
+  NormalizePDF(fModelOVCRaM2, outTreeOVCRaM2,     50, 2700);
+
+  NormalizePDF(fModelFrameKM2,  outTreeFrameKM2,    50, 2700);
+  NormalizePDF(fModelTShieldKM2, outTreeTShieldKM2, 50, 2700);  
+  NormalizePDF(fModel50mKKM2, outTree50mKKM2,     50, 2700);
+  NormalizePDF(fModel600mKKM2, outTree600mKKM2,   50, 2700);
+  NormalizePDF(fModelIVCKM2, outTreeIVCKM2,     50, 2700);
+  NormalizePDF(fModelOVCKM2, outTreeOVCKM2,     50, 2700);
+
+  NormalizePDF(fModelFrameCoM2, outTreeFrameCoM2,   50, 2700);
+  NormalizePDF(fModelTShieldCoM2, outTreeTShieldCoM2, 50, 2700);  
+  NormalizePDF(fModel50mKCoM2, outTree50mKCoM2,   50, 2700);
+  NormalizePDF(fModel600mKCoM2, outTree600mKCoM2,   50, 2700);
+  NormalizePDF(fModelIVCCoM2, outTreeIVCCoM2,     50, 2700);
+  NormalizePDF(fModelOVCCoM2, outTreeOVCCoM2,     50, 2700);
+
+  NormalizePDF(fModelNDBDM2, outTreeNDBDM2,     50, 2700);
+  NormalizePDF(fModelBiM2, outTreeBiM2,         50, 2700);
 
 
-  NormalizePDF(fModelFrameThS01,   outTreeFrameThS01, 50, 2700);
-  NormalizePDF(fModelFrameThS1,    outTreeFrameThS1, 50, 2700);
-  NormalizePDF(fModelFrameThS10,   outTreeFrameThS10, 50, 2700);
-  NormalizePDF(fModelFrameThS100,  outTreeFrameThS100, 50, 2700);
+  NormalizePDF(fModelFrameThS01M2,   outTreeFrameThS01M1, 50, 2700);
+  NormalizePDF(fModelFrameThS1M2,    outTreeFrameThS1M1, 50, 2700);
+  NormalizePDF(fModelFrameThS10M2,   outTreeFrameThS10M1, 50, 2700);
+  NormalizePDF(fModelFrameThS100M2,  outTreeFrameThS100M1, 50, 2700);
 
-  NormalizePDF(fModelFrameRaS01,   outTreeFrameRaS01, 50, 2700);
-  NormalizePDF(fModelFrameRaS1,    outTreeFrameRaS1, 50, 2700);
-  NormalizePDF(fModelFrameRaS10,   outTreeFrameRaS10, 50, 2700);
-  NormalizePDF(fModelFrameRaS100,  outTreeFrameRaS100, 50, 2700);
+  NormalizePDF(fModelFrameRaS01M2,   outTreeFrameRaS01M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS1M2,    outTreeFrameRaS1M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS10M2,   outTreeFrameRaS10M1, 50, 2700);
+  NormalizePDF(fModelFrameRaS100M2,  outTreeFrameRaS100M1, 50, 2700);
 
-  NormalizePDF(fModelTShieldThS01,   outTreeTShieldThS01, 50, 2700);
-  NormalizePDF(fModelTShieldThS1,    outTreeTShieldThS1, 50, 2700);
-  NormalizePDF(fModelTShieldThS10,   outTreeTShieldThS10, 50, 2700);
-  NormalizePDF(fModelTShieldThS100,  outTreeTShieldThS100, 50, 2700);
+  NormalizePDF(fModelTShieldThS01M2,   outTreeTShieldThS01M2, 50, 2700);
+  NormalizePDF(fModelTShieldThS1M2,    outTreeTShieldThS1M2, 50, 2700);
+  NormalizePDF(fModelTShieldThS10M2,   outTreeTShieldThS10M2, 50, 2700);
+  NormalizePDF(fModelTShieldThS100M2,  outTreeTShieldThS100M2, 50, 2700);
+
+
 
 
 	cout << "Normalized MC PDFs" << endl;
@@ -1451,42 +1562,72 @@ void TBackgroundModel::Initialize()
     double dRes = 6.0/2.355;
 
     // Adding the 10 micron distribution for now...
-    SmearMC(fModelFrameThS10, fSmearFrameThS10, dRes);
-    SmearMC(fModelTShieldThS10, fSmearTShieldThS10, dRes);
+    SmearMC(fModelFrameThS10M1, fSmearFrameThS10M1, dRes);
+    SmearMC(fModelTShieldThS10M1, fSmearTShieldThS10M1, dRes);
 
-    // SmearMC();
+    // M1
+    SmearMC(fModelFrameThM1, fSmearFrameThM1, dRes);
+    SmearMC(fModelTShieldThM1, fSmearTShieldThM1, dRes);  
+    SmearMC(fModel50mKThM1, fSmear50mKThM1, dRes);
+    SmearMC(fModel600mKThM1, fSmear600mKThM1, dRes);
+    SmearMC(fModelIVCThM1, fSmearIVCThM1, dRes);
+    SmearMC(fModelOVCThM1, fSmearOVCThM1, dRes);
 
-    SmearMC(fModelFrameTh, fSmearFrameTh, dRes);
-    SmearMC(fModelTShieldTh, fSmearTShieldTh, dRes);  
-    SmearMC(fModel50mKTh, fSmear50mKTh, dRes);
-    SmearMC(fModel600mKTh, fSmear600mKTh, dRes);
-    SmearMC(fModelIVCTh, fSmearIVCTh, dRes);
-    SmearMC(fModelOVCTh, fSmearOVCTh, dRes);
+    SmearMC(fModelFrameRaM1, fSmearFrameRaM1, dRes);
+    SmearMC(fModelTShieldRaM1, fSmearTShieldRaM1, dRes);  
+    SmearMC(fModel50mKRaM1, fSmear50mKRaM1, dRes);
+    SmearMC(fModel600mKRaM1, fSmear600mKRaM1, dRes);
+    SmearMC(fModelIVCRaM1, fSmearIVCRaM1, dRes);
+    SmearMC(fModelOVCRaM1, fSmearOVCRaM1, dRes);
 
-    SmearMC(fModelFrameRa, fSmearFrameRa, dRes);
-    SmearMC(fModelTShieldRa, fSmearTShieldRa, dRes);  
-    SmearMC(fModel50mKRa, fSmear50mKRa, dRes);
-    SmearMC(fModel600mKRa, fSmear600mKRa, dRes);
-    SmearMC(fModelIVCRa, fSmearIVCRa, dRes);
-    SmearMC(fModelOVCRa, fSmearOVCRa, dRes);
+    SmearMC(fModelFrameKM1, fSmearFrameKM1, dRes);
+    SmearMC(fModelTShieldKM1, fSmearTShieldKM1, dRes);
+    SmearMC(fModel50mKKM1, fSmear50mKKM1, dRes);
+    SmearMC(fModel600mKKM1, fSmear600mKKM1, dRes);
+    SmearMC(fModelIVCKM1, fSmearIVCKM1, dRes);
+    SmearMC(fModelOVCKM1, fSmearOVCKM1, dRes); 
 
-    SmearMC(fModelFrameK, fSmearFrameK, dRes);
-    SmearMC(fModelTShieldK, fSmearTShieldK, dRes);
-    SmearMC(fModel50mKK, fSmear50mKK, dRes);
-    SmearMC(fModel600mKK, fSmear600mKK, dRes);
-    SmearMC(fModelIVCK, fSmearIVCK, dRes);
-    SmearMC(fModelOVCK, fSmearOVCK, dRes); 
+    SmearMC(fModelFrameCoM1, fSmearFrameCoM1, dRes);
+    SmearMC(fModelTShieldCoM1, fSmearTShieldCoM1, dRes);
+    SmearMC(fModel50mKCoM1, fSmear50mKCoM1, dRes);
+    SmearMC(fModel600mKCoM1, fSmear600mKCoM1, dRes);
+    SmearMC(fModelIVCCoM1, fSmearIVCCoM1, dRes);
+    SmearMC(fModelOVCCoM1, fSmearOVCCoM1, dRes);  
 
-    SmearMC(fModelFrameCo, fSmearFrameCo, dRes);
-    SmearMC(fModelTShieldCo, fSmearTShieldCo, dRes);
-    SmearMC(fModel50mKCo, fSmear50mKCo, dRes);
-    SmearMC(fModel600mKCo, fSmear600mKCo, dRes);
-    SmearMC(fModelIVCCo, fSmearIVCCo, dRes);
-    SmearMC(fModelOVCCo, fSmearOVCCo, dRes);  
+    SmearMC(fModelNDBDM1, fSmearNDBDM1, dRes);  
+    SmearMC(fModelBiM1, fSmearBiM1, dRes);  
 
-    SmearMC(fModelNDBD, fSmearNDBD, dRes);  
+    // M2
+    SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes);
+    SmearMC(fModelTShieldThM2, fSmearTShieldThM2, dRes);  
+    SmearMC(fModel50mKThM2, fSmear50mKThM2, dRes);
+    SmearMC(fModel600mKThM2, fSmear600mKThM2, dRes);
+    SmearMC(fModelIVCThM2, fSmearIVCThM2, dRes);
+    SmearMC(fModelOVCThM2, fSmearOVCThM2, dRes);
 
-    SmearMC(fModelBi, fSmearBi, dRes);  
+    SmearMC(fModelFrameRaM2, fSmearFrameRaM2, dRes);
+    SmearMC(fModelTShieldRaM2, fSmearTShieldRaM2, dRes);  
+    SmearMC(fModel50mKRaM2, fSmear50mKRaM2, dRes);
+    SmearMC(fModel600mKRaM2, fSmear600mKRaM2, dRes);
+    SmearMC(fModelIVCRaM2, fSmearIVCRaM2, dRes);
+    SmearMC(fModelOVCRaM2, fSmearOVCRaM2, dRes);
+
+    SmearMC(fModelFrameKM2, fSmearFrameKM2, dRes);
+    SmearMC(fModelTShieldKM2, fSmearTShieldKM2, dRes);
+    SmearMC(fModel50mKKM2, fSmear50mKKM2, dRes);
+    SmearMC(fModel600mKKM2, fSmear600mKKM2, dRes);
+    SmearMC(fModelIVCKM2, fSmearIVCKM2, dRes);
+    SmearMC(fModelOVCKM2, fSmearOVCKM2, dRes); 
+
+    SmearMC(fModelFrameCoM2, fSmearFrameCoM2, dRes);
+    SmearMC(fModelTShieldCoM2, fSmearTShieldCoM2, dRes);
+    SmearMC(fModel50mKCoM2, fSmear50mKCoM2, dRes);
+    SmearMC(fModel600mKCoM2, fSmear600mKCoM2, dRes);
+    SmearMC(fModelIVCCoM2, fSmearIVCCoM2, dRes);
+    SmearMC(fModelOVCCoM2, fSmearOVCCoM2, dRes);  
+
+    SmearMC(fModelNDBDM2, fSmearNDBDM2, dRes);  
+    SmearMC(fModelBiM2, fSmearBiM2, dRes);  
 
     cout << "Finished smearing MC histograms" << endl;
 
@@ -1598,13 +1739,13 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
   cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
   cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
-  cout<< "Par11 = "  << fParameters[12] << " +/- " << fParError[12] << endl;
-  cout<< "Par11 = "  << fParameters[13] << " +/- " << fParError[13] << endl;
-  cout<< "Par11 = "  << fParameters[14] << " +/- " << fParError[14] << endl;
-  cout<< "Par11 = "  << fParameters[15] << " +/- " << fParError[15] << endl;
-  cout<< "Par11 = "  << fParameters[16] << " +/- " << fParError[16] << endl;
-  cout<< "Par11 = "  << fParameters[17] << " +/- " << fParError[17] << endl;
-  cout<< "Par11 = "  << fParameters[18] << " +/- " << fParError[18] << endl;
+  // cout<< "Par12 = "  << fParameters[12] << " +/- " << fParError[12] << endl;
+  // cout<< "Par13 = "  << fParameters[13] << " +/- " << fParError[13] << endl;
+  // cout<< "Par14 = "  << fParameters[14] << " +/- " << fParError[14] << endl;
+  // cout<< "Par15 = "  << fParameters[15] << " +/- " << fParError[15] << endl;
+  // cout<< "Par16 = "  << fParameters[16] << " +/- " << fParError[16] << endl;
+  // cout<< "Par17 = "  << fParameters[17] << " +/- " << fParError[17] << endl;
+  // cout<< "Par18 = "  << fParameters[18] << " +/- " << fParError[18] << endl;
 
 
 //	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
@@ -1669,7 +1810,8 @@ void TBackgroundModel::UpdateModel()
 	}
 
 	// Reset all bins in model histogram(s)
-	fModelTot->Reset();
+	fModelTotM1->Reset();
+  fModelTotM2->Reset();
 
 	// Create model
 
@@ -1693,39 +1835,72 @@ void TBackgroundModel::UpdateModel()
   /////////////////////////////////////
   //// Few Parameters ////////////////
   ////////////////////////////////////
-  fModelTot->Add( fSmearTShieldThS10,    fParameters[0]);
+  // fModelTot->Add( fSmearTShieldThS10,    fParameters[0]);
+  // M1
+  fModelTotM1->Add( fSmearFrameThM1,    fParameters[0]);
+  fModelTotM1->Add( fSmearTShieldThM1,  fParameters[0]);  
+  fModelTotM1->Add( fSmear50mKThM1,     fParameters[0]);
+  fModelTotM1->Add( fSmear600mKThM1,    fParameters[0]);
+  fModelTotM1->Add( fSmearIVCThM1,      fParameters[1]);
+  fModelTotM1->Add( fSmearOVCThM1,      fParameters[1]);
 
-  // fModelTot->Add( fSmearFrameTh,    fParameters[0]);
-  // fModelTot->Add( fSmearTShieldTh,  fParameters[0]);  
-  // fModelTot->Add( fSmear50mKTh,     fParameters[0]);
-  // fModelTot->Add( fSmear600mKTh,    fParameters[0]);
-  fModelTot->Add( fSmearIVCTh,      fParameters[1]);
-  fModelTot->Add( fSmearOVCTh,      fParameters[1]);
+  fModelTotM1->Add( fSmearFrameRaM1,    fParameters[2]);
+  fModelTotM1->Add( fSmearTShieldRaM1,  fParameters[2]);  
+  fModelTotM1->Add( fSmear50mKRaM1,     fParameters[2]);
+  fModelTotM1->Add( fSmear600mKRaM1,    fParameters[2]);
+  fModelTotM1->Add( fSmearIVCRaM1,      fParameters[3]);
+  fModelTotM1->Add( fSmearOVCRaM1,      fParameters[3]);
 
-  fModelTot->Add( fSmearFrameRa,    fParameters[2]);
-  fModelTot->Add( fSmearTShieldRa,  fParameters[2]);  
-  fModelTot->Add( fSmear50mKRa,     fParameters[2]);
-  fModelTot->Add( fSmear600mKRa,    fParameters[2]);
-  fModelTot->Add( fSmearIVCRa,      fParameters[3]);
-  fModelTot->Add( fSmearOVCRa,      fParameters[3]);
+  fModelTotM1->Add( fSmearFrameKM1,    fParameters[4]);
+  fModelTotM1->Add( fSmearTShieldKM1,  fParameters[4]);
+  fModelTotM1->Add( fSmear50mKKM1,     fParameters[4]);
+  fModelTotM1->Add( fSmear600mKKM1,    fParameters[4]);
+  fModelTotM1->Add( fSmearIVCKM1,      fParameters[5]);
+  fModelTotM1->Add( fSmearOVCKM1,      fParameters[5]); 
 
-  fModelTot->Add( fSmearFrameK,    fParameters[4]);
-  fModelTot->Add( fSmearTShieldK,  fParameters[4]);
-  fModelTot->Add( fSmear50mKK,     fParameters[4]);
-  fModelTot->Add( fSmear600mKK,    fParameters[4]);
-  fModelTot->Add( fSmearIVCK,      fParameters[5]);
-  fModelTot->Add( fSmearOVCK,      fParameters[5]); 
+  fModelTotM1->Add( fSmearFrameCoM1,    fParameters[6]);
+  fModelTotM1->Add( fSmearTShieldCoM1,  fParameters[6]);
+  fModelTotM1->Add( fSmear50mKCoM1,     fParameters[6]);
+  fModelTotM1->Add( fSmear600mKCoM1,    fParameters[6]);
+  fModelTotM1->Add( fSmearIVCCoM1,      fParameters[7]);
+  fModelTotM1->Add( fSmearOVCCoM1,      fParameters[7]);  
 
-  fModelTot->Add( fSmearFrameCo,    fParameters[6]);
-  fModelTot->Add( fSmearTShieldCo,  fParameters[6]);
-  fModelTot->Add( fSmear50mKCo,     fParameters[6]);
-  fModelTot->Add( fSmear600mKCo,    fParameters[6]);
-  fModelTot->Add( fSmearIVCCo,      fParameters[7]);
-  fModelTot->Add( fSmearOVCCo,      fParameters[7]);  
+  fModelTotM1->Add( fSmearNDBDM1,      fParameters[9]);  
+  fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
 
-  fModelTot->Add( fSmearNDBD,      fParameters[9]);  
-  fModelTot->Add( fSmearBi,        fParameters[10]);  
 
+
+  // M2
+  fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
+  fModelTotM2->Add( fSmearTShieldThM2,  fParameters[0]);  
+  fModelTotM2->Add( fSmear50mKThM2,     fParameters[0]);
+  fModelTotM2->Add( fSmear600mKThM2,    fParameters[0]);
+  fModelTotM2->Add( fSmearIVCThM2,      fParameters[1]);
+  fModelTotM2->Add( fSmearOVCThM2,      fParameters[1]);
+
+  fModelTotM2->Add( fSmearFrameRaM2,    fParameters[2]);
+  fModelTotM2->Add( fSmearTShieldRaM2,  fParameters[2]);  
+  fModelTotM2->Add( fSmear50mKRaM2,     fParameters[2]);
+  fModelTotM2->Add( fSmear600mKRaM2,    fParameters[2]);
+  fModelTotM2->Add( fSmearIVCRaM2,      fParameters[3]);
+  fModelTotM2->Add( fSmearOVCRaM2,      fParameters[3]);
+
+  fModelTotM2->Add( fSmearFrameKM2,    fParameters[4]);
+  fModelTotM2->Add( fSmearTShieldKM2,  fParameters[4]);
+  fModelTotM2->Add( fSmear50mKKM2,     fParameters[4]);
+  fModelTotM2->Add( fSmear600mKKM2,    fParameters[4]);
+  fModelTotM2->Add( fSmearIVCKM2,      fParameters[5]);
+  fModelTotM2->Add( fSmearOVCKM2,      fParameters[5]); 
+
+  fModelTotM2->Add( fSmearFrameCoM2,    fParameters[6]);
+  fModelTotM2->Add( fSmearTShieldCoM2,  fParameters[6]);
+  fModelTotM2->Add( fSmear50mKCoM2,     fParameters[6]);
+  fModelTotM2->Add( fSmear600mKCoM2,    fParameters[6]);
+  fModelTotM2->Add( fSmearIVCCoM2,      fParameters[7]);
+  fModelTotM2->Add( fSmearOVCCoM2,      fParameters[7]);  
+
+  fModelTotM2->Add( fSmearNDBDM2,      fParameters[9]);  
+  fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
 
 
   /////////////////////////////////////
@@ -1771,7 +1946,7 @@ void TBackgroundModel::UpdateModel()
 
 
 
-
+/*
   else
   {
 
@@ -1809,86 +1984,10 @@ void TBackgroundModel::UpdateModel()
 
   fModelTot->Add( SmearMC(fModelBi, fSmearBi, fParameters[8]),      fParameters[10]);  
   }
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-////////////// Just testing
-TH1D *TBackgroundModel::SmearChannel(TChain *fChain, TH1D *fMC, TH1D *fSMC, int channel, double resolution)
-{
-  // Reset previously smeared histogram
-  // fMC->Reset(); 
-  fSMC->Reset();
-
-  fChain->Project(fMC->GetName() , "Ener1", Form("Channel==%d", channel));
-
-  double dArea = 0;
-  double dSmearedValue = 0;
-
-  for(int i = 0; i<dBin; i++)
-  {
-    for(int j = 0; j<dBin; j++)
-    {
-      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-      dArea = dBinSize*fMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
-
-      // Set parameters of gaussian ... resolution floating in fit
-      gaus->SetParameters(dArea, fMC->GetBinCenter(j), resolution);
-
-      // Smeared contribution from gaussian centered at bin j for bin i 
-      dSmearedValue = gaus->Eval(fSMC->GetBinCenter(i));
-
-      // Fill bin i with contribution from gaussian centered at bin j
-      fSMC->Fill(fSMC->GetBinCenter(i), dSmearedValue);
-    }
-  }
-
-  return fSMC;
-}
-
-// Test to see how long the initial smearing takes
-void TBackgroundModel::TestSmear()
-{
-  // int i = 1;
-  for (int i = 0; i<52; i++)
-  {
-    cout << "Channel: " << i << endl;
-    hDummy = new TH1D(Form("hC%d", i), "", dBin, dEMin, dEMax);
-
-    fSmearFrameTh->Add( SmearChannel(outTreeFrameTh, hDummy, hSmearDummy, i, fResolution[i]), 1 );
-    fSmearFrameRa->Add( SmearChannel(outTreeFrameRa, hDummy, hSmearDummy, i, fResolution[i]), 1 );
-    fSmearFrameCo->Add( SmearChannel(outTreeFrameCo, hDummy, hSmearDummy, i, fResolution[i]), 1 );
-    fSmearFrameK->Add( SmearChannel(outTreeFrameK, hDummy, hSmearDummy, i, fResolution[i]), 1 );
-
-
-
-
-  } 
-
-  // TCanvas *ctest2 = new TCanvas ("ctest2");
-  hMC->Draw();
-
-}
 */
 
+
+}
 
 
 
