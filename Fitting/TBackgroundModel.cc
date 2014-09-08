@@ -1300,7 +1300,7 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS100M1  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 1);
 
 
-/*
+
   // Load M2
   outTreeFrameThM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 2);
   outTreeTShieldThM2  = LoadMC(dDataDir.c_str(),  "TShield","Th232", "B", 2);
@@ -1347,7 +1347,7 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS1M2    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", 2);
   outTreeTShieldThS10M2   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 2);
   outTreeTShieldThS100M2  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 2);
-*/
+
 
 
   // Projecting to histograms
@@ -1399,7 +1399,7 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS100M1->Project("fModelTShieldThS100M1", "Ener1", ener_cut);
   
 
-/*  
+  
   // M1
   outTreeNDBDM2->Project("fModelNDBDM2",        "Ener1", ener_cut);
   outTreeBiM2->Project("fModelBiM2",            "Ener1", ener_cut);  
@@ -1446,7 +1446,7 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS1M2->Project("fModelTShieldThS1M2",     "Ener1", ener_cut);
   outTreeTShieldThS10M2->Project("fModelTShieldThS10M2",   "Ener1", ener_cut);
   outTreeTShieldThS100M2->Project("fModelTShieldThS100M2", "Ener1", ener_cut);
-*/
+
 
 
 
@@ -1503,7 +1503,7 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelTShieldThS10M1,   outTreeTShieldThS10M1, 50, 2700);
   NormalizePDF(fModelTShieldThS100M1,  outTreeTShieldThS100M1, 50, 2700);
 
-/*
+
   // M2
   NormalizePDF(fModelFrameThM2, outTreeFrameThM2,   50, 2700);
   NormalizePDF(fModelTShieldThM2, outTreeTShieldThM2, 50, 2700);
@@ -1551,7 +1551,7 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelTShieldThS1M2,    outTreeTShieldThS1M2, 50, 2700);
   NormalizePDF(fModelTShieldThS10M2,   outTreeTShieldThS10M2, 50, 2700);
   NormalizePDF(fModelTShieldThS100M2,  outTreeTShieldThS100M2, 50, 2700);
-*/
+
 
 
 
@@ -1599,7 +1599,7 @@ void TBackgroundModel::Initialize()
     SmearMC(fModelNDBDM1, fSmearNDBDM1, dRes);  
     SmearMC(fModelBiM1, fSmearBiM1, dRes);  
 
-/*
+
     // M2
     SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes);
     SmearMC(fModelTShieldThM2, fSmearTShieldThM2, dRes);  
@@ -1631,7 +1631,7 @@ void TBackgroundModel::Initialize()
 
     SmearMC(fModelNDBDM2, fSmearNDBDM2, dRes);  
     SmearMC(fModelBiM2, fSmearBiM2, dRes);  
-*/
+
 
     cout << "Finished smearing MC histograms" << endl;
 
@@ -1813,7 +1813,7 @@ void TBackgroundModel::UpdateModel()
 
 	// Reset all bins in model histogram(s)
 	fModelTotM1->Reset();
-  // fModelTotM2->Reset();
+  fModelTotM2->Reset();
 
 	// Create model
 
@@ -1864,7 +1864,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
 
 
-/*
+
   // M2
   fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
   fModelTotM2->Add( fSmearTShieldThM2,  fParameters[0]);  
@@ -1896,7 +1896,7 @@ void TBackgroundModel::UpdateModel()
 
   fModelTotM2->Add( fSmearNDBDM2,      fParameters[9]);  
   fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
-*/
+
 
   /////////////////////////////////////
   //// Many parameters
