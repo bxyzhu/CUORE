@@ -529,7 +529,7 @@ bool TBackgroundModel::DoTheFit()
 	gStyle->SetOptStat(0);
    // This method actually sets up minuit and does the fit
 
- 
+
    TMinuit minuit(11); //initialize minuit, n is the number of parameters
 
    // Reduce Minuit Output
@@ -1025,6 +1025,9 @@ bool TBackgroundModel::DoTheFit()
   hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM2->Draw("E");
 
+
+  // Prints out covariance and correlation matrices
+  // minuit.mnmatu(1);
 
 	return true;
    
