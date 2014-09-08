@@ -1037,23 +1037,19 @@ void TBackgroundModel::DrawBkg()
  	gStyle->SetOptStat(0);
   gStyle->SetOptFit();
  	// gStyle->SetOptTitle(0);	
-  TCanvas *cBkg = new TCanvas("cBkg", "cBkg", 1200, 800);
-  cBkg->SetLogy();
+  TCanvas *cBkg1 = new TCanvas("cBkg1", "cBkg1", 1200, 800);
+  cBkg1->SetLogy();
+  fDataHistoM1->SetLineColor(1);
+  fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+  fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+  fDataHistoM1->Draw();
 
-  if(dMult == 1)
-  {
-    fDataHistoM1->SetLineColor(1);
-    fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-    fDataHistoM1->Draw();
-  }
-  else if(dMult == 2)
-  {
-    fDataHistoM2->SetLineColor(1);
-    fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-    fDataHistoM2->Draw();
-  }
+  TCanvas *cBkg2 = new TCanvas("cBkg2", "cBkg2", 1200, 800);
+  cBkg2->SetLogy();
+  fDataHistoM2->SetLineColor(1);
+  fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+  fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+  fDataHistoM2->Draw();
 
 }
 
@@ -1336,34 +1332,34 @@ double TBackgroundModel::GetChiSquare()
 		}
 		else 
 		{
-      if(dMult == 1)
-      {
-			 datam1_i = fDataHistoM1->GetBinContent(i); // For real data
-      }
-      else if(dMult == 2)
-      {
-       datam2_i = fDataHistoM2->GetBinContent(i); // For real data
-      }      
+			datam1_i = fDataHistoM1->GetBinContent(i); // For real data
+      datam2_i = fDataHistoM2->GetBinContent(i); // For real data
 		}
 
+    // From MC
 		modelm1_i = fModelTotM1->GetBinContent(i);
+    modelm2_i = fModelTotM2->GetBinContent(i);
 
 
 		// Log-likelihood Chi-Squared
     // Avoiding 0's... correct or no?
 		if(modelm1_i != 0 && datam1_i != 0)
 		{
+      // M1 portion
 			chiSquare += 2 * (modelm1_i - datam1_i + datam1_i * TMath::Log(datam1_i/modelm1_i));
-      // Adding on M2 portion soon(tm)
-
 		}
 
+    if(modelm2_i != 0 && datam2_i != 0)
+    {
+      // M2 portion
+      chiSquare += 2 * (modelm2_i - datam2_i + datam2_i * TMath::Log(datam2_i/modelm2_i));
+    }
 	}
 
 	return chiSquare;
 }
 
-// Gets efficiency of MC as fraction of normalization
+// Gets efficiency of MC as fraction of normalization -- not used at all right now
 double TBackgroundModel::GetMCEff(TH1D *h1)
 {
   double fIntTotal;
