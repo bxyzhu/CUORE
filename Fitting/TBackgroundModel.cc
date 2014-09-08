@@ -77,8 +77,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dFitMin = fFitMin;
   dFitMax = fFitMax;
 
-  // Temporary
-  dMult = 1;
 
 
   dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
@@ -543,9 +541,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
-   // Range is from 0 to integral of the data
-   // Around 60000 events in background spectrum
-
 
 
    ////////////////////////////////////////////////
@@ -626,9 +621,7 @@ bool TBackgroundModel::DoTheFit()
 */
 
 
-
-
-   // Fix parameters for testing
+   // Fix parameters here
    // minuit.FixParameter(0); // Close Th (or Surface)
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
@@ -651,48 +644,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.SetFCN(myExternal_FCN);
    
    int status = minuit.Migrad(); // this actually does the minimisation
-
-
-    TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
-    c1->SetLogy();
-
-
-    if(bToyFit)
-    {
-		////// Draw Toy Data
-   		fToyData->SetLineColor(1);
-   		fToyData->SetLineWidth(2);
-   		fToyData->GetXaxis()->SetTitle("Energy (keV)");
-   		fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
-		  fToyData->Draw();
-	 }
-	 else
-	 {
-
-    if(dMult == 1)
-    {
-   		///// Draw Data
-  	 	fDataHistoM1->SetLineColor(1);
-  	 	fDataHistoM1->SetLineWidth(2);
-  	 	fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-   		fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-      fDataHistoM1->SetMaximum(90000);
-      fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
-		  fDataHistoM1->Draw("E");
-    }
-    else if(dMult == 2)
-    {
-      ///// Draw Data
-      fDataHistoM2->SetLineColor(1);
-      fDataHistoM2->SetLineWidth(2);
-      fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-      fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-      fDataHistoM2->GetYaxis()->SetRange(0, 50000);
-      fDataHistoM2->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
-      fDataHistoM2->Draw("E");
-
-    }
-	 }
 
 
 	minuit.GetParameter(0,	fParameters[0],		fParError[0]);
@@ -729,6 +680,7 @@ bool TBackgroundModel::DoTheFit()
   // Surface....
   // fModelTotThM1->Add(fSmearTShieldThS10,   fParameters[0]);
 
+  // M1 Parameters
   fModelTotThM1->Add(fSmearFrameThM1,   fParameters[0]);
   fModelTotThM1->Add(fSmearTShieldThM1, fParameters[0]);
   fModelTotThM1->Add(fSmear50mKThM1,    fParameters[0]);
@@ -760,6 +712,37 @@ bool TBackgroundModel::DoTheFit()
   fModelTotNDBDM1->Add(fSmearNDBDM1,    fParameters[9]);
   fModelTotBiM1->Add(fSmearBiM1,      fParameters[10]);
 
+  // M2 Parameters
+  fModelTotThM2->Add(fSmearFrameThM2,   fParameters[0]);
+  fModelTotThM2->Add(fSmearTShieldThM2, fParameters[0]);
+  fModelTotThM2->Add(fSmear50mKThM2,    fParameters[0]);
+  fModelTotThM2->Add(fSmear600mKThM2,   fParameters[0]);
+  fModelTotThM2->Add(fSmearIVCThM2,     fParameters[1]);
+  fModelTotThM2->Add(fSmearOVCThM2,     fParameters[1]);
+
+  fModelTotRaM2->Add(fSmearFrameRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearTShieldRaM2, fParameters[2]);
+  fModelTotRaM2->Add(fSmear50mKRaM2,    fParameters[2]);
+  fModelTotRaM2->Add(fSmear600mKRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearIVCRaM2,     fParameters[3]);
+  fModelTotRaM2->Add(fSmearOVCRaM2,     fParameters[3]);
+
+  fModelTotKM2->Add(fSmearFrameKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearTShieldKM2,   fParameters[4]);
+  fModelTotKM2->Add(fSmear50mKKM2,      fParameters[4]);
+  fModelTotKM2->Add(fSmear600mKKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearIVCKM2,       fParameters[5]);
+  fModelTotKM2->Add(fSmearOVCKM2,       fParameters[5]);
+
+  fModelTotCoM2->Add(fSmearFrameCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearTShieldCoM2, fParameters[6]);
+  fModelTotCoM2->Add(fSmear50mKCoM2,    fParameters[6]);
+  fModelTotCoM2->Add(fSmear600mKCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearIVCCoM2,     fParameters[7]);
+  fModelTotCoM2->Add(fSmearOVCCoM2,     fParameters[7]);
+
+  fModelTotNDBDM2->Add(fSmearNDBDM2,    fParameters[9]);
+  fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
 
 
 
@@ -771,125 +754,277 @@ bool TBackgroundModel::DoTheFit()
   // Surface....
   // fModelTotTh->Add(fSmearFrameThS1,   fParameters[11]);
 /*
-  fModelTotTh->Add(fSmearFrameTh,   fParameters[0]);
-  fModelTotTh->Add(fSmearTShieldTh, fParameters[11]);
-  fModelTotTh->Add(fSmear50mKTh,    fParameters[12]);
-  fModelTotTh->Add(fSmear600mKTh,   fParameters[13]);
-  fModelTotTh->Add(fSmearIVCTh,     fParameters[1]);
-  fModelTotTh->Add(fSmearOVCTh,     fParameters[17]);
+  // M1
+  fModelTotThM1->Add(fSmearFrameThM1,   fParameters[0]);
+  fModelTotThM1->Add(fSmearTShieldThM1, fParameters[11]);
+  fModelTotThM1->Add(fSmear50mKThM1,    fParameters[12]);
+  fModelTotThM1->Add(fSmear600mKThM1,   fParameters[13]);
+  fModelTotThM1->Add(fSmearIVCThM1,     fParameters[1]);
+  fModelTotThM1->Add(fSmearOVCThM1,     fParameters[17]);
 
-  fModelTotRa->Add(fSmearFrameRa,   fParameters[2]);
-  fModelTotRa->Add(fSmearTShieldRa, fParameters[14]);
-  fModelTotRa->Add(fSmear50mKRa,    fParameters[15]);
-  fModelTotRa->Add(fSmear600mKRa,   fParameters[16]);
-  fModelTotRa->Add(fSmearIVCRa,     fParameters[3]);
-  fModelTotRa->Add(fSmearOVCRa,     fParameters[18]);
+  fModelTotRaM1->Add(fSmearFrameRaM1,   fParameters[2]);
+  fModelTotRaM1->Add(fSmearTShieldRaM1, fParameters[14]);
+  fModelTotRaM1->Add(fSmear50mKRaM1,    fParameters[15]);
+  fModelTotRaM1->Add(fSmear600mKRaM1,   fParameters[16]);
+  fModelTotRaM1->Add(fSmearIVCRaM1,     fParameters[3]);
+  fModelTotRaM1->Add(fSmearOVCRaM1,     fParameters[18]);
 
-  fModelTotK->Add(fSmearFrameK,     fParameters[4]);
-  fModelTotK->Add(fSmearTShieldK,   fParameters[4]);
-  fModelTotK->Add(fSmear50mKK,      fParameters[4]);
-  fModelTotK->Add(fSmear600mKK,     fParameters[4]);
-  fModelTotK->Add(fSmearIVCK,       fParameters[5]);
-  fModelTotK->Add(fSmearOVCK,       fParameters[5]);
+  fModelTotKM1->Add(fSmearFrameKM1,     fParameters[4]);
+  fModelTotKM1->Add(fSmearTShieldKM1,   fParameters[4]);
+  fModelTotKM1->Add(fSmear50mKKM1,      fParameters[4]);
+  fModelTotKM1->Add(fSmear600mKKM1,     fParameters[4]);
+  fModelTotKM1->Add(fSmearIVCKM1,       fParameters[5]);
+  fModelTotKM1->Add(fSmearOVCKM1,       fParameters[5]);
 
-  fModelTotCo->Add(fSmearFrameCo,   fParameters[6]);
-  fModelTotCo->Add(fSmearTShieldCo, fParameters[6]);
-  fModelTotCo->Add(fSmear50mKCo,    fParameters[6]);
-  fModelTotCo->Add(fSmear600mKCo,   fParameters[6]);
-  fModelTotCo->Add(fSmearIVCCo,     fParameters[7]);
-  fModelTotCo->Add(fSmearOVCCo,     fParameters[7]);
+  fModelTotCoM1->Add(fSmearFrameCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fSmearTShieldCoM1, fParameters[6]);
+  fModelTotCoM1->Add(fSmear50mKCoM1,    fParameters[6]);
+  fModelTotCoM1->Add(fSmear600mKCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fSmearIVCCoM1,     fParameters[7]);
+  fModelTotCoM1->Add(fSmearOVCCoM1,     fParameters[7]);
 
-  fModelTotNDBD->Add(fSmearNDBD,    fParameters[9]);
-  fModelTotBi->Add(fSmearBi,      fParameters[10]);
+  fModelTotNDBDM1->Add(fSmearNDBDM1,    fParameters[9]);
+  fModelTotBiM1->Add(fSmearBiM1,      fParameters[10]);
+
+  // M2
+  fModelTotThM2->Add(fSmearFrameThM2,   fParameters[0]);
+  fModelTotThM2->Add(fSmearTShieldThM2, fParameters[11]);
+  fModelTotThM2->Add(fSmear50mKThM2,    fParameters[12]);
+  fModelTotThM2->Add(fSmear600mKThM2,   fParameters[13]);
+  fModelTotThM2->Add(fSmearIVCThM2,     fParameters[1]);
+  fModelTotThM2->Add(fSmearOVCThM2,     fParameters[17]);
+
+  fModelTotRaM2->Add(fSmearFrameRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearTShieldRaM2, fParameters[14]);
+  fModelTotRaM2->Add(fSmear50mKRaM2,    fParameters[15]);
+  fModelTotRaM2->Add(fSmear600mKRaM2,   fParameters[16]);
+  fModelTotRaM2->Add(fSmearIVCRaM2,     fParameters[3]);
+  fModelTotRaM2->Add(fSmearOVCRaM2,     fParameters[18]);
+
+  fModelTotKM2->Add(fSmearFrameKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearTShieldKM2,   fParameters[4]);
+  fModelTotKM2->Add(fSmear50mKKM2,      fParameters[4]);
+  fModelTotKM2->Add(fSmear600mKKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearIVCKM2,       fParameters[5]);
+  fModelTotKM2->Add(fSmearOVCKM2,       fParameters[5]);
+
+  fModelTotCoM2->Add(fSmearFrameCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearTShieldCoM2, fParameters[6]);
+  fModelTotCoM2->Add(fSmear50mKCoM2,    fParameters[6]);
+  fModelTotCoM2->Add(fSmear600mKCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearIVCCoM2,     fParameters[7]);
+  fModelTotCoM2->Add(fSmearOVCCoM2,     fParameters[7]);
+
+  fModelTotNDBDM2->Add(fSmearNDBDM2,    fParameters[9]);
+  fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
+
 */
   ////////////////////////////////////////////////////////
 
 
-	
-	fModelTotM1->SetLineColor(2);
-	fModelTotM1->Draw("SAME");
 
-	fModelTotThM1->SetLineColor(3);
-	fModelTotThM1->SetLineStyle(2);
-	fModelTotRaM1->SetLineColor(4);
-	fModelTotRaM1->SetLineStyle(2);
-	fModelTotKM1->SetLineColor(6);
-	fModelTotKM1->SetLineStyle(2);
-	fModelTotCoM1->SetLineColor(7);
-	fModelTotCoM1->SetLineStyle(2);
-	fModelTotNDBDM1->SetLineColor(42);
-	fModelTotNDBDM1->SetLineStyle(2);
-  fModelTotBiM1->SetLineColor(5);
-  fModelTotBiM1->SetLineStyle(2);
+  // Toy fit plots currently aren't complete...
+  if(bToyFit)
+  {
 
-	fModelTotThM1->Draw("SAME");
-	fModelTotRaM1->Draw("SAME");
-	fModelTotKM1->Draw("SAME");
-	fModelTotCoM1->Draw("SAME");
-	fModelTotNDBDM1->Draw("SAME");
-  fModelTotBiM1->Draw("SAME");
+    TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+    c1->SetLogy();    
+  ////// Draw Toy Data
+    fToyData->SetLineColor(1);
+    fToyData->SetLineWidth(2);
+    fToyData->GetXaxis()->SetTitle("Energy (keV)");
+    fToyData->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));
+    fToyData->Draw();
 
+  }
+  else
+  {
 
+    TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+    c1->SetLogy();
 
-  // Few Parameters
-  TPaveText *pt = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
-  pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
-  // pt->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-  pt->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-  pt->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
-  pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
-  pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
-  pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+    ///// Draw Data M1
+    fDataHistoM1->SetLineColor(1);
+    fDataHistoM1->SetLineWidth(2);
+    fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+    fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fDataHistoM1->SetMaximum(90000);
+    fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
+    fDataHistoM1->Draw("E");
+
+  
+    fModelTotM1->SetLineColor(2);
+    fModelTotM1->Draw("SAME");
+
+    fModelTotThM1->SetLineColor(3);
+    fModelTotThM1->SetLineStyle(2);
+    fModelTotRaM1->SetLineColor(4);
+    fModelTotRaM1->SetLineStyle(2);
+    fModelTotKM1->SetLineColor(6);
+    fModelTotKM1->SetLineStyle(2);
+    fModelTotCoM1->SetLineColor(7);
+    fModelTotCoM1->SetLineStyle(2);
+    fModelTotNDBDM1->SetLineColor(42);
+    fModelTotNDBDM1->SetLineStyle(2);
+    fModelTotBiM1->SetLineColor(5);
+    fModelTotBiM1->SetLineStyle(2);
+
+    fModelTotThM1->Draw("SAME");
+    fModelTotRaM1->Draw("SAME");
+    fModelTotKM1->Draw("SAME");
+    fModelTotCoM1->Draw("SAME");
+    fModelTotNDBDM1->Draw("SAME");
+    fModelTotBiM1->Draw("SAME");
+
+    // Few Parameters
+    TPaveText *pt1 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
+    pt1->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    pt1->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+    // pt1->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+    pt1->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+    pt1->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+    pt1->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+    pt1->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
 
 
 /*
-  // Many Parameters
-  TPaveText *pt = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
-  pt->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
-  // pt->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
-  pt->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[11], fParError[11] ));
-  pt->AddText(Form("50mK Th: %0.2E#pm%0.2E --- 600mK Th: %0.2E#pm%0.2E", fParameters[12], fParError[12], fParameters[13], fParError[13] ));
-  pt->AddText(Form("IVC Th: %0.2E#pm%0.2E --- OVC Th: %0.2E#pm%0.2E", fParameters[1], fParError[1], fParameters[17], fParError[17] ));
-  pt->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[14], fParError[14] ));
-  pt->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
-  pt->AddText(Form("IVC Ra: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[3], fParError[3], fParameters[18], fParError[18] ));
-  pt->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
-  pt->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
-  pt->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+    // Many Parameters
+    TPaveText *pt1 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
+    pt1->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    // pt1->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
+    pt1->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[11], fParError[11] ));
+    pt1->AddText(Form("50mK Th: %0.2E#pm%0.2E --- 600mK Th: %0.2E#pm%0.2E", fParameters[12], fParError[12], fParameters[13], fParError[13] ));
+    pt1->AddText(Form("IVC Th: %0.2E#pm%0.2E --- OVC Th: %0.2E#pm%0.2E", fParameters[1], fParError[1], fParameters[17], fParError[17] ));
+    pt1->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[14], fParError[14] ));
+    pt1->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
+    pt1->AddText(Form("IVC Ra: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[3], fParError[3], fParameters[18], fParError[18] ));
+    pt1->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+    pt1->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+    pt1->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
 */
+    pt1->Draw();
+
+    TLegend *legfit1 = new TLegend(0.8,0.8,0.97,0.97);
+    legfit1->AddEntry(fModelTotM1, "Total PDF", "l");
+    legfit1->AddEntry(fModelTotThM1, "Total Th-232", "l");
+    legfit1->AddEntry(fModelTotRaM1, "Total Ra-226", "l");
+    legfit1->AddEntry(fModelTotKM1, "Total K-40", "l");
+    legfit1->AddEntry(fModelTotCoM1, "Total Co-60", "l");
+    legfit1->AddEntry(fModelTotNDBDM1, "NDBD", "l");
+    legfit1->AddEntry(fModelTotBiM1, "Bi-207", "l");
+    legfit1->Draw();
 
 
 
 
-  // pt->AddText(Form(,  ));
-  pt->Draw();
 
- 	TLegend *legfit = new TLegend(0.8,0.8,0.97,0.97);
- 	legfit->AddEntry(fModelTotM1, "Total PDF", "l");
- 	legfit->AddEntry(fModelTotThM1, "Total Th-232", "l");
-  legfit->AddEntry(fModelTotRaM1, "Total Ra-226", "l");
- 	legfit->AddEntry(fModelTotKM1, "Total K-40", "l");
- 	legfit->AddEntry(fModelTotCoM1, "Total Co-60", "l");
- 	legfit->AddEntry(fModelTotNDBDM1, "NDBD", "l");
-  legfit->AddEntry(fModelTotBiM1, "Bi-207", "l");
+    TCanvas *c2 = new TCanvas("c2", "c2", 1200, 800);
+    c2->SetLogy();
 
- 	legfit->Draw();
+    ///// Draw Data M2
+    fDataHistoM2->SetLineColor(1);
+    fDataHistoM2->SetLineWidth(2);
+    fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+    fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fDataHistoM2->GetYaxis()->SetRange(0, 50000);
+    fDataHistoM2->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
+    fDataHistoM2->Draw("E");
+
+  
+    fModelTotM2->SetLineColor(2);
+    fModelTotM2->Draw("SAME");
+
+    fModelTotThM2->SetLineColor(3);
+    fModelTotThM2->SetLineStyle(2);
+    fModelTotRaM2->SetLineColor(4);
+    fModelTotRaM2->SetLineStyle(2);
+    fModelTotKM2->SetLineColor(6);
+    fModelTotKM2->SetLineStyle(2);
+    fModelTotCoM2->SetLineColor(7);
+    fModelTotCoM2->SetLineStyle(2);
+    fModelTotNDBDM2->SetLineColor(42);
+    fModelTotNDBDM2->SetLineStyle(2);
+    fModelTotBiM2->SetLineColor(5);
+    fModelTotBiM2->SetLineStyle(2);
+
+    fModelTotThM2->Draw("SAME");
+    fModelTotRaM2->Draw("SAME");
+    fModelTotKM2->Draw("SAME");
+    fModelTotCoM2->Draw("SAME");
+    fModelTotNDBDM2->Draw("SAME");
+    fModelTotBiM2->Draw("SAME");    
+
+    // Few Parameters
+    TPaveText *pt2 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
+    pt2->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    pt2->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+    // pt2->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
+    pt2->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
+    pt2->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+    pt2->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+    pt2->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+
+
+/*
+    // Many Parameters
+    TPaveText *pt2 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
+    pt2->AddText(Form("Fit Range: %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    // pt2->AddText(Form("#chi^{2}/NDF: %0.3f --  Resolution %0.4f", (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ,fParameters[8]));
+    pt2->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[11], fParError[11] ));
+    pt2->AddText(Form("50mK Th: %0.2E#pm%0.2E --- 600mK Th: %0.2E#pm%0.2E", fParameters[12], fParError[12], fParameters[13], fParError[13] ));
+    pt2->AddText(Form("IVC Th: %0.2E#pm%0.2E --- OVC Th: %0.2E#pm%0.2E", fParameters[1], fParError[1], fParameters[17], fParError[17] ));
+    pt2->AddText(Form("Frame Ra: %0.2E#pm%0.2E --- TShield Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[14], fParError[14] ));
+    pt2->AddText(Form("50mK Ra: %0.2E#pm%0.2E --- 600mK Ra: %0.2E#pm%0.2E", fParameters[15], fParError[15], fParameters[16], fParError[16] ));
+    pt2->AddText(Form("IVC Ra: %0.2E#pm%0.2E --- OVC Ra: %0.2E#pm%0.2E", fParameters[3], fParError[3], fParameters[18], fParError[18] ));
+    pt2->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
+    pt2->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
+    pt2->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+*/
+    pt2->Draw();
+
+
+    TLegend *legfit2 = new TLegend(0.8,0.8,0.97,0.97);
+    legfit2->AddEntry(fModelTotM2, "Total PDF", "l");
+    legfit2->AddEntry(fModelTotThM2, "Total Th-232", "l");
+    legfit2->AddEntry(fModelTotRaM2, "Total Ra-226", "l");
+    legfit2->AddEntry(fModelTotKM2, "Total K-40", "l");
+    legfit2->AddEntry(fModelTotCoM2, "Total Co-60", "l");
+    legfit2->AddEntry(fModelTotNDBDM2, "NDBD", "l");
+    legfit2->AddEntry(fModelTotBiM2, "Bi-207", "l");
+
+    legfit2->Draw();
+
+
+  }
 
 
 	// Residuals
-	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
+	TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
 	hResidualDistM1 = CalculateResiduals(fModelTotM1, fDataHistoM1);
-
 	hResidualDistM1->SetName("Residuals");
 	hResidualDistM1->GetXaxis()->SetTitle("Energy (keV)");
-	// hResidualDist->GetXaxis()->SetTitleSize(0.04);
-	// hResidualDist->GetXaxis()->SetLabelSize(0.05);
-	// hResidualDist->GetYaxis()->SetLabelSize(0.05);
-	// hResidualDist->GetYaxis()->SetTitleSize(0.04);	
+	// hResidualDistM1->GetXaxis()->SetTitleSize(0.04);
+	// hResidualDistM1->GetXaxis()->SetLabelSize(0.05);
+	// hResidualDistM1->GetYaxis()->SetLabelSize(0.05);
+	// hResidualDistM1->GetYaxis()->SetTitleSize(0.04);	
 	hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
 
 	hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
 	hResidualDistM1->Draw("E");
+
+  TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
+  hResidualDistM2 = CalculateResiduals(fModelTotM1, fDataHistoM1);
+  hResidualDistM2->SetName("Residuals");
+  hResidualDistM2->GetXaxis()->SetTitle("Energy (keV)");
+  // hResidualDistM2->GetXaxis()->SetTitleSize(0.04);
+  // hResidualDistM2->GetXaxis()->SetLabelSize(0.05);
+  // hResidualDistM2->GetYaxis()->SetLabelSize(0.05);
+  // hResidualDistM2->GetYaxis()->SetTitleSize(0.04); 
+  hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
+
+  hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
+  hResidualDistM2->Draw("E");
+
 
 	return true;
    
