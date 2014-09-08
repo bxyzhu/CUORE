@@ -77,6 +77,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dFitMin = fFitMin;
   dFitMax = fFitMax;
 
+  // Temporary
   dMult = 1;
 
 
@@ -106,6 +107,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fToyDataK      = new TH1D("fToyDataK",    "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataNDBD   = new TH1D("fToyDataNDBD", "", dNBins, dMinEnergy, dMaxEnergy);
   fToyDataBi     = new TH1D("fToyDataBi",   "", dNBins, dMinEnergy, dMaxEnergy);
+
+
 
 
   // Model histograms M1
@@ -445,7 +448,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
 }
   
-
+// Needs to be updated
 TBackgroundModel::~TBackgroundModel()
 {
 	delete	fDataHistoTot;
@@ -548,25 +551,24 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th",  100., 10.0, 0., 60000);
-   // minuit.DefineParameter(0, "Surface Th",  3000, 100.0, 0., 500000);   
+   minuit.DefineParameter(0, "Close Th",  3000., 10.0, 0., 100000);
    // minuit.DefineParameter(1, "Far Th",	 	100., 50.0, 0., 100000);
    minuit.DefineParameter(1, "Far Th",    45000., 10.0, 0., 100000);
    minuit.DefineParameter(2, "Close Ra",  600., 10.0, 0., 80000);   
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
    minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
    // minuit.DefineParameter(3, "Far Ra",    100., 100.0, 0., 80000);
-   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   // minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   // minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
+   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	100., 100.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 100.0, 0., 80000);  
    // minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",       65., 10.0, 0., 1000);     
-   // minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
-   minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
+   minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
+   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
 
 
 /*
@@ -687,7 +689,7 @@ bool TBackgroundModel::DoTheFit()
       fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
       fDataHistoM2->GetYaxis()->SetRange(0, 50000);
       fDataHistoM2->GetXaxis()->SetRange(2000/dBinSize-5, 2650/dBinSize+5);
-      fDataHistoM2->Draw();
+      fDataHistoM2->Draw("E");
 
     }
 	 }
@@ -713,7 +715,6 @@ bool TBackgroundModel::DoTheFit()
   // minuit.GetParameter(17,  fParameters[17],   fParError[17]);
   // minuit.GetParameter(18,  fParameters[18],   fParError[18]);
 
-
 	UpdateModel();
 	
 	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;
@@ -723,7 +724,7 @@ bool TBackgroundModel::DoTheFit()
   ///////////////////////////////////////////
   //// Few Parameters
   ///////////////////////////////////////////
-  /// Add Histograms after chi-squared minimization
+  /// Add Smeared Histograms after chi-squared minimization
 
   // Surface....
   // fModelTotThM1->Add(fSmearTShieldThS10,   fParameters[0]);
@@ -877,7 +878,7 @@ bool TBackgroundModel::DoTheFit()
 
 	// Residuals
 	TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1200, 800);
-	hResidualDistM1 = CalculateResiduals(fModelTot, fDataHistoM1);
+	hResidualDistM1 = CalculateResiduals(fModelTotM1, fDataHistoM1);
 
 	hResidualDistM1->SetName("Residuals");
 	hResidualDistM1->GetXaxis()->SetTitle("Energy (keV)");
@@ -941,27 +942,27 @@ void TBackgroundModel::DrawMC()
     TCanvas *cThSurf = new TCanvas("cThSurf", "cThSurf", 1200, 800);
     cThSurf->SetLogy();
 
-    fModelFrameTh->SetLineColor(1);
-    fModelFrameTh->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameTh->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));    
-    fModelFrameThS01->SetLineColor(2);
-    fModelFrameThS1->SetLineColor(3);
-    fModelFrameThS10->SetLineColor(4);
-    fModelFrameThS100->SetLineColor(6);
+    fModelFrameThM1->SetLineColor(1);
+    fModelFrameThM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameThM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));    
+    fModelFrameThS01M1->SetLineColor(2);
+    fModelFrameThS1M1->SetLineColor(3);
+    fModelFrameThS10M1->SetLineColor(4);
+    fModelFrameThS100M1->SetLineColor(6);
 
-    fModelFrameTh->DrawNormalized();
-    fModelFrameThS01->DrawNormalized("SAME");
-    fModelFrameThS1->DrawNormalized("SAME");
-    fModelFrameThS10->DrawNormalized("SAME");
-    fModelFrameThS100->DrawNormalized("SAME");
-    fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    fModelFrameThM1->DrawNormalized();
+    fModelFrameThS01M1->DrawNormalized("SAME");
+    fModelFrameThS1M1->DrawNormalized("SAME");
+    fModelFrameThS10M1->DrawNormalized("SAME");
+    fModelFrameThS100M1->DrawNormalized("SAME");
+    fModelFrameThM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
-    legths->AddEntry(fModelFrameTh, "Frame Bulk" ,"l");
-    legths->AddEntry(fModelFrameThS01, "Frame Surface 0.1 #mum", "l");
-    legths->AddEntry(fModelFrameThS1, "Frame Surface 1 #mum" ,"l");
-    legths->AddEntry(fModelFrameThS10, "Frame Surface 10 #mum" ,"l");
-    legths->AddEntry(fModelFrameThS100, "Frame Surface 100 #mum" ,"l");
+    legths->AddEntry(fModelFrameThM1, "Frame Bulk" ,"l");
+    legths->AddEntry(fModelFrameThS01M1, "Frame Surface 0.1 #mum", "l");
+    legths->AddEntry(fModelFrameThS1M1, "Frame Surface 1 #mum" ,"l");
+    legths->AddEntry(fModelFrameThS10M1, "Frame Surface 10 #mum" ,"l");
+    legths->AddEntry(fModelFrameThS100M1, "Frame Surface 100 #mum" ,"l");
     legths->Draw();
 
 
@@ -969,27 +970,27 @@ void TBackgroundModel::DrawMC()
     TCanvas *cRaSurf = new TCanvas("cRaSurf", "cRaSurf", 1200, 800);
     cRaSurf->SetLogy();
 
-    fModelFrameRa->SetLineColor(1);
-    fModelFrameRa->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameRa->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
-    fModelFrameRaS01->SetLineColor(2);
-    fModelFrameRaS1->SetLineColor(3);
-    fModelFrameRaS10->SetLineColor(4);
-    fModelFrameRaS100->SetLineColor(6);
+    fModelFrameRaM1->SetLineColor(1);
+    fModelFrameRaM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameRaM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
+    fModelFrameRaS01M1->SetLineColor(2);
+    fModelFrameRaS1M1->SetLineColor(3);
+    fModelFrameRaS10M1->SetLineColor(4);
+    fModelFrameRaS100M1->SetLineColor(6);
 
-    fModelFrameRa->DrawNormalized();
-    fModelFrameRaS01->DrawNormalized("SAME");
-    fModelFrameRaS1->DrawNormalized("SAME");
-    fModelFrameRaS10->DrawNormalized("SAME");
-    fModelFrameRaS100->DrawNormalized("SAME");
-    fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    fModelFrameRaM1->DrawNormalized();
+    fModelFrameRaS01M1->DrawNormalized("SAME");
+    fModelFrameRaS1M1->DrawNormalized("SAME");
+    fModelFrameRaS10M1->DrawNormalized("SAME");
+    fModelFrameRaS100M1->DrawNormalized("SAME");
+    fModelFrameRaM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
-    legras->AddEntry(fModelFrameRa, "Frame Bulk" ,"l");
-    legras->AddEntry(fModelFrameRaS01, "Frame Surface 0.1 #mum", "l");
-    legras->AddEntry(fModelFrameRaS1, "Frame Surface 1 #mum" ,"l");
-    legras->AddEntry(fModelFrameRaS10, "Frame Surface 10 #mum" ,"l");
-    legras->AddEntry(fModelFrameRaS100, "Frame Surface 100 #mum" ,"l");
+    legras->AddEntry(fModelFrameRaM1, "Frame Bulk" ,"l");
+    legras->AddEntry(fModelFrameRaS01M1, "Frame Surface 0.1 #mum", "l");
+    legras->AddEntry(fModelFrameRaS1M1, "Frame Surface 1 #mum" ,"l");
+    legras->AddEntry(fModelFrameRaS10M1, "Frame Surface 10 #mum" ,"l");
+    legras->AddEntry(fModelFrameRaS100M1, "Frame Surface 100 #mum" ,"l");
     legras->Draw();
 
 
@@ -997,140 +998,140 @@ void TBackgroundModel::DrawMC()
     TCanvas *cTh232 = new TCanvas("cTh232", "cTh232", 1200, 800);
     cTh232->SetLogy();
 
-    fModelFrameTh->SetLineColor(1);
-    fModelFrameTh->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameTh->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
-    fModelTShieldTh->SetLineColor(2);
-    fModel50mKTh->SetLineColor(3);
-    fModel600mKTh->SetLineColor(4);
-    fModelIVCTh->SetLineColor(6);
-    fModelOVCTh->SetLineColor(7);
+    fModelFrameThM1->SetLineColor(1);
+    fModelFrameThM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameThM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
+    fModelTShieldThM1->SetLineColor(2);
+    fModel50mKThM1->SetLineColor(3);
+    fModel600mKThM1->SetLineColor(4);
+    fModelIVCThM1->SetLineColor(6);
+    fModelOVCThM1->SetLineColor(7);
 
 
-    fModelFrameTh->DrawNormalized();
-    fModelTShieldTh->DrawNormalized("SAME");
-    fModel50mKTh->DrawNormalized("SAME");
-    fModel600mKTh->DrawNormalized("SAME");
-    fModelIVCTh->DrawNormalized("SAME");
-    fModelOVCTh->DrawNormalized("SAME");
-    fModelFrameTh->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    fModelFrameThM1->DrawNormalized();
+    fModelTShieldThM1->DrawNormalized("SAME");
+    fModel50mKThM1->DrawNormalized("SAME");
+    fModel600mKThM1->DrawNormalized("SAME");
+    fModelIVCThM1->DrawNormalized("SAME");
+    fModelOVCThM1->DrawNormalized("SAME");
+    fModelFrameThM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
-    legth->AddEntry(fModelFrameTh, "Frame" ,"l");
-    legth->AddEntry(fModelTShieldTh, "TShield", "l");
-    legth->AddEntry(fModel50mKTh, "50mK" ,"l");
-    legth->AddEntry(fModel600mKTh, "600mK" ,"l");
-    legth->AddEntry(fModelIVCTh, "IVC" ,"l");
-    legth->AddEntry(fModelOVCTh, "OVC" ,"l");
+    legth->AddEntry(fModelFrameThM1, "Frame" ,"l");
+    legth->AddEntry(fModelTShieldThM1, "TShield", "l");
+    legth->AddEntry(fModel50mKThM1, "50mK" ,"l");
+    legth->AddEntry(fModel600mKThM1, "600mK" ,"l");
+    legth->AddEntry(fModelIVCThM1, "IVC" ,"l");
+    legth->AddEntry(fModelOVCThM1, "OVC" ,"l");
     legth->Draw();
 
     TCanvas *cRa226 = new TCanvas("cRa226", "cRa226", 1200, 800);
     cRa226->SetLogy();
 
-    fModelFrameRa->SetLineColor(1);
-    fModelFrameRa->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameRa->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
-    fModelTShieldRa->SetLineColor(2);
-    fModel50mKRa->SetLineColor(3);
-    fModel600mKRa->SetLineColor(4);
-    fModelIVCRa->SetLineColor(6);
-    fModelOVCRa->SetLineColor(7);
+    fModelFrameRaM1->SetLineColor(1);
+    fModelFrameRaM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameRaM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
+    fModelTShieldRaM1->SetLineColor(2);
+    fModel50mKRaM1->SetLineColor(3);
+    fModel600mKRaM1->SetLineColor(4);
+    fModelIVCRaM1->SetLineColor(6);
+    fModelOVCRaM1->SetLineColor(7);
 
-    fModelFrameRa->DrawNormalized();
-    fModelTShieldRa->DrawNormalized("SAME");
-    fModel50mKRa->DrawNormalized("SAME");
-    fModel600mKRa->DrawNormalized("SAME");
-    fModelIVCRa->DrawNormalized("SAME");
-    fModelOVCRa->DrawNormalized("SAME");
-    fModelFrameRa->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    fModelFrameRaM1->DrawNormalized();
+    fModelTShieldRaM1->DrawNormalized("SAME");
+    fModel50mKRaM1->DrawNormalized("SAME");
+    fModel600mKRaM1->DrawNormalized("SAME");
+    fModelIVCRaM1->DrawNormalized("SAME");
+    fModelOVCRaM1->DrawNormalized("SAME");
+    fModelFrameRaM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
-    legra->AddEntry(fModelFrameRa, "Frame" ,"l");
-    legra->AddEntry(fModelTShieldRa, "TShield", "l");
-    legra->AddEntry(fModel50mKRa, "50mK" ,"l");
-    legra->AddEntry(fModel600mKRa, "600mK" ,"l");
-    legra->AddEntry(fModelIVCRa, "IVC" ,"l");
-    legra->AddEntry(fModelOVCRa, "OVC" ,"l");
+    legra->AddEntry(fModelFrameRaM1, "Frame" ,"l");
+    legra->AddEntry(fModelTShieldRaM1, "TShield", "l");
+    legra->AddEntry(fModel50mKRaM1, "50mK" ,"l");
+    legra->AddEntry(fModel600mKRaM1, "600mK" ,"l");
+    legra->AddEntry(fModelIVCRaM1, "IVC" ,"l");
+    legra->AddEntry(fModelOVCRaM1, "OVC" ,"l");
     legra->Draw();
 
     TCanvas *cK40 = new TCanvas("cK40", "cK40", 1200, 800);
     cK40->SetLogy();
 
-    fModelFrameK->SetLineColor(1);
-    fModelFrameK->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameK->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
-    fModelTShieldK->SetLineColor(2);
-    fModel50mKK->SetLineColor(3);
-    fModel600mKK->SetLineColor(4);
-    fModelIVCK->SetLineColor(6);
-    fModelOVCK->SetLineColor(7);
+    fModelFrameKM1->SetLineColor(1);
+    fModelFrameKM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameKM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
+    fModelTShieldKM1->SetLineColor(2);
+    fModel50mKKM1->SetLineColor(3);
+    fModel600mKKM1->SetLineColor(4);
+    fModelIVCKM1->SetLineColor(6);
+    fModelOVCKM1->SetLineColor(7);
 
-    fModelFrameK->DrawNormalized();
-    fModelTShieldK->DrawNormalized("SAME");
-    fModel50mKK->DrawNormalized("SAME");
-    fModel600mKK->DrawNormalized("SAME");
-    fModelIVCK->DrawNormalized("SAME");
-    fModelOVCK->DrawNormalized("SAME");
-    fModelFrameK->GetXaxis()->SetRange(0/dBinSize, 1600/dBinSize);
+    fModelFrameKM1->DrawNormalized();
+    fModelTShieldKM1->DrawNormalized("SAME");
+    fModel50mKKM1->DrawNormalized("SAME");
+    fModel600mKKM1->DrawNormalized("SAME");
+    fModelIVCKM1->DrawNormalized("SAME");
+    fModelOVCKM1->DrawNormalized("SAME");
+    fModelFrameKM1->GetXaxis()->SetRange(0/dBinSize, 1600/dBinSize);
 
 
-    legk->AddEntry(fModelFrameK, "Frame" ,"l");
-    legk->AddEntry(fModelTShieldK, "TShield", "l");
-    legk->AddEntry(fModel50mKK, "50mK" ,"l");
-    legk->AddEntry(fModel600mKK, "600mK" ,"l");
-    legk->AddEntry(fModelIVCK, "IVC" ,"l");
-    legk->AddEntry(fModelOVCK, "OVC" ,"l");    
+    legk->AddEntry(fModelFrameKM1, "Frame" ,"l");
+    legk->AddEntry(fModelTShieldKM1, "TShield", "l");
+    legk->AddEntry(fModel50mKKM1, "50mK" ,"l");
+    legk->AddEntry(fModel600mKKM1, "600mK" ,"l");
+    legk->AddEntry(fModelIVCKM1, "IVC" ,"l");
+    legk->AddEntry(fModelOVCKM1, "OVC" ,"l");    
     legk->Draw();
 
     TCanvas *cCo60 = new TCanvas("cCo60", "cCo60", 1200, 800);
     cCo60->SetLogy();
 
-    fModelFrameCo->SetLineColor(1);
-    fModelFrameCo->GetXaxis()->SetTitle("Energy (keV)");
-    fModelFrameCo->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
-    fModelTShieldCo->SetLineColor(2);
-    fModel50mKCo->SetLineColor(3);
-    fModel600mKCo->SetLineColor(4);
-    fModelIVCCo->SetLineColor(6);
-    fModelOVCCo->SetLineColor(7);
+    fModelFrameCoM1->SetLineColor(1);
+    fModelFrameCoM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelFrameCoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
+    fModelTShieldCoM1->SetLineColor(2);
+    fModel50mKCoM1->SetLineColor(3);
+    fModel600mKCoM1->SetLineColor(4);
+    fModelIVCCoM1->SetLineColor(6);
+    fModelOVCCoM1->SetLineColor(7);
 
-    fModelFrameCo->Draw();
-    fModelTShieldCo->Draw("SAME");
-    fModel50mKCo->Draw("SAME");
-    fModel600mKCo->Draw("SAME");
-    fModelIVCCo->Draw("SAME");
-    fModelOVCCo->Draw("SAME");
-    fModelFrameCo->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    fModelFrameCoM1->Draw();
+    fModelTShieldCoM1->Draw("SAME");
+    fModel50mKCoM1->Draw("SAME");
+    fModel600mKCoM1->Draw("SAME");
+    fModelIVCCoM1->Draw("SAME");
+    fModelOVCCoM1->Draw("SAME");
+    fModelFrameCoM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
 
 
-    legco->AddEntry(fModelFrameCo, "Frame" ,"l");
-    legco->AddEntry(fModelTShieldCo, "TShield", "l");
-    legco->AddEntry(fModel50mKCo, "50mK" ,"l");
-    legco->AddEntry(fModel600mKCo, "600mK" ,"l");
-    legco->AddEntry(fModelIVCCo, "IVC" ,"l");
-    legco->AddEntry(fModelOVCCo, "OVC" ,"l");
+    legco->AddEntry(fModelFrameCoM1, "Frame" ,"l");
+    legco->AddEntry(fModelTShieldCoM1, "TShield", "l");
+    legco->AddEntry(fModel50mKCoM1, "50mK" ,"l");
+    legco->AddEntry(fModel600mKCoM1, "600mK" ,"l");
+    legco->AddEntry(fModelIVCCoM1, "IVC" ,"l");
+    legco->AddEntry(fModelOVCCoM1, "OVC" ,"l");
     legco->Draw();
 
 
 
     TCanvas *cNDBD = new TCanvas("cNDBD", "cNDBD", 1200, 800);
     cNDBD->SetLogy();
-    fModelNDBD->SetLineColor(1);
-    fModelNDBD->GetXaxis()->SetTitle("Energy (keV)");
-    fModelNDBD->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
-    fModelNDBD->Draw();
-    fModelNDBD->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
-    legndbd->AddEntry(fModelNDBD, "0#nu#beta#beta" ,"l");
+    fModelNDBDM1->SetLineColor(1);
+    fModelNDBDM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelNDBDM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));  
+    fModelNDBDM1->Draw();
+    fModelNDBDM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    legndbd->AddEntry(fModelNDBDM1, "0#nu#beta#beta" ,"l");
     legndbd->Draw();
 
     TCanvas *cBi = new TCanvas("cBi", "cBi", 1200, 800);
     cBi->SetLogy();
-    fModelBi->SetLineColor(1);
-    fModelBi->GetXaxis()->SetTitle("Energy (keV)");
-    fModelBi->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
-    fModelBi->Draw();
-    fModelBi->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
-    legbi->AddEntry(fModelBi, "Bi-207" ,"l");
+    fModelBiM1->SetLineColor(1);
+    fModelBiM1->GetXaxis()->SetTitle("Energy (keV)");
+    fModelBiM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)", dBinSize));      
+    fModelBiM1->Draw();
+    fModelBiM1->GetXaxis()->SetRange(0/dBinSize, 2700/dBinSize);
+    legbi->AddEntry(fModelBiM1, "Bi-207" ,"l");
     legbi->Draw();
 
 }
@@ -1210,7 +1211,7 @@ double TBackgroundModel::GetChiSquare()
       }      
 		}
 
-		modelm1_i = fModelTot->GetBinContent(i);
+		modelm1_i = fModelTotM1->GetBinContent(i);
 
 
 		// Log-likelihood Chi-Squared
@@ -1804,7 +1805,7 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution)
 // Creates/updates the background model
 void TBackgroundModel::UpdateModel()
 {
-	if(fModelTot == NULL) 
+	if(fModelTotM1 == NULL) 
 	{
 		cout << "Model Histogram Not Created" << endl;
 		return;
