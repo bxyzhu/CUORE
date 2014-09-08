@@ -1218,7 +1218,7 @@ double TBackgroundModel::GetChiSquare()
 		if(modelm1_i != 0 && datam1_i != 0)
 		{
 			chiSquare += 2 * (modelm1_i - datam1_i + datam1_i * TMath::Log(datam1_i/modelm1_i));
-      // Adding on M2 portion
+      // Adding on M2 portion soon(tm)
 
 		}
 
@@ -1250,7 +1250,7 @@ void TBackgroundModel::Initialize()
 
 
   // Fills and Loads MC data
-  // Bulk M1
+  // Load M1
   outTreeFrameThM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", "B", 1);
   outTreeTShieldThM1 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", "B", 1);
   outTree50mKThM1 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", "B", 1);
@@ -1299,7 +1299,8 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS100M1  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 1);
 
 
-  // Bulk M2
+/*
+  // Load M2
   outTreeFrameThM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 2);
   outTreeTShieldThM2  = LoadMC(dDataDir.c_str(),  "TShield","Th232", "B", 2);
   outTree50mKThM2     = LoadMC(dDataDir.c_str(),  "50mK",   "Th232", "B", 2);
@@ -1345,6 +1346,7 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS1M2    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", 2);
   outTreeTShieldThS10M2   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 2);
   outTreeTShieldThS100M2  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 2);
+*/
 
 
   // Projecting to histograms
@@ -1395,6 +1397,8 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS10M1->Project("fModelTShieldThS10M1",   "Ener1", ener_cut);
   outTreeTShieldThS100M1->Project("fModelTShieldThS100M1", "Ener1", ener_cut);
   
+
+/*  
   // M1
   outTreeNDBDM2->Project("fModelNDBDM2",        "Ener1", ener_cut);
   outTreeBiM2->Project("fModelBiM2",            "Ener1", ener_cut);  
@@ -1441,6 +1445,8 @@ void TBackgroundModel::Initialize()
   outTreeTShieldThS1M2->Project("fModelTShieldThS1M2",     "Ener1", ener_cut);
   outTreeTShieldThS10M2->Project("fModelTShieldThS10M2",   "Ener1", ener_cut);
   outTreeTShieldThS100M2->Project("fModelTShieldThS100M2", "Ener1", ener_cut);
+*/
+
 
 
 	cout << "Loaded MC" << endl;
@@ -1496,6 +1502,7 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelTShieldThS10M1,   outTreeTShieldThS10M1, 50, 2700);
   NormalizePDF(fModelTShieldThS100M1,  outTreeTShieldThS100M1, 50, 2700);
 
+/*
   // M2
   NormalizePDF(fModelFrameThM2, outTreeFrameThM2,   50, 2700);
   NormalizePDF(fModelTShieldThM2, outTreeTShieldThM2, 50, 2700);
@@ -1543,7 +1550,7 @@ void TBackgroundModel::Initialize()
   NormalizePDF(fModelTShieldThS1M2,    outTreeTShieldThS1M2, 50, 2700);
   NormalizePDF(fModelTShieldThS10M2,   outTreeTShieldThS10M2, 50, 2700);
   NormalizePDF(fModelTShieldThS100M2,  outTreeTShieldThS100M2, 50, 2700);
-
+*/
 
 
 
@@ -1591,6 +1598,7 @@ void TBackgroundModel::Initialize()
     SmearMC(fModelNDBDM1, fSmearNDBDM1, dRes);  
     SmearMC(fModelBiM1, fSmearBiM1, dRes);  
 
+/*
     // M2
     SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes);
     SmearMC(fModelTShieldThM2, fSmearTShieldThM2, dRes);  
@@ -1622,6 +1630,7 @@ void TBackgroundModel::Initialize()
 
     SmearMC(fModelNDBDM2, fSmearNDBDM2, dRes);  
     SmearMC(fModelBiM2, fSmearBiM2, dRes);  
+*/
 
     cout << "Finished smearing MC histograms" << endl;
 
@@ -1730,7 +1739,7 @@ void TBackgroundModel::PrintParameters()
 	cout<< "Par8 = "	<< fParameters[8]	<< " +/- " << fParError[8] << endl;
 	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
   cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
-  cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
+  // cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
   // cout<< "Par12 = "  << fParameters[12] << " +/- " << fParError[12] << endl;
   // cout<< "Par13 = "  << fParameters[13] << " +/- " << fParError[13] << endl;
   // cout<< "Par14 = "  << fParameters[14] << " +/- " << fParError[14] << endl;
@@ -1803,7 +1812,7 @@ void TBackgroundModel::UpdateModel()
 
 	// Reset all bins in model histogram(s)
 	fModelTotM1->Reset();
-  fModelTotM2->Reset();
+  // fModelTotM2->Reset();
 
 	// Create model
 
@@ -1854,7 +1863,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
 
 
-
+/*
   // M2
   fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
   fModelTotM2->Add( fSmearTShieldThM2,  fParameters[0]);  
@@ -1886,7 +1895,7 @@ void TBackgroundModel::UpdateModel()
 
   fModelTotM2->Add( fSmearNDBDM2,      fParameters[9]);  
   fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
-
+*/
 
   /////////////////////////////////////
   //// Many parameters
