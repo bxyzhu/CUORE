@@ -83,10 +83,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   // Data
   qtree = new TChain("qtree");
 
- base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
- base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
- base_cut = base_cut && "abs(BaselineSlope)<0.1";
- base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "abs(BaselineSlope)<0.1";
+  base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
 
   fDataHistoTot  = new TH1D("fDataHistoTot",  "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM1   = new TH1D("fDataHistoM1",   "", dNBins, dMinEnergy, dMaxEnergy);
@@ -382,17 +382,17 @@ bool TBackgroundModel::DoTheFit()
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
    minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
    // minuit.DefineParameter(3, "Far Ra",    100., 100.0, 0., 80000);
-   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   // minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   // minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
+   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	100., 100.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 100.0, 0., 80000);  
    // minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",       65., 10.0, 0., 1000);     
-   // minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
-   minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
+   minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
+   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
 
 
 /*
@@ -455,16 +455,16 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   minuit.FixParameter(4); // Close K
-   minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(4); // Close K
+   // minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
     minuit.FixParameter(8); // Resolution
    // minuit.FixParameter(9); // NDBD
-   minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(10); // Bi207
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 7;
+  int dNumParameters = 10;
 
 
 
@@ -706,7 +706,7 @@ bool TBackgroundModel::DoTheFit()
 
     // Few Parameters
     TPaveText *pt1 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
-    pt1->AddText(Form("Fit Range (M1): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    pt1->AddText(Form("Fit Range (M1): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
     pt1->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
     // pt1->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
     pt1->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
@@ -784,7 +784,7 @@ bool TBackgroundModel::DoTheFit()
 
     // Few Parameters
     TPaveText *pt2 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
-    pt2->AddText(Form("Fit Range (M2): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
+    pt2->AddText(Form("Fit Range (M2): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
     pt2->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
     // pt2->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
     pt2->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
