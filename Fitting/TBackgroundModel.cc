@@ -63,7 +63,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   bToyFit = false;
 
   // Bin size (keV)
-  dBinSize = 10;
+  dBinSize = 5;
   // Histogram range
   dMinEnergy = 0.;
   dMaxEnergy = 8000.;
@@ -841,7 +841,7 @@ bool TBackgroundModel::DoTheFit()
 	hResidualDistM1->Draw("E");
 
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
-  hResidualDistM2 = CalculateResiduals(fModelTotM1, fDataHistoM1);
+  hResidualDistM2 = CalculateResiduals(fModelTotM2, fDataHistoM2);
   hResidualDistM2->SetName("Residuals");
   hResidualDistM2->GetXaxis()->SetTitle("Energy (keV)");
   // hResidualDistM2->GetXaxis()->SetTitleSize(0.04);
@@ -1751,7 +1751,7 @@ void TBackgroundModel::LoadData()
   fDataHistoM1->Scale(1/(14647393.0 * dSecToYears));
   fDataHistoM2->Scale(1/(14647393.0 * dSecToYears));  
 
-  cout << "Normalized Data" << endl;
+  cout << "Normalized Data using Livetime of: " << 14647393.0 * dSecToYears << " years" <<endl;
 
 }
 
