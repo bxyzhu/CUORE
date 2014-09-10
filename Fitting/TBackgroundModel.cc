@@ -364,13 +364,15 @@ TBackgroundModel::~TBackgroundModel()
 
 
 
-TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
+TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid)
 {
 
 	// Clone histograms for rebinning
 	TH1D 	*hCloneBkg 		= (TH1D*)h1->Clone("hCloneBkg");
 	TH1D 	*hCloneMC		= (TH1D*)h2->Clone("hCloneMC");
-	TH1D	*h1				= new TH1D("h1", "Fit Residuals", dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D  *hOut       = new TH1D("hOut", "Fit Residuals", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	// Variables used in Residual calculations
 	double dResidualX, dResidualY, dResidualXErr = 0, dResidualYErr;
@@ -383,12 +385,13 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2)
 							TMath::Sqrt(hCloneBkg->GetBinContent(j)); // Sqrt(MC + data) = sigma for poisson distribution
 
 		// g1->SetPoint(j, dResidualX, dResidualY);
-		h1->SetBinContent(j, dResidualY);
-		h1->SetBinError(j, 1);
+		hOut->SetBinContent(j, dResidualY);
+		hOut->SetBinError(j, 1);
+    hResid->Fill(dResidualY);
 	}
 
 
-	return h1;
+	return hOut;
 }
 
 
@@ -432,7 +435,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	100., 100.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 100.0, 0., 80000);  
-   // minuit.DefineParameter(7, "Far Co",	 	100., 100.0, 0., 50000);  
+   // minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",       65., 10.0, 0., 1000);     
    minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
@@ -569,17 +572,17 @@ bool TBackgroundModel::DoTheFit()
   fModelTotRaM1->Add(fModelIVCRaM1,     fParameters[3]);
   fModelTotRaM1->Add(fModelOVCRaM1,     fParameters[3]);
 
-  // fModelTotKM1->Add(fModelFrameKM1,     fParameters[4]);
-  // fModelTotKM1->Add(fModelTShieldKM1,   fParameters[4]);
+  fModelTotKM1->Add(fModelFrameKM1,     fParameters[4]);
+  fModelTotKM1->Add(fModelTShieldKM1,   fParameters[4]);
   fModelTotKM1->Add(fModel50mKKM1,      fParameters[4]);
-  // fModelTotKM1->Add(fModel600mKKM1,     fParameters[4]);
+  fModelTotKM1->Add(fModel600mKKM1,     fParameters[4]);
   fModelTotKM1->Add(fModelIVCKM1,       fParameters[5]);
   fModelTotKM1->Add(fModelOVCKM1,       fParameters[5]);
 
-  // fModelTotCoM1->Add(fModelFrameCoM1,   fParameters[6]);
-  // fModelTotCoM1->Add(fModelTShieldCoM1, fParameters[6]);
+  fModelTotCoM1->Add(fModelFrameCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fModelTShieldCoM1, fParameters[6]);
   fModelTotCoM1->Add(fModel50mKCoM1,    fParameters[6]);
-  // fModelTotCoM1->Add(fModel600mKCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fModel600mKCoM1,   fParameters[6]);
   fModelTotCoM1->Add(fModelIVCCoM1,     fParameters[7]);
   fModelTotCoM1->Add(fModelOVCCoM1,     fParameters[7]);
 
@@ -602,17 +605,17 @@ bool TBackgroundModel::DoTheFit()
   fModelTotRaM2->Add(fModelIVCRaM2,     fParameters[3]);
   fModelTotRaM2->Add(fModelOVCRaM2,     fParameters[3]);
 
-  // fModelTotKM2->Add(fModelFrameKM2,     fParameters[4]);
-  // fModelTotKM2->Add(fModelTShieldKM2,   fParameters[4]);
+  fModelTotKM2->Add(fModelFrameKM2,     fParameters[4]);
+  fModelTotKM2->Add(fModelTShieldKM2,   fParameters[4]);
   fModelTotKM2->Add(fModel50mKKM2,      fParameters[4]);
-  // fModelTotKM2->Add(fModel600mKKM2,     fParameters[4]);
+  fModelTotKM2->Add(fModel600mKKM2,     fParameters[4]);
   fModelTotKM2->Add(fModelIVCKM2,       fParameters[5]);
   fModelTotKM2->Add(fModelOVCKM2,       fParameters[5]);
 
-  // fModelTotCoM2->Add(fModelFrameCoM2,   fParameters[6]);
-  // fModelTotCoM2->Add(fModelTShieldCoM2, fParameters[6]);
+  fModelTotCoM2->Add(fModelFrameCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fModelTShieldCoM2, fParameters[6]);
   fModelTotCoM2->Add(fModel50mKCoM2,    fParameters[6]);
-  // fModelTotCoM2->Add(fModel600mKCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fModel600mKCoM2,   fParameters[6]);
   fModelTotCoM2->Add(fModelIVCCoM2,     fParameters[7]);
   fModelTotCoM2->Add(fModelOVCCoM2,     fParameters[7]);
 
@@ -886,7 +889,8 @@ bool TBackgroundModel::DoTheFit()
 
 	// Residuals
 	TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
-	hResidualDistM1 = CalculateResiduals(fModelTotM1, fDataHistoM1);
+  hResidualGausM1 = new TH1D("hResidualGausM1", "Residual Distribution (M1)", 100, -50, 50);
+	hResidualDistM1 = CalculateResiduals(fModelTotM1, fDataHistoM1, hResidualGausM1);
 	hResidualDistM1->SetName("Residuals");
 	hResidualDistM1->GetXaxis()->SetTitle("Energy (keV)");
 	// hResidualDistM1->GetXaxis()->SetTitleSize(0.04);
@@ -898,8 +902,12 @@ bool TBackgroundModel::DoTheFit()
 	hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
 	hResidualDistM1->Draw("E");
 
+  TCanvas *cres1 = new TCanvas();
+  hResidualGausM1->Draw();
+
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
-  hResidualDistM2 = CalculateResiduals(fModelTotM2, fDataHistoM2);
+  hResidualGausM2 = new TH1D("hResidualGausM2", "Residual Distribution (M2)", 100, -50, 50);  
+  hResidualDistM2 = CalculateResiduals(fModelTotM2, fDataHistoM2, hResidualGausM2);
   hResidualDistM2->SetName("Residuals");
   hResidualDistM2->GetXaxis()->SetTitle("Energy (keV)");
   // hResidualDistM2->GetXaxis()->SetTitleSize(0.04);
@@ -911,6 +919,8 @@ bool TBackgroundModel::DoTheFit()
   hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM2->Draw("E");
 
+  TCanvas *cres2 = new TCanvas();
+  hResidualGausM2->Draw();
 
   // Prints out covariance and correlation matrices
   // minuit.mnmatu(1);
@@ -1798,8 +1808,6 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, int minE, int maxE)
 	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
 	// cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
-  // How to apply as efficiency...
-  // Integrate full range... 
 
 	// Make sure integral isn't 0
   // If it is 0, clear model... 
@@ -1819,19 +1827,11 @@ void TBackgroundModel::NormalizePDF(TH1D *h1, int minE, int maxE)
 void TBackgroundModel::NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
 {
   double dIntegral = 0;
-  double Time = 0;
-
-  // hChain->SetBranchAddress("Time", &Time);
-
-  // int dEvents = hChain->GetEntries();
-  // hChain->GetEntry(dEvents - 1);
 
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
   dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
   // cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
-  // How to apply as efficiency...
-  // Integrate full range... 
 
   // Make sure integral isn't 0
   // If it is 0, clear model... 
@@ -1844,8 +1844,8 @@ void TBackgroundModel::NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
 
   if(dIntegral != 0)
   {
-    h1->Scale(1/dIntegral);
-    h2->Scale(1/dIntegral);
+    h1->Scale(1.0/dIntegral);
+    h2->Scale(1.0/dIntegral);
   }
 
 }
@@ -1971,17 +1971,17 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fModelIVCRaM1,      fParameters[3]);
   fModelTotM1->Add( fModelOVCRaM1,      fParameters[3]);
 
-  // fModelTotM1->Add( fModelFrameKM1,    fParameters[4]);
-  // fModelTotM1->Add( fModelTShieldKM1,  fParameters[4]);
+  fModelTotM1->Add( fModelFrameKM1,    fParameters[4]);
+  fModelTotM1->Add( fModelTShieldKM1,  fParameters[4]);
   fModelTotM1->Add( fModel50mKKM1,     fParameters[4]);
-  // fModelTotM1->Add( fModel600mKKM1,    fParameters[4]);
+  fModelTotM1->Add( fModel600mKKM1,    fParameters[4]);
   fModelTotM1->Add( fModelIVCKM1,      fParameters[5]);
   fModelTotM1->Add( fModelOVCKM1,      fParameters[5]); 
 
-  // fModelTotM1->Add( fModelFrameCoM1,    fParameters[6]);
-  // fModelTotM1->Add( fModelTShieldCoM1,  fParameters[6]);
+  fModelTotM1->Add( fModelFrameCoM1,    fParameters[6]);
+  fModelTotM1->Add( fModelTShieldCoM1,  fParameters[6]);
   fModelTotM1->Add( fModel50mKCoM1,     fParameters[6]);
-  // fModelTotM1->Add( fModel600mKCoM1,    fParameters[6]);
+  fModelTotM1->Add( fModel600mKCoM1,    fParameters[6]);
   fModelTotM1->Add( fModelIVCCoM1,      fParameters[7]);
   fModelTotM1->Add( fModelOVCCoM1,      fParameters[7]);  
 
@@ -2006,17 +2006,17 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fModelIVCRaM2,      fParameters[3]);
   fModelTotM2->Add( fModelOVCRaM2,      fParameters[3]);
 
-  // fModelTotM2->Add( fModelFrameKM2,    fParameters[4]);
-  // fModelTotM2->Add( fModelTShieldKM2,  fParameters[4]);
+  fModelTotM2->Add( fModelFrameKM2,    fParameters[4]);
+  fModelTotM2->Add( fModelTShieldKM2,  fParameters[4]);
   fModelTotM2->Add( fModel50mKKM2,     fParameters[4]);
-  // fModelTotM2->Add( fModel600mKKM2,    fParameters[4]);
+  fModelTotM2->Add( fModel600mKKM2,    fParameters[4]);
   fModelTotM2->Add( fModelIVCKM2,      fParameters[5]);
   fModelTotM2->Add( fModelOVCKM2,      fParameters[5]); 
 
-  // fModelTotM2->Add( fModelFrameCoM2,    fParameters[6]);
-  // fModelTotM2->Add( fModelTShieldCoM2,  fParameters[6]);
+  fModelTotM2->Add( fModelFrameCoM2,    fParameters[6]);
+  fModelTotM2->Add( fModelTShieldCoM2,  fParameters[6]);
   fModelTotM2->Add( fModel50mKCoM2,     fParameters[6]);
-  // fModelTotM2->Add( fModel600mKCoM2,    fParameters[6]);
+  fModelTotM2->Add( fModel600mKCoM2,    fParameters[6]);
   fModelTotM2->Add( fModelIVCCoM2,      fParameters[7]);
   fModelTotM2->Add( fModelOVCCoM2,      fParameters[7]);  
 

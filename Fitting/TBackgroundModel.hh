@@ -15,7 +15,7 @@ public:
 	TBackgroundModel(double fFitMin, double fFitMax);
 	virtual ~TBackgroundModel();
 
-	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2);
+	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid);
   
 	double GetChiSquare();
 
@@ -315,6 +315,9 @@ private:
 
 	TH1D			*hResidualDistM1;
 	TH1D			*hResidualDistM2;
+
+	TH1D			*hResidualGausM1;
+	TH1D			*hResidualGausM2;
 
 	// Smearing
 	TRandom3		*fRandomGenerator;	
