@@ -33,7 +33,7 @@ public:
 
 	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult);
 
-	void NormalizePDF(TH1D *h1, TChain *hChain, int minE, int maxE);
+	void NormalizePDF(TH1D *h1, int minE, int maxE);
 
 	void PrintParameters();
 
@@ -136,6 +136,7 @@ private:
 	TChain			*outTreeOVCCoM1;
 
 	TChain			*outTreeNDBDM1;
+	TChain			*outTree2NDBDM1;
 	TChain			*outTreeBiM1;
 
 
@@ -184,6 +185,7 @@ private:
 	TChain			*outTreeOVCCoM2;
 
 	TChain			*outTreeNDBDM2;
+	TChain			*outTree2NDBDM2;	
 	TChain			*outTreeBiM2;
 
 
@@ -195,8 +197,10 @@ private:
 	TH1D			*fModelTotCoM1;
 
 	TH1D			*fModelTotNDBDM1;
+	TH1D			*fModelTot2NDBDM1;
 	TH1D			*fModelTotBiM1;
 	TH1D			*fModelNDBDM1;
+	TH1D			*fModel2NDBDM1;
 	TH1D			*fModelBiM1;
 
 	TH1D			*fModelFrameThS01M1;
@@ -252,8 +256,10 @@ private:
 	TH1D			*fModelTotCoM2;
 
 	TH1D			*fModelTotNDBDM2;
+	TH1D			*fModelTot2NDBDM2;
 	TH1D			*fModelTotBiM2;
 	TH1D			*fModelNDBDM2;
+	TH1D			*fModel2NDBDM2;
 	TH1D			*fModelBiM2;
 
 	TH1D			*fModelFrameThS01M2;
