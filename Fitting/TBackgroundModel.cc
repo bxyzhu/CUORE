@@ -287,41 +287,79 @@ TBackgroundModel::~TBackgroundModel()
 	delete	fDataHistoM2;
 	delete	fToyData;
 
-	delete 	fModelFrameTh;
-	delete	fModelTShieldTh;
-	delete	fModel50mKTh;
-	delete	fModel600mKTh;
-	delete 	fModelIVCTh;
-	delete	fModelOVCTh;
+	delete 	fModelFrameThM1;
+	delete	fModelTShieldThM1;
+	delete	fModel50mKThM1;
+	delete	fModel600mKThM1;
+	delete 	fModelIVCThM1;
+	delete	fModelOVCThM1;
 
-	delete	fModelFrameRa
-	delete 	fModelTShieldRa;
-	delete	fModel50mKRa;
-	delete	fModel600mKRa;
-	delete 	fModelIVCRa;
-	delete	fModelOVCRa;
+  delete  fModelFrameThM2;
+  delete  fModelTShieldThM2;
+  delete  fModel50mKThM2;
+  delete  fModel600mKThM2;
+  delete  fModelIVCThM2;
+  delete  fModelOVCThM2;
 
-	delete	fModelFrameK;
-	delete 	fModelTShieldK;
-	delete	fModel50mKK;
-	delete	fModel600mKK;
-	delete 	fModelIVCK;
-	delete	fModelOVCK;
 
-	delete	fModelFrameCo;
-	delete 	fModelTShieldCo;
-	delete	fModel50mKCo;
-	delete	fModel600mKCo;
-	delete 	fModelIVCCo;
-	delete	fModelOVCCo;
+	delete	fModelFrameRaM1;
+	delete 	fModelTShieldRaM1;
+	delete	fModel50mKRaM1;
+	delete	fModel600mKRaM1;
+	delete 	fModelIVCRaM1;
+	delete	fModelOVCRaM1;
 
-	delete 	fModelTotTh;
-	delete	fModelTotRa;
-	delete	fModelTotK;
-	delete	fModelTotCo;
-  delete  fModelTotBi;
-  delete  fModelTotNDBD;
-  delete  fModelTot2NDBD;
+  delete  fModelFrameRaM2;
+  delete  fModelTShieldRaM2;
+  delete  fModel50mKRaM2;
+  delete  fModel600mKRaM2;
+  delete  fModelIVCRaM2;
+  delete  fModelOVCRaM2;
+
+	delete	fModelFrameKM1;
+	delete 	fModelTShieldKM1;
+	delete	fModel50mKKM1;
+	delete	fModel600mKKM1;
+	delete 	fModelIVCKM1;
+	delete	fModelOVCKM1;
+
+  delete  fModelFrameKM2;
+  delete  fModelTShieldKM2;
+  delete  fModel50mKKM2;
+  delete  fModel600mKKM2;
+  delete  fModelIVCKM2;
+  delete  fModelOVCKM2;
+
+	delete	fModelFrameCoM1;
+	delete 	fModelTShieldCoM1;
+	delete	fModel50mKCoM1;
+	delete	fModel600mKCoM1;
+	delete 	fModelIVCCoM1;
+	delete	fModelOVCCoM1;
+
+  delete  fModelFrameCoM2;
+  delete  fModelTShieldCoM2;
+  delete  fModel50mKCoM2;
+  delete  fModel600mKCoM2;
+  delete  fModelIVCCoM2;
+  delete  fModelOVCCoM2;
+
+	delete 	fModelTotThM1;
+	delete	fModelTotRaM1;
+	delete	fModelTotKM1;
+	delete	fModelTotCoM1;
+  delete  fModelTotBiM1;
+  delete  fModelTotNDBDM1;
+  delete  fModelTot2NDBDM1;
+
+  delete  fModelTotThM2;
+  delete  fModelTotRaM2;
+  delete  fModelTotKM2;
+  delete  fModelTotCoM2;
+  delete  fModelTotBiM2;
+  delete  fModelTotNDBDM2;
+  delete  fModelTot2NDBDM2;
+
 }
 
 
@@ -1642,107 +1680,53 @@ void TBackgroundModel::Initialize()
 
 
 	// Normalize all MC histograms
-  // Fixing normalization of NDBD from 2000 to 2650
-  // M1
-	NormalizePDF(fModelFrameThM1, outTreeFrameThM1, 	50, 2700);
-	NormalizePDF(fModelTShieldThM1, outTreeTShieldThM1,	50, 2700);
-	NormalizePDF(fModel50mKThM1, outTree50mKThM1,		50, 2700);
-	NormalizePDF(fModel600mKThM1, outTree600mKThM1,		50, 2700);
-	NormalizePDF(fModelIVCThM1, outTreeIVCThM1,			50, 2700);
-	NormalizePDF(fModelOVCThM1, outTreeOVCThM1,			50, 2700);
+	NormalizePDFPair(fModelFrameThM1,	fModelFrameThM2,      50, 2700);
+	NormalizePDFPair(fModelTShieldThM1, fModelTShieldThM2,  50, 2700);
+	NormalizePDFPair(fModel50mKThM1, fModel50mKThM2,        50, 2700);
+	NormalizePDFPair(fModel600mKThM1, fModel600mKThM2, 	   	50, 2700);
+	NormalizePDFPair(fModelIVCThM1, fModelIVCThM2,		      50, 2700);
+	NormalizePDFPair(fModelOVCThM1, fModelOVCThM2,		     	50, 2700);
 
-	NormalizePDF(fModelFrameRaM1,  outTreeFrameRaM1,	50, 2700);
-	NormalizePDF(fModelTShieldRaM1, outTreeTShieldRaM1,	50, 2700);	
-	NormalizePDF(fModel50mKRaM1, outTree50mKRaM1,		50, 2700);
-	NormalizePDF(fModel600mKRaM1, outTree600mKRaM1,		50, 2700);
-	NormalizePDF(fModelIVCRaM1, outTreeIVCRaM1,			50, 2700);
-	NormalizePDF(fModelOVCRaM1, outTreeOVCRaM1,			50, 2700);
+	NormalizePDFPair(fModelFrameRaM1,  fModelFrameRaM2,    	50, 2700);
+	NormalizePDFPair(fModelTShieldRaM1, fModelTShieldRaM2,	50, 2700);	
+	NormalizePDFPair(fModel50mKRaM1, fModel50mKRaM2,	    	50, 2700);
+	NormalizePDFPair(fModel600mKRaM1, fModel600mKRaM2,	  	50, 2700);
+	NormalizePDFPair(fModelIVCRaM1, fModelIVCRaM1,		     	50, 2700);
+	NormalizePDFPair(fModelOVCRaM1, fModelOVCRaM2,		     	50, 2700);
 
-	NormalizePDF(fModelFrameKM1, 	outTreeFrameKM1,		50, 2700);
-	NormalizePDF(fModelTShieldKM1, outTreeTShieldKM1,	50, 2700);	
-	NormalizePDF(fModel50mKKM1, outTree50mKKM1,			50, 2700);
-	NormalizePDF(fModel600mKKM1, outTree600mKKM1,		50, 2700);
-	NormalizePDF(fModelIVCKM1, outTreeIVCKM1,			50, 2700);
-	NormalizePDF(fModelOVCKM1, outTreeOVCKM1,			50, 2700);
+	NormalizePDFPair(fModelFrameKM1, 	fModelFrameKM2,	     	50, 2700);
+	NormalizePDFPair(fModelTShieldKM1, fModelTShieldKM2,   	50, 2700);	
+	NormalizePDFPair(fModel50mKKM1, fModel50mKKM2,		     	50, 2700);
+	NormalizePDFPair(fModel600mKKM1, fModel600mKKM2,	    	50, 2700);
+	NormalizePDFPair(fModelIVCKM1, fModelIVCKM2,		       	50, 2700);
+	NormalizePDFPair(fModelOVCKM1, fModelOVCKM2,		       	50, 2700);
 
-	NormalizePDF(fModelFrameCoM1, outTreeFrameCoM1,		50, 2700);
-	NormalizePDF(fModelTShieldCoM1, outTreeTShieldCoM1,	50, 2700);	
-	NormalizePDF(fModel50mKCoM1, outTree50mKCoM1,		50, 2700);
-	NormalizePDF(fModel600mKCoM1, outTree600mKCoM1,		50, 2700);
-	NormalizePDF(fModelIVCCoM1, outTreeIVCCoM1,			50, 2700);
-	NormalizePDF(fModelOVCCoM1, outTreeOVCCoM1,			50, 2700);
+	NormalizePDFPair(fModelFrameCoM1, fModelFrameCoM2,   		50, 2700);
+	NormalizePDFPair(fModelTShieldCoM1, fModelTShieldCoM2,	50, 2700);	
+	NormalizePDFPair(fModel50mKCoM1, fModel50mKCoM2,	    	50, 2700);
+	NormalizePDFPair(fModel600mKCoM1, fModel600mKCoM2,   		50, 2700);
+	NormalizePDFPair(fModelIVCCoM1, fModelIVCCoM2,		   	50, 2700);
+	NormalizePDFPair(fModelOVCCoM1, fModelOVCCoM2,		   	50, 2700);
 
-  NormalizePDF(fModelNDBDM1, outTreeNDBDM1,     50, 2700);
-  NormalizePDF(fModel2NDBDM1, outTree2NDBDM1,   50, 2700);
-  NormalizePDF(fModelBiM1, outTreeBiM1,         50, 2700);
+  NormalizePDFPair(fModelNDBDM1, fModelNDBDM2,     50, 2700);
+  NormalizePDFPair(fModel2NDBDM1, fModel2NDBDM2,   50, 2700);
+  NormalizePDFPair(fModelBiM1, fModelBiM2,         50, 2700);
 
 
-  NormalizePDF(fModelFrameThS01M1,   outTreeFrameThS01M1, 50, 2700);
-  NormalizePDF(fModelFrameThS1M1,    outTreeFrameThS1M1, 50, 2700);
-  NormalizePDF(fModelFrameThS10M1,   outTreeFrameThS10M1, 50, 2700);
-  NormalizePDF(fModelFrameThS100M1,  outTreeFrameThS100M1, 50, 2700);
+  NormalizePDFPair(fModelFrameThS01M1,   fModelFrameThS01M2,   50, 2700);
+  NormalizePDFPair(fModelFrameThS1M1,    fModelFrameThS1M2,    50, 2700);
+  NormalizePDFPair(fModelFrameThS10M1,   fModelFrameThS10M2,   50, 2700);
+  NormalizePDFPair(fModelFrameThS100M1,  fModelFrameThS100M2,  50, 2700);
 
-  NormalizePDF(fModelFrameRaS01M1,   outTreeFrameRaS01M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS1M1,    outTreeFrameRaS1M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS10M1,   outTreeFrameRaS10M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS100M1,  outTreeFrameRaS100M1, 50, 2700);
+  NormalizePDFPair(fModelFrameRaS01M1,   fModelFrameRaS01M2,   50, 2700);
+  NormalizePDFPair(fModelFrameRaS1M1,    fModelFrameRaS1M2,    50, 2700);
+  NormalizePDFPair(fModelFrameRaS10M1,   fModelFrameRaS10M2,   50, 2700);
+  NormalizePDFPair(fModelFrameRaS100M1,  fModelFrameRaS100M2,  50, 2700);
 
-  NormalizePDF(fModelTShieldThS01M1,   outTreeTShieldThS01M1, 50, 2700);
-  NormalizePDF(fModelTShieldThS1M1,    outTreeTShieldThS1M1, 50, 2700);
-  NormalizePDF(fModelTShieldThS10M1,   outTreeTShieldThS10M1, 50, 2700);
-  NormalizePDF(fModelTShieldThS100M1,  outTreeTShieldThS100M1, 50, 2700);
-
-
-  // M2
-  NormalizePDF(fModelFrameThM2, outTreeFrameThM2,   50, 2700);
-  NormalizePDF(fModelTShieldThM2, outTreeTShieldThM2, 50, 2700);
-  NormalizePDF(fModel50mKThM2, outTree50mKThM2,   50, 2700);
-  NormalizePDF(fModel600mKThM2, outTree600mKThM2,   50, 2700);
-  NormalizePDF(fModelIVCThM2, outTreeIVCThM2,     50, 2700);
-  NormalizePDF(fModelOVCThM2, outTreeOVCThM2,     50, 2700);
-
-  NormalizePDF(fModelFrameRaM2,  outTreeFrameRaM2,  50, 2700);
-  NormalizePDF(fModelTShieldRaM2, outTreeTShieldRaM2, 50, 2700);  
-  NormalizePDF(fModel50mKRaM2, outTree50mKRaM2,   50, 2700);
-  NormalizePDF(fModel600mKRaM2, outTree600mKRaM2,   50, 2700);
-  NormalizePDF(fModelIVCRaM2, outTreeIVCRaM2,     50, 2700);
-  NormalizePDF(fModelOVCRaM2, outTreeOVCRaM2,     50, 2700);
-
-  NormalizePDF(fModelFrameKM2,  outTreeFrameKM2,    50, 2700);
-  NormalizePDF(fModelTShieldKM2, outTreeTShieldKM2, 50, 2700);  
-  NormalizePDF(fModel50mKKM2, outTree50mKKM2,     50, 2700);
-  NormalizePDF(fModel600mKKM2, outTree600mKKM2,   50, 2700);
-  NormalizePDF(fModelIVCKM2, outTreeIVCKM2,     50, 2700);
-  NormalizePDF(fModelOVCKM2, outTreeOVCKM2,     50, 2700);
-
-  NormalizePDF(fModelFrameCoM2, outTreeFrameCoM2,   50, 2700);
-  NormalizePDF(fModelTShieldCoM2, outTreeTShieldCoM2, 50, 2700);  
-  NormalizePDF(fModel50mKCoM2, outTree50mKCoM2,   50, 2700);
-  NormalizePDF(fModel600mKCoM2, outTree600mKCoM2,   50, 2700);
-  NormalizePDF(fModelIVCCoM2, outTreeIVCCoM2,     50, 2700);
-  NormalizePDF(fModelOVCCoM2, outTreeOVCCoM2,     50, 2700);
-
-  NormalizePDF(fModelNDBDM2, outTreeNDBDM2,     50, 2700);
-  NormalizePDF(fModel2NDBDM2, outTree2NDBDM2,   50, 2700);
-  NormalizePDF(fModelBiM2, outTreeBiM2,         50, 2700);
-
-
-  NormalizePDF(fModelFrameThS01M2,   outTreeFrameThS01M1, 50, 2700);
-  NormalizePDF(fModelFrameThS1M2,    outTreeFrameThS1M1, 50, 2700);
-  NormalizePDF(fModelFrameThS10M2,   outTreeFrameThS10M1, 50, 2700);
-  NormalizePDF(fModelFrameThS100M2,  outTreeFrameThS100M1, 50, 2700);
-
-  NormalizePDF(fModelFrameRaS01M2,   outTreeFrameRaS01M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS1M2,    outTreeFrameRaS1M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS10M2,   outTreeFrameRaS10M1, 50, 2700);
-  NormalizePDF(fModelFrameRaS100M2,  outTreeFrameRaS100M1, 50, 2700);
-
-  NormalizePDF(fModelTShieldThS01M2,   outTreeTShieldThS01M2, 50, 2700);
-  NormalizePDF(fModelTShieldThS1M2,    outTreeTShieldThS1M2, 50, 2700);
-  NormalizePDF(fModelTShieldThS10M2,   outTreeTShieldThS10M2, 50, 2700);
-  NormalizePDF(fModelTShieldThS100M2,  outTreeTShieldThS100M2, 50, 2700);
-
-
+  NormalizePDFPair(fModelTShieldThS01M1,   fModelTShieldThS01M2,  50, 2700);
+  NormalizePDFPair(fModelTShieldThS1M1,    fModelTShieldThS1M2,   50, 2700);
+  NormalizePDFPair(fModelTShieldThS10M1,   fModelTShieldThS10M2,  50, 2700);
+  NormalizePDFPair(fModelTShieldThS100M1,  fModelTShieldThS100M2, 50, 2700);
 
 
 	cout << "Normalized MC PDFs" << endl;

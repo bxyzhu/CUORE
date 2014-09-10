@@ -35,6 +35,8 @@ public:
 
 	void NormalizePDF(TH1D *h1, int minE, int maxE);
 
+	void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE);
+
 	void PrintParameters();
 
 	void ReadMC();
