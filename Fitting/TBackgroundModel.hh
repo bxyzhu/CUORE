@@ -322,6 +322,7 @@ private:
 	// Smearing
 	TRandom3		*fRandomGenerator;	
 	TF1				*gaus;
+	TF1 			*gaus2;
 
 	std::string		dDataDir;
 	bool			bToyFit;

@@ -233,6 +233,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   // Modeling
   gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
+  gaus2 = new TF1("gaus2","gaus(0)", dMinEnergy, dMaxEnergy);
 
 
   // Set Initial Parameters/Errors to 0
@@ -422,25 +423,26 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "Close Th",  3000., 10.0, 0., 100000);
+   // minuit.DefineParameter(0, "Close Th",  7900., 10.0, 0., 100000);
+   minuit.DefineParameter(0, "Close Th",  100., 1.0, 0., 100000);
    // minuit.DefineParameter(1, "Far Th",	 	100., 50.0, 0., 100000);
-   minuit.DefineParameter(1, "Far Th",    45000., 10.0, 0., 100000);
-   minuit.DefineParameter(2, "Close Ra",  600., 10.0, 0., 80000);   
+   minuit.DefineParameter(1, "Far Th",    78000., 1.0, 0., 100000);
+   minuit.DefineParameter(2, "Close Ra",  1000., 1.0, 0., 80000);   
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
-   minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
-   // minuit.DefineParameter(3, "Far Ra",    100., 100.0, 0., 80000);
+   // minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
+   minuit.DefineParameter(3, "Far Ra",    0., 10.0, 0., 80000);
    // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   minuit.DefineParameter(4, "Close K",   100., 10.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
    // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K", 		38000., 100.0, 0., 500000);
-   minuit.DefineParameter(6, "Close Co", 	100., 100.0, 0., 80000); 
-   minuit.DefineParameter(7, "Far Co",    11000, 100.0, 0., 80000);  
+   minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
+   minuit.DefineParameter(6, "Close Co", 	30000., 10.0, 0., 80000); 
+   minuit.DefineParameter(7, "Far Co",    11000, 10.0, 0., 500000);  
    // minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",       65., 10.0, 0., 1000);     
-   minuit.DefineParameter(10, "Lead Bi",	 	6900., 100.0, 0., 100000);  
+   minuit.DefineParameter(9, "NDBD",       77., 10.0, 0., 1000);     
+   minuit.DefineParameter(10, "Lead Bi",	 	7300., 10.0, 0., 100000);  
    // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
-   minuit.DefineParameter(11, "2NDBD",    0., 100.0, 0., 100000);  
+   minuit.DefineParameter(11, "2NDBD",    0., 10.0, 0., 100000);  
 
 
 /*
@@ -508,12 +510,12 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
     minuit.FixParameter(8); // Resolution
-   // minuit.FixParameter(9); // NDBD
+   minuit.FixParameter(9); // NDBD
    // minuit.FixParameter(10); // Bi207
    minuit.FixParameter(11); // 2NDBD
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 10;
+  int dNumParameters = 9;
 
 
 
@@ -1787,7 +1789,7 @@ void TBackgroundModel::LoadData()
 TChain *TBackgroundModel::LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult)
 {
     TChain *outTree = new TChain("outTree");
-    outTree->Add(Form("%s%s-%s-%s-M%d-r0.0500.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
+    outTree->Add(Form("%s%s-%s-%s-M%d-r0.0100.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
 
     return outTree;
 }
@@ -1896,12 +1898,13 @@ void TBackgroundModel::SetParameters(int index, double value)
 
 
 // For custom Smearing with resolution, currently constant resolution 
-TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution)
+TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, double resolution2)
 {
 	// Reset previously Modeled histogram
 	hSMC->Reset();
 
-	double dArea;
+	double dNorm;
+  double dNorm2;
 	double dSmearedValue;
 
 	for(int i = 0; i<dNBins; i++)
@@ -1909,10 +1912,12 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution)
 		for(int j = 0; j<dNBins; j++)
 		{
 			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-			dArea = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution);
+			dNorm = (853.3/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+      dNorm2 = (362.5/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution2);
 
-			// Set parameters of gaussian ... resolution floating in fit
-			gaus->SetParameters(dArea, hMC->GetBinCenter(j), resolution);
+			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+      gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, resolution2);
 
 			// Smeared contribution from gaussian centered at bin j for bin i 
 			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
