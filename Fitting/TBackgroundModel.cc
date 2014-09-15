@@ -1784,11 +1784,12 @@ void TBackgroundModel::LoadData()
 }
 
 
-// Loads MC files into Trees
+// Loads MC files into Trees... Careful about coincidence timing!
 TChain *TBackgroundModel::LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult)
 {
     TChain *outTree = new TChain("outTree");
-    outTree->Add(Form("%s%s-%s-%s-M%d-r0.0100.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
+    outTree->Add(Form("%s%s-%s-%s-M%d-T50-r0.0425.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
+    // outTree->Add(Form("%s%s-%s-%s-M%d-r0.0100.root", dDir.c_str(), dLocation.c_str(), dSource.c_str(), dSType.c_str(), dMult));
 
     return outTree;
 }
@@ -2100,12 +2101,15 @@ void TBackgroundModel::UpdateModel()
 
 void TBackgroundModel::TestSmear()
 {
+  gStyle->SetOptStat(0);
   // Load up some hisotgrams
-  outTreeFrameThM1    = LoadMC("/Users/brian/macros/MC/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 1);
-  outTreeFrameThM2    = LoadMC("/Users/brian/macros/MC/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 2);
+  outTreeFrameThM1    = LoadMC("/Users/brian/macros/Simulations/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 1);
+  outTreeFrameThM2    = LoadMC("/Users/brian/macros/Simulations/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 2);
 
   outTreeFrameThM1->Project("fModelFrameThM1",      "Ener1", ener_cut);
   outTreeFrameThM2->Project("fModelFrameThM2",      "Ener1", ener_cut);
+
+  cout << "Loaded Test Histograms" << endl;
 
   NormalizePDFPair(fModelFrameThM1, fModelFrameThM2, 50, 2700);
 
@@ -2129,6 +2133,8 @@ void TBackgroundModel::TestSmear()
   TCanvas *ctest1 = new TCanvas("ctest1", "ctest1", 1200, 800);
   ctest1->SetLogy();
   fSmearFrameThM1->SetLineColor(1);
+  fSmearFrameThM1->GetXaxis()->SetRange(0, 2700/dBinSize);
+  fSmearFrameThM1->SetMaximum(10000);
   fSmearFrameThM1->Draw("SAME");
   fSmearFrameThOldM1->SetLineColor(2);
   fSmearFrameThOldM1->Draw("SAME");
@@ -2142,6 +2148,8 @@ void TBackgroundModel::TestSmear()
   TCanvas *ctest2 = new TCanvas("ctest2", "ctest2", 1200, 800);
   ctest2->SetLogy();
   fSmearFrameThM2->SetLineColor(1);
+  fSmearFrameThM2->GetXaxis()->SetRange(0, 2700/dBinSize);  
+  fSmearFrameThM2->SetMaximum(10000);
   fSmearFrameThM2->Draw("SAME");
   fSmearFrameThOldM2->SetLineColor(2);
   fSmearFrameThOldM2->Draw("SAME");
