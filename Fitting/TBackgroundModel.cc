@@ -108,7 +108,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
 
 
-
   // Model histograms M1
   fModelFrameThS01M1   = new TH1D("fModelFrameThS01M1",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
   fModelFrameThS1M1    = new TH1D("fModelFrameThS1M1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
@@ -144,7 +143,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModel50mKKM1      = new TH1D("fModel50mKKM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
   fModel600mKKM1     = new TH1D("fModel600mKKM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   fModelIVCKM1       = new TH1D("fModelIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCKM1       = new TH1D("fModelOVCKM1",   "OVC",        dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCKM1       = new TH1D("fModelOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fModelFrameCoM1    = new TH1D("fModelFrameCoM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTShieldCoM1  = new TH1D("fModelTShieldCoM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -192,7 +191,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModel50mKKM2      = new TH1D("fModel50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
   fModel600mKKM2     = new TH1D("fModel600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   fModelIVCKM2       = new TH1D("fModelIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCKM2       = new TH1D("fModelOVCKM2",   "OVC",        dNBins, dMinEnergy, dMaxEnergy);
+  fModelOVCKM2       = new TH1D("fModelOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fModelFrameCoM2    = new TH1D("fModelFrameCoM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fModelTShieldCoM2  = new TH1D("fModelTShieldCoM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -227,7 +226,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   fModelTotNDBDM2  = new TH1D("fModelTotNDBDM2",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTot2NDBDM2 = new TH1D("fModelTot2NDBDM2", "Total 2NDBD",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotBiM2    = new TH1D("fModelTotBiM2",    "Total Bi207",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotBiM2    = new TH1D("fModelTotBiM2",    "Total Bi207",  dNBins, dMinEnergy, dMaxEnergy);
 
 
 
@@ -509,7 +508,7 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
-    minuit.FixParameter(8); // Resolution
+   minuit.FixParameter(8); // Resolution
    minuit.FixParameter(9); // NDBD
    // minuit.FixParameter(10); // Bi207
    minuit.FixParameter(11); // 2NDBD
@@ -623,7 +622,7 @@ bool TBackgroundModel::DoTheFit()
 
   fModelTotNDBDM2->Add(fModelNDBDM2,    fParameters[9]);
   fModelTot2NDBDM2->Add(fModel2NDBDM2,  fParameters[11]);
-  fModelTotBiM2->Add(fModelBiM2,      fParameters[10]);
+  fModelTotBiM2->Add(fModelBiM2,        fParameters[10]);
 
 
 
@@ -1920,7 +1919,7 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, doubl
       gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, resolution2);
 
 			// Smeared contribution from gaussian centered at bin j for bin i 
-			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
+			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
 
 			// Fill bin i with contribution from gaussian centered at bin j
 			hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
@@ -1930,6 +1929,35 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, doubl
 	return hSMC;
 }
 
+// Smearing with single gaussian
+TH1D *TBackgroundModel::SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1)
+{
+  // Reset previously Modeled histogram
+  hSMC->Reset();
+
+  double dNorm;
+  double dSmearedValue;
+
+  for(int i = 0; i<dNBins; i++)
+  {
+    for(int j = 0; j<dNBins; j++)
+    {
+      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+      dNorm = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+
+      // Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+      gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+
+      // Smeared contribution from gaussian centered at bin j for bin i 
+      dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
+
+      // Fill bin i with contribution from gaussian centered at bin j
+      hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
+    }
+  }
+  
+  return hSMC;
+}
 
 
 // Creates/updates the background model
@@ -2069,5 +2097,65 @@ void TBackgroundModel::UpdateModel()
 }
 
 
+
+void TBackgroundModel::TestSmear()
+{
+  // Load up some hisotgrams
+  outTreeFrameThM1    = LoadMC("/Users/brian/macros/MC/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 1);
+  outTreeFrameThM2    = LoadMC("/Users/brian/macros/MC/Bkg/Unsmeared/",  "Frame",  "Th232", "B", 2);
+
+  outTreeFrameThM1->Project("fModelFrameThM1",      "Ener1", ener_cut);
+  outTreeFrameThM2->Project("fModelFrameThM2",      "Ener1", ener_cut);
+
+  NormalizePDFPair(fModelFrameThM1, fModelFrameThM2, 50, 2700);
+
+  double dRes1 = 1.986;
+  double dRes2 = 5.332;
+
+  TH1D *fSmearFrameThM1    = new TH1D("fSmearFrameThM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fSmearFrameThOldM1 = new TH1D("fSmearFrameThOldM1", "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fSmearFrameThM2    = new TH1D("fSmearFrameThM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fSmearFrameThOldM2 = new TH1D("fSmearFrameThOldM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+
+
+  // Adding the 10 micron distribution for now...
+  fSmearFrameThM1 = SmearMC(fModelFrameThM1, fSmearFrameThM1, dRes1 , dRes2);
+  fSmearFrameThM2 = SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes1 , dRes2);
+
+  fSmearFrameThOldM1 = SmearMCOld(fModelFrameThM1, fSmearFrameThOldM1, dRes1);
+  fSmearFrameThOldM2 = SmearMCOld(fModelFrameThM2, fSmearFrameThOldM2, dRes1);
+
+  TCanvas *ctest1 = new TCanvas("ctest1", "ctest1", 1200, 800);
+  ctest1->SetLogy();
+  fSmearFrameThM1->SetLineColor(1);
+  fSmearFrameThM1->Draw("SAME");
+  fSmearFrameThOldM1->SetLineColor(2);
+  fSmearFrameThOldM1->Draw("SAME");
+
+  TLegend *leg1 = new TLegend(0.8,0.8,0.97,0.97);
+  leg1->AddEntry(fSmearFrameThM1, "Double Gaussian", "l");
+  leg1->AddEntry(fSmearFrameThOldM1, "Single Gaussian", "l");
+  leg1->Draw();
+
+
+  TCanvas *ctest2 = new TCanvas("ctest2", "ctest2", 1200, 800);
+  ctest2->SetLogy();
+  fSmearFrameThM2->SetLineColor(1);
+  fSmearFrameThM2->Draw("SAME");
+  fSmearFrameThOldM2->SetLineColor(2);
+  fSmearFrameThOldM2->Draw("SAME");
+
+  TLegend *leg2 = new TLegend(0.8,0.8,0.97,0.97);
+  leg2->AddEntry(fSmearFrameThM2, "Double Gaussian", "l");
+  leg2->AddEntry(fSmearFrameThOldM2, "Single Gaussian", "l");
+  leg2->Draw();
+
+
+
+
+
+
+}
 
 

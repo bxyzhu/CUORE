@@ -43,10 +43,10 @@ public:
 
 	void SetParameters(int index, double value);
 
-	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution);
+	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, double resolution2);
 
-	TH1D *SmearChannel(TChain *fChain, TH1D *fMC, TH1D *fSMC, int channel, double resolution);
-
+	TH1D *SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1);
+	
 	void TestSmear();
 
 	void UpdateModel();
