@@ -324,6 +324,115 @@ private:
 	TF1				*gaus;
 	TF1 			*gaus2;
 
+
+
+	// Smeared PDFs M1
+	TH1D			*fSmearDummyM1;
+
+	TH1D			*fSmearNDBDM1;
+	TH1D			*fSmear2NDBDM1;
+	TH1D			*fSmearBiM1;
+
+	TH1D			*fSmearFrameThS01M1;
+	TH1D			*fSmearFrameThS1M1;
+	TH1D			*fSmearFrameThS10M1;
+	TH1D			*fSmearFrameThS100M1;
+
+	TH1D			*fSmearFrameRaS01M1;
+	TH1D			*fSmearFrameRaS1M1;
+	TH1D			*fSmearFrameRaS10M1;
+	TH1D			*fSmearFrameRaS100M1;
+
+	TH1D			*fSmearTShieldThS01M1;
+	TH1D			*fSmearTShieldThS1M1;
+	TH1D			*fSmearTShieldThS10M1;
+	TH1D			*fSmearTShieldThS100M1;
+
+
+	TH1D			*fSmearFrameThM1;
+	TH1D			*fSmearTShieldThM1;
+	TH1D			*fSmear50mKThM1;
+	TH1D			*fSmear600mKThM1;	
+	TH1D			*fSmearIVCThM1;
+	TH1D			*fSmearOVCThM1;
+
+	TH1D			*fSmearFrameRaM1;
+	TH1D			*fSmearTShieldRaM1;
+	TH1D			*fSmear50mKRaM1;
+	TH1D			*fSmear600mKRaM1;
+	TH1D			*fSmearIVCRaM1;
+	TH1D			*fSmearOVCRaM1;
+
+	TH1D			*fSmearFrameKM1;
+	TH1D			*fSmearTShieldKM1;
+	TH1D			*fSmear50mKKM1;
+	TH1D			*fSmear600mKKM1;
+	TH1D			*fSmearIVCKM1;
+	TH1D			*fSmearOVCKM1;
+
+
+	TH1D			*fSmearFrameCoM1;
+	TH1D			*fSmearTShieldCoM1;
+	TH1D			*fSmear50mKCoM1;
+	TH1D			*fSmear600mKCoM1;
+	TH1D			*fSmearIVCCoM1;
+	TH1D			*fSmearOVCCoM1;
+
+	// Smeared PDFs M2
+	TH1D			*fSmearDummyM2;
+
+	TH1D			*fSmearNDBDM2;
+	TH1D			*fSmear2NDBDM2;
+	TH1D			*fSmearBiM2;
+
+	TH1D			*fSmearFrameThS01M2;
+	TH1D			*fSmearFrameThS1M2;
+	TH1D			*fSmearFrameThS10M2;
+	TH1D			*fSmearFrameThS100M2;
+
+	TH1D			*fSmearFrameRaS01M2;
+	TH1D			*fSmearFrameRaS1M2;
+	TH1D			*fSmearFrameRaS10M2;
+	TH1D			*fSmearFrameRaS100M2;
+
+	TH1D			*fSmearTShieldThS01M2;
+	TH1D			*fSmearTShieldThS1M2;
+	TH1D			*fSmearTShieldThS10M2;
+	TH1D			*fSmearTShieldThS100M2;
+
+
+	TH1D			*fSmearFrameThM2;
+	TH1D			*fSmearTShieldThM2;
+	TH1D			*fSmear50mKThM2;
+	TH1D			*fSmear600mKThM2;	
+	TH1D			*fSmearIVCThM2;
+	TH1D			*fSmearOVCThM2;
+
+	TH1D			*fSmearFrameRaM2;
+	TH1D			*fSmearTShieldRaM2;
+	TH1D			*fSmear50mKRaM2;
+	TH1D			*fSmear600mKRaM2;
+	TH1D			*fSmearIVCRaM2;
+	TH1D			*fSmearOVCRaM2;
+
+	TH1D			*fSmearFrameKM2;
+	TH1D			*fSmearTShieldKM2;
+	TH1D			*fSmear50mKKM2;
+	TH1D			*fSmear600mKKM2;
+	TH1D			*fSmearIVCKM2;
+	TH1D			*fSmearOVCKM2;
+
+
+	TH1D			*fSmearFrameCoM2;
+	TH1D			*fSmearTShieldCoM2;
+	TH1D			*fSmear50mKCoM2;
+	TH1D			*fSmear600mKCoM2;
+	TH1D			*fSmearIVCCoM2;
+	TH1D			*fSmearOVCCoM2;
+
+
+
+
 	std::string		dDataDir;
 	bool			bToyFit;
 	bool			bFixedRes;

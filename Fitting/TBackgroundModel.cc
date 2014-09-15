@@ -235,6 +235,110 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   gaus2 = new TF1("gaus2","gaus(0)", dMinEnergy, dMaxEnergy);
 
 
+
+  // Smeared Histograms M1
+  fSmearDummyM1      = new TH1D("fSmearDummyM1",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameThS01M1   = new TH1D("fSmearFrameThS01M1",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS1M1    = new TH1D("fSmearFrameThS1M1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS10M1   = new TH1D("fSmearFrameThS10M1",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS100M1  = new TH1D("fSmearFrameThS100M1",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameRaS01M1   = new TH1D("fSmearFrameRaS01M1",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS1M1    = new TH1D("fSmearFrameRaS1M1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS10M1   = new TH1D("fSmearFrameRaS10M1",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS100M1  = new TH1D("fSmearFrameRaS100M1",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearTShieldThS01M1   = new TH1D("fSmearTShieldThS01M1",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS1M1    = new TH1D("fSmearTShieldThS1M1",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS10M1   = new TH1D("fSmearTShieldThS10M1",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS100M1  = new TH1D("fSmearTShieldThS100M1",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameThM1    = new TH1D("fSmearFrameThM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThM1  = new TH1D("fSmearTShieldThM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKThM1     = new TH1D("fSmear50mKThM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKThM1    = new TH1D("fSmear600mKThM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCThM1      = new TH1D("fSmearIVCThM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCThM1      = new TH1D("fSmearOVCThM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameRaM1    = new TH1D("fSmearFrameRaM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldRaM1  = new TH1D("fSmearTShieldRaM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
+  fSmear50mKRaM1     = new TH1D("fSmear50mKRaM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKRaM1    = new TH1D("fSmear600mKRaM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCRaM1      = new TH1D("fSmearIVCRaM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCRaM1      = new TH1D("fSmearOVCRaM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameKM1     = new TH1D("fSmearFrameKM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldKM1   = new TH1D("fSmearTShieldKM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKKM1      = new TH1D("fSmear50mKKM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKKM1     = new TH1D("fSmear600mKKM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCKM1       = new TH1D("fSmearIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCKM1       = new TH1D("fSmearOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameCoM1    = new TH1D("fSmearFrameCoM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldCoM1  = new TH1D("fSmearTShieldCoM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKCoM1     = new TH1D("fSmear50mKCoM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKCoM1    = new TH1D("fSmear600mKCoM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCCoM1      = new TH1D("fSmearIVCCoM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCCoM1      = new TH1D("fSmearOVCCoM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearNDBDM1       = new TH1D("fSmearNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  fSmear2NDBDM1      = new TH1D("fSmear2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearBiM1         = new TH1D("fSmearBiM1",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
+
+
+  // Smeared Histograms M2
+  fSmearDummyM2      = new TH1D("fSmearDummyM2",  "Dummy smeared",  dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameThS01M2   = new TH1D("fSmearFrameThS01M2",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS1M2    = new TH1D("fSmearFrameThS1M2",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS10M2   = new TH1D("fSmearFrameThS10M2",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameThS100M2  = new TH1D("fSmearFrameThS100M2",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameRaS01M2   = new TH1D("fSmearFrameRaS01M2",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS1M2    = new TH1D("fSmearFrameRaS1M2",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS10M2   = new TH1D("fSmearFrameRaS10M2",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameRaS100M2  = new TH1D("fSmearFrameRaS100M2",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearTShieldThS01M2   = new TH1D("fSmearTShieldThS01M2",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS1M2    = new TH1D("fSmearTShieldThS1M2",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS10M2   = new TH1D("fSmearTShieldThS10M2",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThS100M2  = new TH1D("fSmearTShieldThS100M2",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameThM2    = new TH1D("fSmearFrameThM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldThM2  = new TH1D("fSmearTShieldThM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKThM2     = new TH1D("fSmear50mKThM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKThM2    = new TH1D("fSmear600mKThM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCThM2      = new TH1D("fSmearIVCThM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCThM2      = new TH1D("fSmearOVCThM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameRaM2    = new TH1D("fSmearFrameRaM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldRaM2  = new TH1D("fSmearTShieldRaM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
+  fSmear50mKRaM2     = new TH1D("fSmear50mKRaM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKRaM2    = new TH1D("fSmear600mKRaM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCRaM2      = new TH1D("fSmearIVCRaM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCRaM2      = new TH1D("fSmearOVCRaM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameKM2     = new TH1D("fSmearFrameKM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldKM2   = new TH1D("fSmearTShieldKM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKKM2      = new TH1D("fSmear50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKKM2     = new TH1D("fSmear600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCKM2       = new TH1D("fSmearIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCKM2       = new TH1D("fSmearOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearFrameCoM2    = new TH1D("fSmearFrameCoM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearTShieldCoM2  = new TH1D("fSmearTShieldCoM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmear50mKCoM2     = new TH1D("fSmear50mKCoM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  fSmear600mKCoM2    = new TH1D("fSmear600mKCoM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fSmearIVCCoM2      = new TH1D("fSmearIVCCoM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearOVCCoM2      = new TH1D("fSmearOVCCoM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearNDBDM2       = new TH1D("fSmearNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  fSmear2NDBDM2      = new TH1D("fSmear2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
+  fSmearBiM2         = new TH1D("fSmearBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
+
+
+
   // Set Initial Parameters/Errors to 0
   fParameters[0]  = 0.;
   fParameters[1]  = 0.;
@@ -551,10 +655,10 @@ bool TBackgroundModel::DoTheFit()
 
 
   ///////////////////////////////////////////
-  //// Few Parameters
+  //// Few Parameters - Pre-smeared
   ///////////////////////////////////////////
   /// Add Modeled Histograms after chi-squared minimization
-
+/*
   // Surface....
   // fModelTotThM1->Add(fModelTShieldThS10,   fParameters[0]);
 
@@ -623,7 +727,78 @@ bool TBackgroundModel::DoTheFit()
   fModelTotNDBDM2->Add(fModelNDBDM2,    fParameters[9]);
   fModelTot2NDBDM2->Add(fModel2NDBDM2,  fParameters[11]);
   fModelTotBiM2->Add(fModelBiM2,        fParameters[10]);
+*/
 
+
+  ///////////////////////////////////////////
+  //// Few Parameters - no smear
+  ///////////////////////////////////////////
+  /// Add Smeared Histograms after chi-squared minimization
+  // M1 Parameters
+  fModelTotThM1->Add(fSmearFrameThM1,   fParameters[0]);
+  fModelTotThM1->Add(fSmearTShieldThM1, fParameters[0]);
+  fModelTotThM1->Add(fSmear50mKThM1,    fParameters[0]);
+  fModelTotThM1->Add(fSmear600mKThM1,   fParameters[0]);
+  fModelTotThM1->Add(fSmearIVCThM1,     fParameters[1]);
+  fModelTotThM1->Add(fSmearOVCThM1,     fParameters[1]);
+
+  fModelTotRaM1->Add(fSmearFrameRaM1,   fParameters[2]);
+  fModelTotRaM1->Add(fSmearTShieldRaM1, fParameters[2]);
+  fModelTotRaM1->Add(fSmear50mKRaM1,    fParameters[2]);
+  fModelTotRaM1->Add(fSmear600mKRaM1,   fParameters[2]);
+  fModelTotRaM1->Add(fSmearIVCRaM1,     fParameters[3]);
+  fModelTotRaM1->Add(fSmearOVCRaM1,     fParameters[3]);
+
+  fModelTotKM1->Add(fSmearFrameKM1,     fParameters[4]);
+  fModelTotKM1->Add(fSmearTShieldKM1,   fParameters[4]);
+  fModelTotKM1->Add(fSmear50mKKM1,      fParameters[4]);
+  fModelTotKM1->Add(fSmear600mKKM1,     fParameters[4]);
+  fModelTotKM1->Add(fSmearIVCKM1,       fParameters[5]);
+  fModelTotKM1->Add(fSmearOVCKM1,       fParameters[5]);
+
+  fModelTotCoM1->Add(fSmearFrameCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fSmearTShieldCoM1, fParameters[6]);
+  fModelTotCoM1->Add(fSmear50mKCoM1,    fParameters[6]);
+  fModelTotCoM1->Add(fSmear600mKCoM1,   fParameters[6]);
+  fModelTotCoM1->Add(fSmearIVCCoM1,     fParameters[7]);
+  fModelTotCoM1->Add(fSmearOVCCoM1,     fParameters[7]);
+
+  fModelTotNDBDM1->Add(fSmearNDBDM1,    fParameters[9]);
+  fModelTot2NDBDM1->Add(fSmear2NDBDM1,  fParameters[11]);
+  fModelTotBiM1->Add(fSmearBiM1,        fParameters[10]);
+
+  // M2 Parameters
+  fModelTotThM2->Add(fSmearFrameThM2,   fParameters[0]);
+  fModelTotThM2->Add(fSmearTShieldThM2, fParameters[0]);
+  fModelTotThM2->Add(fSmear50mKThM2,    fParameters[0]);
+  fModelTotThM2->Add(fSmear600mKThM2,   fParameters[0]);
+  fModelTotThM2->Add(fSmearIVCThM2,     fParameters[1]);
+  fModelTotThM2->Add(fSmearOVCThM2,     fParameters[1]);
+
+  fModelTotRaM2->Add(fSmearFrameRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearTShieldRaM2, fParameters[2]);
+  fModelTotRaM2->Add(fSmear50mKRaM2,    fParameters[2]);
+  fModelTotRaM2->Add(fSmear600mKRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearIVCRaM2,     fParameters[3]);
+  fModelTotRaM2->Add(fSmearOVCRaM2,     fParameters[3]);
+
+  fModelTotKM2->Add(fSmearFrameKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearTShieldKM2,   fParameters[4]);
+  fModelTotKM2->Add(fSmear50mKKM2,      fParameters[4]);
+  fModelTotKM2->Add(fSmear600mKKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearIVCKM2,       fParameters[5]);
+  fModelTotKM2->Add(fSmearOVCKM2,       fParameters[5]);
+
+  fModelTotCoM2->Add(fSmearFrameCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearTShieldCoM2, fParameters[6]);
+  fModelTotCoM2->Add(fSmear50mKCoM2,    fParameters[6]);
+  fModelTotCoM2->Add(fSmear600mKCoM2,   fParameters[6]);
+  fModelTotCoM2->Add(fSmearIVCCoM2,     fParameters[7]);
+  fModelTotCoM2->Add(fSmearOVCCoM2,     fParameters[7]);
+
+  fModelTotNDBDM2->Add(fSmearNDBDM2,    fParameters[9]);
+  fModelTot2NDBDM2->Add(fSmear2NDBDM2,  fParameters[11]);
+  fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
 
 
   ///////////////////////////////////////////
@@ -1369,7 +1544,7 @@ void TBackgroundModel::DrawMC()
 }
 
 
-// Generates Toy Data using MC histograms
+// Generates Toy Data using MC histograms // Needs to be updated
 void TBackgroundModel::GenerateToyData()
 {
 	bToyFit = true;
@@ -1742,6 +1917,89 @@ void TBackgroundModel::Initialize()
 
 	cout << "Normalized MC PDFs" << endl;
 
+    // cout << "Fixed resolution: " << endl;
+    cout << "Smearing histograms" << endl;
+
+    // Sigmas of the two gaussians
+    double dRes1 = 1.986;
+    double dRes2 = 5.332;
+
+    // Adding the 10 micron distribution for now...
+    SmearMC(fModelFrameThS10M1, fSmearFrameThS10M1, dRes1, dRes2);
+    SmearMC(fModelTShieldThS10M1, fSmearTShieldThS10M1, dRes1, dRes2);
+
+    // M1
+    SmearMC(fModelFrameThM1, fSmearFrameThM1, dRes1 , dRes2);
+    SmearMC(fModelTShieldThM1, fSmearTShieldThM1, dRes1, dRes2);  
+    SmearMC(fModel50mKThM1, fSmear50mKThM1, dRes1, dRes2);
+    SmearMC(fModel600mKThM1, fSmear600mKThM1, dRes1, dRes2);
+    SmearMC(fModelIVCThM1, fSmearIVCThM1, dRes1, dRes2);
+    SmearMC(fModelOVCThM1, fSmearOVCThM1, dRes1, dRes2);
+
+    SmearMC(fModelFrameRaM1, fSmearFrameRaM1, dRes1, dRes2);
+    SmearMC(fModelTShieldRaM1, fSmearTShieldRaM1, dRes1, dRes2);  
+    SmearMC(fModel50mKRaM1, fSmear50mKRaM1, dRes1, dRes2);
+    SmearMC(fModel600mKRaM1, fSmear600mKRaM1, dRes1, dRes2);
+    SmearMC(fModelIVCRaM1, fSmearIVCRaM1, dRes1, dRes2);
+    SmearMC(fModelOVCRaM1, fSmearOVCRaM1, dRes1, dRes2);
+
+    SmearMC(fModelFrameKM1, fSmearFrameKM1, dRes1, dRes2);
+    SmearMC(fModelTShieldKM1, fSmearTShieldKM1, dRes1, dRes2);
+    SmearMC(fModel50mKKM1, fSmear50mKKM1, dRes1, dRes2);
+    SmearMC(fModel600mKKM1, fSmear600mKKM1, dRes1, dRes2);
+    SmearMC(fModelIVCKM1, fSmearIVCKM1, dRes1, dRes2);
+    SmearMC(fModelOVCKM1, fSmearOVCKM1, dRes1, dRes2); 
+
+    SmearMC(fModelFrameCoM1, fSmearFrameCoM1, dRes1, dRes2);
+    SmearMC(fModelTShieldCoM1, fSmearTShieldCoM1, dRes1, dRes2);
+    SmearMC(fModel50mKCoM1, fSmear50mKCoM1, dRes1, dRes2);
+    SmearMC(fModel600mKCoM1, fSmear600mKCoM1, dRes1, dRes2);
+    SmearMC(fModelIVCCoM1, fSmearIVCCoM1, dRes1, dRes2);
+    SmearMC(fModelOVCCoM1, fSmearOVCCoM1, dRes1, dRes2);  
+
+    SmearMC(fModelNDBDM1, fSmearNDBDM1, dRes1, dRes2);  
+    SmearMC(fModel2NDBDM1, fSmear2NDBDM1, dRes1, dRes2);  
+    SmearMC(fModelBiM1, fSmearBiM1, dRes1, dRes2);  
+
+
+    // M2
+    SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes1, dRes2);
+    SmearMC(fModelTShieldThM2, fSmearTShieldThM2, dRes1, dRes2);  
+    SmearMC(fModel50mKThM2, fSmear50mKThM2, dRes1, dRes2);
+    SmearMC(fModel600mKThM2, fSmear600mKThM2, dRes1, dRes2);
+    SmearMC(fModelIVCThM2, fSmearIVCThM2, dRes1, dRes2);
+    SmearMC(fModelOVCThM2, fSmearOVCThM2, dRes1, dRes2);
+
+    SmearMC(fModelFrameRaM2, fSmearFrameRaM2, dRes1, dRes2);
+    SmearMC(fModelTShieldRaM2, fSmearTShieldRaM2, dRes1, dRes2);  
+    SmearMC(fModel50mKRaM2, fSmear50mKRaM2, dRes1, dRes2);
+    SmearMC(fModel600mKRaM2, fSmear600mKRaM2, dRes1, dRes2);
+    SmearMC(fModelIVCRaM2, fSmearIVCRaM2, dRes1, dRes2);
+    SmearMC(fModelOVCRaM2, fSmearOVCRaM2, dRes1, dRes2);
+
+    SmearMC(fModelFrameKM2, fSmearFrameKM2, dRes1, dRes2);
+    SmearMC(fModelTShieldKM2, fSmearTShieldKM2, dRes1, dRes2);
+    SmearMC(fModel50mKKM2, fSmear50mKKM2, dRes1, dRes2);
+    SmearMC(fModel600mKKM2, fSmear600mKKM2, dRes1, dRes2);
+    SmearMC(fModelIVCKM2, fSmearIVCKM2, dRes1, dRes2);
+    SmearMC(fModelOVCKM2, fSmearOVCKM2, dRes1, dRes2); 
+
+    SmearMC(fModelFrameCoM2, fSmearFrameCoM2, dRes1, dRes2);
+    SmearMC(fModelTShieldCoM2, fSmearTShieldCoM2, dRes1, dRes2);
+    SmearMC(fModel50mKCoM2, fSmear50mKCoM2, dRes1, dRes2);
+    SmearMC(fModel600mKCoM2, fSmear600mKCoM2, dRes1, dRes2);
+    SmearMC(fModelIVCCoM2, fSmearIVCCoM2, dRes1, dRes2);
+    SmearMC(fModelOVCCoM2, fSmearOVCCoM2, dRes1, dRes2);  
+
+    SmearMC(fModelNDBDM2, fSmearNDBDM2, dRes1, dRes2);  
+    SmearMC(fModel2NDBDM2, fSmear2NDBDM2, dRes1, dRes2);  
+    SmearMC(fModelBiM2, fSmearBiM2, dRes1, dRes2);  
+
+
+    cout << "Finished smearing MC histograms" << endl;
+
+
+
 }
 
 
@@ -1986,10 +2244,10 @@ void TBackgroundModel::UpdateModel()
     cout << "Call #: "<< dNumCalls << endl;
   }
 
-  /////////////////////////////////////
-  //// Few Parameters ////////////////
-  ////////////////////////////////////
-  // fModelTot->Add( fModelTShieldThS10,    fParameters[0]);
+  /////////////////////////////////////////////////
+  //// Few Parameters //////////////// Smeared 
+  ////////////////////////////////////////////////
+  /*
   // M1
   fModelTotM1->Add( fModelFrameThM1,    fParameters[0]);
   fModelTotM1->Add( fModelTShieldThM1,  fParameters[0]);  
@@ -2057,6 +2315,82 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fModelNDBDM2,      fParameters[9]);  
   fModelTotM2->Add( fModel2NDBDM2,     fParameters[11]);  
   fModelTotM2->Add( fModelBiM2,        fParameters[10]);  
+*/
+
+
+
+
+  ///////////////////////////////////////////////////
+  //// Few Parameters //////////////// Unsmeared
+  //////////////////////////////////////////////////
+  // M1
+  fModelTotM1->Add( fSmearFrameThM1,    fParameters[0]);
+  fModelTotM1->Add( fSmearTShieldThM1,  fParameters[0]);  
+  fModelTotM1->Add( fSmear50mKThM1,     fParameters[0]);
+  fModelTotM1->Add( fSmear600mKThM1,    fParameters[0]);
+  fModelTotM1->Add( fSmearIVCThM1,      fParameters[1]);
+  fModelTotM1->Add( fSmearOVCThM1,      fParameters[1]);
+
+  fModelTotM1->Add( fSmearFrameRaM1,    fParameters[2]);
+  fModelTotM1->Add( fSmearTShieldRaM1,  fParameters[2]);  
+  fModelTotM1->Add( fSmear50mKRaM1,     fParameters[2]);
+  fModelTotM1->Add( fSmear600mKRaM1,    fParameters[2]);
+  fModelTotM1->Add( fSmearIVCRaM1,      fParameters[3]);
+  fModelTotM1->Add( fSmearOVCRaM1,      fParameters[3]);
+
+  fModelTotM1->Add( fSmearFrameKM1,    fParameters[4]);
+  fModelTotM1->Add( fSmearTShieldKM1,  fParameters[4]);
+  fModelTotM1->Add( fSmear50mKKM1,     fParameters[4]);
+  fModelTotM1->Add( fSmear600mKKM1,    fParameters[4]);
+  fModelTotM1->Add( fSmearIVCKM1,      fParameters[5]);
+  fModelTotM1->Add( fSmearOVCKM1,      fParameters[5]); 
+
+  fModelTotM1->Add( fSmearFrameCoM1,    fParameters[6]);
+  fModelTotM1->Add( fSmearTShieldCoM1,  fParameters[6]);
+  fModelTotM1->Add( fSmear50mKCoM1,     fParameters[6]);
+  fModelTotM1->Add( fSmear600mKCoM1,    fParameters[6]);
+  fModelTotM1->Add( fSmearIVCCoM1,      fParameters[7]);
+  fModelTotM1->Add( fSmearOVCCoM1,      fParameters[7]);  
+
+  fModelTotM1->Add( fSmearNDBDM1,      fParameters[9]);  
+  fModelTotM1->Add( fSmear2NDBDM1,     fParameters[11]);  
+  fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
+
+
+
+  // M2
+  fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
+  fModelTotM2->Add( fSmearTShieldThM2,  fParameters[0]);  
+  fModelTotM2->Add( fSmear50mKThM2,     fParameters[0]);
+  fModelTotM2->Add( fSmear600mKThM2,    fParameters[0]);
+  fModelTotM2->Add( fSmearIVCThM2,      fParameters[1]);
+  fModelTotM2->Add( fSmearOVCThM2,      fParameters[1]);
+
+  fModelTotM2->Add( fSmearFrameRaM2,    fParameters[2]);
+  fModelTotM2->Add( fSmearTShieldRaM2,  fParameters[2]);  
+  fModelTotM2->Add( fSmear50mKRaM2,     fParameters[2]);
+  fModelTotM2->Add( fSmear600mKRaM2,    fParameters[2]);
+  fModelTotM2->Add( fSmearIVCRaM2,      fParameters[3]);
+  fModelTotM2->Add( fSmearOVCRaM2,      fParameters[3]);
+
+  fModelTotM2->Add( fSmearFrameKM2,    fParameters[4]);
+  fModelTotM2->Add( fSmearTShieldKM2,  fParameters[4]);
+  fModelTotM2->Add( fSmear50mKKM2,     fParameters[4]);
+  fModelTotM2->Add( fSmear600mKKM2,    fParameters[4]);
+  fModelTotM2->Add( fSmearIVCKM2,      fParameters[5]);
+  fModelTotM2->Add( fSmearOVCKM2,      fParameters[5]); 
+
+  fModelTotM2->Add( fSmearFrameCoM2,    fParameters[6]);
+  fModelTotM2->Add( fSmearTShieldCoM2,  fParameters[6]);
+  fModelTotM2->Add( fSmear50mKCoM2,     fParameters[6]);
+  fModelTotM2->Add( fSmear600mKCoM2,    fParameters[6]);
+  fModelTotM2->Add( fSmearIVCCoM2,      fParameters[7]);
+  fModelTotM2->Add( fSmearOVCCoM2,      fParameters[7]);  
+
+  fModelTotM2->Add( fSmearNDBDM2,      fParameters[9]);  
+  fModelTotM2->Add( fSmear2NDBDM2,     fParameters[11]);  
+  fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
+
 
 
   /////////////////////////////////////
