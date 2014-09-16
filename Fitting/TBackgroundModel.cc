@@ -58,12 +58,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
-  dDataDir =  "/Users/brian/macros/Simulations/Bkg/";
+  dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
   dDataIntegral = 0;
   bToyFit = false;
 
   // Bin size (keV)
-  dBinSize = 5;
+  dBinSize = 2;
   // Histogram range
   dMinEnergy = 0.;
   dMaxEnergy = 8000.;
@@ -534,17 +534,17 @@ bool TBackgroundModel::DoTheFit()
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
    // minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
    minuit.DefineParameter(3, "Far Ra",    0., 10.0, 0., 80000);
-   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
-   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   // minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	30000., 10.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 10.0, 0., 500000);  
    // minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
    minuit.DefineParameter(9, "NDBD",       77., 10.0, 0., 1000);     
-   minuit.DefineParameter(10, "Lead Bi",	 	7300., 10.0, 0., 100000);  
-   // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
+   // minuit.DefineParameter(10, "Lead Bi",	 	7300., 10.0, 0., 100000);  
+   minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
    minuit.DefineParameter(11, "2NDBD",    0., 10.0, 0., 100000);  
 
 
@@ -604,21 +604,21 @@ bool TBackgroundModel::DoTheFit()
 
 
    // Fix parameters here
-   // minuit.FixParameter(0); // Close Th (or Surface)
+   // minuit.FixParameter(0); // Close Th
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   // minuit.FixParameter(4); // Close K
-   // minuit.FixParameter(5); // Far K
+   minuit.FixParameter(4); // Close K
+   minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
    minuit.FixParameter(8); // Resolution
    minuit.FixParameter(9); // NDBD
-   // minuit.FixParameter(10); // Bi207
+   minuit.FixParameter(10); // Bi207
    minuit.FixParameter(11); // 2NDBD
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 9;
+  int dNumParameters = 6;
 
 
 
@@ -1918,7 +1918,7 @@ void TBackgroundModel::Initialize()
 	cout << "Normalized MC PDFs" << endl;
 
     // cout << "Fixed resolution: " << endl;
-    cout << "Smearing histograms" << endl;
+    cout << "Smearing M1 histograms" << endl;
 
     // Sigmas of the two gaussians
     double dRes1 = 1.986;
@@ -1961,6 +1961,8 @@ void TBackgroundModel::Initialize()
     SmearMC(fModel2NDBDM1, fSmear2NDBDM1, dRes1, dRes2);  
     SmearMC(fModelBiM1, fSmearBiM1, dRes1, dRes2);  
 
+
+    cout << "Smearing M2 histograms" << endl;
 
     // M2
     SmearMC(fModelFrameThM2, fSmearFrameThM2, dRes1, dRes2);
