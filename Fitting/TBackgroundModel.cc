@@ -61,6 +61,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
   dDataIntegral = 0;
   bToyFit = false;
+  bUnSmeared = false;
 
   // Bin size (keV)
   dBinSize = 2;
@@ -534,10 +535,10 @@ bool TBackgroundModel::DoTheFit()
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
    // minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
    minuit.DefineParameter(3, "Far Ra",    100., 10.0, 0., 80000);
-   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
-   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   // minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	30000., 10.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 10.0, 0., 500000);  
    // minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 50000);  
@@ -608,17 +609,17 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   // minuit.FixParameter(4); // Close K
-   // minuit.FixParameter(5); // Far K
+   minuit.FixParameter(4); // Close K
+   minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
    minuit.FixParameter(8); // Resolution
-   minuit.FixParameter(9); // NDBD
-   // minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(9); // NDBD
+   minuit.FixParameter(10); // Bi207
    minuit.FixParameter(11); // 2NDBD
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 9;
+  int dNumParameters = 7;
 
 
 
@@ -1666,7 +1667,7 @@ void TBackgroundModel::Initialize()
   else
   {
     cout << "Loading Smeared Histograms from file" << endl;
-    fFile = new TFile(Form("Test-%d.root", dBinSize));
+    fFile = new TFile(Form("Test-%dkeV.root", dBinSize));
 
     fSmearFrameThM1   = (TH1D*)fFile->Get("fSmearFrameThM1");
     fSmearTShieldThM1 = (TH1D*)fFile->Get("fSmearTShieldThM1");
