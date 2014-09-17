@@ -29,7 +29,10 @@ public:
 
 	void Initialize();
 
+	// Dumb to have all of these but w/e
 	void LoadData();
+
+	void LoadPDFs();
 
 	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult);
 
@@ -40,6 +43,8 @@ public:
 	void PrintParameters();
 
 	void ReadMC();
+
+	void SaveSmearedData();
 
 	void SetParameters(int index, double value);
 
@@ -436,6 +441,7 @@ private:
 	std::string		dDataDir;
 	bool			bToyFit;
 	bool			bFixedRes;
+	bool			bUnSmeared;
 	
 	int 			dNumCalls;
 	int 			dMult;

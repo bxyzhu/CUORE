@@ -66,7 +66,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dBinSize = 2;
   // Histogram range
   dMinEnergy = 0.;
-  dMaxEnergy = 8000.;
+  dMaxEnergy = 6000.;
 
   if(fFitMin >= fFitMax)
   {
@@ -526,23 +526,23 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using less parameters
    ////////////////////////////////////////////////
-   // minuit.DefineParameter(0, "Close Th",  7900., 10.0, 0., 100000);
-   minuit.DefineParameter(0, "Close Th",  100., 1.0, 0., 100000);
+   minuit.DefineParameter(0, "Close Th",  7600., 10.0, 0., 100000);
+   // minuit.DefineParameter(0, "Close Th",  100., 1.0, 0., 100000);
    // minuit.DefineParameter(1, "Far Th",	 	100., 50.0, 0., 100000);
-   minuit.DefineParameter(1, "Far Th",    78000., 1.0, 0., 100000);
-   minuit.DefineParameter(2, "Close Ra",  1000., 1.0, 0., 80000);   
+   minuit.DefineParameter(1, "Far Th",    22700., 1.0, 0., 100000);
+   minuit.DefineParameter(2, "Close Ra",  36000., 1.0, 0., 80000);   
    // minuit.DefineParameter(2, "Close Ra",  30000., 100.0, 0., 80000);   
    // minuit.DefineParameter(3, "Far Ra",    55000., 10.0, 0., 80000);
-   minuit.DefineParameter(3, "Far Ra",    0., 10.0, 0., 80000);
-   minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
-   // minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
-   minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
-   // minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
+   minuit.DefineParameter(3, "Far Ra",    100., 10.0, 0., 80000);
+   // minuit.DefineParameter(4, "Close K", 	0., 100.0, 0., 500000);
+   minuit.DefineParameter(4, "Close K",   100., 1.0, 0., 500000);
+   // minuit.DefineParameter(5, "Far K",     0., 100.0, 0., 500000);
+   minuit.DefineParameter(5, "Far K", 		30000., 10.0, 0., 500000);
    minuit.DefineParameter(6, "Close Co", 	30000., 10.0, 0., 80000); 
    minuit.DefineParameter(7, "Far Co",    11000, 10.0, 0., 500000);  
    // minuit.DefineParameter(7, "Far Co",	 	0., 100.0, 0., 50000);  
    minuit.DefineParameter(8, "Resolution",	6., 1, 3, 10);  
-   minuit.DefineParameter(9, "NDBD",       77., 10.0, 0., 1000);     
+   minuit.DefineParameter(9, "NDBD",       85.9, 1.0, 0., 500);     
    // minuit.DefineParameter(10, "Lead Bi",	 	7300., 10.0, 0., 100000);  
    minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
    minuit.DefineParameter(11, "2NDBD",    0., 10.0, 0., 100000);  
@@ -608,17 +608,17 @@ bool TBackgroundModel::DoTheFit()
    // minuit.FixParameter(1); // Far Th
    // minuit.FixParameter(2); // Close Ra
    // minuit.FixParameter(3); // Far Ra
-   minuit.FixParameter(4); // Close K
-   minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(4); // Close K
+   // minuit.FixParameter(5); // Far K
    // minuit.FixParameter(6); // Close Co
    // minuit.FixParameter(7); // Far Co
    minuit.FixParameter(8); // Resolution
    minuit.FixParameter(9); // NDBD
-   minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(10); // Bi207
    minuit.FixParameter(11); // 2NDBD
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 6;
+  int dNumParameters = 9;
 
 
 
@@ -1657,39 +1657,156 @@ void TBackgroundModel::Initialize()
 	// Loading background data
 	LoadData();	
 
+  // If using unsmeared
+  if(bUnSmeared)
+  {
+    LoadPDFs();
+  }
+  // If using smeared custom
+  else
+  {
+    cout << "Loading Smeared Histograms from file" << endl;
+    fFile = new TFile(Form("Test-%d.root", dBinSize));
 
+    fSmearFrameThM1   = (TH1D*)fFile->Get("fSmearFrameThM1");
+    fSmearTShieldThM1 = (TH1D*)fFile->Get("fSmearTShieldThM1");
+    fSmear50mKThM1    = (TH1D*)fFile->Get("fSmear50mKThM1");
+    fSmear600mKThM1   = (TH1D*)fFile->Get("fSmear600mKThM1");
+    fSmearIVCThM1     = (TH1D*)fFile->Get("fSmearIVCThM1");
+    fSmearOVCThM1     = (TH1D*)fFile->Get("fSmearOVCThM1");
+
+    fSmearFrameRaM1   = (TH1D*)fFile->Get("fSmearFrameRaM1");
+    fSmearTShieldRaM1 = (TH1D*)fFile->Get("fSmearTShieldRaM1");
+    fSmear50mKRaM1    = (TH1D*)fFile->Get("fSmear50mKRaM1");
+    fSmear600mKRaM1   = (TH1D*)fFile->Get("fSmear600mKRaM1");
+    fSmearIVCRaM1     = (TH1D*)fFile->Get("fSmearIVCRaM1");
+    fSmearOVCRaM1     = (TH1D*)fFile->Get("fSmearOVCRaM1");
+
+    fSmearFrameCoM1   = (TH1D*)fFile->Get("fSmearFrameCoM1");
+    fSmearTShieldCoM1 = (TH1D*)fFile->Get("fSmearTShieldCoM1");
+    fSmear50mKCoM1    = (TH1D*)fFile->Get("fSmear50mKCoM1");
+    fSmear600mKCoM1   = (TH1D*)fFile->Get("fSmear600mKCoM1");
+    fSmearIVCCoM1     = (TH1D*)fFile->Get("fSmearIVCCoM1");
+    fSmearOVCCoM1     = (TH1D*)fFile->Get("fSmearOVCCoM1");    
+
+    fSmearFrameKM1    = (TH1D*)fFile->Get("fSmearFrameKM1");
+    fSmearTShieldKM1  = (TH1D*)fFile->Get("fSmearTShieldKM1");
+    fSmear50mKKM1     = (TH1D*)fFile->Get("fSmear50mKKM1");
+    fSmear600mKKM1    = (TH1D*)fFile->Get("fSmear600mKKM1");
+    fSmearIVCKM1      = (TH1D*)fFile->Get("fSmearIVCKM1");
+    fSmearOVCKM1      = (TH1D*)fFile->Get("fSmearOVCKM1");    
+
+    fSmearNDBDM1      = (TH1D*)fFile->Get("fSmearNDBDM1");
+    fSmearBiM1        = (TH1D*)fFile->Get("fSmearBiM1");
+
+
+    fSmearFrameThM2   = (TH1D*)fFile->Get("fSmearFrameThM2");
+    fSmearTShieldThM2 = (TH1D*)fFile->Get("fSmearTShieldThM2");
+    fSmear50mKThM2    = (TH1D*)fFile->Get("fSmear50mKThM2");
+    fSmear600mKThM2   = (TH1D*)fFile->Get("fSmear600mKThM2");
+    fSmearIVCThM2     = (TH1D*)fFile->Get("fSmearIVCThM2");
+    fSmearOVCThM2     = (TH1D*)fFile->Get("fSmearOVCThM2");
+
+    fSmearFrameRaM2   = (TH1D*)fFile->Get("fSmearFrameRaM2");
+    fSmearTShieldRaM2 = (TH1D*)fFile->Get("fSmearTShieldRaM2");
+    fSmear50mKRaM2    = (TH1D*)fFile->Get("fSmear50mKRaM2");
+    fSmear600mKRaM2   = (TH1D*)fFile->Get("fSmear600mKRaM2");
+    fSmearIVCRaM2     = (TH1D*)fFile->Get("fSmearIVCRaM2");
+    fSmearOVCRaM2     = (TH1D*)fFile->Get("fSmearOVCRaM2");
+
+    fSmearFrameCoM2   = (TH1D*)fFile->Get("fSmearFrameCoM2");
+    fSmearTShieldCoM2 = (TH1D*)fFile->Get("fSmearTShieldCoM2");
+    fSmear50mKCoM2    = (TH1D*)fFile->Get("fSmear50mKCoM2");
+    fSmear600mKCoM2   = (TH1D*)fFile->Get("fSmear600mKCoM2");
+    fSmearIVCCoM2     = (TH1D*)fFile->Get("fSmearIVCCoM2");
+    fSmearOVCCoM2     = (TH1D*)fFile->Get("fSmearOVCCoM2");    
+
+    fSmearFrameKM2    = (TH1D*)fFile->Get("fSmearFrameKM2");
+    fSmearTShieldKM2  = (TH1D*)fFile->Get("fSmearTShieldKM2");
+    fSmear50mKKM2     = (TH1D*)fFile->Get("fSmear50mKKM2");
+    fSmear600mKKM2    = (TH1D*)fFile->Get("fSmear600mKKM2");
+    fSmearIVCKM2      = (TH1D*)fFile->Get("fSmearIVCKM2");
+    fSmearOVCKM2      = (TH1D*)fFile->Get("fSmearOVCKM2");    
+
+    fSmearNDBDM2      = (TH1D*)fFile->Get("fSmearNDBDM2");
+    fSmearBiM2        = (TH1D*)fFile->Get("fSmearBiM2");    
+  }
+
+}
+
+
+// Loads the data
+void TBackgroundModel::LoadData()
+{
+	if(fDataHistoTot == NULL) 
+	{
+		cout << "Data Histograms Not Created" << endl;
+		return;
+	}
+	else
+	{
+		cout << "Data Histograms Created" << endl;
+	}
+
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");	
+  qtree->Project("fDataHistoTot", "Energy", base_cut);
+  qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
+  qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
+
+	cout << "Loaded Data" << endl;
+
+	// Normalizing data (don't!)
+	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
+
+	dDataIntegral = fDataHistoM1->Integral(1, dNBins);
+  int dDataIntegralTot = qtree->GetEntries();
+
+  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
+	cout << "Events in background spectrum (M1): " << dDataIntegral << endl;
+  cout << "Events in background spectrum (M2): " << fDataHistoM2->Integral(1, dNBins) << endl;
+
+  // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
+  fDataHistoM1->Scale(1/(14647393.0 * dSecToYears));
+  fDataHistoM2->Scale(1/(14647393.0 * dSecToYears));  
+
+  cout << "Normalized Data using Livetime of: " << 14647393.0 * dSecToYears << " years" <<endl;
+
+}
+
+void TBackgroundModel::LoadPDFs()
+{
   // Fills and Loads MC data
   // Load M1
-  outTreeFrameThM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Th232", "B", 1);
-  outTreeTShieldThM1 	= LoadMC(dDataDir.c_str(),	"TShield","Th232", "B", 1);
-  outTree50mKThM1 		= LoadMC(dDataDir.c_str(),	"50mK",		"Th232", "B", 1);
-  outTree600mKThM1 		= LoadMC(dDataDir.c_str(),	"600mK", 	"Th232", "B", 1);
-  outTreeIVCThM1 	  	= LoadMC(dDataDir.c_str(),	"IVC", 		"Th232", "B", 1);
-  outTreeOVCThM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Th232", "B", 1);
+  outTreeFrameThM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 1);
+  outTreeTShieldThM1  = LoadMC(dDataDir.c_str(),  "TShield","Th232", "B", 1);
+  outTree50mKThM1     = LoadMC(dDataDir.c_str(),  "50mK",   "Th232", "B", 1);
+  outTree600mKThM1    = LoadMC(dDataDir.c_str(),  "600mK",  "Th232", "B", 1);
+  outTreeIVCThM1      = LoadMC(dDataDir.c_str(),  "IVC",    "Th232", "B", 1);
+  outTreeOVCThM1      = LoadMC(dDataDir.c_str(),  "OVC",    "Th232", "B", 1);
 
-  outTreeFrameRaM1	 	= LoadMC(dDataDir.c_str(),	"Frame", 	"Ra226", "B", 1);
-  outTreeTShieldRaM1 	= LoadMC(dDataDir.c_str(),	"TShield","Ra226", "B", 1);    
-  outTree50mKRaM1	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Ra226", "B", 1);
-  outTree600mKRaM1		= LoadMC(dDataDir.c_str(),	"600mK", 	"Ra226", "B", 1);
-  outTreeIVCRaM1	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Ra226", "B", 1);
-  outTreeOVCRaM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Ra226", "B", 1);
+  outTreeFrameRaM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "B", 1);
+  outTreeTShieldRaM1  = LoadMC(dDataDir.c_str(),  "TShield","Ra226", "B", 1);    
+  outTree50mKRaM1     = LoadMC(dDataDir.c_str(),  "50mK",   "Ra226", "B", 1);
+  outTree600mKRaM1    = LoadMC(dDataDir.c_str(),  "600mK",  "Ra226", "B", 1);
+  outTreeIVCRaM1      = LoadMC(dDataDir.c_str(),  "IVC",    "Ra226", "B", 1);
+  outTreeOVCRaM1      = LoadMC(dDataDir.c_str(),  "OVC",    "Ra226", "B", 1);
 
-  outTreeFrameKM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"K40", "B", 1);
-  outTreeTShieldKM1 	= LoadMC(dDataDir.c_str(),	"TShield","K40", "B", 1);    
-  outTree50mKKM1	   	= LoadMC(dDataDir.c_str(),	"50mK", 	"K40", "B", 1);
-  outTree600mKKM1	  	= LoadMC(dDataDir.c_str(),	"600mK", 	"K40", "B", 1);
-  outTreeIVCKM1		   	= LoadMC(dDataDir.c_str(),	"IVC", 		"K40", "B", 1);
-  outTreeOVCKM1 	   	= LoadMC(dDataDir.c_str(),	"OVC", 		"K40", "B", 1);
+  outTreeFrameKM1     = LoadMC(dDataDir.c_str(),  "Frame",  "K40", "B", 1);
+  outTreeTShieldKM1   = LoadMC(dDataDir.c_str(),  "TShield","K40", "B", 1);    
+  outTree50mKKM1      = LoadMC(dDataDir.c_str(),  "50mK",   "K40", "B", 1);
+  outTree600mKKM1     = LoadMC(dDataDir.c_str(),  "600mK",  "K40", "B", 1);
+  outTreeIVCKM1       = LoadMC(dDataDir.c_str(),  "IVC",    "K40", "B", 1);
+  outTreeOVCKM1       = LoadMC(dDataDir.c_str(),  "OVC",    "K40", "B", 1);
 
 
-  outTreeFrameCoM1 		= LoadMC(dDataDir.c_str(),	"Frame", 	"Co60",	"B", 1);
-  outTreeTShieldCoM1 	= LoadMC(dDataDir.c_str(),	"TShield","Co60", "B", 1);    
-  outTree50mKCoM1	  	= LoadMC(dDataDir.c_str(),	"50mK", 	"Co60", "B", 1);
-  outTree600mKCoM1		= LoadMC(dDataDir.c_str(),	"600mK", 	"Co60", "B", 1);
-  outTreeIVCCoM1	   	= LoadMC(dDataDir.c_str(),	"IVC", 		"Co60", "B", 1);
-  outTreeOVCCoM1 	  	= LoadMC(dDataDir.c_str(),	"OVC", 		"Co60", "B", 1);
+  outTreeFrameCoM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Co60", "B", 1);
+  outTreeTShieldCoM1  = LoadMC(dDataDir.c_str(),  "TShield","Co60", "B", 1);    
+  outTree50mKCoM1     = LoadMC(dDataDir.c_str(),  "50mK",   "Co60", "B", 1);
+  outTree600mKCoM1    = LoadMC(dDataDir.c_str(),  "600mK",  "Co60", "B", 1);
+  outTreeIVCCoM1      = LoadMC(dDataDir.c_str(),  "IVC",    "Co60", "B", 1);
+  outTreeOVCCoM1      = LoadMC(dDataDir.c_str(),  "OVC",    "Co60", "B", 1);
 
-  outTreeNDBDM1 	   	= LoadMC(dDataDir.c_str(),	"Crystal", "0NDBD", "B", 1);
+  outTreeNDBDM1       = LoadMC(dDataDir.c_str(),  "Crystal", "0NDBD", "B", 1);
   outTree2NDBDM1      = LoadMC(dDataDir.c_str(),  "Crystal", "2NDBD", "B", 1);
   outTreeBiM1         = LoadMC(dDataDir.c_str(),  "RLead",   "Bi207", "B", 1);
 
@@ -1762,37 +1879,37 @@ void TBackgroundModel::Initialize()
 
   // Projecting to histograms
   // M1
-  outTreeNDBDM1->Project("fModelNDBDM1",				"Ener1", ener_cut);
+  outTreeNDBDM1->Project("fModelNDBDM1",        "Ener1", ener_cut);
   outTree2NDBDM1->Project("fModel2NDBDM1",      "Ener1", ener_cut);
   outTreeBiM1->Project("fModelBiM1",            "Ener1", ener_cut);  
 
-	outTreeFrameThM1->Project("fModelFrameThM1", 	   	"Ener1", ener_cut);
-	outTreeTShieldThM1->Project("fModelTShieldThM1",	"Ener1", ener_cut);
-  outTree50mKThM1->Project("fModel50mKThM1", 		   	"Ener1", ener_cut);
-  outTree600mKThM1->Project("fModel600mKThM1", 	  	"Ener1", ener_cut);
-  outTreeIVCThM1->Project("fModelIVCThM1", 		    	"Ener1", ener_cut);
-  outTreeOVCThM1->Project("fModelOVCThM1", 		     	"Ener1", ener_cut);
+  outTreeFrameThM1->Project("fModelFrameThM1",      "Ener1", ener_cut);
+  outTreeTShieldThM1->Project("fModelTShieldThM1",  "Ener1", ener_cut);
+  outTree50mKThM1->Project("fModel50mKThM1",        "Ener1", ener_cut);
+  outTree600mKThM1->Project("fModel600mKThM1",      "Ener1", ener_cut);
+  outTreeIVCThM1->Project("fModelIVCThM1",          "Ener1", ener_cut);
+  outTreeOVCThM1->Project("fModelOVCThM1",          "Ener1", ener_cut);
 
-	outTreeFrameRaM1->Project("fModelFrameRaM1", 	   	"Ener1", ener_cut);
-	outTreeTShieldRaM1->Project("fModelTShieldRaM1",	"Ener1", ener_cut);	
-  outTree50mKRaM1->Project("fModel50mKRaM1", 			  "Ener1", ener_cut);
-  outTree600mKRaM1->Project("fModel600mKRaM1", 		  "Ener1", ener_cut);
-  outTreeIVCRaM1->Project("fModelIVCRaM1", 		     	"Ener1", ener_cut);
-  outTreeOVCRaM1->Project("fModelOVCRaM1", 		     	"Ener1", ener_cut);
+  outTreeFrameRaM1->Project("fModelFrameRaM1",      "Ener1", ener_cut);
+  outTreeTShieldRaM1->Project("fModelTShieldRaM1",  "Ener1", ener_cut); 
+  outTree50mKRaM1->Project("fModel50mKRaM1",        "Ener1", ener_cut);
+  outTree600mKRaM1->Project("fModel600mKRaM1",      "Ener1", ener_cut);
+  outTreeIVCRaM1->Project("fModelIVCRaM1",          "Ener1", ener_cut);
+  outTreeOVCRaM1->Project("fModelOVCRaM1",          "Ener1", ener_cut);
 
-	outTreeFrameKM1->Project("fModelFrameKM1", 		  	"Ener1", ener_cut);
-	outTreeTShieldKM1->Project("fModelTShieldKM1",		"Ener1", ener_cut);	
-  outTree50mKKM1->Project("fModel50mKKM1", 		     	"Ener1", ener_cut);
-  outTree600mKKM1->Project("fModel600mKKM1", 		   	"Ener1", ener_cut);
-  outTreeIVCKM1->Project("fModelIVCKM1", 			    	"Ener1", ener_cut);
-  outTreeOVCKM1->Project("fModelOVCKM1", 			    	"Ener1", ener_cut);	
+  outTreeFrameKM1->Project("fModelFrameKM1",        "Ener1", ener_cut);
+  outTreeTShieldKM1->Project("fModelTShieldKM1",    "Ener1", ener_cut); 
+  outTree50mKKM1->Project("fModel50mKKM1",          "Ener1", ener_cut);
+  outTree600mKKM1->Project("fModel600mKKM1",        "Ener1", ener_cut);
+  outTreeIVCKM1->Project("fModelIVCKM1",            "Ener1", ener_cut);
+  outTreeOVCKM1->Project("fModelOVCKM1",            "Ener1", ener_cut); 
 
-	outTreeFrameCoM1->Project("fModelFrameCoM1", 	   	"Ener1", ener_cut);
-	outTreeTShieldCoM1->Project("fModelTShieldCoM1",	"Ener1", ener_cut);	
-  outTree50mKCoM1->Project("fModel50mKCoM1", 		   	"Ener1", ener_cut);
-  outTree600mKCoM1->Project("fModel600mKCoM1", 	  	"Ener1", ener_cut);
-  outTreeIVCCoM1->Project("fModelIVCCoM1", 		     	"Ener1", ener_cut);
-  outTreeOVCCoM1->Project("fModelOVCCoM1", 		     	"Ener1", ener_cut);
+  outTreeFrameCoM1->Project("fModelFrameCoM1",      "Ener1", ener_cut);
+  outTreeTShieldCoM1->Project("fModelTShieldCoM1",  "Ener1", ener_cut); 
+  outTree50mKCoM1->Project("fModel50mKCoM1",        "Ener1", ener_cut);
+  outTree600mKCoM1->Project("fModel600mKCoM1",      "Ener1", ener_cut);
+  outTreeIVCCoM1->Project("fModelIVCCoM1",          "Ener1", ener_cut);
+  outTreeOVCCoM1->Project("fModelOVCCoM1",          "Ener1", ener_cut);
 
   outTreeFrameThS01M1->Project("fModelFrameThS01M1",   "Ener1", ener_cut);
   outTreeFrameThS1M1->Project("fModelFrameThS1M1",     "Ener1", ener_cut);
@@ -1862,37 +1979,37 @@ void TBackgroundModel::Initialize()
 
 
 
-	cout << "Loaded MC" << endl;
+  cout << "Loaded MC" << endl;
 
 
-	// Normalize all MC histograms
-	NormalizePDFPair(fModelFrameThM1,	fModelFrameThM2,      50, 2700);
-	NormalizePDFPair(fModelTShieldThM1, fModelTShieldThM2,  50, 2700);
-	NormalizePDFPair(fModel50mKThM1, fModel50mKThM2,        50, 2700);
-	NormalizePDFPair(fModel600mKThM1, fModel600mKThM2, 	   	50, 2700);
-	NormalizePDFPair(fModelIVCThM1, fModelIVCThM2,		      50, 2700);
-	NormalizePDFPair(fModelOVCThM1, fModelOVCThM2,		     	50, 2700);
+  // Normalize all MC histograms
+  NormalizePDFPair(fModelFrameThM1, fModelFrameThM2,      50, 2700);
+  NormalizePDFPair(fModelTShieldThM1, fModelTShieldThM2,  50, 2700);
+  NormalizePDFPair(fModel50mKThM1, fModel50mKThM2,        50, 2700);
+  NormalizePDFPair(fModel600mKThM1, fModel600mKThM2,      50, 2700);
+  NormalizePDFPair(fModelIVCThM1, fModelIVCThM2,          50, 2700);
+  NormalizePDFPair(fModelOVCThM1, fModelOVCThM2,          50, 2700);
 
-	NormalizePDFPair(fModelFrameRaM1,  fModelFrameRaM2,    	50, 2700);
-	NormalizePDFPair(fModelTShieldRaM1, fModelTShieldRaM2,	50, 2700);	
-	NormalizePDFPair(fModel50mKRaM1, fModel50mKRaM2,	    	50, 2700);
-	NormalizePDFPair(fModel600mKRaM1, fModel600mKRaM2,	  	50, 2700);
-	NormalizePDFPair(fModelIVCRaM1, fModelIVCRaM1,		     	50, 2700);
-	NormalizePDFPair(fModelOVCRaM1, fModelOVCRaM2,		     	50, 2700);
+  NormalizePDFPair(fModelFrameRaM1,  fModelFrameRaM2,     50, 2700);
+  NormalizePDFPair(fModelTShieldRaM1, fModelTShieldRaM2,  50, 2700);  
+  NormalizePDFPair(fModel50mKRaM1, fModel50mKRaM2,        50, 2700);
+  NormalizePDFPair(fModel600mKRaM1, fModel600mKRaM2,      50, 2700);
+  NormalizePDFPair(fModelIVCRaM1, fModelIVCRaM1,          50, 2700);
+  NormalizePDFPair(fModelOVCRaM1, fModelOVCRaM2,          50, 2700);
 
-	NormalizePDFPair(fModelFrameKM1, 	fModelFrameKM2,	     	50, 2700);
-	NormalizePDFPair(fModelTShieldKM1, fModelTShieldKM2,   	50, 2700);	
-	NormalizePDFPair(fModel50mKKM1, fModel50mKKM2,		     	50, 2700);
-	NormalizePDFPair(fModel600mKKM1, fModel600mKKM2,	    	50, 2700);
-	NormalizePDFPair(fModelIVCKM1, fModelIVCKM2,		       	50, 2700);
-	NormalizePDFPair(fModelOVCKM1, fModelOVCKM2,		       	50, 2700);
+  NormalizePDFPair(fModelFrameKM1,  fModelFrameKM2,       50, 2700);
+  NormalizePDFPair(fModelTShieldKM1, fModelTShieldKM2,    50, 2700);  
+  NormalizePDFPair(fModel50mKKM1, fModel50mKKM2,          50, 2700);
+  NormalizePDFPair(fModel600mKKM1, fModel600mKKM2,        50, 2700);
+  NormalizePDFPair(fModelIVCKM1, fModelIVCKM2,            50, 2700);
+  NormalizePDFPair(fModelOVCKM1, fModelOVCKM2,            50, 2700);
 
-	NormalizePDFPair(fModelFrameCoM1, fModelFrameCoM2,   		50, 2700);
-	NormalizePDFPair(fModelTShieldCoM1, fModelTShieldCoM2,	50, 2700);	
-	NormalizePDFPair(fModel50mKCoM1, fModel50mKCoM2,	    	50, 2700);
-	NormalizePDFPair(fModel600mKCoM1, fModel600mKCoM2,   		50, 2700);
-	NormalizePDFPair(fModelIVCCoM1, fModelIVCCoM2,		   	50, 2700);
-	NormalizePDFPair(fModelOVCCoM1, fModelOVCCoM2,		   	50, 2700);
+  NormalizePDFPair(fModelFrameCoM1, fModelFrameCoM2,      50, 2700);
+  NormalizePDFPair(fModelTShieldCoM1, fModelTShieldCoM2,  50, 2700);  
+  NormalizePDFPair(fModel50mKCoM1, fModel50mKCoM2,        50, 2700);
+  NormalizePDFPair(fModel600mKCoM1, fModel600mKCoM2,      50, 2700);
+  NormalizePDFPair(fModelIVCCoM1, fModelIVCCoM2,        50, 2700);
+  NormalizePDFPair(fModelOVCCoM1, fModelOVCCoM2,        50, 2700);
 
   NormalizePDFPair(fModelNDBDM1, fModelNDBDM2,     50, 2700);
   NormalizePDFPair(fModel2NDBDM1, fModel2NDBDM2,   50, 2700);
@@ -1915,7 +2032,7 @@ void TBackgroundModel::Initialize()
   NormalizePDFPair(fModelTShieldThS100M1,  fModelTShieldThS100M2, 50, 2700);
 
 
-	cout << "Normalized MC PDFs" << endl;
+  cout << "Normalized MC PDFs" << endl;
 
     // cout << "Fixed resolution: " << endl;
     cout << "Smearing M1 histograms" << endl;
@@ -1925,8 +2042,8 @@ void TBackgroundModel::Initialize()
     double dRes2 = 5.332;
 
     // Adding the 10 micron distribution for now...
-    SmearMC(fModelFrameThS10M1, fSmearFrameThS10M1, dRes1, dRes2);
-    SmearMC(fModelTShieldThS10M1, fSmearTShieldThS10M1, dRes1, dRes2);
+    // SmearMC(fModelFrameThS10M1, fSmearFrameThS10M1, dRes1, dRes2);
+    // SmearMC(fModelTShieldThS10M1, fSmearTShieldThS10M1, dRes1, dRes2);
 
     // M1
     SmearMC(fModelFrameThM1, fSmearFrameThM1, dRes1 , dRes2);
@@ -1999,47 +2116,6 @@ void TBackgroundModel::Initialize()
 
 
     cout << "Finished smearing MC histograms" << endl;
-
-
-
-}
-
-
-// Loads the data
-void TBackgroundModel::LoadData()
-{
-	if(fDataHistoTot == NULL) 
-	{
-		cout << "Data Histograms Not Created" << endl;
-		return;
-	}
-	else
-	{
-		cout << "Data Histograms Created" << endl;
-	}
-
-  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkg-ds*.root");	
-  qtree->Project("fDataHistoTot", "Energy", base_cut);
-  qtree->Project("fDataHistoM1", 	"Energy", base_cut && "Multiplicity_OFTime==1");
-  qtree->Project("fDataHistoM2", 	"Energy", base_cut && "Multiplicity_OFTime==2");
-
-	cout << "Loaded Data" << endl;
-
-	// Normalizing data (don't!)
-	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-
-	dDataIntegral = fDataHistoM1->Integral(1, dNBins);
-  int dDataIntegralTot = qtree->GetEntries();
-
-  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
-	cout << "Events in background spectrum (M1): " << dDataIntegral << endl;
-  cout << "Events in background spectrum (M2): " << fDataHistoM2->Integral(1, dNBins) << endl;
-
-  // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
-  fDataHistoM1->Scale(1/(14647393.0 * dSecToYears));
-  fDataHistoM2->Scale(1/(14647393.0 * dSecToYears));  
-
-  cout << "Normalized Data using Livetime of: " << 14647393.0 * dSecToYears << " years" <<endl;
 
 }
 
@@ -2495,11 +2571,83 @@ void TBackgroundModel::TestSmear()
   leg2->AddEntry(fSmearFrameThOldM2, "Single Gaussian", "l");
   leg2->Draw();
 
-
-
-
-
-
 }
 
+void TBackgroundModel::SaveSmearedData()
+{
+  // First initialize
+  Initialize();
+
+  // Now store data
+  TFile *file1 = new TFile(Form("Test-%dkeV.root", dBinSize), "RECREATE");
+  // Does this just work..?
+    fSmearFrameThM1->Write();
+    fSmearTShieldThM1->Write();  
+    fSmear50mKThM1->Write();
+    fSmear600mKThM1->Write();
+    fSmearIVCThM1->Write();
+    fSmearOVCThM1->Write();
+
+    fSmearFrameRaM1->Write();
+    fSmearTShieldRaM1->Write();  
+    fSmear50mKRaM1->Write();
+    fSmear600mKRaM1->Write();
+    fSmearIVCRaM1->Write();
+    fSmearOVCRaM1->Write();
+
+    fSmearFrameKM1->Write();
+    fSmearTShieldKM1->Write();
+    fSmear50mKKM1->Write();
+    fSmear600mKKM1->Write();
+    fSmearIVCKM1->Write();
+    fSmearOVCKM1->Write(); 
+
+    fSmearFrameCoM1->Write();
+    fSmearTShieldCoM1->Write();
+    fSmear50mKCoM1->Write();
+    fSmear600mKCoM1->Write();
+    fSmearIVCCoM1->Write();
+    fSmearOVCCoM1->Write();  
+
+    fSmearNDBDM1->Write();  
+    fSmear2NDBDM1->Write();  
+    fSmearBiM1->Write();  
+
+
+    fSmearFrameThM2->Write();
+    fSmearTShieldThM2->Write();  
+    fSmear50mKThM2->Write();
+    fSmear600mKThM2->Write();
+    fSmearIVCThM2->Write();
+    fSmearOVCThM2->Write();
+
+    fSmearFrameRaM2->Write();
+    fSmearTShieldRaM2->Write();  
+    fSmear50mKRaM2->Write();
+    fSmear600mKRaM2->Write();
+    fSmearIVCRaM2->Write();
+    fSmearOVCRaM2->Write();
+
+    fSmearFrameKM2->Write();
+    fSmearTShieldKM2->Write();
+    fSmear50mKKM2->Write();
+    fSmear600mKKM2->Write();
+    fSmearIVCKM2->Write();
+    fSmearOVCKM2->Write(); 
+
+    fSmearFrameCoM2->Write();
+    fSmearTShieldCoM2->Write();
+    fSmear50mKCoM2->Write();
+    fSmear600mKCoM2->Write();
+    fSmearIVCCoM2->Write();
+    fSmearOVCCoM2->Write();  
+
+    fSmearNDBDM2->Write();  
+    fSmear2NDBDM2->Write();  
+    fSmearBiM2->Write();  
+
+
+    file1->Write();
+
+}
 
