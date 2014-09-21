@@ -1668,7 +1668,7 @@ void TBackgroundModel::Initialize()
   else
   {
     cout << "Loading Smeared Histograms from file" << endl;
-    fFile = new TFile(Form("Test-%dkeV.root", dBinSize));
+    fFile = new TFile(Form("MCData-%dkeV.root", dBinSize));
 
     fSmearFrameThM1   = (TH1D*)fFile->Get("fSmearFrameThM1");
     fSmearTShieldThM1 = (TH1D*)fFile->Get("fSmearTShieldThM1");
@@ -2581,7 +2581,7 @@ void TBackgroundModel::SaveSmearedData()
   Initialize();
 
   // Now store data
-  TFile *file1 = new TFile(Form("Test-%dkeV.root", dBinSize), "RECREATE");
+  TFile *file1 = new TFile(Form("MCData-%dkeV.root", dBinSize), "RECREATE");
   // Does this just work..?
     fSmearFrameThM1->Write();
     fSmearTShieldThM1->Write();  
