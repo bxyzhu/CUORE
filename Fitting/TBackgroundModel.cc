@@ -62,7 +62,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
   dDataIntegral = 0;
   bToyFit = false;
-  bUnSmeared = true;
+  bUnSmeared = false;
 
   // Bin size (keV)
   dBinSize = 2;
@@ -565,8 +565,8 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(10, "Lead Bi",	 	10000., 10.0, 0., 100000);  
    // minuit.DefineParameter(10, "Lead Bi",    0., 100.0, 0., 100000);  
    // minuit.DefineParameter(11, "2NDBD",    33394., 10.0, 0., 100000);  
-   minuit.DefineParameter(11, "TShield Mn",    0., 10.0, 0., 100000);  
-   minuit.DefineParameter(12, "IVC Mn",    0., 10.0, 0., 100000);  
+   minuit.DefineParameter(11, "TShield Mn",    100., 10.0, 0., 100000);  
+   minuit.DefineParameter(12, "IVC Mn",    100., 10.0, 0., 100000);  
    // minuit.DefineParameter(13, "IVC Mn",    0., 10.0, 0., 100000);  
 
 
@@ -765,7 +765,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotThM1->Add(fSmearIVCThM1,     fParameters[1]);
   // fModelTotThM1->Add(fSmearOVCThM1,     fParameters[1]);
 
-  // fModelTotRaM1->Add(fSmearFrameRaM1,   fParameters[2]);
+  fModelTotRaM1->Add(fSmearFrameRaM1,   fParameters[2]);
   fModelTotRaM1->Add(fSmearTShieldRaM1, fParameters[2]);
   fModelTotRaM1->Add(fSmear50mKRaM1,    fParameters[2]);
   fModelTotRaM1->Add(fSmear600mKRaM1,   fParameters[2]);
@@ -804,7 +804,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotThM2->Add(fSmearIVCThM2,     fParameters[1]);
   // fModelTotThM2->Add(fSmearOVCThM2,     fParameters[1]);
 
-  // fModelTotRaM2->Add(fSmearFrameRaM2,   fParameters[2]);
+  fModelTotRaM2->Add(fSmearFrameRaM2,   fParameters[2]);
   fModelTotRaM2->Add(fSmearTShieldRaM2, fParameters[2]);
   fModelTotRaM2->Add(fSmear50mKRaM2,    fParameters[2]);
   fModelTotRaM2->Add(fSmear600mKRaM2,   fParameters[2]);
@@ -941,6 +941,7 @@ bool TBackgroundModel::DoTheFit()
 
   
     fModelTotM1->SetLineColor(2);
+    fModelTotM1->SetLineWidth(2);
     fModelTotM1->Draw("SAME");
 
     fModelTotThM1->SetLineColor(3);
@@ -957,6 +958,8 @@ bool TBackgroundModel::DoTheFit()
     fModelTot2NDBDM1->SetLineStyle(2);
     fModelTotBiM1->SetLineColor(5);
     fModelTotBiM1->SetLineStyle(2);
+    fModelTotMnM1->SetLineColor(40);
+    fModelTotMnM1->SetLineStyle(2);
 
     fModelTotThM1->Draw("SAME");
     fModelTotRaM1->Draw("SAME");
@@ -965,6 +968,7 @@ bool TBackgroundModel::DoTheFit()
     fModelTotNDBDM1->Draw("SAME");
     fModelTot2NDBDM1->Draw("SAME");
     fModelTotBiM1->Draw("SAME");
+    fModelTotMnM1->Draw("SAME");
 
     // Few Parameters
     TPaveText *pt1 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
@@ -975,6 +979,7 @@ bool TBackgroundModel::DoTheFit()
     pt1->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
     pt1->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
     pt1->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
+    pt1->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
     pt1->AddText(Form("2NDBD: %0.2E#pm%0.2E", fParameters[8], fParError[8] ));
 
 
@@ -1004,6 +1009,7 @@ bool TBackgroundModel::DoTheFit()
     legfit1->AddEntry(fModelTotNDBDM1, "NDBD", "l");
     legfit1->AddEntry(fModelTot2NDBDM1, "2NDBD", "l");
     legfit1->AddEntry(fModelTotBiM1, "Bi-207", "l");
+    legfit1->AddEntry(fModelTotMnM1, "Mn-54", "l");
     legfit1->Draw();
 
 
@@ -1024,6 +1030,7 @@ bool TBackgroundModel::DoTheFit()
 
   
     fModelTotM2->SetLineColor(2);
+    fModelTotM2->SetLineWidth(2);
     fModelTotM2->Draw("SAME");
 
     fModelTotThM2->SetLineColor(3);
@@ -1040,6 +1047,8 @@ bool TBackgroundModel::DoTheFit()
     fModelTot2NDBDM2->SetLineStyle(2);
     fModelTotBiM2->SetLineColor(5);
     fModelTotBiM2->SetLineStyle(2);
+    fModelTotMnM2->SetLineColor(40);
+    fModelTotMnM2->SetLineStyle(2);
 
     fModelTotThM2->Draw("SAME");
     fModelTotRaM2->Draw("SAME");
@@ -1048,6 +1057,7 @@ bool TBackgroundModel::DoTheFit()
     fModelTotNDBDM2->Draw("SAME");
     fModelTot2NDBDM2->Draw("SAME");
     fModelTotBiM2->Draw("SAME");    
+    fModelTotMnM2->Draw("SAME");
 
     // Few Parameters
     TPaveText *pt2 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
@@ -1087,8 +1097,9 @@ bool TBackgroundModel::DoTheFit()
     legfit2->AddEntry(fModelTotKM2, "Total K-40", "l");
     legfit2->AddEntry(fModelTotCoM2, "Total Co-60", "l");
     legfit2->AddEntry(fModelTotNDBDM2, "NDBD", "l");
-    legfit2->AddEntry(fModelTot2NDBDM2, "NDBD", "l");
+    legfit2->AddEntry(fModelTot2NDBDM2, "2NDBD", "l");
     legfit2->AddEntry(fModelTotBiM2, "Bi-207", "l");
+    legfit2->AddEntry(fModelTotMnM2, "Mn-54", "l");
 
     legfit2->Draw();
 
@@ -2533,7 +2544,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmearIVCThM1,      fParameters[1]);
   // fModelTotM1->Add( fSmearOVCThM1,      fParameters[1]);
 
-  // fModelTotM1->Add( fSmearFrameRaM1,    fParameters[2]);
+  fModelTotM1->Add( fSmearFrameRaM1,    fParameters[2]);
   fModelTotM1->Add( fSmearTShieldRaM1,  fParameters[2]);  
   fModelTotM1->Add( fSmear50mKRaM1,     fParameters[2]);
   fModelTotM1->Add( fSmear600mKRaM1,    fParameters[2]);
@@ -2571,7 +2582,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fSmearIVCThM2,      fParameters[1]);
   // fModelTotM2->Add( fSmearOVCThM2,      fParameters[1]);
 
-  // fModelTotM2->Add( fSmearFrameRaM2,    fParameters[2]);
+  fModelTotM2->Add( fSmearFrameRaM2,    fParameters[2]);
   fModelTotM2->Add( fSmearTShieldRaM2,  fParameters[2]);  
   fModelTotM2->Add( fSmear50mKRaM2,     fParameters[2]);
   fModelTotM2->Add( fSmear600mKRaM2,    fParameters[2]);
