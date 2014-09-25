@@ -142,6 +142,9 @@ private:
 	TChain			*outTreeIVCCoM1;
 	TChain			*outTreeOVCCoM1;
 
+	TChain			*outTreeTShieldMnM1;
+	TChain			*outTreeIVCMnM1;
+
 	TChain			*outTreeNDBDM1;
 	TChain			*outTree2NDBDM1;
 	TChain			*outTreeBiM1;
@@ -191,6 +194,9 @@ private:
 	TChain			*outTreeIVCCoM2;
 	TChain			*outTreeOVCCoM2;
 
+	TChain			*outTreeTShieldMnM2;
+	TChain			*outTreeIVCMnM2;
+
 	TChain			*outTreeNDBDM2;
 	TChain			*outTree2NDBDM2;	
 	TChain			*outTreeBiM2;
@@ -202,6 +208,7 @@ private:
 	TH1D			*fModelTotRaM1;
 	TH1D			*fModelTotKM1;
 	TH1D			*fModelTotCoM1;
+	TH1D			*fModelTotMnM1;
 
 	TH1D			*fModelTotNDBDM1;
 	TH1D			*fModelTot2NDBDM1;
@@ -255,12 +262,16 @@ private:
 	TH1D			*fModelIVCCoM1;
 	TH1D			*fModelOVCCoM1;
 
+	TH1D			*fModelTShieldMnM1;
+	TH1D			*fModelIVCMnM1;
+
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
 	TH1D			*fModelTotThM2;
 	TH1D			*fModelTotRaM2;
 	TH1D			*fModelTotKM2;
 	TH1D			*fModelTotCoM2;
+	TH1D			*fModelTotMnM2;
 
 	TH1D			*fModelTotNDBDM2;
 	TH1D			*fModelTot2NDBDM2;
@@ -314,7 +325,12 @@ private:
 	TH1D			*fModelIVCCoM2;
 	TH1D			*fModelOVCCoM2;
 
+	TH1D			*fModelTShieldMnM2;
+	TH1D			*fModelIVCMnM2;
 
+
+
+	// Residuals
 	TGraph			*gResidualM1;
 	TGraph 			*gResidualM2;
 
@@ -383,6 +399,9 @@ private:
 	TH1D			*fSmearIVCCoM1;
 	TH1D			*fSmearOVCCoM1;
 
+	TH1D			*fSmearTShieldMnM1;
+	TH1D			*fSmearIVCMnM1;
+
 	// Smeared PDFs M2
 	TH1D			*fSmearDummyM2;
 
@@ -435,7 +454,8 @@ private:
 	TH1D			*fSmearIVCCoM2;
 	TH1D			*fSmearOVCCoM2;
 
-
+	TH1D			*fSmearTShieldMnM2;
+	TH1D			*fSmearIVCMnM2;
 
 
 	std::string		dDataDir;
