@@ -467,8 +467,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[19];
-	double				fParError[19];
+	double				fParameters[22];
+	double				fParError[22];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[26];
