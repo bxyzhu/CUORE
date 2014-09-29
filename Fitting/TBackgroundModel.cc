@@ -606,10 +606,10 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(16, "OVC Th",    51700., 10.0, 0., 500000);
    minuit.DefineParameter(17, "50mK Ra", 14200., 10.0, 0., 80000);
    minuit.DefineParameter(18, "600mK Ra", 14200., 10.0, 0., 80000);
-   minuit.DefineParameter(19, "IVC Ra",    10., 10.0, 0., 80000);
-   minuit.DefineParameter(20, "OVC Ra",    10., 10.0, 0., 80000);
+   minuit.DefineParameter(19, "IVC Ra",    10., 10.0, 0., 100000);
+   minuit.DefineParameter(20, "OVC Ra",    10., 10.0, 0., 100000);
 
-
+   
 
 
 
