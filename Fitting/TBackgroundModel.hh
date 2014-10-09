@@ -1,6 +1,7 @@
 #ifndef __TBackgroundModel__
 #define __TBackgroundModel__
 #include "TObject.h"
+#include "TFile.h"
 #include "TH1D.h"
 #include "TF1.h"
 #include "TChain.h"
@@ -459,24 +460,49 @@ private:
 
 
 	// For accidental coincidence test
+	TFile *fFileCoin;
+
 	TH1D *fModelTestM1;
+	TH1D *fModelTestM2;
+	TH1D *fModelTest1;	
+	TH1D *fModelTest2;
+
 	TH1D *f600mKThM1;
 	TH1D *fIVCThM1;
-	TH1D *fOVCThM1
-	TH1D *f600mKRaM1
-	TH1D *fOVCRaM1
-	TH1D *fFrameKM1 
-	TH1D *fTShieldKM1
-	TH1D *f50mKKM1
-	TH1D *f600mKKM1
-	TH1D *fIVCKM1
-	TH1D *fOVCKM1
-	TH1D *fFrameCoM1
-	TH1D *fOVCCoM1
-	TH1D *fIVCMnM1
-	TH1D *fNDBDM1
-	TH1D *f2NDBDM1
+	TH1D *fOVCThM1;
+	TH1D *f600mKRaM1;
+	TH1D *fOVCRaM1;
+	TH1D *fFrameKM1; 
+	TH1D *fTShieldKM1;
+	TH1D *f50mKKM1;
+	TH1D *f600mKKM1;
+	TH1D *fIVCKM1;
+	TH1D *fOVCKM1;
+	TH1D *fFrameCoM1;
+	TH1D *fOVCCoM1;
+	TH1D *fIVCMnM1;
+	TH1D *fNDBDM1;
+	TH1D *f2NDBDM1;
 	TH1D *fBiM1;
+
+	TH1D *f600mKThM2;
+	TH1D *fIVCThM2;
+	TH1D *fOVCThM2;
+	TH1D *f600mKRaM2;
+	TH1D *fOVCRaM2;
+	TH1D *fFrameKM2; 
+	TH1D *fTShieldKM2;
+	TH1D *f50mKKM2;
+	TH1D *f600mKKM2;
+	TH1D *fIVCKM2;
+	TH1D *fOVCKM2;
+	TH1D *fFrameCoM2;
+	TH1D *fOVCCoM2;
+	TH1D *fIVCMnM2;
+	TH1D *fNDBDM2;
+	TH1D *f2NDBDM2;
+	TH1D *fBiM2;
+
 
 	std::string		dDataDir;
 	bool			bToyFit;
