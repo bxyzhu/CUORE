@@ -52,7 +52,7 @@ public:
 
 	TH1D *SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1);
 	
-	void TestSmear();
+	void TestSave();
 
 	void UpdateModel();
 
@@ -458,6 +458,26 @@ private:
 	TH1D			*fSmearIVCMnM2;
 
 
+	// For accidental coincidence test
+	TH1D *fModelTestM1;
+	TH1D *f600mKThM1;
+	TH1D *fIVCThM1;
+	TH1D *fOVCThM1
+	TH1D *f600mKRaM1
+	TH1D *fOVCRaM1
+	TH1D *fFrameKM1 
+	TH1D *fTShieldKM1
+	TH1D *f50mKKM1
+	TH1D *f600mKKM1
+	TH1D *fIVCKM1
+	TH1D *fOVCKM1
+	TH1D *fFrameCoM1
+	TH1D *fOVCCoM1
+	TH1D *fIVCMnM1
+	TH1D *fNDBDM1
+	TH1D *f2NDBDM1
+	TH1D *fBiM1;
+
 	std::string		dDataDir;
 	bool			bToyFit;
 	bool			bFixedRes;
@@ -467,8 +487,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[25];
-	double				fParError[25];
+	double				fParameters[26];
+	double				fParError[26];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[26];
