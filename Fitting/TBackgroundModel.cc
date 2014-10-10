@@ -708,42 +708,43 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(22, "600mK Co",    0., 10.0, 0., 80000);
    minuit.DefineParameter(23, "IVC Co",    0, 10.0, 0., 500000);  
    minuit.DefineParameter(24, "OVC Co",    20815.6, 10.0, 0., 500000);  
-   minuit.DefineParameter(25, "Constant",    500000, 1, 0., 1000000);  
+   // minuit.DefineParameter(25, "Constant",    500000, 1, 0., 1000000);  
+   minuit.DefineParameter(25, "Constant",    0, 1, 0., 1000000);  
 
    
 
 
 
    // Fix parameters here
-   minuit.FixParameter(0); // Close Th
-   minuit.FixParameter(1); // Far Th
-   minuit.FixParameter(2); // Close Ra
-   minuit.FixParameter(3); // Far Ra
-   minuit.FixParameter(4); // Close K
-   minuit.FixParameter(5); // Far K
-   minuit.FixParameter(6); // Close Co
-   minuit.FixParameter(7); // Far Co
-   minuit.FixParameter(8); // 2NDBD
-   minuit.FixParameter(9); // NDBD
-   minuit.FixParameter(10); // Bi207
-   minuit.FixParameter(11); // Close Mn
-   minuit.FixParameter(12); // Far Mn
-   minuit.FixParameter(13); // 
-   minuit.FixParameter(14); // 
-   minuit.FixParameter(15); // 
-   minuit.FixParameter(16); // 
-   minuit.FixParameter(17); // 
-   minuit.FixParameter(18); // 
-   minuit.FixParameter(19); // 
-   minuit.FixParameter(20); // 
-   minuit.FixParameter(21); // 
-   minuit.FixParameter(22); // 
-   minuit.FixParameter(23); // 
-   minuit.FixParameter(24); // 
-   // minuit.FixParameter(25); // 
+   // minuit.FixParameter(0); // Close Th
+   // minuit.FixParameter(1); // Far Th
+   // minuit.FixParameter(2); // Close Ra
+   // minuit.FixParameter(3); // Far Ra
+   // minuit.FixParameter(4); // Close K
+   // minuit.FixParameter(5); // Far K
+   // minuit.FixParameter(6); // Close Co
+   // minuit.FixParameter(7); // Far Co
+   // minuit.FixParameter(8); // 2NDBD
+   // minuit.FixParameter(9); // NDBD
+   // minuit.FixParameter(10); // Bi207
+   // minuit.FixParameter(11); // Close Mn
+   // minuit.FixParameter(12); // Far Mn
+   // minuit.FixParameter(13); // 
+   // minuit.FixParameter(14); // 
+   // minuit.FixParameter(15); // 
+   // minuit.FixParameter(16); // 
+   // minuit.FixParameter(17); // 
+   // minuit.FixParameter(18); // 
+   // minuit.FixParameter(19); // 
+   // minuit.FixParameter(20); // 
+   // minuit.FixParameter(21); // 
+   // minuit.FixParameter(22); // 
+   // minuit.FixParameter(23); // 
+   // minuit.FixParameter(24); // 
+   minuit.FixParameter(25); // 
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 1;
+  int dNumParameters = 25;
 
 
 
@@ -782,8 +783,8 @@ bool TBackgroundModel::DoTheFit()
   minuit.GetParameter(25,  fParameters[25],   fParError[25]);
 	UpdateModel();
 	
-	// cout << "At the end; ChiSq/NDF = " << GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters) << endl; // for M1 and M2
-  cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;  // for M1
+	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters) << endl; // for M1 and M2
+  // cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;  // for M1
   cout << "Total number of calls = " << dNumCalls << endl;
 
 
@@ -900,11 +901,9 @@ bool TBackgroundModel::DoTheFit()
   fModelTotMnM1->Add(fSmearTShieldMnM1, fParameters[11]);
   fModelTotMnM1->Add(fSmearIVCMnM1,     fParameters[12]);
 
-
   fModelTotNDBDM1->Add(fSmearNDBDM1,    fParameters[9]);
   fModelTot2NDBDM1->Add(fSmear2NDBDM1,  fParameters[8]);
   fModelTotBiM1->Add(fSmearBiM1,        fParameters[10]);
-
 
 
   // M2 Parameters
@@ -949,7 +948,7 @@ bool TBackgroundModel::DoTheFit()
   ///////////////////////////////////////////
   /// Use only after previous step converges!
   // 
-/*
+
   // M1 Parameters
   fModelTotThM1->Add(fSmearFrameThM1,   fParameters[0]);
   fModelTotThM1->Add(fSmearTShieldThM1, fParameters[1]);
@@ -1024,12 +1023,12 @@ bool TBackgroundModel::DoTheFit()
   fModelTotNDBDM2->Add(fSmearNDBDM2,    fParameters[9]);
   fModelTot2NDBDM2->Add(fSmear2NDBDM2,  fParameters[8]);
   fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
-*/
+
 
   ////////////////////////////////////////////////////////
 
 
-
+/*
   ////////// Only for testing
   fModelTotM1->Add( fSmearFrameThM1,    fParameters[0]);
   fModelTotM1->Add( fSmearTShieldThM1,  fParameters[1]);  
@@ -1065,7 +1064,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotM1->Add( fSmearNDBDM1,      fParameters[9]);  
   fModelTotM1->Add( fSmear2NDBDM1,     fParameters[8]);  
   fModelTotM1->Add( fSmearBiM1,        fParameters[10]);   
-
+*/
 //////////////////////////////////////
 
 
@@ -1100,11 +1099,14 @@ bool TBackgroundModel::DoTheFit()
     fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
     fDataHistoM1->Draw("E");
 
-  
+
     fModelTotM1->SetLineColor(2);
     fModelTotM1->SetLineWidth(1);
     fModelTotM1->Draw("SAME");
 
+  
+//////////////////////////
+    /*
     fModelTest2->SetLineColor(4);
     fModelTest2->SetLineWidth(1);
     fModelTest2->Draw("SAME");
@@ -1113,8 +1115,9 @@ bool TBackgroundModel::DoTheFit()
     legfit1->AddEntry(fModelTotM1, "Standard PDF", "l");
     legfit1->AddEntry(fModelTest2, "Accidental Coincidence corrected PDF", "l");
     legfit1->Draw();
+    */
+//////////////////////////////////////////
 
-/*
     fModelTotThM1->SetLineColor(3);
     fModelTotThM1->SetLineStyle(2);
     fModelTotRaM1->SetLineColor(4);
@@ -1140,7 +1143,7 @@ bool TBackgroundModel::DoTheFit()
     fModelTot2NDBDM1->Draw("SAME");
     fModelTotBiM1->Draw("SAME");
     fModelTotMnM1->Draw("SAME");
-*/
+
 /*
     // Few Parameters
     TPaveText *pt1 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
@@ -1155,7 +1158,7 @@ bool TBackgroundModel::DoTheFit()
     pt1->AddText(Form("2NDBD: %0.2E#pm%0.2E", fParameters[8], fParError[8] ));
 */
 
-/*
+
     // Many Parameters
     TPaveText *pt1 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
     pt1->AddText(Form("Fit Range (M1): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
@@ -1183,11 +1186,11 @@ bool TBackgroundModel::DoTheFit()
     legfit1->AddEntry(fModelTotBiM1, "Bi-207", "l");
     legfit1->AddEntry(fModelTotMnM1, "Mn-54", "l");
     legfit1->Draw();
-*/
 
 
 
-/*
+
+
     TCanvas *c2 = new TCanvas("c2", "c2", 1200, 800);
     c2->SetLogy();
 
@@ -1230,7 +1233,7 @@ bool TBackgroundModel::DoTheFit()
     fModelTot2NDBDM2->Draw("SAME");
     fModelTotBiM2->Draw("SAME");    
     fModelTotMnM2->Draw("SAME");
-*/    
+    
 /*
     // Few Parameters
     TPaveText *pt2 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
@@ -1244,7 +1247,7 @@ bool TBackgroundModel::DoTheFit()
     pt2->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
     pt2->AddText(Form("2NDBD: %0.2E#pm%0.2E", fParameters[8], fParError[8] ));
 */
-/*
+
     // Many Parameters
     TPaveText *pt2 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
     pt2->AddText(Form("Fit Range (M2): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
@@ -1274,11 +1277,11 @@ bool TBackgroundModel::DoTheFit()
     legfit2->AddEntry(fModelTotMnM2, "Mn-54", "l");
 
     legfit2->Draw();
-*/
+
 
   }
 
-/*
+
 	// Residuals
 	TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
   hResidualGausM1 = new TH1D("hResidualGausM1", "Residual Distribution (M1)", 100, -50, 50);
@@ -1296,7 +1299,7 @@ bool TBackgroundModel::DoTheFit()
 
 	hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
 	hResidualDistM1->Draw("E");
-*/
+
 /*
   TLine *lineth = new TLine();
   lineth->SetLineStyle(9);
@@ -1336,7 +1339,6 @@ bool TBackgroundModel::DoTheFit()
   linek->SetLineColor(6);
   linek->DrawLine(1461, -13, 1461, 15);
 
-
   TLine *lineco = new TLine();
   lineco->SetLineStyle(9);
   lineco->SetLineWidth(1);
@@ -1346,7 +1348,7 @@ bool TBackgroundModel::DoTheFit()
 */
 
 
-/*
+
   TCanvas *cres1 = new TCanvas();
   hResidualGausM1->Draw();
 
@@ -1386,7 +1388,7 @@ bool TBackgroundModel::DoTheFit()
   cout << "Integral 600mK Th PDF in ROI: " << fParameters[14]*fSmear600mKThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
   cout << "Integral IVC Th PDF in ROI: " << fParameters[15]*fSmearIVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
   cout << "Integral OVC Th PDF in ROI: " << fParameters[16]*fSmearOVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-*/
+
 
 
 	return true;
@@ -1901,9 +1903,9 @@ double TBackgroundModel::GetChiSquare()
 		}
 
     // From MC
-		// modelm1_i = fModelTotM1->GetBinContent(i);
-    // modelm2_i = fModelTotM2->GetBinContent(i);
-    modelm1_i = fModelTest2->GetBinContent(i); // For testing
+		modelm1_i = fModelTotM1->GetBinContent(i);
+    modelm2_i = fModelTotM2->GetBinContent(i);
+    // modelm1_i = fModelTest2->GetBinContent(i); // For testing
 
 		// Log-likelihood Chi-Squared
     // Avoiding 0's... correct or no?
@@ -1913,13 +1915,13 @@ double TBackgroundModel::GetChiSquare()
       // M1 portion
 			chiSquare += 2 * (modelm1_i - datam1_i + datam1_i * TMath::Log(datam1_i/modelm1_i));
 		}
-/*
+
     if(modelm2_i != 0 && datam2_i != 0)
     {
       // M2 portion
       chiSquare += 2 * (modelm2_i - datam2_i + datam2_i * TMath::Log(datam2_i/modelm2_i));
     }
-*/
+
 	}
 
 	return chiSquare;
@@ -1955,8 +1957,8 @@ void TBackgroundModel::Initialize()
   else
   {
     cout << "Loading Smeared Histograms from file" << endl;
+    fFile = new TFile(Form("MCHist-%dkeV.root", dBinSize));
     // fFile = new TFile(Form("MCData-%dkeV.root", dBinSize));
-    fFile = new TFile(Form("MCData-%dkeV.root", dBinSize));
 
     fSmearFrameThM1   = (TH1D*)fFile->Get("fSmearFrameThM1");
     fSmearTShieldThM1 = (TH1D*)fFile->Get("fSmearTShieldThM1");
@@ -1993,7 +1995,7 @@ void TBackgroundModel::Initialize()
     fSmearNDBDM1      = (TH1D*)fFile->Get("fSmearNDBDM1");
     fSmearBiM1        = (TH1D*)fFile->Get("fSmearBiM1");
 
-/*
+
     fSmearFrameThM2   = (TH1D*)fFile->Get("fSmearFrameThM2");
     fSmearTShieldThM2 = (TH1D*)fFile->Get("fSmearTShieldThM2");
     fSmear50mKThM2    = (TH1D*)fFile->Get("fSmear50mKThM2");
@@ -2028,7 +2030,7 @@ void TBackgroundModel::Initialize()
     fSmear2NDBDM2     = (TH1D*)fFile->Get("fSmear2NDBDM2");
     fSmearNDBDM2      = (TH1D*)fFile->Get("fSmearNDBDM2");
     fSmearBiM2        = (TH1D*)fFile->Get("fSmearBiM2");    
-*/ 
+ 
   }
 
 }
@@ -2808,7 +2810,7 @@ void TBackgroundModel::UpdateModel()
   /////////////////////////////////////
   //// Many parameters
   ////////////////////////////////////
-/*
+
   // M1
   fModelTotM1->Add( fSmearFrameThM1,    fParameters[0]);
   fModelTotM1->Add( fSmearTShieldThM1,  fParameters[1]);  
@@ -2880,12 +2882,12 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fSmearNDBDM2,      fParameters[9]);  
   fModelTotM2->Add( fSmear2NDBDM2,     fParameters[8]);  
   fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
-*/
+
 
   /////////////////////////////////////
   //// Test for accidental coincidence (Only M1 right now)
   ////////////////////////////////////
-
+/*
   // M1
   fModelTestM1->Reset();
   fModelTest2->Reset();
@@ -2927,7 +2929,7 @@ void TBackgroundModel::UpdateModel()
     r_i = 0;
   }
     fModelTest2->Scale(1./fParameters[25]);
-
+*/
 
 }
 
@@ -3058,28 +3060,23 @@ void TBackgroundModel::TestSave()
   fBiM2 = (TH1D*)fRLeadBi2->Get("h0");
 
 
-  NormalizePDFPair(f600mKThM1, 50, 2700);
-  NormalizePDFPair(fIVCThM1, 50, 2700);
-  NormalizePDFPair(fOVCThM1, 50, 2700);
-
-  NormalizePDFPair(f600mKRaM1, 50, 2700);
-  NormalizePDFPair(fOVCRaM1, 50, 2700);
-
-  NormalizePDFPair(fFrameKM1, 50, 2700);
-  NormalizePDFPair(fTShieldKM1, 50, 2700);
-  NormalizePDFPair(f50mKKM1, 50, 2700);
-  NormalizePDFPair(f600mKKM1, 50, 2700);
-  NormalizePDFPair(fIVCKM1, 50, 2700);
-  NormalizePDFPair(fOVCKM1, 50, 2700);
-
-  NormalizePDFPair(fFrameCoM1, 50, 2700);
-  NormalizePDFPair(fOVCCoM1, 50, 2700);
-
-  NormalizePDFPair(fIVCMnM1, 50, 2700);
-  NormalizePDFPair(fNDBDM1, 50, 2700);
-  NormalizePDFPair(f2NDBDM1, 50, 2700);
-  NormalizePDFPair(fBiM1, 50, 2700);
-
+  NormalizePDFPair(f600mKThM1, f600mKThM2, 50, 2700);
+  NormalizePDFPair(fIVCThM1, fIVCThM2, 50, 2700);
+  NormalizePDFPair(fOVCThM1, fOVCThM2, 50, 2700);
+  NormalizePDFPair(f600mKRaM1, f600mKRaM2, 50, 2700);
+  NormalizePDFPair(fOVCRaM1, fOVCRaM2, 50, 2700);
+  NormalizePDFPair(fFrameKM1, fFrameKM2, 50, 2700);
+  NormalizePDFPair(fTShieldKM1, fTShieldKM2, 50, 2700);
+  NormalizePDFPair(f50mKKM1, f50mKKM2, 50, 2700);
+  NormalizePDFPair(f600mKKM1, f600mKKM2, 50, 2700);
+  NormalizePDFPair(fIVCKM1, fIVCKM2, 50, 2700);
+  NormalizePDFPair(fOVCKM1, fOVCKM2, 50, 2700);
+  NormalizePDFPair(fFrameCoM1, fFrameCoM2, 50, 2700);
+  NormalizePDFPair(fOVCCoM1, fOVCCoM2, 50, 2700);
+  NormalizePDFPair(fIVCMnM1, fIVCMnM2, 50, 2700);
+  NormalizePDFPair(fNDBDM1, fNDBDM2, 50, 2700);
+  NormalizePDFPair(f2NDBDM1, f2NDBDM2, 50, 2700);
+  NormalizePDFPair(fBiM1, fBiM2, 50, 2700);
 
 
   SmearMC(f600mKThM1, fSmear600mKThM1, dRes1, dRes2);
