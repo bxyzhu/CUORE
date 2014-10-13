@@ -503,6 +503,8 @@ private:
 	TH1D *f2NDBDM2;
 	TH1D *fBiM2;
 
+	TH1D *fCorrectionM2;
+
 
 	std::string		dDataDir;
 	bool			bToyFit;

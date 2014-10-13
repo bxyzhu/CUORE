@@ -115,12 +115,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   // Normalizing data (don't!)
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
 
-  dDataIntegral = fDataHistoTot->Integral(1, dNBins);
+  dDataIntegral = fDataHistoM1->Integral(1, dNBins);
   int dDataIntegralTot = qtree->GetEntries();
 
   cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
-  cout << "Events in background spectrum (M1): " << dDataIntegral << endl;
-  cout << "Events in background spectrum (M2): " << fDataHistoM2->Integral(1, dNBins) << endl;
+  cout << "Events in background spectrum (M1): " << fDataHistoM1->Integral(1, 3000/dBinSize) << endl;
+  cout << "Events in background spectrum (M2): " << fDataHistoM2->Integral(1, 3000/dBinSize) << endl;
 
   // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
   fDataHistoM1->Scale(1/((936398+14647393.0) * dSecToYears));
@@ -449,6 +449,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
 
   ////////////////////////////// Histograms for accidental coincidence test
+  fCorrectionM2     = new TH1D("fCorrectionM2",      "Correction Spectra",        dNBins, dMinEnergy, dMaxEnergy);  
+
   fModelTestM1      = new TH1D("fModelTestM1",      "Test",        dNBins, dMinEnergy, dMaxEnergy);  
   fModelTest2      = new TH1D("fModelTest2",      "Test",        dNBins, dMinEnergy, dMaxEnergy);  
 
@@ -1389,7 +1391,21 @@ bool TBackgroundModel::DoTheFit()
   cout << "Integral IVC Th PDF in ROI: " << fParameters[15]*fSmearIVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
   cout << "Integral OVC Th PDF in ROI: " << fParameters[16]*fSmearOVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
 
+  cout << "M2/(M1+M2) = " << (double)fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)/(fModelTotM1->Integral(300/dBinSize, 3000/dBinSize)+fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)) << endl;
 
+
+  // Write
+
+  TH1D  *hCloneResultM1    = (TH1D*)fModelTotM1->Clone("fModelTotM1");
+  // TH1D  *hCloneResultM2    = (TH1D*)fModelTotM2->Clone("fModelTotM2");
+
+  NormalizePDF(hCloneResultM1, 0, 2700);
+
+
+  TFile *fFileResult = new TFile("Result-2keV.root", "RECREATE");
+  hCloneResultM1->Write();
+  // hCloneResultM2->Write();
+  fFileResult->Write();
 
 	return true;
    
