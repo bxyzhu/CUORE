@@ -210,10 +210,12 @@ private:
 	TH1D			*fModelTotKM1;
 	TH1D			*fModelTotCoM1;
 	TH1D			*fModelTotMnM1;
-
 	TH1D			*fModelTotNDBDM1;
 	TH1D			*fModelTot2NDBDM1;
 	TH1D			*fModelTotBiM1;
+	TH1D			*fModelTotPtM1;
+	TH1D			*fModelTotPbM1;
+
 	TH1D			*fModelNDBDM1;
 	TH1D			*fModel2NDBDM1;
 	TH1D			*fModelBiM1;
@@ -266,6 +268,20 @@ private:
 	TH1D			*fModelTShieldMnM1;
 	TH1D			*fModelIVCMnM1;
 
+	// M1 Alphas
+	TH1D			*fModelCrystalPtBM1;
+	TH1D			*fModelCrystalPbBM1;
+	TH1D			*fModelCrystalPbS01M1;
+	TH1D			*fModelCrystalPbS1M1;
+	TH1D			*fModelCrystalPbS10M1;
+	TH1D			*fModelCrystalPbS100M1;
+	TH1D			*fModelFramePbBM1;
+	TH1D			*fModelFramePbS01M1;
+	TH1D			*fModelFramePbS1M1;
+	TH1D			*fModelFramePbS10M1;
+	TH1D			*fModelFramePbS100M1;
+
+
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
 	TH1D			*fModelTotThM2;
@@ -273,10 +289,12 @@ private:
 	TH1D			*fModelTotKM2;
 	TH1D			*fModelTotCoM2;
 	TH1D			*fModelTotMnM2;
-
 	TH1D			*fModelTotNDBDM2;
 	TH1D			*fModelTot2NDBDM2;
 	TH1D			*fModelTotBiM2;
+	TH1D			*fModelTotPtM2;
+	TH1D			*fModelTotPbM2;
+
 	TH1D			*fModelNDBDM2;
 	TH1D			*fModel2NDBDM2;
 	TH1D			*fModelBiM2;
@@ -328,6 +346,19 @@ private:
 
 	TH1D			*fModelTShieldMnM2;
 	TH1D			*fModelIVCMnM2;
+
+	// M2 Alphas
+	TH1D			*fModelCrystalPtBM2;
+	TH1D			*fModelCrystalPbBM2;
+	TH1D			*fModelCrystalPbS01M2;
+	TH1D			*fModelCrystalPbS1M2;
+	TH1D			*fModelCrystalPbS10M2;
+	TH1D			*fModelCrystalPbS100M2;
+	TH1D			*fModelFramePbBM2;
+	TH1D			*fModelFramePbS01M2;
+	TH1D			*fModelFramePbS1M2;
+	TH1D			*fModelFramePbS10M2;
+	TH1D			*fModelFramePbS100M2;
 
 
 
@@ -403,6 +434,19 @@ private:
 	TH1D			*fSmearTShieldMnM1;
 	TH1D			*fSmearIVCMnM1;
 
+	TH1D			*fSmearCrystalPtM1;
+	TH1D			*fSmearCrystalPbBM1;
+	TH1D			*fSmearCrystalPbS01M1;
+	TH1D			*fSmearCrystalPbS1M1;
+	TH1D			*fSmearCrystalPbS10M1;
+	TH1D			*fSmearCrystalPbS100M1;
+	TH1D			*fSmearFramePbBM1;
+	TH1D			*fSmearFramePbS01M1;
+	TH1D			*fSmearFramePbS1M1;
+	TH1D			*fSmearFramePbS10M1;
+	TH1D			*fSmearFramePbS100M1;
+
+
 	// Smeared PDFs M2
 	TH1D			*fSmearDummyM2;
 
@@ -458,6 +502,17 @@ private:
 	TH1D			*fSmearTShieldMnM2;
 	TH1D			*fSmearIVCMnM2;
 
+	TH1D			*fSmearCrystalPtM2;
+	TH1D			*fSmearCrystalPbBM2;
+	TH1D			*fSmearCrystalPbS01M2;
+	TH1D			*fSmearCrystalPbS1M2;
+	TH1D			*fSmearCrystalPbS10M2;
+	TH1D			*fSmearCrystalPbS100M2;
+	TH1D			*fSmearFramePbBM2;
+	TH1D			*fSmearFramePbS01M2;
+	TH1D			*fSmearFramePbS1M2;
+	TH1D			*fSmearFramePbS10M2;
+	TH1D			*fSmearFramePbS100M2;
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
@@ -503,7 +558,10 @@ private:
 	TH1D *f2NDBDM2;
 	TH1D *fBiM2;
 
+	TFile *fFileCorrection;
 	TH1D *fCorrectionM2;
+	TH1D *fCorrectionM2Tot;
+	TH1D *fTotCorrection;
 
 
 	std::string		dDataDir;
