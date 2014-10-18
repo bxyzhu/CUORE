@@ -8,6 +8,7 @@
 #include "TCut.h"
 #include "TGraphErrors.h"
 #include "TRandom3.h"
+#include <vector>
 
 class TBackgroundModel : public TObject {
 
@@ -15,6 +16,8 @@ public:
 
 	TBackgroundModel(double fFitMin, double fFitMax);
 	virtual ~TBackgroundModel();
+
+	vector<double> AdaptiveBinning(TH1D *h1);
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid);
   
@@ -53,6 +56,8 @@ public:
 
 	TH1D *SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1);
 	
+	void Test();
+
 	void TestSave();
 
 	void UpdateModel();

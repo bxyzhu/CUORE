@@ -7,6 +7,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <vector>
 
 
 using namespace std;
@@ -771,7 +772,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(23, "IVC Co",    0, 10.0, 0., 500000);  
    minuit.DefineParameter(24, "OVC Co",    20815.6, 10.0, 0., 500000);  
    // minuit.DefineParameter(25, "Constant",    500000, 1, 0., 1000000);  
-   minuit.DefineParameter(25, "Pb-210 chain",    1000, 1, 0., 1000000);  
+   minuit.DefineParameter(25, "Pb-210 chain",    110000, 1, 0., 1000000);  
 
    
 
@@ -1048,7 +1049,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTot2NDBDM1->Add(fSmear2NDBDM1,  fParameters[8]);
   fModelTotBiM1->Add(fSmearBiM1,        fParameters[10]);
 
-  fModelTotPbM1->Add(fSmearFramePbS01M1, fParameters[25]);
+  fModelTotPbM1->Add(fSmearCrystalPbBM1, fParameters[25]);
 
 
   // M2 Parameters
@@ -1087,7 +1088,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTot2NDBDM2->Add(fSmear2NDBDM2,  fParameters[8]);
   fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
 
-  fModelTotPbM2->Add(fSmearFramePbS01M2, fParameters[25]);
+  fModelTotPbM2->Add(fSmearCrystalPbBM2, fParameters[25]);
 
   ////////// Only for testing
   // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(R*T)
@@ -2053,9 +2054,15 @@ void TBackgroundModel::Initialize()
 
     fSmearCrystalPtM1 = (TH1D*)fFile->Get("fSmearCrystalPtM1");
     fSmearCrystalPbBM1 = (TH1D*)fFile->Get("fSmearCrystalPbBM1");
+    fSmearCrystalPbS01M1 = (TH1D*)fFile->Get("fSmearCrystalPbS01M1");
     fSmearCrystalPbS1M1 = (TH1D*)fFile->Get("fSmearCrystalPbS1M1");
+    fSmearCrystalPbS10M1 = (TH1D*)fFile->Get("fSmearCrystalPbS10M1");
+    fSmearCrystalPbS100M1 = (TH1D*)fFile->Get("fSmearCrystalPbS100M1");
     fSmearFramePbBM1 = (TH1D*)fFile->Get("fSmearFramePbBM1");
+    fSmearFramePbS01M1 = (TH1D*)fFile->Get("fSmearFramePbS01M1");
     fSmearFramePbS1M1 = (TH1D*)fFile->Get("fSmearFramePbS1M1");
+    fSmearFramePbS10M1 = (TH1D*)fFile->Get("fSmearFramePbS10M1");
+    fSmearFramePbS100M1 = (TH1D*)fFile->Get("fSmearFramePbS100M1");
 
 
     fSmearFrameThM2   = (TH1D*)fFile->Get("fSmearFrameThM2");
@@ -2095,9 +2102,15 @@ void TBackgroundModel::Initialize()
  
     fSmearCrystalPtM2 = (TH1D*)fFile->Get("fSmearCrystalPtM2");
     fSmearCrystalPbBM2 = (TH1D*)fFile->Get("fSmearCrystalPbBM2");
+    fSmearCrystalPbS01M2 = (TH1D*)fFile->Get("fSmearCrystalPbS01M2");
     fSmearCrystalPbS1M2 = (TH1D*)fFile->Get("fSmearCrystalPbS1M2");
+    fSmearCrystalPbS10M2 = (TH1D*)fFile->Get("fSmearCrystalPbS10M2");
+    fSmearCrystalPbS100M2 = (TH1D*)fFile->Get("fSmearCrystalPbS100M2");
     fSmearFramePbBM2 = (TH1D*)fFile->Get("fSmearFramePbBM2");
+    fSmearFramePbS01M2 = (TH1D*)fFile->Get("fSmearFramePbS01M2"); 
     fSmearFramePbS1M2 = (TH1D*)fFile->Get("fSmearFramePbS1M2"); 
+    fSmearFramePbS10M2 = (TH1D*)fFile->Get("fSmearFramePbS10M2"); 
+    fSmearFramePbS100M2 = (TH1D*)fFile->Get("fSmearFramePbS100M2"); 
 
   }
 
@@ -2611,14 +2624,6 @@ void TBackgroundModel::PrintParameters()
   cout<< "Par24 = "  << fParameters[24] << " +/- " << fParError[24] << endl;
   cout<< "Par25 = "  << fParameters[25] << " +/- " << fParError[25] << endl;
 
-
-//	double dSum = fParameters[0] + fParameters[1] + fParameters[2] + fParameters[3]
-//					+ fParameters[4] + fParameters[5] + fParameters[6] + fParameters[7] + fParameters[9];
-
-	// cout << "Par11 (1 - Sum) = " << 1 - dSum << endl;
-//	cout << "Sum = " << dSum << endl; 
-
-
 }
 
 
@@ -2915,7 +2920,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmear2NDBDM1,     fParameters[8]);  
   fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
 
-  fModelTotM1->Add( fSmearFramePbS01M1, fParameters[25]);  
+  fModelTotM1->Add( fSmearCrystalPbBM1, fParameters[25]);  
 
   // M2
   fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
@@ -2953,7 +2958,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fSmear2NDBDM2,     fParameters[8]);  
   fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
 
-  fModelTotM1->Add( fSmearFramePbS01M2, fParameters[25]);  
+  fModelTotM1->Add( fSmearCrystalPbBM2, fParameters[25]);  
 
 
   // Adding on correction for M2.. (just the M1 spectrum)
@@ -3461,4 +3466,79 @@ void TBackgroundModel::SaveSmearedData()
     file1->Write();
 
 }
+
+vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1)
+{
+
+  vector<double> dBinArrayThing;
+
+  double dDummy = 0;
+  double dDummyFill = 0;
+  int j = 0;
+
+  for(int i = 1; i < 25; i++)
+  {
+    dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i));
+  }
+
+  for(int i = 25; i < dNBins; i++)
+  {
+    dDummy = h1->GetBinContent(i);
+    dDummyFill += dDummy;
+
+    if(dDummyFill >= 50)
+    {
+      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
+      dDummyFill = 0;
+      j = 0;
+    }
+    else if(i == dNBins-1) // for the very end if it doesn't reach 50 events (which it won't)
+    {
+      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
+    }
+    else 
+    {
+      j++;
+    }
+  }
+
+return dBinArrayThing;
+}
+
+
+// For whatever tests...
+void TBackgroundModel::Test()
+{ 
+  vector<double> Test;
+
+  Test = AdaptiveBinning(fDataHistoM1);
+
+  int bins = Test.size();
+
+  cout << "Old Number of bins: " << dNBins << " New number of bins: " << bins-1 << endl;
+
+  double *TestArray = &Test[0];
+
+  double dFill = 0;
+
+  fDataHistoM1->Rebin(bins-1, "hnew", TestArray);
+
+  TH1D *hAdjusted = new TH1D("hAdjusted", "Variable bin width histogram", bins-1, TestArray);
+
+  for(int i = 1; i < bins; i++)
+  {
+    dFill = 2*hnew->GetBinContent(i)/hnew->GetBinWidth(i);
+    hAdjusted->SetBinContent(i, dFill);
+  }
+
+  fDataHistoM1->Draw("E");
+  hAdjusted->SetLineColor(kRed);
+  hAdjusted->SetLineStyle(2);
+  hAdjusted->Draw("SAME");
+  // hnew->SetLineColor(kRed);
+  // hnew->SetLineStyle(2);
+  // hnew->Draw("ESAME");
+
+}
+
 
