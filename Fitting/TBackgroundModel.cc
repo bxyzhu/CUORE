@@ -142,6 +142,20 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fAdapDataHistoM1   = new TH1D("fAdapDataHistoM1",   "", dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapDataHistoM2   = new TH1D("fAdapDataHistoM2",   "", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
+  fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
+  fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
+
+  for(int i = 1; i <= dAdaptiveBinsM1; i++)
+  {
+    fAdapDataHistoM1->SetBinContent(i, 2*hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i);
+  }
+
+  for(int i = 1; i <= dAdaptiveBinsM2; i++)
+  {
+    fAdapDataHistoM2->SetBinContent(i, 2*hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i));
+  }
+
+
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
   dFitMinBinM2 = fAdapDataHistoM2->FindBin(dFitMin);
   dFitMaxBinM1 = fAdapDataHistoM1->FindBin(dFitMax);
@@ -2109,7 +2123,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   for(int i = dFitMinBinM1 ; i <= dFitMaxBinM1; i++)
   {
 
-    datam1_i = fDataHistoM1->GetBinContent(i); // For real data
+    datam1_i = fAdapDataHistoM1->GetBinContent(i); // For real data
 
     modelm1_i = fModelTotM1->GetBinContent(i);
 
@@ -2121,7 +2135,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
   for(int i = dFitMinBinM2; i <= dFitMaxBinM2; i++)
   {
-    datam2_i = fDataHistoM2->GetBinContent(i); // For real data
+    datam2_i = fAdapDataHistoM2->GetBinContent(i); // For real data
 
     modelm2_i = fModelTotM2->GetBinContent(i);
 
@@ -4264,13 +4278,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
     c1->SetLogy();
 
     ///// Draw Data M1
-    fDataHistoM1->SetLineColor(1);
-    fDataHistoM1->SetLineWidth(2);
-    fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-    fDataHistoM1->SetMaximum(90000);
-    fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
-    fDataHistoM1->Draw("E");
+    fAdapDataHistoM1->SetLineColor(1);
+    fAdapDataHistoM1->SetLineWidth(2);
+    fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+    fAdapDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fAdapDataHistoM1->SetMaximum(90000);
+    fAdapDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
+    fAdapDataHistoM1->Draw("E");
 
 
     fModelTotM1->SetLineColor(2);
@@ -4345,13 +4359,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
     c2->SetLogy();
 
     ///// Draw Data M2
-    fDataHistoM2->SetLineColor(1);
-    fDataHistoM2->SetLineWidth(2);
-    fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-    fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-    fDataHistoM2->SetMaximum(9000);
-    fDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
-    fDataHistoM2->Draw("E");
+    fAdapDataHistoM2->SetLineColor(1);
+    fAdapDataHistoM2->SetLineWidth(2);
+    fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+    fAdapDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fAdapDataHistoM2->SetMaximum(9000);
+    fAdapDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
+    fAdapDataHistoM2->Draw("E");
 
   
     fModelTotM2->SetLineColor(2);
