@@ -23,6 +23,8 @@ public:
   
 	double GetChiSquare();
 
+	double GetChiSquareAdaptive();
+
 	double GetMCEff(TH1D *h1);
 
 	bool DoTheFit();
@@ -69,6 +71,17 @@ public:
 	double 	dMaxEnergy;
 	double	dFitMin;
 	double	dFitMax;
+	int 	dFitMinBinM1;
+	int 	dFitMaxBinM1;
+	int 	dFitMinBinM2;
+	int 	dFitMaxBinM2;
+
+	int 	dAdaptiveBinsM1;
+	int 	dAdaptiveBinsM2;
+	vector<double> dAdaptiveVectorM1;
+	vector<double> dAdaptiveVectorM2;
+	double 	*dAdaptiveArrayM1;
+	double 	*dAdaptiveArrayM2;
 
 private:
 
@@ -82,6 +95,10 @@ private:
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
+
+	TH1D			*fAdapDataHistoM1;
+	TH1D			*fAdapDataHistoM2;
+
 
 	// Toy data
 	TH1D			*fToyData;
@@ -518,6 +535,73 @@ private:
 	TH1D			*fSmearFramePbS1M2;
 	TH1D			*fSmearFramePbS10M2;
 	TH1D			*fSmearFramePbS100M2;
+
+
+	// Adaptive binned histograms
+	TH1D *fAdap600mKThM1;
+	TH1D *fAdapIVCThM1;
+	TH1D *fAdapOVCThM1;
+	TH1D *fAdap600mKRaM1;
+	TH1D *fAdapOVCRaM1;
+	TH1D *fAdapFrameKM1;
+	TH1D *fAdapTShieldKM1;
+	TH1D *fAdap50mKKM1;
+	TH1D *fAdap600mKKM1;
+	TH1D *fAdapIVCKM1;
+	TH1D *fAdapOVCKM1;
+	TH1D *fAdapFrameCoM1;
+	TH1D *fAdapOVCCoM1;
+	TH1D *fAdapIVCMnM1;
+	TH1D *fAdapNDBDM1;
+	TH1D *fAdap2NDBDM1;
+	TH1D *fAdapBiM1;
+
+	TH1D *fAdapCrystalPtM1;
+	TH1D *fAdapCrystalPbBM1;
+	TH1D *fAdapCrystalPbS01M1;
+	TH1D *fAdapCrystalPbS1M1;
+	TH1D *fAdapCrystalPbS10M1;
+	TH1D *fAdapCrystalPbS100M1;
+	TH1D *fAdapFramePbBM1;
+	TH1D *fAdapFramePbS01M1;
+	TH1D *fAdapFramePbS1M1;
+	TH1D *fAdapFramePbS10M1;
+	TH1D *fAdapFramePbS100M1;
+
+
+
+	TH1D *fAdap600mKThM2;
+	TH1D *fAdapIVCThM2;
+	TH1D *fAdapOVCThM2;
+	TH1D *fAdap600mKRaM2;
+	TH1D *fAdapOVCRaM2;
+	TH1D *fAdapFrameKM2;
+	TH1D *fAdapTShieldKM2;
+	TH1D *fAdap50mKKM2;
+	TH1D *fAdap600mKKM2;
+	TH1D *fAdapIVCKM2;
+	TH1D *fAdapOVCKM2;
+	TH1D *fAdapFrameCoM2;
+	TH1D *fAdapOVCCoM2;
+	TH1D *fAdapIVCMnM2;
+	TH1D *fAdapNDBDM2;
+	TH1D *fAdap2NDBDM2;
+	TH1D *fAdapBiM2;
+
+	TH1D *fAdapCrystalPtM2;
+	TH1D *fAdapCrystalPbBM2;
+	TH1D *fAdapCrystalPbS01M2;
+	TH1D *fAdapCrystalPbS1M2;
+	TH1D *fAdapCrystalPbS10M2;
+	TH1D *fAdapCrystalPbS100M2;
+	TH1D *fAdapFramePbBM2;
+	TH1D *fAdapFramePbS01M2;
+	TH1D *fAdapFramePbS1M2;
+	TH1D *fAdapFramePbS10M2;
+	TH1D *fAdapFramePbS100M2;
+
+
+
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
