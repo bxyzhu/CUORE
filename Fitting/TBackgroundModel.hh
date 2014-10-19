@@ -29,6 +29,8 @@ public:
 
 	bool DoTheFit();
 
+	bool DoTheFitAdaptive();
+
 	void DrawBkg();
 
 	void DrawMC();
