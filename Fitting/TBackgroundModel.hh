@@ -66,6 +66,8 @@ public:
 
 	void UpdateModel();
 
+	void UpdateModelAdaptive();
+
 
 	int 	dBinSize;
 	int 	dNBins;
@@ -227,6 +229,69 @@ private:
 	TChain			*outTreeBiM2;
 
 
+	// Alphas
+	TChain			*outTreeCrystalPt190BM1;
+	TChain			*outTreeCrystalPt190S01M1;
+	TChain			*outTreeCrystalPt190S1M1;
+	TChain			*outTreeCrystalPt190S10M1;
+	TChain			*outTreeCrystalPt190S100M1;
+
+	TChain			*outTreeCrystalPb210BM1;
+	TChain			*outTreeCrystalPb210S01M1;
+	TChain			*outTreeCrystalPb210S1M1;
+	TChain			*outTreeCrystalPb210S10M1;
+	TChain			*outTreeCrystalPb210S100M1;
+
+	TChain			*outTreeCrystalRa226BM1;
+	TChain			*outTreeCrystalRa226S01M1;
+	TChain			*outTreeCrystalRa226S1M1;
+	TChain			*outTreeCrystalRa226S10M1;
+	TChain			*outTreeCrystalRa226S100M1;
+
+	TChain			*outTreeFramePb210BM1;
+	TChain			*outTreeFramePb210S01M1;
+	TChain			*outTreeFramePb210S1M1;
+	TChain			*outTreeFramePb210S10M1;
+	TChain			*outTreeFramePb210S100M1;
+
+	TChain			*outTreeFrameRa226BM1;
+	TChain			*outTreeFrameRa226S01M1;
+	TChain			*outTreeFrameRa226S1M1;
+	TChain			*outTreeFrameRa226S10M1;
+	TChain			*outTreeFrameRa226S100M1;
+
+
+	TChain			*outTreeCrystalPt190BM2;
+	TChain			*outTreeCrystalPt190S01M2;
+	TChain			*outTreeCrystalPt190S1M2;
+	TChain			*outTreeCrystalPt190S10M2;
+	TChain			*outTreeCrystalPt190S100M2;
+
+	TChain			*outTreeCrystalPb210BM2;
+	TChain			*outTreeCrystalPb210S01M2;
+	TChain			*outTreeCrystalPb210S1M2;
+	TChain			*outTreeCrystalPb210S10M2;
+	TChain			*outTreeCrystalPb210S100M2;
+
+	TChain			*outTreeCrystalRa226BM2;
+	TChain			*outTreeCrystalRa226S01M2;
+	TChain			*outTreeCrystalRa226S1M2;
+	TChain			*outTreeCrystalRa226S10M2;
+	TChain			*outTreeCrystalRa226S100M2;
+
+	TChain			*outTreeFramePb210BM2;
+	TChain			*outTreeFramePb210S01M2;
+	TChain			*outTreeFramePb210S1M2;
+	TChain			*outTreeFramePb210S10M2;
+	TChain			*outTreeFramePb210S100M2;
+
+	TChain			*outTreeFrameRa226BM2;
+	TChain			*outTreeFrameRa226S01M2;
+	TChain			*outTreeFrameRa226S1M2;
+	TChain			*outTreeFrameRa226S10M2;
+	TChain			*outTreeFrameRa226S100M2;
+
+
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
 	TH1D			*fModelTotThM1;
@@ -243,6 +308,7 @@ private:
 	TH1D			*fModelNDBDM1;
 	TH1D			*fModel2NDBDM1;
 	TH1D			*fModelBiM1;
+	TH1D			*fModelBi2M1;
 
 	TH1D			*fModelFrameThS01M1;
 	TH1D			*fModelFrameThS1M1;
@@ -292,6 +358,9 @@ private:
 	TH1D			*fModelTShieldMnM1;
 	TH1D			*fModelIVCMnM1;
 
+	TH1D			*fModelCrystalBi2M1;
+	TH1D			*fModelFrameBi2M1;
+
 	// M1 Alphas
 	TH1D			*fModelCrystalPtBM1;
 	TH1D			*fModelCrystalPbBM1;
@@ -322,6 +391,7 @@ private:
 	TH1D			*fModelNDBDM2;
 	TH1D			*fModel2NDBDM2;
 	TH1D			*fModelBiM2;
+	TH1D			*fModelBi2M2;
 
 	TH1D			*fModelFrameThS01M2;
 	TH1D			*fModelFrameThS1M2;
@@ -370,6 +440,9 @@ private:
 
 	TH1D			*fModelTShieldMnM2;
 	TH1D			*fModelIVCMnM2;
+
+	TH1D			*fModelCrystalBi2M2;
+	TH1D			*fModelFrameBi2M2;
 
 	// M2 Alphas
 	TH1D			*fModelCrystalPtBM2;
@@ -458,6 +531,9 @@ private:
 	TH1D			*fSmearTShieldMnM1;
 	TH1D			*fSmearIVCMnM1;
 
+	TH1D			*fSmearCrystalBi2M1;
+	TH1D			*fSmearFrameBi2M1;
+
 	TH1D			*fSmearCrystalPtM1;
 	TH1D			*fSmearCrystalPbBM1;
 	TH1D			*fSmearCrystalPbS01M1;
@@ -526,6 +602,9 @@ private:
 	TH1D			*fSmearTShieldMnM2;
 	TH1D			*fSmearIVCMnM2;
 
+	TH1D			*fSmearCrystalBi2M2;
+	TH1D			*fSmearFrameBi2M2;
+
 	TH1D			*fSmearCrystalPtM2;
 	TH1D			*fSmearCrystalPbBM2;
 	TH1D			*fSmearCrystalPbS01M2;
@@ -540,20 +619,41 @@ private:
 
 
 	// Adaptive binned histograms
+
+	TH1D *fAdapFrameThM1;
+	TH1D *fAdapTShieldThM1;
+	TH1D *fAdap50mKThM1;
 	TH1D *fAdap600mKThM1;
 	TH1D *fAdapIVCThM1;
 	TH1D *fAdapOVCThM1;
+
+	TH1D *fAdapFrameRaM1;
+	TH1D *fAdapTShieldRaM1;
+	TH1D *fAdap50mKRaM1;
 	TH1D *fAdap600mKRaM1;
+	TH1D *fAdapIVCRaM1;
 	TH1D *fAdapOVCRaM1;
+	
 	TH1D *fAdapFrameKM1;
 	TH1D *fAdapTShieldKM1;
 	TH1D *fAdap50mKKM1;
 	TH1D *fAdap600mKKM1;
 	TH1D *fAdapIVCKM1;
 	TH1D *fAdapOVCKM1;
+	
 	TH1D *fAdapFrameCoM1;
+	TH1D *fAdapTShieldCoM1;
+	TH1D *fAdap50mKCoM1;
+	TH1D *fAdap600mKCoM1;
+	TH1D *fAdapIVCCoM1;
 	TH1D *fAdapOVCCoM1;
+	
+	TH1D *fAdapTShieldMnM1;
 	TH1D *fAdapIVCMnM1;
+	
+	TH1D *fAdapCrystalBi2M1;
+	TH1D *fAdapFrameBi2M1;
+
 	TH1D *fAdapNDBDM1;
 	TH1D *fAdap2NDBDM1;
 	TH1D *fAdapBiM1;
@@ -572,23 +672,39 @@ private:
 
 
 
+	TH1D *fAdapFrameThM2;
+	TH1D *fAdapTShieldThM2;
+	TH1D *fAdap50mKThM2;
 	TH1D *fAdap600mKThM2;
 	TH1D *fAdapIVCThM2;
 	TH1D *fAdapOVCThM2;
+
+	TH1D *fAdapFrameRaM2;
+	TH1D *fAdapTShieldRaM2;
+	TH1D *fAdap50mKRaM2;
 	TH1D *fAdap600mKRaM2;
+	TH1D *fAdapIVCRaM2;
 	TH1D *fAdapOVCRaM2;
+	
 	TH1D *fAdapFrameKM2;
 	TH1D *fAdapTShieldKM2;
 	TH1D *fAdap50mKKM2;
 	TH1D *fAdap600mKKM2;
 	TH1D *fAdapIVCKM2;
 	TH1D *fAdapOVCKM2;
+	
 	TH1D *fAdapFrameCoM2;
+	TH1D *fAdapTShieldCoM2;
+	TH1D *fAdap50mKCoM2;
+	TH1D *fAdap600mKCoM2;
+	TH1D *fAdapIVCCoM2;
 	TH1D *fAdapOVCCoM2;
+	
+	TH1D *fAdapTShieldMnM2;
 	TH1D *fAdapIVCMnM2;
-	TH1D *fAdapNDBDM2;
-	TH1D *fAdap2NDBDM2;
-	TH1D *fAdapBiM2;
+	
+	TH1D *fAdapCrystalBi2M2;
+	TH1D *fAdapFrameBi2M2;
 
 	TH1D *fAdapCrystalPtM2;
 	TH1D *fAdapCrystalPbBM2;
@@ -613,41 +729,82 @@ private:
 	TH1D *fModelTest1;	
 	TH1D *fModelTest2;
 
+	TH1D *fFrameThM1; 
+	TH1D *fTShieldThM1;
+	TH1D *f50mKThM1;
 	TH1D *f600mKThM1;
 	TH1D *fIVCThM1;
 	TH1D *fOVCThM1;
+
+	TH1D *fFrameRaM1; 
+	TH1D *fTShieldRaM1;
+	TH1D *f50mKRaM1;
 	TH1D *f600mKRaM1;
+	TH1D *fIVCRaM1;
 	TH1D *fOVCRaM1;
+
 	TH1D *fFrameKM1; 
 	TH1D *fTShieldKM1;
 	TH1D *f50mKKM1;
 	TH1D *f600mKKM1;
 	TH1D *fIVCKM1;
 	TH1D *fOVCKM1;
-	TH1D *fFrameCoM1;
+
+	TH1D *fFrameCoM1; 
+	TH1D *fTShieldCoM1;
+	TH1D *f50mKCoM1;
+	TH1D *f600mKCoM1;
+	TH1D *fIVCCoM1;
 	TH1D *fOVCCoM1;
+
+	TH1D *fTShieldMnM1;
 	TH1D *fIVCMnM1;
+
+	TH1D *fCrystalBi2M1;
+	TH1D *fFrameBi2M1;
+
 	TH1D *fNDBDM1;
 	TH1D *f2NDBDM1;
 	TH1D *fBiM1;
 
-	TH1D *f600mKThM2;
-	TH1D *fIVCThM2;
-	TH1D *fOVCThM2;
-	TH1D *f600mKRaM2;
-	TH1D *fOVCRaM2;
-	TH1D *fFrameKM2; 
-	TH1D *fTShieldKM2;
-	TH1D *f50mKKM2;
-	TH1D *f600mKKM2;
-	TH1D *fIVCKM2;
-	TH1D *fOVCKM2;
-	TH1D *fFrameCoM2;
-	TH1D *fOVCCoM2;
-	TH1D *fIVCMnM2;
-	TH1D *fNDBDM2;
-	TH1D *f2NDBDM2;
-	TH1D *fBiM2;
+
+	TH1D *fFrameThM1; 
+	TH1D *fTShieldThM1;
+	TH1D *f50mKThM1;
+	TH1D *f600mKThM1;
+	TH1D *fIVCThM1;
+	TH1D *fOVCThM1;
+
+	TH1D *fFrameRaM1; 
+	TH1D *fTShieldRaM1;
+	TH1D *f50mKRaM1;
+	TH1D *f600mKRaM1;
+	TH1D *fIVCRaM1;
+	TH1D *fOVCRaM1;
+
+	TH1D *fFrameKM1; 
+	TH1D *fTShieldKM1;
+	TH1D *f50mKKM1;
+	TH1D *f600mKKM1;
+	TH1D *fIVCKM1;
+	TH1D *fOVCKM1;
+
+	TH1D *fFrameCoM1; 
+	TH1D *fTShieldCoM1;
+	TH1D *f50mKCoM1;
+	TH1D *f600mKCoM1;
+	TH1D *fIVCCoM1;
+	TH1D *fOVCCoM1;
+
+	TH1D *fTShieldMnM1;
+	TH1D *fIVCMnM1;
+
+	TH1D *fCrystalBi2M1;
+	TH1D *fFrameBi2M1;
+
+	TH1D *fNDBDM1;
+	TH1D *f2NDBDM1;
+	TH1D *fBiM1;
 
 	TFile *fFileCorrection;
 	TH1D *fCorrectionM2;

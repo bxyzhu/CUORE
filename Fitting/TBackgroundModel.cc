@@ -55,10 +55,11 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 
 	Obj->UpdateModel();
+  // Obj->UpdateModelAdaptive();
 
 	//implement a method in your class that calculates the quantity you want to minimise, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
-	// fval = Obj->GetChiSquare();
-  fval = Obj->GetChiSquareAdaptive();
+	fval = Obj->GetChiSquare();
+  // fval = Obj->GetChiSquareAdaptive();
 
 }
 
@@ -228,6 +229,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTShieldMnM1  = new TH1D("fModelTShieldMnM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
   fModelIVCMnM1      = new TH1D("fModelIVCMnM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
 
+  fModelCrystalBi2M1  = new TH1D("fModelCrystalBi2M1","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameBi2M1    = new TH1D("fModelFrameBi2M1","Frame",  dNBins, dMinEnergy, dMaxEnergy);
+
+
   fModelCrystalPtBM1        = new TH1D("fModelCrystalPtBM1",    "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
   fModelCrystalPbBM1        = new TH1D("fModelCrystalPbBM1",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
   fModelCrystalPbS01M1      = new TH1D("fModelCrystalPbS01M1",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
@@ -292,6 +297,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTShieldMnM2  = new TH1D("fModelTShieldMnM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
   fModelIVCMnM2      = new TH1D("fModelIVCMnM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
 
+  fModelCrystalBi2M2  = new TH1D("fModelCrystalBi2M2","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelFrameBi2M2    = new TH1D("fModelFrameBi2M2","Frame",  dNBins, dMinEnergy, dMaxEnergy);
+
   fModelCrystalPtBM2        = new TH1D("fModelCrystalPtBM2",    "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
   fModelCrystalPbBM2        = new TH1D("fModelCrystalPbBM2",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
   fModelCrystalPbS01M2      = new TH1D("fModelCrystalPbS01M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
@@ -304,7 +312,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelFramePbS10M2        = new TH1D("fModelFramePbS10M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
   fModelFramePbS100M2       = new TH1D("fModelFramePbS100M2", "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
 
-/*
+
   // Total model histograms M1
   fModelTotM1      = new TH1D("fModelTotM1",      "Frame",        dNBins, dMinEnergy, dMaxEnergy);  
   fModelTotThM1    = new TH1D("fModelTotThM1",    "Total Th232",  dNBins, dMinEnergy, dMaxEnergy);
@@ -316,6 +324,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotNDBDM1  = new TH1D("fModelTotNDBDM1",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTot2NDBDM1 = new TH1D("fModelTot2NDBDM1", "Total 2NDBD",  dNBins, dMinEnergy, dMaxEnergy);
   fModelTotBiM1    = new TH1D("fModelTotBiM1",   "Total Bi207",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotBi2M1   = new TH1D("fModelTotBi2M1",   "Total Bi210",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotPtM1    = new TH1D("fModelTotPtM1",   "Total Pt190",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotPbM1    = new TH1D("fModelTotPbM1",   "Total Pb210",   dNBins, dMinEnergy, dMaxEnergy);
 
@@ -331,9 +340,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotNDBDM2  = new TH1D("fModelTotNDBDM2",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTot2NDBDM2 = new TH1D("fModelTot2NDBDM2", "Total 2NDBD",  dNBins, dMinEnergy, dMaxEnergy);
   fModelTotBiM2    = new TH1D("fModelTotBiM2",    "Total Bi207",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotBi2M2   = new TH1D("fModelTotBi2M2",   "Total Bi210",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotPtM2    = new TH1D("fModelTotPtM2",   "Total Pt190",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotPbM2    = new TH1D("fModelTotPbM2",   "Total Pb210",   dNBins, dMinEnergy, dMaxEnergy);
-*/
+
 
   // Total adaptive binning created later
 
@@ -391,6 +401,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   fSmearTShieldMnM1  = new TH1D("fSmearTShieldMnM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
   fSmearIVCMnM1      = new TH1D("fSmearIVCMnM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fSmearCrystalBi2M1  = new TH1D("fSmearCrystalBi2M1","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameBi2M1    = new TH1D("fSmearFrameBi2M1","Frame",  dNBins, dMinEnergy, dMaxEnergy);
+
 
   fSmearNDBDM1       = new TH1D("fSmearNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
   fSmear2NDBDM1      = new TH1D("fSmear2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
@@ -459,6 +473,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fSmearTShieldMnM2  = new TH1D("fSmearTShieldMnM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
   fSmearIVCMnM2      = new TH1D("fSmearIVCMnM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
 
+  fSmearCrystalBi2M2  = new TH1D("fSmearCrystalBi2M2","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
+  fSmearFrameBi2M2    = new TH1D("fSmearFrameBi2M2","Frame",  dNBins, dMinEnergy, dMaxEnergy);
+
+
   fSmearNDBDM2       = new TH1D("fSmearNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
   fSmear2NDBDM2      = new TH1D("fSmear2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
   fSmearBiM2         = new TH1D("fSmearBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
@@ -479,21 +497,41 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
 
 //////////////// Adaptive binned histograms
-
+  fAdapFrameThM1    = new TH1D("fAdapFrameThM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapTShieldThM1  = new TH1D("fAdapTShieldThM1",  "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdap50mKThM1     = new TH1D("fAdap50mKThM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdap600mKThM1    = new TH1D("fAdap600mKThM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapIVCThM1      = new TH1D("fAdapIVCThM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapOVCThM1      = new TH1D("fAdapOVCThM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  fAdapFrameRaM1    = new TH1D("fAdapFrameRaM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapTShieldRaM1  = new TH1D("fAdapTShieldRaM1",  "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdap50mKRaM1     = new TH1D("fAdap50mKRaM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdap600mKRaM1    = new TH1D("fAdap600mKRaM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapIVCRaM1      = new TH1D("fAdapIVCRaM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapOVCRaM1      = new TH1D("fAdapOVCRaM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
   fAdapFrameKM1     = new TH1D("fAdapFrameKM1",   "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapTShieldKM1   = new TH1D("fAdapTShieldKM1", "TShield",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdap50mKKM1      = new TH1D("fAdap50mKKM1",    "50mK",     dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdap600mKKM1     = new TH1D("fAdap600mKKM1",   "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapIVCKM1       = new TH1D("fAdapIVCKM1",     "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapOVCKM1       = new TH1D("fAdapOVCKM1",     "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
   fAdapFrameCoM1    = new TH1D("fAdapFrameCoM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapTShieldCoM1  = new TH1D("fAdapTShieldCoM1", "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdap50mKCoM1     = new TH1D("fAdap50mKCoM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdap600mKCoM1    = new TH1D("fAdap600mKCoM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapIVCCoM1      = new TH1D("fAdapIVCCoM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapOVCCoM1      = new TH1D("fAdapOVCCoM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  fAdapTShieldMnM1  = new TH1D("fAdapTShieldMnM1",    "TShield",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapIVCMnM1      = new TH1D("fAdapIVCMnM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  fAdapCrystalBi2M1 = new TH1D("fAdapCrystalBi2M1",    "Crystal",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fAdapFrameBi2M1   = new TH1D("fAdapFrameBi2M1",    "Frame",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+
   fAdapNDBDM1       = new TH1D("fAdapNDBDM1",   "NDBD",       dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdap2NDBDM1      = new TH1D("fAdap2NDBDM1",  "2NDBD",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapBiM1         = new TH1D("fAdapBiM1",     "Bi",         dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -512,20 +550,40 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
 
 
+  fAdapFrameThM2    = new TH1D("fAdapFrameThM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapTShieldThM2  = new TH1D("fAdapTShieldThM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdap50mKThM2     = new TH1D("fAdap50mKThM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdap600mKThM2    = new TH1D("fAdap600mKThM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapIVCThM2      = new TH1D("fAdapIVCThM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapOVCThM2      = new TH1D("fAdapOVCThM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  fAdapFrameRaM2    = new TH1D("fAdapFrameRaM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapTShieldRaM2  = new TH1D("fAdapTShieldRaM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdap50mKRaM2     = new TH1D("fAdap50mKRaM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdap600mKRaM2    = new TH1D("fAdap600mKRaM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapIVCRaM2      = new TH1D("fAdapIVCRaM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapOVCRaM2      = new TH1D("fAdapOVCRaM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   fAdapFrameKM2     = new TH1D("fAdapFrameKM2",   "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapTShieldKM2   = new TH1D("fAdapTShieldKM2", "TShield",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdap50mKKM2      = new TH1D("fAdap50mKKM2",    "50mK",     dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdap600mKKM2     = new TH1D("fAdap600mKKM2",   "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapIVCKM2       = new TH1D("fAdapIVCKM2",     "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapOVCKM2       = new TH1D("fAdapOVCKM2",     "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   fAdapFrameCoM2    = new TH1D("fAdapFrameCoM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapTShieldCoM2  = new TH1D("fAdapTShieldCoM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdap50mKCoM2     = new TH1D("fAdap50mKCoM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdap600mKCoM2    = new TH1D("fAdap600mKCoM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapIVCCoM2      = new TH1D("fAdapIVCCoM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapOVCCoM2      = new TH1D("fAdapOVCCoM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  fAdapTShieldMnM2  = new TH1D("fAdapTShieldMnM2",    "TShield",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapIVCMnM2      = new TH1D("fAdapIVCMnM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  fAdapCrystalBi2M2 = new TH1D("fAdapCrystalBi2M2",    "Crystal",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fAdapFrameBi2M2   = new TH1D("fAdapFrameBi2M2",    "Frame",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   fAdapNDBDM2       = new TH1D("fAdapNDBDM2",   "NDBD",       dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdap2NDBDM2      = new TH1D("fAdap2NDBDM2",  "2NDBD",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapBiM2         = new TH1D("fAdapBiM2",     "Bi",         dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -542,6 +600,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fAdapFramePbS10M2    = new TH1D("fAdapFramePbS10M2", "Pb",     dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapFramePbS100M2   = new TH1D("fAdapFramePbS100M2", "Pb",    dAdaptiveBinsM2, dAdaptiveArrayM2);
 
+/*
+  // Total Adaptive binning histograms M1
   fModelTotM1      = new TH1D("fModelTotM1",      "Frame",        dAdaptiveBinsM1, dAdaptiveArrayM1);  
   fModelTotThM1    = new TH1D("fModelTotThM1",    "Total Th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotRaM1    = new TH1D("fModelTotRaM1",    "Total Ra226",  dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -552,11 +612,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotNDBDM1  = new TH1D("fModelTotNDBDM1",  "Total NDBD",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTot2NDBDM1 = new TH1D("fModelTot2NDBDM1", "Total 2NDBD",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotBiM1    = new TH1D("fModelTotBiM1",   "Total Bi207",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotBi2M1   = new TH1D("fModelTotBi2M1",   "Total Bi210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotPtM1    = new TH1D("fModelTotPtM1",   "Total Pt190",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotPbM1    = new TH1D("fModelTotPbM1",   "Total Pb210",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
 
-  // Total model histograms M2
+  // Total Adaptive binning histograms M2
   fModelTotM2      = new TH1D("fModelTotM2",      "Frame",        dAdaptiveBinsM2, dAdaptiveArrayM2);  
   fModelTotThM2    = new TH1D("fModelTotThM2",    "Total Th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotRaM2    = new TH1D("fModelTotRaM2",    "Total Ra226",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -567,9 +628,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotNDBDM2  = new TH1D("fModelTotNDBDM2",  "Total NDBD",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTot2NDBDM2 = new TH1D("fModelTot2NDBDM2", "Total 2NDBD",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotBiM2    = new TH1D("fModelTotBiM2",    "Total Bi207",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotBi2M2   = new TH1D("fModelTotBi2M2",   "Total Bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotPtM2    = new TH1D("fModelTotPtM2",   "Total Pt190",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotPbM2    = new TH1D("fModelTotPbM2",   "Total Pb210",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-
+*/
 
   // Set Initial Parameters/Errors to 0
   fParameters[0]  = 0.;
@@ -634,15 +696,22 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fTotCorrection     = new TH1D("fTotCorrection",      "Total Correction Spectra",        dNBins, dMinEnergy, dMaxEnergy);  
 
 
-  fModelTestM1      = new TH1D("fModelTestM1",      "Test",        dNBins, dMinEnergy, dMaxEnergy);  
+  fModelTestM1      = new TH1D("fModelTestM1",    "Test",        dNBins, dMinEnergy, dMaxEnergy);  
   fModelTest2      = new TH1D("fModelTest2",      "Test",        dNBins, dMinEnergy, dMaxEnergy);  
 
-  f600mKThM1    = new TH1D("f600mKThM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCThM1      = new TH1D("fIVCThM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCThM1      = new TH1D("fOVCThM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fFrameThM1     = new TH1D("fFrameThM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldThM1   = new TH1D("fTShieldThM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKThM1      = new TH1D("f50mKThM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKThM1     = new TH1D("f600mKThM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCThM1       = new TH1D("fIVCThM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCThM1       = new TH1D("fOVCThM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  f600mKRaM1    = new TH1D("f600mKRaM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fOVCRaM1      = new TH1D("fOVCRaM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fFrameRaM1     = new TH1D("fFrameRaM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldRaM1   = new TH1D("fTShieldRaM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKRaM1      = new TH1D("f50mKRaM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKRaM1     = new TH1D("f600mKRaM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCRaM1       = new TH1D("fIVCRaM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCRaM1       = new TH1D("fOVCRaM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
   fFrameKM1     = new TH1D("fFrameKM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   fTShieldKM1   = new TH1D("fTShieldKM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
@@ -651,15 +720,63 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fIVCKM1       = new TH1D("fIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   fOVCKM1       = new TH1D("fOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
-  fFrameCoM1    = new TH1D("fFrameCoM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fOVCCoM1      = new TH1D("fOVCCoM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fFrameCoM1     = new TH1D("fFrameCoM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldCoM1   = new TH1D("fTShieldCoM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKCoM1      = new TH1D("f50mKCoM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKCoM1     = new TH1D("f600mKCoM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCCoM1       = new TH1D("fIVCCoM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCCoM1       = new TH1D("fOVCCoM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
 
+
+  fTShieldMnM1      = new TH1D("fTShieldMnM1",    "TShield",      dNBins, dMinEnergy, dMaxEnergy);
   fIVCMnM1      = new TH1D("fIVCMnM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fCrystalBi2M1      = new TH1D("fCrystalBi2M1",    "Crystal",      dNBins, dMinEnergy, dMaxEnergy);
+  fFrameBi2M1      = new TH1D("fFrameBi2M1",    "Frame",      dNBins, dMinEnergy, dMaxEnergy);
 
   fNDBDM1       = new TH1D("fNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
   f2NDBDM1      = new TH1D("f2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
   fBiM1         = new TH1D("fBiM1",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
 
+
+  fFrameThM2     = new TH1D("fFrameThM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldThM2   = new TH1D("fTShieldThM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKThM2      = new TH1D("f50mKThM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKThM2     = new TH1D("f600mKThM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCThM2       = new TH1D("fIVCThM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCThM2       = new TH1D("fOVCThM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fFrameRaM2     = new TH1D("fFrameRaM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldRaM2   = new TH1D("fTShieldRaM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKRaM2      = new TH1D("f50mKRaM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKRaM2     = new TH1D("f600mKRaM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCRaM2       = new TH1D("fIVCRaM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCRaM2       = new TH1D("fOVCRaM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fFrameKM2     = new TH1D("fFrameKM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldKM2   = new TH1D("fTShieldKM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKKM2      = new TH1D("f50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKKM2     = new TH1D("f600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCKM2       = new TH1D("fIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCKM2       = new TH1D("fOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fFrameCoM2     = new TH1D("fFrameCoM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  fTShieldCoM2   = new TH1D("fTShieldCoM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
+  f50mKCoM2      = new TH1D("f50mKCoM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
+  f600mKCoM2     = new TH1D("f600mKCoM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  fIVCCoM2       = new TH1D("fIVCCoM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+  fOVCCoM2       = new TH1D("fOVCCoM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+
+  fTShieldMnM2      = new TH1D("fTShieldMnM2",    "TShield",      dNBins, dMinEnergy, dMaxEnergy);
+  fIVCMnM2      = new TH1D("fIVCMnM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fCrystalBi2M2      = new TH1D("fCrystalBi2M2",    "Crystal",      dNBins, dMinEnergy, dMaxEnergy);
+  fFrameBi2M2      = new TH1D("fFrameBi2M2",    "Frame",      dNBins, dMinEnergy, dMaxEnergy);
+
+  fNDBDM2       = new TH1D("fNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
+  f2NDBDM2      = new TH1D("f2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
+  fBiM2         = new TH1D("fBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
 
 /*
   fFileCoin = new TFile(Form("MCHist-%dkeV.root", dBinSize));
@@ -900,7 +1017,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(23, "IVC Co",    0, 10.0, 0., 500000);  
    minuit.DefineParameter(24, "OVC Co",    20815.6, 10.0, 0., 500000);  
    // minuit.DefineParameter(25, "Constant",    500000, 1, 0., 1000000);  
-   minuit.DefineParameter(25, "Pb-210 chain",    110000, 1, 0., 1000000);  
+   minuit.DefineParameter(25, "Bi-210",    110000, 1, 0., 1000000);  
 
    
 
@@ -1155,12 +1272,12 @@ bool TBackgroundModel::DoTheFit()
   fModelTotRaM1->Add(fSmearIVCRaM1,     fParameters[19]);
   fModelTotRaM1->Add(fSmearOVCRaM1,     fParameters[20]);
 
-  // fModelTotKM1->Add(fSmearFrameKM1,     fParameters[4]);
+  fModelTotKM1->Add(fSmearFrameKM1,     fParameters[4]);
   fModelTotKM1->Add(fSmearTShieldKM1,   fParameters[4]);
   fModelTotKM1->Add(fSmear50mKKM1,      fParameters[4]);
   fModelTotKM1->Add(fSmear600mKKM1,     fParameters[4]);
   fModelTotKM1->Add(fSmearIVCKM1,       fParameters[5]);
-  // fModelTotKM1->Add(fSmearOVCKM1,       fParameters[5]);
+  fModelTotKM1->Add(fSmearOVCKM1,       fParameters[5]);
 
   fModelTotCoM1->Add(fSmearFrameCoM1,   fParameters[6]);
   fModelTotCoM1->Add(fSmearTShieldCoM1, fParameters[7]);
@@ -1177,7 +1294,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTot2NDBDM1->Add(fSmear2NDBDM1,  fParameters[8]);
   fModelTotBiM1->Add(fSmearBiM1,        fParameters[10]);
 
-  fModelTotPbM1->Add(fSmearCrystalPbBM1, fParameters[25]);
+  fModelTotPbM1->Add(fSmearCrystalBi2M1, fParameters[25]);
 
 
   // M2 Parameters
@@ -1195,12 +1312,12 @@ bool TBackgroundModel::DoTheFit()
   fModelTotRaM2->Add(fSmearIVCRaM2,     fParameters[19]);
   fModelTotRaM2->Add(fSmearOVCRaM2,     fParameters[20]);
 
-  // fModelTotKM2->Add(fSmearFrameKM2,     fParameters[4]);
+  fModelTotKM2->Add(fSmearFrameKM2,     fParameters[4]);
   fModelTotKM2->Add(fSmearTShieldKM2,   fParameters[4]);
   fModelTotKM2->Add(fSmear50mKKM2,      fParameters[4]);
   fModelTotKM2->Add(fSmear600mKKM2,     fParameters[4]);
   fModelTotKM2->Add(fSmearIVCKM2,       fParameters[5]);
-  // fModelTotKM2->Add(fSmearOVCKM2,       fParameters[5]);
+  fModelTotKM2->Add(fSmearOVCKM2,       fParameters[5]);
 
   fModelTotCoM2->Add(fSmearFrameCoM2,   fParameters[6]);
   fModelTotCoM2->Add(fSmearTShieldCoM2, fParameters[7]);
@@ -1216,7 +1333,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTot2NDBDM2->Add(fSmear2NDBDM2,  fParameters[8]);
   fModelTotBiM2->Add(fSmearBiM2,      fParameters[10]);
 
-  fModelTotPbM2->Add(fSmearCrystalPbBM2, fParameters[25]);
+  fModelTotPbM2->Add( fSmearCrystalBi2M2, fParameters[25]);
 
   ////////// Only for testing
   // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(R*T)
@@ -1345,7 +1462,7 @@ bool TBackgroundModel::DoTheFit()
     legfit1->AddEntry(fModelTot2NDBDM1, "2NDBD", "l");
     legfit1->AddEntry(fModelTotBiM1, "Bi-207", "l");
     legfit1->AddEntry(fModelTotMnM1, "Mn-54", "l");
-    legfit1->AddEntry(fModelTotPbM1 , "Pb-210", "l");    
+    legfit1->AddEntry(fModelTotPbM1 , "Bi-210", "l");    
     legfit1->Draw();
 
 
@@ -1443,7 +1560,7 @@ bool TBackgroundModel::DoTheFit()
     legfit2->AddEntry(fModelTot2NDBDM2, "2NDBD", "l");
     legfit2->AddEntry(fModelTotBiM2, "Bi-207", "l");
     legfit2->AddEntry(fModelTotMnM2, "Mn-54", "l");
-    legfit2->AddEntry(fModelTotPbM2 , "Pb-210", "l");
+    legfit2->AddEntry(fModelTotPbM2 , "Bi-210", "l");
 
     legfit2->Draw();
 
@@ -2184,7 +2301,7 @@ void TBackgroundModel::Initialize()
   {
     cout << "Loading Smeared Histograms from file" << endl;
     // fFile = new TFile(Form("MCHist-%dkeV.root", dBinSize));
-    fFile = new TFile(Form("MCAdaptive-%dkeV.root", dBinSize));    
+    fFile = new TFile("MCAdaptiveGamma.root");    
     // fFile = new TFile(Form("MCData-%dkeV.root", dBinSize));
 
     fSmearFrameThM1   = (TH1D*)fFile->Get("fSmearFrameThM1");
@@ -2217,6 +2334,10 @@ void TBackgroundModel::Initialize()
 
     fSmearTShieldMnM1 = (TH1D*)fFile->Get("fSmearTShieldMnM1");
     fSmearIVCMnM1     = (TH1D*)fFile->Get("fSmearIVCMnM1");
+
+    fSmearCrystalBi2M1 = (TH1D*)fFile->Get("fSmearCrystalBi2M1");
+    fSmearFrameBi2M1 = (TH1D*)fFile->Get("fSmearFrameBi2M1");
+
 
     fSmear2NDBDM1     = (TH1D*)fFile->Get("fSmear2NDBDM1");
     fSmearNDBDM1      = (TH1D*)fFile->Get("fSmearNDBDM1");
@@ -2264,6 +2385,9 @@ void TBackgroundModel::Initialize()
 
     fSmearTShieldMnM2 = (TH1D*)fFile->Get("fSmearTShieldMnM2");
     fSmearIVCMnM2     = (TH1D*)fFile->Get("fSmearIVCMnM2");
+
+    fSmearCrystalBi2M2 = (TH1D*)fFile->Get("fSmearCrystalBi2M2");
+    fSmearFrameBi2M2 = (TH1D*)fFile->Get("fSmearFrameBi2M2");
 
     fSmear2NDBDM2     = (TH1D*)fFile->Get("fSmear2NDBDM2");
     fSmearNDBDM2      = (TH1D*)fFile->Get("fSmearNDBDM2");
@@ -2376,6 +2500,202 @@ void TBackgroundModel::LoadPDFs()
 {
   // Fills and Loads MC data
   // Load M1
+  outTreeCrystalPt190BM1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "B", 1);
+  outTreeCrystalPt190S01M1    = LoadMC(dDataDir.c_str(),  "Crystal", "Pt190", "S01", 1);
+  outTreeCrystalPt190S1M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S1", 1);
+  outTreeCrystalPt190S10M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S10", 1);
+  outTreeCrystalPt190S100M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S100", 1);
+
+  outTreeCrystalPb210BM1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "B", 1);
+  outTreeCrystalPb210S01M1    = LoadMC(dDataDir.c_str(),  "Crystal", "Pb210", "S01", 1);
+  outTreeCrystalPb210S1M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S1", 1);
+  outTreeCrystalPb210S10M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S10", 1);
+  outTreeCrystalPb210S100M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S100", 1);
+
+  outTreeCrystalRa226BM1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "B", 1);
+  outTreeCrystalRa226S01M1    = LoadMC(dDataDir.c_str(),  "Crystal", "Ra226", "S01", 1);
+  outTreeCrystalRa226S1M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S1", 1);
+  outTreeCrystalRa226S10M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S10", 1);
+  outTreeCrystalRa226S100M1    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S100", 1);
+
+  // outTreeFramePb210BM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "B", 1);
+  outTreeFramePb210S01M1    = LoadMC(dDataDir.c_str(),  "Frame", "Pb210", "S01", 1);
+  outTreeFramePb210S1M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S1", 1);
+  outTreeFramePb210S10M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S10", 1);
+  outTreeFramePb210S100M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S100", 1);
+
+  // outTreeFrameRa226BM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "B", 1);
+  outTreeFrameRa226S01M1    = LoadMC(dDataDir.c_str(),  "Frame", "Ra226", "S01", 1);
+  outTreeFrameRa226S1M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", 1);
+  outTreeFrameRa226S10M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", 1);
+  outTreeFrameRa226S100M1    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", 1);
+
+
+  outTreeCrystalPt190BM2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "B", 2);
+  outTreeCrystalPt190S01M2    = LoadMC(dDataDir.c_str(),  "Crystal", "Pt190", "S01", 2);
+  outTreeCrystalPt190S1M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S1", 2);
+  outTreeCrystalPt190S10M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S10", 2);
+  outTreeCrystalPt190S100M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pt190", "S100", 2);
+
+  outTreeCrystalPb210BM2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "B", 2);
+  outTreeCrystalPb210S01M2    = LoadMC(dDataDir.c_str(),  "Crystal", "Pb210", "S01", 2);
+  outTreeCrystalPb210S1M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S1", 2);
+  outTreeCrystalPb210S10M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S10", 2);
+  outTreeCrystalPb210S100M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Pb210", "S100", 2);
+
+  outTreeCrystalRa226BM2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "B", 2);
+  outTreeCrystalRa226S01M2    = LoadMC(dDataDir.c_str(),  "Crystal", "Ra226", "S01", 2);
+  outTreeCrystalRa226S1M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S1", 2);
+  outTreeCrystalRa226S10M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S10", 2);
+  outTreeCrystalRa226S100M2    = LoadMC(dDataDir.c_str(),  "Crystal",  "Ra226", "S100", 2);
+
+  // outTreeFramePb210BM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "B", 2);
+  outTreeFramePb210S01M2    = LoadMC(dDataDir.c_str(),  "Frame", "Pb210", "S01", 2);
+  outTreeFramePb210S1M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S1", 2);
+  outTreeFramePb210S10M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S10", 2);
+  outTreeFramePb210S100M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Pb210", "S100", 2);
+
+  // outTreeFrameRa226BM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "B", 2);
+  outTreeFrameRa226S01M2    = LoadMC(dDataDir.c_str(),  "Frame", "Ra226", "S01", 2);
+  outTreeFrameRa226S1M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S1", 2);
+  outTreeFrameRa226S10M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S10", 2);
+  outTreeFrameRa226S100M2    = LoadMC(dDataDir.c_str(),  "Frame",  "Ra226", "S100", 2);
+
+
+  outTreeCrystalPt190BM1->Project("fModelCrystalPt190BM1",        "Ener2");
+  outTreeCrystalPt190S01M1->Project("fModelCrystalPt190S01M1",     "Ener2");
+  outTreeCrystalPt190S1M1->Project("fModelCrystalPt190S1M1",        "Ener2");
+  outTreeCrystalPt190S10M1->Project("fModelCrystalPt190S10M1",        "Ener2");
+  outTreeCrystalPt190S100M1->Project("fModelCrystalPt190S100M1",        "Ener2");
+
+  outTreeCrystalPb210BM1->Project("fModelCrystalPb210BM1",        "Ener2");
+  outTreeCrystalPb210S01M1->Project("fModelCrystalPb210S01M1",     "Ener2");
+  outTreeCrystalPb210S1M1->Project("fModelCrystalPb210S1M1",        "Ener2");
+  outTreeCrystalPb210S10M1->Project("fModelCrystalPb210S10M1",        "Ener2");
+  outTreeCrystalPb210S100M1->Project("fModelCrystalPb210S100M1",        "Ener2");
+
+  outTreeCrystalRa226BM1->Project("fModelCrystalRa226BM1",        "Ener2");
+  outTreeCrystalRa226S01M1->Project("fModelCrystalRa226S01M1",     "Ener2");
+  outTreeCrystalRa226S1M1->Project("fModelCrystalRa226S1M1",        "Ener2");
+  outTreeCrystalRa226S10M1->Project("fModelCrystalRa226S10M1",        "Ener2");
+  outTreeCrystalRa226S100M1->Project("fModelCrystalRa226S100M1",        "Ener2");
+
+
+  outTreeFramePb210BM1->Project("fModelFramePb210BM1",        "Ener2");
+  outTreeFramePb210S01M1->Project("fModelFramePb210S01M1",     "Ener2");
+  outTreeFramePb210S1M1->Project("fModelFramePb210S1M1",        "Ener2");
+  outTreeFramePb210S10M1->Project("fModelFramePb210S10M1",        "Ener2");
+  outTreeFramePb210S100M1->Project("fModelFramePb210S100M1",        "Ener2");
+
+  // outTreeFrameRa226BM1->Project("fModelFrameRa226BM1",        "Ener2");
+  outTreeFrameRa226S01M1->Project("fModelFrameRa226S01M1",     "Ener2");
+  outTreeFrameRa226S1M1->Project("fModelFrameRa226S1M1",        "Ener2");
+  outTreeFrameRa226S10M1->Project("fModelFrameRa226S10M1",        "Ener2");
+  outTreeFrameRa226S100M1->Project("fModelFrameRa226S100M1",        "Ener2");
+
+
+
+  outTreeCrystalPt190BM2->Project("fModelCrystalPt190BM2",        "Ener2");
+  outTreeCrystalPt190S01M2->Project("fModelCrystalPt190S01M2",     "Ener2");
+  outTreeCrystalPt190S1M2->Project("fModelCrystalPt190S1M2",        "Ener2");
+  outTreeCrystalPt190S10M2->Project("fModelCrystalPt190S10M2",        "Ener2");
+  outTreeCrystalPt190S100M2->Project("fModelCrystalPt190S100M2",        "Ener2");
+
+  outTreeCrystalPb210BM2->Project("fModelCrystalPb210BM2",        "Ener2");
+  outTreeCrystalPb210S01M2->Project("fModelCrystalPb210S01M2",     "Ener2");
+  outTreeCrystalPb210S1M2->Project("fModelCrystalPb210S1M2",        "Ener2");
+  outTreeCrystalPb210S10M2->Project("fModelCrystalPb210S10M2",        "Ener2");
+  outTreeCrystalPb210S100M2->Project("fModelCrystalPb210S100M2",        "Ener2");
+
+  outTreeCrystalRa226BM2->Project("fModelCrystalRa226BM2",        "Ener2");
+  outTreeCrystalRa226S01M2->Project("fModelCrystalRa226S01M2",     "Ener2");
+  outTreeCrystalRa226S1M2->Project("fModelCrystalRa226S1M2",        "Ener2");
+  outTreeCrystalRa226S10M2->Project("fModelCrystalRa226S10M2",        "Ener2");
+  outTreeCrystalRa226S100M2->Project("fModelCrystalRa226S100M2",        "Ener2");
+
+
+  outTreeFramePb210BM2->Project("fModelFramePb210BM2",        "Ener2");
+  outTreeFramePb210S01M2->Project("fModelFramePb210S01M2",     "Ener2");
+  outTreeFramePb210S1M2->Project("fModelFramePb210S1M2",        "Ener2");
+  outTreeFramePb210S10M2->Project("fModelFramePb210S10M2",        "Ener2");
+  outTreeFramePb210S100M2->Project("fModelFramePb210S100M2",        "Ener2");
+
+  // outTreeFrameRa226BM2->Project("fModelFrameRa226BM2",        "Ener2");
+  outTreeFrameRa226S01M2->Project("fModelFrameRa226S01M2",     "Ener2");
+  outTreeFrameRa226S1M2->Project("fModelFrameRa226S1M2",        "Ener2");
+  outTreeFrameRa226S10M2->Project("fModelFrameRa226S10M2",        "Ener2");
+  outTreeFrameRa226S100M2->Project("fModelFrameRa226S100M2",        "Ener2");
+
+  NormalizePDFPair(fModelCrystalPt190BM1, fModelCrystalPt190BM2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPt190S01M1, fModelCrystalPt190S01M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPt190S1M1, fModelCrystalPt190S1M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPt190S10M1, fModelCrystalPt190S10M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPt190S100M1, fModelCrystalPt190S100M2,      50, 10000);
+
+  NormalizePDFPair(fModelCrystalPb210BM1, fModelCrystalPb210BM2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPb210S01M1, fModelCrystalPb210S01M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPb210S1M1, fModelCrystalPb210S1M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPb210S10M1, fModelCrystalPb210S10M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalPb210S100M1, fModelCrystalPb210S100M2,      50, 10000);
+
+  NormalizePDFPair(fModelCrystalRa226BM1, fModelCrystalRa226BM2,      50, 10000);
+  NormalizePDFPair(fModelCrystalRa226S01M1, fModelCrystalRa226S01M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalRa226S1M1, fModelCrystalRa226S1M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalRa226S10M1, fModelCrystalRa226S10M2,      50, 10000);
+  NormalizePDFPair(fModelCrystalRa226S100M1, fModelCrystalRa226S100M2,      50, 10000);
+
+
+  NormalizePDFPair(fModelFramePb210BM1, fModelFramePb210BM2,      50, 10000);
+  NormalizePDFPair(fModelFramePb210S01M1, fModelFramePb210S01M2,      50, 10000);
+  NormalizePDFPair(fModelFramePb210S1M1, fModelFramePb210S1M2,      50, 10000);
+  NormalizePDFPair(fModelFramePb210S10M1, fModelFramePb210S10M2,      50, 10000);
+  NormalizePDFPair(fModelFramePb210S100M1, fModelFramePb210S100M2,      50, 10000);
+
+  // NormalizePDFPair(fModelFrameRa226BM1, fModelFrameRa226BM2,      50, 10000);
+  NormalizePDFPair(fModelFrameRa226S01M1, fModelFrameRa226S01M2,      50, 10000);
+  NormalizePDFPair(fModelFrameRa226S1M1, fModelFrameRa226S1M2,      50, 10000);
+  NormalizePDFPair(fModelFrameRa226S10M1, fModelFrameRa226S10M2,      50, 10000);
+  NormalizePDFPair(fModelFrameRa226S100M1, fModelFrameRa226S100M2,      50, 10000);
+
+
+  // Smearing, needs to be updated
+  double dRes1 = 1.986;
+  double dRes2 = 5.332;
+
+  // M1
+  SmearMC(fModelCrystalPt190BM1, fSmearCrystalPt190BM1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPt190S01M1, fSmearCrystalPt190S01M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPt190S1M1, fSmearCrystalPt190S1M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPt190S10M1, fSmearCrystalPt190S10M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPt190S100M1, fSmearCrystalPt190S100M1, dRes1 , dRes2);
+
+  SmearMC(fModelCrystalPb210BM1, fSmearCrystalPb210BM1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPb210S01M1, fSmearCrystalPb210S01M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPb210S1M1, fSmearCrystalPb210S1M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPb210S10M1, fSmearCrystalPb210S10M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalPb210S100M1, fSmearCrystalPb210S100M1, dRes1 , dRes2);
+
+  SmearMC(fModelCrystalRa226BM1, fSmearCrystalRa226BM1, dRes1 , dRes2);
+  SmearMC(fModelCrystalRa226S01M1, fSmearCrystalRa226S01M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalRa226S1M1, fSmearCrystalRa226S1M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalRa226S10M1, fSmearCrystalRa226S10M1, dRes1 , dRes2);
+  SmearMC(fModelCrystalRa226S100M1, fSmearCrystalRa226S100M1, dRes1 , dRes2);
+
+  SmearMC(fModelFramePb210BM1, fSmearFramePb210BM1, dRes1 , dRes2);
+  SmearMC(fModelFramePb210S01M1, fSmearFramePb210S01M1, dRes1 , dRes2);
+  SmearMC(fModelFramePb210S1M1, fSmearFramePb210S1M1, dRes1 , dRes2);
+  SmearMC(fModelFramePb210S10M1, fSmearFramePb210S10M1, dRes1 , dRes2);
+  SmearMC(fModelFramePb210S100M1, fSmearFramePb210S100M1, dRes1 , dRes2);
+
+  // SmearMC(fModelFrameRa226BM1, fSmearFrameRa226BM1, dRes1 , dRes2);
+  SmearMC(fModelFrameRa226S01M1, fSmearFrameRa226S01M1, dRes1 , dRes2);
+  SmearMC(fModelFrameRa226S1M1, fSmearFrameRa226S1M1, dRes1 , dRes2);
+  SmearMC(fModelFrameRa226S10M1, fSmearFrameRa226S10M1, dRes1 , dRes2);
+  SmearMC(fModelFrameRa226S100M1, fSmearFrameRa226S100M1, dRes1 , dRes2);
+
+    cout << "Finished smearing MC histograms" << endl;
+
+/*
   outTreeFrameThM1    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 1);
   outTreeTShieldThM1  = LoadMC(dDataDir.c_str(),  "TShield","Th232", "B", 1);
   outTree50mKThM1     = LoadMC(dDataDir.c_str(),  "50mK",   "Th232", "B", 1);
@@ -2426,8 +2746,6 @@ void TBackgroundModel::LoadPDFs()
   outTreeTShieldThS1M1    = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S1", 1);
   outTreeTShieldThS10M1   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 1);
   outTreeTShieldThS100M1  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 1);
-
-
 
   // Load M2
   outTreeFrameThM2    = LoadMC(dDataDir.c_str(),  "Frame",  "Th232", "B", 2);
@@ -2480,8 +2798,6 @@ void TBackgroundModel::LoadPDFs()
   outTreeTShieldThS10M2   = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S10", 2);
   outTreeTShieldThS100M2  = LoadMC(dDataDir.c_str(),  "TShield",  "Th232", "S100", 2);
 
-
-
   // Projecting to histograms
   // M1
   outTreeNDBDM1->Project("fModelNDBDM1",        "Ener1", ener_cut);
@@ -2533,7 +2849,6 @@ void TBackgroundModel::LoadPDFs()
   outTreeTShieldThS1M1->Project("fModelTShieldThS1M1",     "Ener1", ener_cut);
   outTreeTShieldThS10M1->Project("fModelTShieldThS10M1",   "Ener1", ener_cut);
   outTreeTShieldThS100M1->Project("fModelTShieldThS100M1", "Ener1", ener_cut);
-  
 
   
   // M1
@@ -2586,9 +2901,6 @@ void TBackgroundModel::LoadPDFs()
   outTreeTShieldThS1M2->Project("fModelTShieldThS1M2",     "Ener1", ener_cut);
   outTreeTShieldThS10M2->Project("fModelTShieldThS10M2",   "Ener1", ener_cut);
   outTreeTShieldThS100M2->Project("fModelTShieldThS100M2", "Ener1", ener_cut);
-
-
-
 
   cout << "Loaded MC" << endl;
 
@@ -2734,9 +3046,7 @@ void TBackgroundModel::LoadPDFs()
     SmearMC(fModelNDBDM2, fSmearNDBDM2, dRes1, dRes2);  
     SmearMC(fModel2NDBDM2, fSmear2NDBDM2, dRes1, dRes2);  
     SmearMC(fModelBiM2, fSmearBiM2, dRes1, dRes2);  
-
-
-    cout << "Finished smearing MC histograms" << endl;
+*/
 
 }
 
@@ -3099,7 +3409,7 @@ void TBackgroundModel::UpdateModel()
   /////////////////////////////////////
   //// Many parameters
   ////////////////////////////////////
-/*
+
   // M1
   fModelTotM1->Add( fSmearFrameThM1,    fParameters[0]);
   fModelTotM1->Add( fSmearTShieldThM1,  fParameters[1]);  
@@ -3115,12 +3425,12 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmearIVCRaM1,      fParameters[19]);
   fModelTotM1->Add( fSmearOVCRaM1,      fParameters[20]);
 
-  // fModelTotM1->Add( fSmearFrameKM1,     fParameters[4]);
+  fModelTotM1->Add( fSmearFrameKM1,     fParameters[4]);
   fModelTotM1->Add( fSmearTShieldKM1,   fParameters[4]);
   fModelTotM1->Add( fSmear50mKKM1,      fParameters[4]);
   fModelTotM1->Add( fSmear600mKKM1,     fParameters[4]);
   fModelTotM1->Add( fSmearIVCKM1,       fParameters[5]);
-  // fModelTotM1->Add( fSmearOVCKM1,       fParameters[5]); 
+  fModelTotM1->Add( fSmearOVCKM1,       fParameters[5]); 
 
   fModelTotM1->Add( fSmearFrameCoM1,    fParameters[6]);
   fModelTotM1->Add( fSmearTShieldCoM1,  fParameters[7]);
@@ -3136,7 +3446,7 @@ void TBackgroundModel::UpdateModel()
   fModelTotM1->Add( fSmear2NDBDM1,     fParameters[8]);  
   fModelTotM1->Add( fSmearBiM1,        fParameters[10]);  
 
-  fModelTotM1->Add( fSmearCrystalPbBM1, fParameters[25]);  
+  fModelTotM1->Add( fSmearCrystalBi2M1, fParameters[25]);  
 
   // M2
   fModelTotM2->Add( fSmearFrameThM2,    fParameters[0]);
@@ -3153,12 +3463,12 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fSmearIVCRaM2,      fParameters[19]);
   fModelTotM2->Add( fSmearOVCRaM2,      fParameters[20]);
 
-  // fModelTotM2->Add( fSmearFrameKM2,     fParameters[4]);
+  fModelTotM2->Add( fSmearFrameKM2,     fParameters[4]);
   fModelTotM2->Add( fSmearTShieldKM2,   fParameters[4]);
   fModelTotM2->Add( fSmear50mKKM2,      fParameters[4]);
   fModelTotM2->Add( fSmear600mKKM2,     fParameters[4]);
   fModelTotM2->Add( fSmearIVCKM2,       fParameters[5]);
-  // fModelTotM2->Add( fSmearOVCKM2,       fParameters[5]); 
+  fModelTotM2->Add( fSmearOVCKM2,       fParameters[5]); 
 
   fModelTotM2->Add( fSmearFrameCoM2,    fParameters[6]);
   fModelTotM2->Add( fSmearTShieldCoM2,  fParameters[7]);
@@ -3174,16 +3484,18 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fSmear2NDBDM2,     fParameters[8]);  
   fModelTotM2->Add( fSmearBiM2,        fParameters[10]);  
 
-  fModelTotM1->Add( fSmearCrystalPbBM2, fParameters[25]);  
+  fModelTotM1->Add( fSmearCrystalBi2M2 , fParameters[25]);  
 
 
   // Adding on correction for M2.. (just the M1 spectrum)
   // fModelTotM2->Add( fCorrectionM2, 180197*(1-TMath::Exp(-0.05*0.1)) );
-*/
 
 
 
+}
 
+void TBackgroundModel::UpdateModelAdaptive()
+{
   /////////////////////////////////////
   //// Adaptive Binning parameters
   ////////////////////////////////////
@@ -3261,8 +3573,8 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( fAdapBiM2,        fParameters[10]);  
 
 
-}
 
+}
 
 
 // For various tests
@@ -3279,20 +3591,40 @@ void TBackgroundModel::TestSave()
   int dNBins = (dMaxEnergy - dMinEnergy)/ dBinSize;
 
 
+  TH1D *fFrameThM1    = new TH1D("fFrameThM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldThM1  = new TH1D("fTShieldThM1",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKThM1     = new TH1D("f50mKThM1",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKThM1    = new TH1D("f600mKThM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCThM1      = new TH1D("fIVCThM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCThM1      = new TH1D("fOVCThM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fFrameRaM1    = new TH1D("fFrameRaM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldRaM1  = new TH1D("fTShieldRaM1","TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKRaM1     = new TH1D("f50mKRaM1",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKRaM1    = new TH1D("f600mKRaM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fIVCRaM1      = new TH1D("fIVCRaM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCRaM1      = new TH1D("fOVCRaM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fFrameKM1     = new TH1D("fFrameKM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fTShieldKM1   = new TH1D("fTShieldKM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f50mKKM1      = new TH1D("f50mKKM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKKM1     = new TH1D("f600mKKM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCKM1       = new TH1D("fIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCKM1       = new TH1D("fOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fFrameCoM1    = new TH1D("fFrameCoM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldCoM1  = new TH1D("fTShieldCoM1","TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKCoM1     = new TH1D("f50mKCoM1",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f600mKCoM1    = new TH1D("f600mKCoM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fIVCCoM1      = new TH1D("fIVCCoM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCCoM1      = new TH1D("fOVCCoM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fTShieldMnM1  = new TH1D("fTShieldMnM1",    "TShield",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCMnM1      = new TH1D("fIVCMnM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fCrystalBi2M1    = new TH1D("fCrystalBi2M1",    "Crystal",      dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fFrameBi2M1      = new TH1D("fFrameBi2M1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fNDBDM1       = new TH1D("fNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f2NDBDM1      = new TH1D("f2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fBiM1         = new TH1D("fBiM1",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
@@ -3311,20 +3643,40 @@ void TBackgroundModel::TestSave()
 
 
 
+  TH1D *fFrameThM2    = new TH1D("fFrameThM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldThM2  = new TH1D("fTShieldThM2",  "TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKThM2     = new TH1D("f50mKThM2",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKThM2    = new TH1D("f600mKThM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCThM2      = new TH1D("fIVCThM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCThM2      = new TH1D("fOVCThM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fFrameRaM2    = new TH1D("fFrameRaM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldRaM2  = new TH1D("fTShieldRaM2","TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKRaM2     = new TH1D("f50mKRaM2",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKRaM2    = new TH1D("f600mKRaM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fIVCRaM2      = new TH1D("fIVCRaM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCRaM2      = new TH1D("fOVCRaM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fFrameKM2     = new TH1D("fFrameKM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fTShieldKM2   = new TH1D("fTShieldKM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f50mKKM2      = new TH1D("f50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f600mKKM2     = new TH1D("f600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCKM2       = new TH1D("fIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCKM2       = new TH1D("fOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fFrameCoM2    = new TH1D("fFrameCoM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fTShieldCoM2  = new TH1D("fTShieldCoM2","TShield",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f50mKCoM2     = new TH1D("f50mKCoM2",   "50mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *f600mKCoM2    = new TH1D("f600mKCoM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fIVCCoM2      = new TH1D("fIVCCoM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fOVCCoM2      = new TH1D("fOVCCoM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fTShieldMnM2  = new TH1D("fTShieldMnM2",    "TShield",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fIVCMnM2      = new TH1D("fIVCMnM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
+  TH1D *fCrystalBi2M2    = new TH1D("fCrystalBi2M2",    "Crystal",      dNBins, dMinEnergy, dMaxEnergy);
+  TH1D *fFrameBi2M2      = new TH1D("fFrameBi2M2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
+
   TH1D *fNDBDM2       = new TH1D("fNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
   TH1D *f2NDBDM2      = new TH1D("f2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
   TH1D *fBiM2         = new TH1D("fBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
@@ -3343,20 +3695,40 @@ void TBackgroundModel::TestSave()
 
 
 
+  TH1D *fAdapFrameThM1    = new TH1D("fAdapFrameThM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapTShieldThM1  = new TH1D("fAdapTShieldThM1", "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdap50mKThM1     = new TH1D("fAdap50mKThM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdap600mKThM1    = new TH1D("fAdap600mKThM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapIVCThM1      = new TH1D("fAdapIVCThM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapOVCThM1      = new TH1D("fAdapOVCThM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  TH1D *fAdapFrameRaM1    = new TH1D("fAdapFrameRaM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapTShieldRaM1  = new TH1D("fAdapTShieldRaM1", "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdap50mKRaM1     = new TH1D("fAdap50mKRaM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdap600mKRaM1    = new TH1D("fAdap600mKRaM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapIVCRaM1      = new TH1D("fAdapIVCRaM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapOVCRaM1      = new TH1D("fAdapOVCRaM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
   TH1D *fAdapFrameKM1     = new TH1D("fAdapFrameKM1",   "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapTShieldKM1   = new TH1D("fAdapTShieldKM1", "TShield",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdap50mKKM1      = new TH1D("fAdap50mKKM1",    "50mK",     dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdap600mKKM1     = new TH1D("fAdap600mKKM1",   "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapIVCKM1       = new TH1D("fAdapIVCKM1",     "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapOVCKM1       = new TH1D("fAdapOVCKM1",     "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
   TH1D *fAdapFrameCoM1    = new TH1D("fAdapFrameCoM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapTShieldCoM1  = new TH1D("fAdapTShieldCoM1", "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdap50mKCoM1     = new TH1D("fAdap50mKCoM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdap600mKCoM1    = new TH1D("fAdap600mKCoM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapIVCCoM1      = new TH1D("fAdapIVCCoM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapOVCCoM1      = new TH1D("fAdapOVCCoM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  TH1D *fAdapTShieldMnM1  = new TH1D("fAdapTShieldMnM1", "TShield",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapIVCMnM1      = new TH1D("fAdapIVCMnM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  TH1D *fAdapCrystalBi2M1  = new TH1D("fAdapCrystalBi2M1", "Crystal",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *fAdapFrameBi2M1  = new TH1D("fAdapFrameBi2M1", "Frame",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+
   TH1D *fAdapNDBDM1       = new TH1D("fAdapNDBDM1",   "NDBD",       dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdap2NDBDM1      = new TH1D("fAdap2NDBDM1",  "2NDBD",      dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *fAdapBiM1         = new TH1D("fAdapBiM1",     "Bi",         dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -3375,20 +3747,41 @@ void TBackgroundModel::TestSave()
 
 
 
+  TH1D *fAdapFrameThM2    = new TH1D("fAdapFrameThM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapTShieldThM2  = new TH1D("fAdapTShieldThM2", "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdap50mKThM2     = new TH1D("fAdap50mKThM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdap600mKThM2    = new TH1D("fAdap600mKThM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapIVCThM2      = new TH1D("fAdapIVCThM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapOVCThM2      = new TH1D("fAdapOVCThM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  TH1D *fAdapFrameRaM2    = new TH1D("fAdapFrameRaM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapTShieldRaM2  = new TH1D("fAdapTShieldRaM2", "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdap50mKRaM2     = new TH1D("fAdap50mKRaM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdap600mKRaM2    = new TH1D("fAdap600mKRaM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapIVCRaM2      = new TH1D("fAdapIVCRaM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapOVCRaM2      = new TH1D("fAdapOVCRaM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   TH1D *fAdapFrameKM2     = new TH1D("fAdapFrameKM2",   "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapTShieldKM2   = new TH1D("fAdapTShieldKM2", "TShield",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdap50mKKM2      = new TH1D("fAdap50mKKM2",    "50mK",     dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdap600mKKM2     = new TH1D("fAdap600mKKM2",   "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapIVCKM2       = new TH1D("fAdapIVCKM2",     "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapOVCKM2       = new TH1D("fAdapOVCKM2",     "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   TH1D *fAdapFrameCoM2    = new TH1D("fAdapFrameCoM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapTShieldCoM2  = new TH1D("fAdapTShieldCoM2", "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdap50mKCoM2     = new TH1D("fAdap50mKCoM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdap600mKCoM2    = new TH1D("fAdap600mKCoM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapIVCCoM2      = new TH1D("fAdapIVCCoM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapOVCCoM2      = new TH1D("fAdapOVCCoM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  TH1D *fAdapTShieldMnM2  = new TH1D("fAdapTShieldMnM2", "TShield",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapIVCMnM2      = new TH1D("fAdapIVCMnM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  TH1D *fAdapCrystalBi2M2  = new TH1D("fAdapCrystalBi2M2", "Crystal",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D *fAdapFrameBi2M2  = new TH1D("fAdapFrameBi2M2", "Frame",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+
   TH1D *fAdapNDBDM2       = new TH1D("fAdapNDBDM2",   "NDBD",       dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdap2NDBDM2      = new TH1D("fAdap2NDBDM2",  "2NDBD",      dAdaptiveBinsM2, dAdaptiveArrayM2);
   TH1D *fAdapBiM2         = new TH1D("fAdapBiM2",     "Bi",         dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -3407,24 +3800,47 @@ void TBackgroundModel::TestSave()
 
 
 
+  TFile *fFrameTh1 = new TFile(Form("%s/Frame-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldTh1 = new TFile(Form("%s/TShield-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKTh1 = new TFile(Form("%s/50mK-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *f600mKTh1 = new TFile(Form("%s/600mK-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCTh1 = new TFile(Form("%s/IVC-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fOVCTh1 = new TFile(Form("%s/OVC-Th232-B-M1-T50.root", dDataDir.c_str()) );  
+
+  TFile *fFrameRa1 = new TFile(Form("%s/Frame-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldRa1 = new TFile(Form("%s/TShield-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKRa1 = new TFile(Form("%s/50mK-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
   TFile *f600mKRa1 = new TFile(Form("%s/600mK-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCRa1 = new TFile(Form("%s/IVC-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
   TFile *fOVCRa1 = new TFile(Form("%s/OVC-Ra226-B-M1-T50.root", dDataDir.c_str()) );  
+
   TFile *fCrystalNDBD1 = new TFile(Form("%s/Crystal-0NDBD-B-M1-T50.root", dDataDir.c_str()) );  
   TFile *fCrystal2NDBD1 = new TFile(Form("%s/Crystal-2NDBD-B-M1-T50.root", dDataDir.c_str()) ); 
-  TFile *fFrameCo1 = new TFile(Form("%s/Frame-Co60-B-M1-T50.root", dDataDir.c_str()) );
-  TFile *fOVCCo1 = new TFile(Form("%s/OVC-Co60-B-M1-T50.root", dDataDir.c_str()));
+
+  TFile *fFrameCo1 = new TFile(Form("%s/Frame-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldCo1 = new TFile(Form("%s/TShield-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKCo1 = new TFile(Form("%s/50mK-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *f600mKCo1 = new TFile(Form("%s/600mK-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCCo1 = new TFile(Form("%s/IVC-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fOVCCo1 = new TFile(Form("%s/OVC-Co60-B-M1-T50.root", dDataDir.c_str()) );  
+
   TFile *fRLeadBi1 = new TFile(Form("%s/RLead-Bi207-B-M1-T50.root", dDataDir.c_str()) );
+
+  TFile *fTShieldMn1 = new TFile(Form("%s/TShield-Mn54-B-M1-T50.root", dDataDir.c_str()) );  
   TFile *fIVCMn1 = new TFile(Form("%s/IVC-Mn54-B-M1-T50.root", dDataDir.c_str()) );
+
+  TFile *fCrystalBi21 = new TFile(Form("%s/Crystal-Bi210-B-M1-T50.root", dDataDir.c_str()) );  
+  TFile *fFrameBi21 = new TFile(Form("%s/Frame-Bi210-B-M1-T50.root", dDataDir.c_str()) );  
+
+
   TFile *fFrameK1 = new TFile(Form("%s/Frame-K40-B-M1-T50.root", dDataDir.c_str()) );
   TFile *fTShieldK1 = new TFile(Form("%s/TShield-K40-B-M1-T50.root", dDataDir.c_str()) );
   TFile *f50mKK1 = new TFile(Form("%s/50mK-K40-B-M1-T50.root", dDataDir.c_str()) );
   TFile *f600mKK1 = new TFile(Form("%s/600mK-K40-B-M1-T50.root", dDataDir.c_str()) );
   TFile *fIVCK1 = new TFile(Form("%s/IVC-K40-B-M1-T50.root", dDataDir.c_str()) );
   TFile *fOVCK1 = new TFile(Form("%s/OVC-K40-B-M1-T50.root", dDataDir.c_str()) );
-  TFile *f600mKTh1 = new TFile(Form("%s/600mK-Th232-B-M1-T50.root", dDataDir.c_str()) );  
-  TFile *fIVCTh1 = new TFile(Form("%s/IVC-Th232-B-M1-T50.root", dDataDir.c_str()) );  
-  TFile *fOVCTh1 = new TFile(Form("%s/OVC-Th232-B-M1-T50.root", dDataDir.c_str()) );  
 
+/*
   TFile *ffCrystalPt1 = new TFile(Form("%s/Crystal-Pt190-B-M1-T50.root", dDataDir.c_str()) );
   TFile *ffCrystalPbB1 = new TFile(Form("%s/Crystal-Pb210-B-M1-T50.root", dDataDir.c_str()) );
   TFile *ffCrystalPbS011 = new TFile(Form("%s/Crystal-Pb210-S01-M1-T50.root", dDataDir.c_str()) );
@@ -3436,26 +3852,48 @@ void TBackgroundModel::TestSave()
   TFile *ffFramePbS11 = new TFile(Form("%s/Frame-Pb210-S1-M1-T50.root", dDataDir.c_str()) );
   TFile *ffFramePbS101 = new TFile(Form("%s/Frame-Pb210-S10-M1-T50.root", dDataDir.c_str()) );
   TFile *ffFramePbS1001 = new TFile(Form("%s/Frame-Pb210-S100-M1-T50.root", dDataDir.c_str()) );
+*/
 
 
+  TFile *fFrameTh2 = new TFile(Form("%s/Frame-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldTh2 = new TFile(Form("%s/TShield-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKTh2 = new TFile(Form("%s/50mK-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *f600mKTh2 = new TFile(Form("%s/600mK-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCTh2 = new TFile(Form("%s/IVC-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fOVCTh2 = new TFile(Form("%s/OVC-Th232-B-M2-T50.root", dDataDir.c_str()) );  
+
+  TFile *fFrameRa2 = new TFile(Form("%s/Frame-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldRa2 = new TFile(Form("%s/TShield-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKRa2 = new TFile(Form("%s/50mK-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
   TFile *f600mKRa2 = new TFile(Form("%s/600mK-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCRa2 = new TFile(Form("%s/IVC-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
   TFile *fOVCRa2 = new TFile(Form("%s/OVC-Ra226-B-M2-T50.root", dDataDir.c_str()) );  
+
   TFile *fCrystalNDBD2 = new TFile(Form("%s/Crystal-0NDBD-B-M2-T50.root", dDataDir.c_str()) );  
   TFile *fCrystal2NDBD2 = new TFile(Form("%s/Crystal-2NDBD-B-M2-T50.root", dDataDir.c_str()) ); 
-  TFile *fFrameCo2 = new TFile(Form("%s/Frame-Co60-B-M2-T50.root", dDataDir.c_str()) );
-  TFile *fOVCCo2 = new TFile(Form("%s/OVC-Co60-B-M2-T50.root", dDataDir.c_str()) );
+
+  TFile *fFrameCo2 = new TFile(Form("%s/Frame-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fTShieldCo2 = new TFile(Form("%s/TShield-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *f50mKCo2 = new TFile(Form("%s/50mK-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *f600mKCo2 = new TFile(Form("%s/600mK-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fIVCCo2 = new TFile(Form("%s/IVC-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fOVCCo2 = new TFile(Form("%s/OVC-Co60-B-M2-T50.root", dDataDir.c_str()) );  
+
   TFile *fRLeadBi2 = new TFile(Form("%s/RLead-Bi207-B-M2-T50.root", dDataDir.c_str()) );
+  TFile *fTShieldMn2 = new TFile(Form("%s/TShield-Mn54-B-M2-T50.root", dDataDir.c_str()) );  
   TFile *fIVCMn2 = new TFile(Form("%s/IVC-Mn54-B-M2-T50.root", dDataDir.c_str()) );
+  
+  TFile *fCrystalBi22 = new TFile(Form("%s/Crystal-Bi210-B-M2-T50.root", dDataDir.c_str()) );  
+  TFile *fFrameBi22 = new TFile(Form("%s/Frame-Bi210-B-M2-T50.root", dDataDir.c_str()) );  
+
   TFile *fFrameK2 = new TFile(Form("%s/Frame-K40-B-M2-T50.root", dDataDir.c_str()) );
   TFile *fTShieldK2 = new TFile(Form("%s/TShield-K40-B-M2-T50.root", dDataDir.c_str()) );
   TFile *f50mKK2 = new TFile(Form("%s/50mK-K40-B-M2-T50.root", dDataDir.c_str()) );
   TFile *f600mKK2 = new TFile(Form("%s/600mK-K40-B-M2-T50.root", dDataDir.c_str()) );
   TFile *fIVCK2 = new TFile(Form("%s/IVC-K40-B-M2-T50.root", dDataDir.c_str()) );
   TFile *fOVCK2 = new TFile(Form("%s/OVC-K40-B-M2-T50.root", dDataDir.c_str()) );
-  TFile *f600mKTh2 = new TFile(Form("%s/600mK-Th232-B-M2-T50.root", dDataDir.c_str()) );  
-  TFile *fIVCTh2 = new TFile(Form("%s/IVC-Th232-B-M2-T50.root", dDataDir.c_str()));  
-  TFile *fOVCTh2 = new TFile(Form("%s/OVC-Th232-B-M2-T50.root", dDataDir.c_str()) );  
 
+/*
   TFile *ffCrystalPt2 = new TFile(Form("%s/Crystal-Pt190-B-M2-T50.root", dDataDir.c_str()) );
   TFile *ffCrystalPbB2 = new TFile(Form("%s/Crystal-Pb210-B-M2-T50.root", dDataDir.c_str()) );
   TFile *ffCrystalPbS012 = new TFile(Form("%s/Crystal-Pb210-S01-M2-T50.root", dDataDir.c_str()) );
@@ -3467,28 +3905,51 @@ void TBackgroundModel::TestSave()
   TFile *ffFramePbS12 = new TFile(Form("%s/Frame-Pb210-S1-M2-T50.root", dDataDir.c_str()) );
   TFile *ffFramePbS102 = new TFile(Form("%s/Frame-Pb210-S10-M2-T50.root", dDataDir.c_str()) );
   TFile *ffFramePbS1002 = new TFile(Form("%s/Frame-Pb210-S100-M2-T50.root", dDataDir.c_str()) );
+*/
 
   cout << "Loaded Files" << endl;
 
+
   // Have to rebin because bin size is 2 but default is 1 keV bins in the output...
+  fFrameThM1 = (TH1D*)fFrameTh1->Get("h0"); fFrameThM1->Rebin();
+  fTShieldThM1 = (TH1D*)fTShieldTh1->Get("h0"); fTShieldThM1->Rebin();
+  f50mKThM1 = (TH1D*)f50mKTh1->Get("h0"); f50mKThM1->Rebin();
   f600mKThM1 = (TH1D*)f600mKTh1->Get("h0"); f600mKThM1->Rebin();
   fIVCThM1 = (TH1D*)fIVCTh1->Get("h0");  fIVCThM1->Rebin();
   fOVCThM1 = (TH1D*)fOVCTh1->Get("h0");  fOVCThM1->Rebin();
+
+  fFrameRaM1 = (TH1D*)fFrameRa1->Get("h0");  fFrameRaM1->Rebin();
+  fTShieldRaM1 = (TH1D*)fTShieldRa1->Get("h0");  fTShieldRaM1->Rebin();
+  f50mKRaM1 = (TH1D*)f50mKRa1->Get("h0");  f50mKRaM1->Rebin();
   f600mKRaM1 = (TH1D*)f600mKRa1->Get("h0");  f600mKRaM1->Rebin();
+  fIVCRaM1 = (TH1D*)fIVCRa1->Get("h0");  fIVCRaM1->Rebin();
   fOVCRaM1 = (TH1D*)fOVCRa1->Get("h0");  fOVCRaM1->Rebin();
+
   fFrameKM1 = (TH1D*)fFrameK1->Get("h0"); fFrameKM1->Rebin();
   fTShieldKM1 = (TH1D*)fTShieldK1->Get("h0"); fTShieldKM1->Rebin();
   f50mKKM1 = (TH1D*)f50mKK1->Get("h0"); f50mKKM1->Rebin();
   f600mKKM1 = (TH1D*)f600mKK1->Get("h0"); f600mKKM1->Rebin();
   fIVCKM1 = (TH1D*)fIVCK1->Get("h0");  fIVCKM1->Rebin();
   fOVCKM1 = (TH1D*)fOVCK1->Get("h0");  fOVCKM1->Rebin();
+
   fFrameCoM1 = (TH1D*)fFrameCo1->Get("h0"); fFrameCoM1->Rebin();
+  fTShieldCoM1 = (TH1D*)fTShieldCo1->Get("h0"); fTShieldCoM1->Rebin();
+  f50mKCoM1 = (TH1D*)f50mKCo1->Get("h0"); f50mKCoM1->Rebin();
+  f600mKCoM1 = (TH1D*)f600mKCo1->Get("h0"); f600mKCoM1->Rebin();
+  fIVCCoM1 = (TH1D*)fIVCCo1->Get("h0"); fIVCCoM1->Rebin();
   fOVCCoM1 = (TH1D*)fOVCCo1->Get("h0"); fOVCCoM1->Rebin();
+
+  fTShieldMnM1 = (TH1D*)fTShieldMn1->Get("h0"); fTShieldMnM1->Rebin();
   fIVCMnM1 = (TH1D*)fIVCMn1->Get("h0"); fIVCMnM1->Rebin();
+
+  fCrystalBi2M1 = (TH1D*)fCrystalBi21->Get("h0"); fCrystalBi2M1->Rebin();
+  fFrameBi2M1 = (TH1D*)fFrameBi21->Get("h0"); fFrameBi2M1->Rebin();
+
   fNDBDM1 = (TH1D*)fCrystalNDBD1->Get("h0"); fNDBDM1->Rebin();
   f2NDBDM1 = (TH1D*)fCrystal2NDBD1->Get("h0"); f2NDBDM1->Rebin();
   fBiM1 = (TH1D*)fRLeadBi1->Get("h0"); fBiM1->Rebin();
 
+/*
   fCrystalPtM1 = (TH1D*)ffCrystalPt1->Get("h0"); fCrystalPtM1->Rebin();
   fCrystalPbBM1 = (TH1D*)ffCrystalPbB1->Get("h0"); fCrystalPbBM1->Rebin();
   fCrystalPbS01M1 = (TH1D*)ffCrystalPbS011->Get("h0"); fCrystalPbS01M1->Rebin();
@@ -3500,26 +3961,48 @@ void TBackgroundModel::TestSave()
   fFramePbS1M1 = (TH1D*)ffFramePbS11->Get("h0"); fFramePbS1M1->Rebin();
   fFramePbS10M1 = (TH1D*)ffFramePbS101->Get("h0"); fFramePbS10M1->Rebin();
   fFramePbS100M1 = (TH1D*)ffFramePbS1001->Get("h0"); fFramePbS100M1->Rebin();
+*/
 
 
+  fFrameThM2 = (TH1D*)fFrameTh2->Get("h0"); fFrameThM2->Rebin();
+  fTShieldThM2 = (TH1D*)fTShieldTh2->Get("h0"); fTShieldThM2->Rebin();
+  f50mKThM2 = (TH1D*)f50mKTh2->Get("h0"); f50mKThM2->Rebin();
   f600mKThM2 = (TH1D*)f600mKTh2->Get("h0"); f600mKThM2->Rebin();
   fIVCThM2 = (TH1D*)fIVCTh2->Get("h0");  fIVCThM2->Rebin();
   fOVCThM2 = (TH1D*)fOVCTh2->Get("h0");  fOVCThM2->Rebin();
+
+  fFrameRaM2 = (TH1D*)fFrameRa2->Get("h0");  fFrameRaM2->Rebin();
+  fTShieldRaM2 = (TH1D*)fTShieldRa2->Get("h0");  fTShieldRaM2->Rebin();
+  f50mKRaM2 = (TH1D*)f50mKRa2->Get("h0");  f50mKRaM2->Rebin();
   f600mKRaM2 = (TH1D*)f600mKRa2->Get("h0");  f600mKRaM2->Rebin();
+  fIVCRaM2 = (TH1D*)fIVCRa2->Get("h0");  fIVCRaM2->Rebin();
   fOVCRaM2 = (TH1D*)fOVCRa2->Get("h0");  fOVCRaM2->Rebin();
+
   fFrameKM2 = (TH1D*)fFrameK2->Get("h0"); fFrameKM2->Rebin();
   fTShieldKM2 = (TH1D*)fTShieldK2->Get("h0"); fTShieldKM2->Rebin();
   f50mKKM2 = (TH1D*)f50mKK2->Get("h0"); f50mKKM2->Rebin();
   f600mKKM2 = (TH1D*)f600mKK2->Get("h0"); f600mKKM2->Rebin();
   fIVCKM2 = (TH1D*)fIVCK2->Get("h0");  fIVCKM2->Rebin();
   fOVCKM2 = (TH1D*)fOVCK2->Get("h0");  fOVCKM2->Rebin();
+
   fFrameCoM2 = (TH1D*)fFrameCo2->Get("h0"); fFrameCoM2->Rebin();
+  fTShieldCoM2 = (TH1D*)fTShieldCo2->Get("h0"); fTShieldCoM2->Rebin();
+  f50mKCoM2 = (TH1D*)f50mKCo2->Get("h0"); f50mKCoM2->Rebin();
+  f600mKCoM2 = (TH1D*)f600mKCo2->Get("h0"); f600mKCoM2->Rebin();
+  fIVCCoM2 = (TH1D*)fIVCCo2->Get("h0"); fIVCCoM2->Rebin();
   fOVCCoM2 = (TH1D*)fOVCCo2->Get("h0"); fOVCCoM2->Rebin();
+
+  fTShieldMnM2 = (TH1D*)fTShieldMn2->Get("h0"); fTShieldMnM2->Rebin();
   fIVCMnM2 = (TH1D*)fIVCMn2->Get("h0"); fIVCMnM2->Rebin();
+
+  fCrystalBi2M2 = (TH1D*)fCrystalBi22->Get("h0"); fCrystalBi2M2->Rebin();
+  fFrameBi2M2 = (TH1D*)fFrameBi22->Get("h0"); fFrameBi2M2->Rebin();
+
   fNDBDM2 = (TH1D*)fCrystalNDBD2->Get("h0"); fNDBDM2->Rebin();
   f2NDBDM2 = (TH1D*)fCrystal2NDBD2->Get("h0"); f2NDBDM2->Rebin();
   fBiM2 = (TH1D*)fRLeadBi2->Get("h0"); fBiM2->Rebin();
 
+/*
   fCrystalPtM2 = (TH1D*)ffCrystalPt2->Get("h0"); fCrystalPtM2->Rebin();
   fCrystalPbBM2 = (TH1D*)ffCrystalPbB2->Get("h0"); fCrystalPbBM2->Rebin();
   fCrystalPbS01M2 = (TH1D*)ffCrystalPbS12->Get("h0"); fCrystalPbS1M2->Rebin();
@@ -3531,27 +4014,48 @@ void TBackgroundModel::TestSave()
   fFramePbS1M2 = (TH1D*)ffFramePbS12->Get("h0"); fFramePbS1M2->Rebin();
   fFramePbS10M2 = (TH1D*)ffFramePbS102->Get("h0"); fFramePbS10M2->Rebin();
   fFramePbS100M2 = (TH1D*)ffFramePbS1002->Get("h0"); fFramePbS100M2->Rebin();
+*/
 
 
+  NormalizePDFPair(fFrameThM1, fFrameThM2, 50, 2700);
+  NormalizePDFPair(fTShieldThM1, fTShieldThM2, 50, 2700);
+  NormalizePDFPair(f50mKThM1, f50mKThM2, 50, 2700);
   NormalizePDFPair(f600mKThM1, f600mKThM2, 50, 2700);
   NormalizePDFPair(fIVCThM1, fIVCThM2, 50, 2700);
   NormalizePDFPair(fOVCThM1, fOVCThM2, 50, 2700);
+
+  NormalizePDFPair(fFrameRaM1, fFrameRaM2, 50, 2700);
+  NormalizePDFPair(fTShieldRaM1, fTShieldRaM2, 50, 2700);
+  NormalizePDFPair(f50mKRaM1, f50mKRaM2, 50, 2700);
   NormalizePDFPair(f600mKRaM1, f600mKRaM2, 50, 2700);
+  NormalizePDFPair(fIVCRaM1, fIVCRaM2, 50, 2700);
   NormalizePDFPair(fOVCRaM1, fOVCRaM2, 50, 2700);
+
   NormalizePDFPair(fFrameKM1, fFrameKM2, 50, 2700);
   NormalizePDFPair(fTShieldKM1, fTShieldKM2, 50, 2700);
   NormalizePDFPair(f50mKKM1, f50mKKM2, 50, 2700);
   NormalizePDFPair(f600mKKM1, f600mKKM2, 50, 2700);
   NormalizePDFPair(fIVCKM1, fIVCKM2, 50, 2700);
   NormalizePDFPair(fOVCKM1, fOVCKM2, 50, 2700);
+
   NormalizePDFPair(fFrameCoM1, fFrameCoM2, 50, 2700);
+  NormalizePDFPair(fTShieldCoM1, fTShieldCoM2, 50, 2700);
+  NormalizePDFPair(f50mKCoM1, f50mKCoM2, 50, 2700);
+  NormalizePDFPair(f600mKCoM1, f600mKCoM2, 50, 2700);
+  NormalizePDFPair(fIVCCoM1, fIVCCoM2, 50, 2700);
   NormalizePDFPair(fOVCCoM1, fOVCCoM2, 50, 2700);
+
+  NormalizePDFPair(fTShieldMnM1, fTShieldMnM2, 50, 2700);
   NormalizePDFPair(fIVCMnM1, fIVCMnM2, 50, 2700);
+
+  NormalizePDFPair(fCrystalBi2M1, fCrystalBi2M2, 50, 2700);
+  NormalizePDFPair(fFrameBi2M1, fFrameBi2M2, 50, 2700);
+
   NormalizePDFPair(fNDBDM1, fNDBDM2, 50, 2700);
   NormalizePDFPair(f2NDBDM1, f2NDBDM2, 50, 2700);
   NormalizePDFPair(fBiM1, fBiM2, 50, 2700);
 
-
+/*
   NormalizePDFPair(fCrystalPtM1, fCrystalPtM2, 50, 8000);
   NormalizePDFPair(fCrystalPbBM1, fCrystalPbBM2, 50, 8000);
   NormalizePDFPair(fCrystalPbS01M1, fCrystalPbS01M2, 50, 8000);
@@ -3559,34 +4063,55 @@ void TBackgroundModel::TestSave()
   NormalizePDFPair(fCrystalPbS10M1, fCrystalPbS10M2, 50, 8000);
   NormalizePDFPair(fCrystalPbS100M1, fCrystalPbS100M2, 50, 8000);
 
+
   NormalizePDFPair(fFramePbBM1, fFramePbBM2, 50, 8000);
   NormalizePDFPair(fFramePbS01M1, fFramePbS01M2, 50, 8000);
   NormalizePDFPair(fFramePbS1M1, fFramePbS1M2, 50, 8000);
   NormalizePDFPair(fFramePbS10M1, fFramePbS10M2, 50, 8000);
   NormalizePDFPair(fFramePbS100M1, fFramePbS100M2, 50, 8000);
-
+*/
   cout << "Normalized Histograms" << endl;
 
 
+  SmearMC(fFrameThM1, fSmearFrameThM1, dRes1, dRes2);
+  SmearMC(fTShieldThM1, fSmearTShieldThM1, dRes1, dRes2);
+  SmearMC(f50mKThM1, fSmear50mKThM1, dRes1, dRes2);
   SmearMC(f600mKThM1, fSmear600mKThM1, dRes1, dRes2);
-
   SmearMC(fIVCThM1, fSmearIVCThM1, dRes1, dRes2);
   SmearMC(fOVCThM1, fSmearOVCThM1, dRes1, dRes2);
+
+  SmearMC(fFrameRaM1, fSmearFrameRaM1, dRes1, dRes2);
+  SmearMC(fTShieldRaM1, fSmearTShieldRaM1, dRes1, dRes2);
+  SmearMC(f50mKRaM1, fSmear50mKRaM1, dRes1, dRes2);
   SmearMC(f600mKRaM1, fSmear600mKRaM1, dRes1, dRes2);
+  SmearMC(fIVCRaM1, fSmearIVCRaM1, dRes1, dRes2);
   SmearMC(fOVCRaM1, fSmearOVCRaM1, dRes1, dRes2);
+
   SmearMC(fFrameKM1, fSmearFrameKM1, dRes1, dRes2);
   SmearMC(fTShieldKM1, fSmearTShieldKM1, dRes1, dRes2);
   SmearMC(f50mKKM1, fSmear50mKKM1, dRes1, dRes2);
   SmearMC(f600mKKM1, fSmear600mKKM1, dRes1, dRes2);
   SmearMC(fIVCKM1, fSmearIVCKM1, dRes1, dRes2);
   SmearMC(fOVCKM1, fSmearOVCKM1, dRes1, dRes2);
+
   SmearMC(fFrameCoM1, fSmearFrameCoM1, dRes1, dRes2);
+  SmearMC(fTShieldCoM1, fSmearTShieldCoM1, dRes1, dRes2);
+  SmearMC(f50mKCoM1, fSmear50mKCoM1, dRes1, dRes2);
+  SmearMC(f600mKCoM1, fSmear600mKCoM1, dRes1, dRes2);
+  SmearMC(fIVCCoM1, fSmearIVCCoM1, dRes1, dRes2);
   SmearMC(fOVCCoM1, fSmearOVCCoM1, dRes1, dRes2);
+
+  SmearMC(fTShieldMnM1, fSmearTShieldMnM1, dRes1, dRes2);
   SmearMC(fIVCMnM1, fSmearIVCMnM1, dRes1, dRes2);
+
+  SmearMC(fCrystalBi2M1, fSmearCrystalBi2M1, dRes1, dRes2);
+  SmearMC(fFrameBi2M1, fSmearFrameBi2M1, dRes1, dRes2);
+
   SmearMC(fNDBDM1, fSmearNDBDM1, dRes1, dRes2);
   SmearMC(f2NDBDM1, fSmear2NDBDM1, dRes1, dRes2);
   SmearMC(fBiM1, fSmearBiM1, dRes1, dRes2);
 
+/*
   SmearMC(fCrystalPtM1, fSmearCrystalPtM1, dRes1, dRes2);
   SmearMC(fCrystalPbBM1, fSmearCrystalPbBM1, dRes1, dRes2);
   SmearMC(fCrystalPbS01M1, fSmearCrystalPbS01M1, dRes1, dRes2);
@@ -3598,29 +4123,47 @@ void TBackgroundModel::TestSave()
   SmearMC(fFramePbS1M1, fSmearFramePbS1M1, dRes1, dRes2);
   SmearMC(fFramePbS10M1, fSmearFramePbS10M1, dRes1, dRes2);
   SmearMC(fFramePbS100M1, fSmearFramePbS100M1, dRes1, dRes2);
+*/
 
-
-
+  SmearMC(fFrameThM2, fSmearFrameThM2, dRes1, dRes2);
+  SmearMC(fTShieldThM2, fSmearTShieldThM2, dRes1, dRes2);
+  SmearMC(f50mKThM2, fSmear50mKThM2, dRes1, dRes2);
   SmearMC(f600mKThM2, fSmear600mKThM2, dRes1, dRes2);
-
   SmearMC(fIVCThM2, fSmearIVCThM2, dRes1, dRes2);
   SmearMC(fOVCThM2, fSmearOVCThM2, dRes1, dRes2);
+
+  SmearMC(fFrameRaM2, fSmearFrameRaM2, dRes1, dRes2);
+  SmearMC(fTShieldRaM2, fSmearTShieldRaM2, dRes1, dRes2);
+  SmearMC(f50mKRaM2, fSmear50mKRaM2, dRes1, dRes2);
   SmearMC(f600mKRaM2, fSmear600mKRaM2, dRes1, dRes2);
+  SmearMC(fIVCRaM2, fSmearIVCRaM2, dRes1, dRes2);
   SmearMC(fOVCRaM2, fSmearOVCRaM2, dRes1, dRes2);
+
   SmearMC(fFrameKM2, fSmearFrameKM2, dRes1, dRes2);
   SmearMC(fTShieldKM2, fSmearTShieldKM2, dRes1, dRes2);
   SmearMC(f50mKKM2, fSmear50mKKM2, dRes1, dRes2);
   SmearMC(f600mKKM2, fSmear600mKKM2, dRes1, dRes2);
   SmearMC(fIVCKM2, fSmearIVCKM2, dRes1, dRes2);
   SmearMC(fOVCKM2, fSmearOVCKM2, dRes1, dRes2);
+
   SmearMC(fFrameCoM2, fSmearFrameCoM2, dRes1, dRes2);
+  SmearMC(fTShieldCoM2, fSmearTShieldCoM2, dRes1, dRes2);
+  SmearMC(f50mKCoM2, fSmear50mKCoM2, dRes1, dRes2);
+  SmearMC(f600mKCoM2, fSmear600mKCoM2, dRes1, dRes2);
+  SmearMC(fIVCCoM2, fSmearIVCCoM2, dRes1, dRes2);
   SmearMC(fOVCCoM2, fSmearOVCCoM2, dRes1, dRes2);
+
+  SmearMC(fTShieldMnM2, fSmearTShieldMnM2, dRes1, dRes2);
   SmearMC(fIVCMnM2, fSmearIVCMnM2, dRes1, dRes2);
+
+  SmearMC(fCrystalBi2M2, fSmearCrystalBi2M2, dRes1, dRes2);
+  SmearMC(fFrameBi2M2, fSmearFrameBi2M2, dRes1, dRes2);
+
   SmearMC(fNDBDM2, fSmearNDBDM2, dRes1, dRes2);
   SmearMC(f2NDBDM2, fSmear2NDBDM2, dRes1, dRes2);
   SmearMC(fBiM2, fSmearBiM2, dRes1, dRes2);
 
-
+/*
   SmearMC(fCrystalPtM2, fSmearCrystalPtM2, dRes1, dRes2);
   SmearMC(fCrystalPbBM2, fSmearCrystalPbBM2, dRes1, dRes2);
   SmearMC(fCrystalPbS01M2, fSmearCrystalPbS01M2, dRes1, dRes2);
@@ -3632,64 +4175,127 @@ void TBackgroundModel::TestSave()
   SmearMC(fFramePbS1M2, fSmearFramePbS1M2, dRes1, dRes2);
   SmearMC(fFramePbS10M2, fSmearFramePbS10M2, dRes1, dRes2);
   SmearMC(fFramePbS100M2, fSmearFramePbS100M2, dRes1, dRes2);
-
+*/
 
   /////////////// Rebinning for Adaptive
+
+
+  fSmearFrameThM1->Rebin(dAdaptiveBinsM1, "fnewFrameThM1", dAdaptiveArrayM1);
+  fSmearTShieldThM1->Rebin(dAdaptiveBinsM1, "fnewTShieldThM1", dAdaptiveArrayM1);
+  fSmear50mKThM1->Rebin(dAdaptiveBinsM1, "fnew50mKThM1", dAdaptiveArrayM1);
   fSmear600mKThM1->Rebin(dAdaptiveBinsM1, "fnew600mKThM1", dAdaptiveArrayM1);
   fSmearIVCThM1->Rebin(dAdaptiveBinsM1, "fnewIVCThM1", dAdaptiveArrayM1);
   fSmearOVCThM1->Rebin(dAdaptiveBinsM1, "fnewOVCThM1", dAdaptiveArrayM1);
+
+  fSmearFrameRaM1->Rebin(dAdaptiveBinsM1, "fnewFrameRaM1", dAdaptiveArrayM1);
+  fSmearTShieldRaM1->Rebin(dAdaptiveBinsM1, "fnewTShieldRaM1", dAdaptiveArrayM1);
+  fSmear50mKRaM1->Rebin(dAdaptiveBinsM1, "fnew50mKRaM1", dAdaptiveArrayM1);
   fSmear600mKRaM1->Rebin(dAdaptiveBinsM1, "fnew600mKRaM1", dAdaptiveArrayM1);
+  fSmearIVCRaM1->Rebin(dAdaptiveBinsM1, "fnewIVCRaM1", dAdaptiveArrayM1);
   fSmearOVCRaM1->Rebin(dAdaptiveBinsM1, "fnewOVCRaM1", dAdaptiveArrayM1);
+
   fSmearFrameKM1->Rebin(dAdaptiveBinsM1, "fnewFrameKM1", dAdaptiveArrayM1);
   fSmearTShieldKM1->Rebin(dAdaptiveBinsM1, "fnewTShieldKM1", dAdaptiveArrayM1);
   fSmear50mKKM1->Rebin(dAdaptiveBinsM1, "fnew50mKKM1", dAdaptiveArrayM1);
   fSmear600mKKM1->Rebin(dAdaptiveBinsM1, "fnew600mKKM1", dAdaptiveArrayM1);
   fSmearIVCKM1->Rebin(dAdaptiveBinsM1, "fnewIVCKM1", dAdaptiveArrayM1);
   fSmearOVCKM1->Rebin(dAdaptiveBinsM1, "fnewOVCKM1", dAdaptiveArrayM1);
+
   fSmearFrameCoM1->Rebin(dAdaptiveBinsM1, "fnewFrameCoM1", dAdaptiveArrayM1);
+  fSmearTShieldCoM1->Rebin(dAdaptiveBinsM1, "fnewTShieldCoM1", dAdaptiveArrayM1);
+  fSmear50mKCoM1->Rebin(dAdaptiveBinsM1, "fnew50mKCoM1", dAdaptiveArrayM1);
+  fSmear600mKCoM1->Rebin(dAdaptiveBinsM1, "fnew600mKCoM1", dAdaptiveArrayM1);
+  fSmearIVCCoM1->Rebin(dAdaptiveBinsM1, "fnewIVCCoM1", dAdaptiveArrayM1);
   fSmearOVCCoM1->Rebin(dAdaptiveBinsM1, "fnewOVCCoM1", dAdaptiveArrayM1);
+
+  fSmearTShieldMnM1->Rebin(dAdaptiveBinsM1, "fnewTShieldMnM1", dAdaptiveArrayM1);
   fSmearIVCMnM1->Rebin(dAdaptiveBinsM1, "fnewIVCMnM1", dAdaptiveArrayM1);
+
+  fSmearCrystalBi2M1->Rebin(dAdaptiveBinsM1, "fnewCrystalBi2M1", dAdaptiveArrayM1);
+  fSmearFrameBi2M1->Rebin(dAdaptiveBinsM1, "fnewFrameBi2M1", dAdaptiveArrayM1);
+
   fSmearNDBDM1->Rebin(dAdaptiveBinsM1, "fnewNDBDM1", dAdaptiveArrayM1);
   fSmear2NDBDM1->Rebin(dAdaptiveBinsM1, "fnew2NDBDM1", dAdaptiveArrayM1);
   fSmearBiM1->Rebin(dAdaptiveBinsM1, "fnewBiM1", dAdaptiveArrayM1);
 
 
 
+  fSmearFrameThM2->Rebin(dAdaptiveBinsM2, "fnewFrameThM2", dAdaptiveArrayM2);
+  fSmearTShieldThM2->Rebin(dAdaptiveBinsM2, "fnewTShieldThM2", dAdaptiveArrayM2);
+  fSmear50mKThM2->Rebin(dAdaptiveBinsM2, "fnew50mKThM2", dAdaptiveArrayM2);
   fSmear600mKThM2->Rebin(dAdaptiveBinsM2, "fnew600mKThM2", dAdaptiveArrayM2);
   fSmearIVCThM2->Rebin(dAdaptiveBinsM2, "fnewIVCThM2", dAdaptiveArrayM2);
   fSmearOVCThM2->Rebin(dAdaptiveBinsM2, "fnewOVCThM2", dAdaptiveArrayM2);
+
+  fSmearFrameRaM2->Rebin(dAdaptiveBinsM2, "fnewFrameRaM2", dAdaptiveArrayM2);
+  fSmearTShieldRaM2->Rebin(dAdaptiveBinsM2, "fnewTShieldRaM2", dAdaptiveArrayM2);
+  fSmear50mKRaM2->Rebin(dAdaptiveBinsM2, "fnew50mKRaM2", dAdaptiveArrayM2);
   fSmear600mKRaM2->Rebin(dAdaptiveBinsM2, "fnew600mKRaM2", dAdaptiveArrayM2);
+  fSmearIVCRaM2->Rebin(dAdaptiveBinsM2, "fnewIVCRaM2", dAdaptiveArrayM2);
   fSmearOVCRaM2->Rebin(dAdaptiveBinsM2, "fnewOVCRaM2", dAdaptiveArrayM2);
+
   fSmearFrameKM2->Rebin(dAdaptiveBinsM2, "fnewFrameKM2", dAdaptiveArrayM2);
   fSmearTShieldKM2->Rebin(dAdaptiveBinsM2, "fnewTShieldKM2", dAdaptiveArrayM2);
   fSmear50mKKM2->Rebin(dAdaptiveBinsM2, "fnew50mKKM2", dAdaptiveArrayM2);
   fSmear600mKKM2->Rebin(dAdaptiveBinsM2, "fnew600mKKM2", dAdaptiveArrayM2);
   fSmearIVCKM2->Rebin(dAdaptiveBinsM2, "fnewIVCKM2", dAdaptiveArrayM2);
   fSmearOVCKM2->Rebin(dAdaptiveBinsM2, "fnewOVCKM2", dAdaptiveArrayM2);
+
   fSmearFrameCoM2->Rebin(dAdaptiveBinsM2, "fnewFrameCoM2", dAdaptiveArrayM2);
+  fSmearTShieldCoM2->Rebin(dAdaptiveBinsM2, "fnewTShieldCoM2", dAdaptiveArrayM2);
+  fSmear50mKCoM2->Rebin(dAdaptiveBinsM2, "fnew50mKCoM2", dAdaptiveArrayM2);
+  fSmear600mKCoM2->Rebin(dAdaptiveBinsM2, "fnew600mKCoM2", dAdaptiveArrayM2);
+  fSmearIVCCoM2->Rebin(dAdaptiveBinsM2, "fnewIVCCoM2", dAdaptiveArrayM2);
   fSmearOVCCoM2->Rebin(dAdaptiveBinsM2, "fnewOVCCoM2", dAdaptiveArrayM2);
+
+  fSmearTShieldMnM2->Rebin(dAdaptiveBinsM2, "fnewTShieldMnM2", dAdaptiveArrayM2);
   fSmearIVCMnM2->Rebin(dAdaptiveBinsM2, "fnewIVCMnM2", dAdaptiveArrayM2);
+
+  fSmearCrystalBi2M2->Rebin(dAdaptiveBinsM2, "fnewCrystalBi2M2", dAdaptiveArrayM2);
+  fSmearFrameBi2M2->Rebin(dAdaptiveBinsM2, "fnewFrameBi2M2", dAdaptiveArrayM2);
+
   fSmearNDBDM2->Rebin(dAdaptiveBinsM2, "fnewNDBDM2", dAdaptiveArrayM2);
   fSmear2NDBDM2->Rebin(dAdaptiveBinsM2, "fnew2NDBDM2", dAdaptiveArrayM2);
   fSmearBiM2->Rebin(dAdaptiveBinsM2, "fnewBiM2", dAdaptiveArrayM2);
 
 
+
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
+    fAdapFrameThM1->SetBinContent(i, 2*fnewFrameThM1->GetBinContent(i)/fnewFrameThM1->GetBinWidth(i));
+    fAdapTShieldThM1->SetBinContent(i, 2*fnewTShieldThM1->GetBinContent(i)/fnewTShieldThM1->GetBinWidth(i));
+    fAdap50mKThM1->SetBinContent(i, 2*fnew50mKThM1->GetBinContent(i)/fnew50mKThM1->GetBinWidth(i));
     fAdap600mKThM1->SetBinContent(i, 2*fnew600mKThM1->GetBinContent(i)/fnew600mKThM1->GetBinWidth(i));
     fAdapIVCThM1->SetBinContent(i, 2*fnewIVCThM1->GetBinContent(i)/fnewIVCThM1->GetBinWidth(i));
     fAdapOVCThM1->SetBinContent(i, 2*fnewOVCThM1->GetBinContent(i)/fnewOVCThM1->GetBinWidth(i));
+
+    fAdapFrameRaM1->SetBinContent(i, 2*fnewFrameRaM1->GetBinContent(i)/fnewFrameRaM1->GetBinWidth(i));
+    fAdapTShieldRaM1->SetBinContent(i, 2*fnewTShieldRaM1->GetBinContent(i)/fnewTShieldRaM1->GetBinWidth(i));
+    fAdap50mKRaM1->SetBinContent(i, 2*fnew50mKRaM1->GetBinContent(i)/fnew50mKRaM1->GetBinWidth(i));
     fAdap600mKRaM1->SetBinContent(i, 2*fnew600mKRaM1->GetBinContent(i)/fnew600mKRaM1->GetBinWidth(i));
+    fAdapIVCRaM1->SetBinContent(i, 2*fnewIVCRaM1->GetBinContent(i)/fnewIVCRaM1->GetBinWidth(i));
     fAdapOVCRaM1->SetBinContent(i, 2*fnewOVCRaM1->GetBinContent(i)/fnewOVCRaM1->GetBinWidth(i));
+
     fAdapFrameKM1->SetBinContent(i, 2*fnewFrameKM1->GetBinContent(i)/fnewFrameKM1->GetBinWidth(i));
     fAdapTShieldKM1->SetBinContent(i, 2*fnewTShieldKM1->GetBinContent(i)/fnewTShieldKM1->GetBinWidth(i));
     fAdap50mKKM1->SetBinContent(i, 2*fnew50mKKM1->GetBinContent(i)/fnew50mKKM1->GetBinWidth(i));
     fAdap600mKKM1->SetBinContent(i, 2*fnew600mKKM1->GetBinContent(i)/fnew600mKKM1->GetBinWidth(i));
     fAdapIVCKM1->SetBinContent(i, 2*fnewIVCKM1->GetBinContent(i)/fnewIVCKM1->GetBinWidth(i));
     fAdapOVCKM1->SetBinContent(i, 2*fnewOVCKM1->GetBinContent(i)/fnewOVCKM1->GetBinWidth(i));
+
     fAdapFrameCoM1->SetBinContent(i, 2*fnewFrameCoM1->GetBinContent(i)/fnewFrameCoM1->GetBinWidth(i));
+    fAdapTShieldCoM1->SetBinContent(i, 2*fnewTShieldCoM1->GetBinContent(i)/fnewTShieldCoM1->GetBinWidth(i));
+    fAdap50mKCoM1->SetBinContent(i, 2*fnew50mKCoM1->GetBinContent(i)/fnew50mKCoM1->GetBinWidth(i));
+    fAdap600mKCoM1->SetBinContent(i, 2*fnew600mKCoM1->GetBinContent(i)/fnew600mKCoM1->GetBinWidth(i));
+    fAdapIVCCoM1->SetBinContent(i, 2*fnewIVCCoM1->GetBinContent(i)/fnewIVCCoM1->GetBinWidth(i));
     fAdapOVCCoM1->SetBinContent(i, 2*fnewOVCCoM1->GetBinContent(i)/fnewOVCCoM1->GetBinWidth(i));
+
+    fAdapTShieldMnM1->SetBinContent(i, 2*fnewTShieldMnM1->GetBinContent(i)/fnewTShieldMnM1->GetBinWidth(i));
     fAdapIVCMnM1->SetBinContent(i, 2*fnewIVCMnM1->GetBinContent(i)/fnewIVCMnM1->GetBinWidth(i));
+
+    fAdapCrystalBi2M1->SetBinContent(i, 2*fnewCrystalBi2M1->GetBinContent(i)/fnewCrystalBi2M1->GetBinWidth(i));
+    fAdapFrameBi2M1->SetBinContent(i, 2*fnewFrameBi2M1->GetBinContent(i)/fnewFrameBi2M1->GetBinWidth(i));
+
     fAdapNDBDM1->SetBinContent(i, 2*fnewNDBDM1->GetBinContent(i)/fnewNDBDM1->GetBinWidth(i));
     fAdap2NDBDM1->SetBinContent(i, 2*fnew2NDBDM1->GetBinContent(i)/fnew600mKThM1->GetBinWidth(i));
     fAdapBiM1->SetBinContent(i, 2*fnewBiM1->GetBinContent(i)/fnewBiM1->GetBinWidth(i));
@@ -3699,20 +4305,40 @@ void TBackgroundModel::TestSave()
 
   for(int i = 1; i <= dAdaptiveBinsM2; i++)
   {
+    fAdapFrameThM2->SetBinContent(i, 2*fnewFrameThM2->GetBinContent(i)/fnewFrameThM2->GetBinWidth(i));
+    fAdapTShieldThM2->SetBinContent(i, 2*fnewTShieldThM2->GetBinContent(i)/fnewTShieldThM2->GetBinWidth(i));
+    fAdap50mKThM2->SetBinContent(i, 2*fnew50mKThM2->GetBinContent(i)/fnew50mKThM2->GetBinWidth(i));
     fAdap600mKThM2->SetBinContent(i, 2*fnew600mKThM2->GetBinContent(i)/fnew600mKThM2->GetBinWidth(i));
     fAdapIVCThM2->SetBinContent(i, 2*fnewIVCThM2->GetBinContent(i)/fnewIVCThM2->GetBinWidth(i));
     fAdapOVCThM2->SetBinContent(i, 2*fnewOVCThM2->GetBinContent(i)/fnewOVCThM2->GetBinWidth(i));
+
+    fAdapFrameRaM2->SetBinContent(i, 2*fnewFrameRaM2->GetBinContent(i)/fnewFrameRaM2->GetBinWidth(i));
+    fAdapTShieldRaM2->SetBinContent(i, 2*fnewTShieldRaM2->GetBinContent(i)/fnewTShieldRaM2->GetBinWidth(i));
+    fAdap50mKRaM2->SetBinContent(i, 2*fnew50mKRaM2->GetBinContent(i)/fnew50mKRaM2->GetBinWidth(i));
     fAdap600mKRaM2->SetBinContent(i, 2*fnew600mKRaM2->GetBinContent(i)/fnew600mKRaM2->GetBinWidth(i));
+    fAdapIVCRaM2->SetBinContent(i, 2*fnewIVCRaM2->GetBinContent(i)/fnewIVCRaM2->GetBinWidth(i));
     fAdapOVCRaM2->SetBinContent(i, 2*fnewOVCRaM2->GetBinContent(i)/fnewOVCRaM2->GetBinWidth(i));
+
     fAdapFrameKM2->SetBinContent(i, 2*fnewFrameKM2->GetBinContent(i)/fnewFrameKM2->GetBinWidth(i));
     fAdapTShieldKM2->SetBinContent(i, 2*fnewTShieldKM2->GetBinContent(i)/fnewTShieldKM2->GetBinWidth(i));
     fAdap50mKKM2->SetBinContent(i, 2*fnew50mKKM2->GetBinContent(i)/fnew50mKKM2->GetBinWidth(i));
     fAdap600mKKM2->SetBinContent(i, 2*fnew600mKKM2->GetBinContent(i)/fnew600mKKM2->GetBinWidth(i));
     fAdapIVCKM2->SetBinContent(i, 2*fnewIVCKM2->GetBinContent(i)/fnewIVCKM2->GetBinWidth(i));
     fAdapOVCKM2->SetBinContent(i, 2*fnewOVCKM2->GetBinContent(i)/fnewOVCKM2->GetBinWidth(i));
+
     fAdapFrameCoM2->SetBinContent(i, 2*fnewFrameCoM2->GetBinContent(i)/fnewFrameCoM2->GetBinWidth(i));
+    fAdapTShieldCoM2->SetBinContent(i, 2*fnewTShieldCoM2->GetBinContent(i)/fnewTShieldCoM2->GetBinWidth(i));
+    fAdap50mKCoM2->SetBinContent(i, 2*fnew50mKCoM2->GetBinContent(i)/fnew50mKCoM2->GetBinWidth(i));
+    fAdap600mKCoM2->SetBinContent(i, 2*fnew600mKCoM2->GetBinContent(i)/fnew600mKCoM2->GetBinWidth(i));
+    fAdapIVCCoM2->SetBinContent(i, 2*fnewIVCCoM2->GetBinContent(i)/fnewIVCCoM2->GetBinWidth(i));
     fAdapOVCCoM2->SetBinContent(i, 2*fnewOVCCoM2->GetBinContent(i)/fnewOVCCoM2->GetBinWidth(i));
+
+    fAdapTShieldMnM2->SetBinContent(i, 2*fnewTShieldMnM2->GetBinContent(i)/fnewTShieldMnM2->GetBinWidth(i));
     fAdapIVCMnM2->SetBinContent(i, 2*fnewIVCMnM2->GetBinContent(i)/fnewIVCMnM2->GetBinWidth(i));
+
+    fAdapCrystalBi2M2->SetBinContent(i, 2*fnewCrystalBi2M2->GetBinContent(i)/fnewCrystalBi2M2->GetBinWidth(i));
+    fAdapFrameBi2M2->SetBinContent(i, 2*fnewFrameBi2M2->GetBinContent(i)/fnewFrameBi2M2->GetBinWidth(i));
+
     fAdapNDBDM2->SetBinContent(i, 2*fnewNDBDM2->GetBinContent(i)/fnewNDBDM2->GetBinWidth(i));
     fAdap2NDBDM2->SetBinContent(i, 2*fnew2NDBDM2->GetBinContent(i)/fnew600mKThM2->GetBinWidth(i));
     fAdapBiM2->SetBinContent(i, 2*fnewBiM2->GetBinContent(i)/fnewBiM2->GetBinWidth(i));
@@ -3721,7 +4347,7 @@ void TBackgroundModel::TestSave()
 
 
 
-  TFile *file1 = new TFile(Form("MCAdaptive-%dkeV.root", dBinSize), "RECREATE");
+  TFile *file1 = new TFile("MCAdaptiveGamma-new.root", "RECREATE");
 
 
     fSmearFrameThM1->Write();
@@ -3730,30 +4356,39 @@ void TBackgroundModel::TestSave()
     fSmear600mKThM1->Write();
     fSmearIVCThM1->Write();
     fSmearOVCThM1->Write();
+
     fSmearFrameRaM1->Write();
     fSmearTShieldRaM1->Write();  
     fSmear50mKRaM1->Write();
     fSmear600mKRaM1->Write();
     fSmearIVCRaM1->Write();
     fSmearOVCRaM1->Write();
+
     fSmearFrameKM1->Write();
     fSmearTShieldKM1->Write();
     fSmear50mKKM1->Write();
     fSmear600mKKM1->Write();
     fSmearIVCKM1->Write();
     fSmearOVCKM1->Write(); 
+
     fSmearFrameCoM1->Write();
     fSmearTShieldCoM1->Write();
     fSmear50mKCoM1->Write();
     fSmear600mKCoM1->Write();
     fSmearIVCCoM1->Write();
     fSmearOVCCoM1->Write();  
+
     fSmearTShieldMnM1->Write();
     fSmearIVCMnM1->Write();
+
+    fSmearCrystalBi2M1->Write();
+    fSmearFrameBi2M1->Write();
+
     fSmearNDBDM1->Write();  
     fSmear2NDBDM1->Write();  
     fSmearBiM1->Write();  
 
+/*
     fSmearCrystalPtM1->Write();
     fSmearCrystalPbBM1->Write();
     fSmearCrystalPbS01M1->Write();
@@ -3765,7 +4400,7 @@ void TBackgroundModel::TestSave()
     fSmearFramePbS1M1->Write();
     fSmearFramePbS10M1->Write();
     fSmearFramePbS100M1->Write();
-
+*/
 
     fSmearFrameThM2->Write();
     fSmearTShieldThM2->Write();  
@@ -3773,30 +4408,39 @@ void TBackgroundModel::TestSave()
     fSmear600mKThM2->Write();
     fSmearIVCThM2->Write();
     fSmearOVCThM2->Write();
+
     fSmearFrameRaM2->Write();
     fSmearTShieldRaM2->Write();  
     fSmear50mKRaM2->Write();
     fSmear600mKRaM2->Write();
     fSmearIVCRaM2->Write();
     fSmearOVCRaM2->Write();
+
     fSmearFrameKM2->Write();
     fSmearTShieldKM2->Write();
     fSmear50mKKM2->Write();
     fSmear600mKKM2->Write();
     fSmearIVCKM2->Write();
     fSmearOVCKM2->Write(); 
+
     fSmearFrameCoM2->Write();
     fSmearTShieldCoM2->Write();
     fSmear50mKCoM2->Write();
     fSmear600mKCoM2->Write();
     fSmearIVCCoM2->Write();
     fSmearOVCCoM2->Write();  
+
     fSmearTShieldMnM2->Write();
     fSmearIVCMnM2->Write();
+
+    fSmearCrystalBi2M2->Write();
+    fSmearFrameBi2M2->Write();
+
     fSmearNDBDM2->Write();  
     fSmear2NDBDM2->Write();  
     fSmearBiM2->Write();  
 
+/*
     fSmearCrystalPtM2->Write();
     fSmearCrystalPbBM2->Write();
     fSmearCrystalPbS01M2->Write();
@@ -3808,45 +4452,88 @@ void TBackgroundModel::TestSave()
     fSmearFramePbS1M2->Write();
     fSmearFramePbS10M2->Write();
     fSmearFramePbS100M2->Write();
+*/
 
+    fAdapFrameThM1->Write();
+    fAdapTShieldThM1->Write();
+    fAdap50mKThM1->Write();
     fAdap600mKThM1->Write();
     fAdapIVCThM1->Write();
     fAdapOVCThM1->Write();
+
+    fAdapFrameRaM1->Write();
+    fAdapTShieldRaM1->Write();
+    fAdap50mKRaM1->Write();
     fAdap600mKRaM1->Write();
+    fAdapIVCRaM1->Write();
     fAdapOVCRaM1->Write();
+
     fAdapFrameKM1->Write();
     fAdapTShieldKM1->Write();
     fAdap50mKKM1->Write();
     fAdap600mKKM1->Write();
     fAdapIVCKM1->Write();
     fAdapOVCKM1->Write();
+
     fAdapFrameCoM1->Write();
+    fAdapTShieldCoM1->Write();
+    fAdap50mKCoM1->Write();
+    fAdap600mKCoM1->Write();
+    fAdapIVCCoM1->Write();
     fAdapOVCCoM1->Write();
+
+    fAdapTShieldMnM1->Write();
     fAdapIVCMnM1->Write();
+
+    fAdapCrystalBi2M1->Write();
+    fAdapFrameBi2M1->Write();
+
     fAdapNDBDM1->Write();
     fAdap2NDBDM1->Write();
     fAdapBiM1->Write();
 
 
+    fAdapFrameThM2->Write();
+    fAdapTShieldThM2->Write();
+    fAdap50mKThM2->Write();
     fAdap600mKThM2->Write();
     fAdapIVCThM2->Write();
     fAdapOVCThM2->Write();
+
+    fAdapFrameRaM2->Write();
+    fAdapTShieldRaM2->Write();
+    fAdap50mKRaM2->Write();
     fAdap600mKRaM2->Write();
+    fAdapIVCRaM2->Write();
     fAdapOVCRaM2->Write();
+
     fAdapFrameKM2->Write();
     fAdapTShieldKM2->Write();
     fAdap50mKKM2->Write();
     fAdap600mKKM2->Write();
     fAdapIVCKM2->Write();
     fAdapOVCKM2->Write();
+
     fAdapFrameCoM2->Write();
+    fAdapTShieldCoM2->Write();
+    fAdap50mKCoM2->Write();
+    fAdap600mKCoM2->Write();
+    fAdapIVCCoM2->Write();
     fAdapOVCCoM2->Write();
+
+    fAdapTShieldMnM2->Write();
     fAdapIVCMnM2->Write();
+
+    fAdapCrystalBi2M2->Write();
+    fAdapFrameBi2M2->Write();
+
     fAdapNDBDM2->Write();
     fAdap2NDBDM2->Write();
     fAdapBiM2->Write();
 
     file1->Write();
+
+
 
 }
 
@@ -3858,7 +4545,8 @@ void TBackgroundModel::SaveSmearedData()
   Initialize();
 
   // Now store data
-  TFile *file1 = new TFile(Form("MCData-%dkeV.root", dBinSize), "RECREATE");
+  TFile *file1 = new TFile("MCAdaptiveAlpha-new.root", "RECREATE");
+
     fSmearFrameThM1->Write();
     fSmearTShieldThM1->Write();  
     fSmear50mKThM1->Write();
@@ -4114,35 +4802,35 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 
    // Fix parameters here
-   // minuit.FixParameter(0); // Close Th
-   // minuit.FixParameter(1); // Far Th
-   // minuit.FixParameter(2); // Close Ra
-   // minuit.FixParameter(3); // Far Ra
+   minuit.FixParameter(0); // Frame Th
+   minuit.FixParameter(1); // TShield Th
+   minuit.FixParameter(2); // Frame Ra
+   minuit.FixParameter(3); // TShield Ra
    // minuit.FixParameter(4); // Close K
    // minuit.FixParameter(5); // Far K
-   // minuit.FixParameter(6); // Close Co
-   // minuit.FixParameter(7); // Far Co
-   // minuit.FixParameter(8); // 2NDBD
+   // minuit.FixParameter(6); // Frame Co
+   minuit.FixParameter(7); // TShield Co
+   minuit.FixParameter(8); // 2NDBD
    // minuit.FixParameter(9); // NDBD
    // minuit.FixParameter(10); // Bi207
-   // minuit.FixParameter(11); // Close Mn
-   // minuit.FixParameter(12); // Far Mn
-   // minuit.FixParameter(13); // 
-   // minuit.FixParameter(14); // 
-   // minuit.FixParameter(15); // 
-   // minuit.FixParameter(16); // 
-   // minuit.FixParameter(17); // 
-   // minuit.FixParameter(18); // 
-   // minuit.FixParameter(19); // 
-   // minuit.FixParameter(20); // 
-   // minuit.FixParameter(21); // 
-   // minuit.FixParameter(22); // 
-   // minuit.FixParameter(23); // 
-   // minuit.FixParameter(24); // 
+   minuit.FixParameter(11); // TShield Mn
+   // minuit.FixParameter(12); // IVC Mn
+   minuit.FixParameter(13); // 50mK Th
+   // minuit.FixParameter(14); // 600mK Th
+   // minuit.FixParameter(15); // IVC Th
+   // minuit.FixParameter(16); // OVC Th
+   minuit.FixParameter(17); // 50mK Ra
+   // minuit.FixParameter(18); // 600mK Ra
+   minuit.FixParameter(19); // IVC Ra
+   // minuit.FixParameter(20); // OVC Ra
+   minuit.FixParameter(21); // 50mK Co
+   minuit.FixParameter(22); // 600 mK Co
+   minuit.FixParameter(23); // IVC Co
+   // minuit.FixParameter(24); // OVC Co
    minuit.FixParameter(25); // 
 
   // Number of Parameters! (for Chi-squared/NDF calculation)
-  int dNumParameters = 25;
+  int dNumParameters = 12;
 
 
 
@@ -4179,7 +4867,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   minuit.GetParameter(23,  fParameters[23],   fParError[23]);
   minuit.GetParameter(24,  fParameters[24],   fParError[24]);
   minuit.GetParameter(25,  fParameters[25],   fParError[25]);
-  UpdateModel();
+  UpdateModelAdaptive();
   
   cout << "At the end; ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumParameters) << endl; // for M1 and M2
   // cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;  // for M1
@@ -4281,10 +4969,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
     fAdapDataHistoM1->SetLineColor(1);
     fAdapDataHistoM1->SetLineWidth(2);
     fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-    fAdapDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/yr");
     fAdapDataHistoM1->SetMaximum(90000);
     fAdapDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
-    fAdapDataHistoM1->Draw("E");
+    fAdapDataHistoM1->Draw();
 
 
     fModelTotM1->SetLineColor(2);
@@ -4362,10 +5050,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
     fAdapDataHistoM2->SetLineColor(1);
     fAdapDataHistoM2->SetLineWidth(2);
     fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-    fAdapDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
+    fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/yr");
     fAdapDataHistoM2->SetMaximum(9000);
     fAdapDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
-    fAdapDataHistoM2->Draw("E");
+    fAdapDataHistoM2->Draw();
 
   
     fModelTotM2->SetLineColor(2);
@@ -4476,7 +5164,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
 */
 
   // Output integrals of stuff for limits
-  cout << "Integral Data in ROI: " << fDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+  cout << "ROI bin: " << fAdapDataHistoM1->FindBin(2470) << " " << fAdapDataHistoM1->FindBin(2570) << endl;
+  cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total PDF in ROI: " << fModelTotM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470)) << " +/- " << sqrt( fModelTotM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total Th PDF in ROI: " << fModelTotThM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fModelTotThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total Ra PDF in ROI: " << fModelTotRaM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotRaM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
@@ -4492,7 +5181,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral IVC Th PDF in ROI: " << fParameters[15]*fSmearIVCThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
   cout << "Integral OVC Th PDF in ROI: " << fParameters[16]*fSmearOVCThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
 
-  cout << "M2/(M1+M2) = " << (double)fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)/(fModelTotM1->Integral(300/dBinSize, 3000/dBinSize)+fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)) << endl;
+  // cout << "M2/(M1+M2) = " << (double)fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)/(fModelTotM1->Integral(300/dBinSize, 3000/dBinSize)+fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)) << endl;
 
 
   return true;
