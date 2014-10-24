@@ -52,7 +52,9 @@ public:
 
 	void ReadMC();
 
-	void SaveSmearedData();
+	void SaveAlpha();
+
+	void SaveGamma();
 
 	void SetParameters(int index, double value);
 
@@ -61,8 +63,6 @@ public:
 	TH1D *SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1);
 	
 	void Test();
-
-	void TestSave();
 
 	void UpdateModel();
 
@@ -361,20 +361,6 @@ private:
 	TH1D			*fModelCrystalBi2M1;
 	TH1D			*fModelFrameBi2M1;
 
-	// M1 Alphas
-	TH1D			*fModelCrystalPtBM1;
-	TH1D			*fModelCrystalPbBM1;
-	TH1D			*fModelCrystalPbS01M1;
-	TH1D			*fModelCrystalPbS1M1;
-	TH1D			*fModelCrystalPbS10M1;
-	TH1D			*fModelCrystalPbS100M1;
-	TH1D			*fModelFramePbBM1;
-	TH1D			*fModelFramePbS01M1;
-	TH1D			*fModelFramePbS1M1;
-	TH1D			*fModelFramePbS10M1;
-	TH1D			*fModelFramePbS100M1;
-
-
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
 	TH1D			*fModelTotThM2;
@@ -444,18 +430,68 @@ private:
 	TH1D			*fModelCrystalBi2M2;
 	TH1D			*fModelFrameBi2M2;
 
+
+	// M1 Alphas
+	TH1D			*fModelCrystalPt190BM1;
+	TH1D			*fModelCrystalPt190S01M1;
+	TH1D			*fModelCrystalPt190S1M1;
+	TH1D			*fModelCrystalPt190S10M1;
+	TH1D			*fModelCrystalPt190S100M1;
+
+	TH1D			*fModelCrystalPb210BM1;
+	TH1D			*fModelCrystalPb210S01M1;
+	TH1D			*fModelCrystalPb210S1M1;
+	TH1D			*fModelCrystalPb210S10M1;
+	TH1D			*fModelCrystalPb210S100M1;
+
+	TH1D			*fModelCrystalRa226BM1;
+	TH1D			*fModelCrystalRa226S01M1;
+	TH1D			*fModelCrystalRa226S1M1;
+	TH1D			*fModelCrystalRa226S10M1;
+	TH1D			*fModelCrystalRa226S100M1;
+
+	TH1D			*fModelFramePb210BM1;
+	TH1D			*fModelFramePb210S01M1;
+	TH1D			*fModelFramePb210S1M1;
+	TH1D			*fModelFramePb210S10M1;
+	TH1D			*fModelFramePb210S100M1;
+
+	// TH1D			*fModelFrameRa226BM1;
+	TH1D			*fModelFrameRa226S01M1;
+	TH1D			*fModelFrameRa226S1M1;
+	TH1D			*fModelFrameRa226S10M1;
+	TH1D			*fModelFrameRa226S100M1;
+
 	// M2 Alphas
-	TH1D			*fModelCrystalPtBM2;
-	TH1D			*fModelCrystalPbBM2;
-	TH1D			*fModelCrystalPbS01M2;
-	TH1D			*fModelCrystalPbS1M2;
-	TH1D			*fModelCrystalPbS10M2;
-	TH1D			*fModelCrystalPbS100M2;
-	TH1D			*fModelFramePbBM2;
-	TH1D			*fModelFramePbS01M2;
-	TH1D			*fModelFramePbS1M2;
-	TH1D			*fModelFramePbS10M2;
-	TH1D			*fModelFramePbS100M2;
+	TH1D			*fModelCrystalPt190BM2;
+	TH1D			*fModelCrystalPt190S01M2;
+	TH1D			*fModelCrystalPt190S1M2;
+	TH1D			*fModelCrystalPt190S10M2;
+	TH1D			*fModelCrystalPt190S100M2;
+
+	TH1D			*fModelCrystalPb210BM2;
+	TH1D			*fModelCrystalPb210S01M2;
+	TH1D			*fModelCrystalPb210S1M2;
+	TH1D			*fModelCrystalPb210S10M2;
+	TH1D			*fModelCrystalPb210S100M2;
+
+	TH1D			*fModelCrystalRa226BM2;
+	TH1D			*fModelCrystalRa226S01M2;
+	TH1D			*fModelCrystalRa226S1M2;
+	TH1D			*fModelCrystalRa226S10M2;
+	TH1D			*fModelCrystalRa226S100M2;
+
+	TH1D			*fModelFramePb210BM2;
+	TH1D			*fModelFramePb210S01M2;
+	TH1D			*fModelFramePb210S1M2;
+	TH1D			*fModelFramePb210S10M2;
+	TH1D			*fModelFramePb210S100M2;
+
+	// TH1D			*fModelFrameRa226BM2;
+	TH1D			*fModelFrameRa226S01M2;
+	TH1D			*fModelFrameRa226S1M2;
+	TH1D			*fModelFrameRa226S10M2;
+	TH1D			*fModelFrameRa226S100M2;
 
 
 
@@ -618,6 +654,70 @@ private:
 	TH1D			*fSmearFramePbS100M2;
 
 
+
+	// M1 Alphas
+	TH1D			*fSmearCrystalPt190BM1;
+	TH1D			*fSmearCrystalPt190S01M1;
+	TH1D			*fSmearCrystalPt190S1M1;
+	TH1D			*fSmearCrystalPt190S10M1;
+	TH1D			*fSmearCrystalPt190S100M1;
+
+	TH1D			*fSmearCrystalPb210BM1;
+	TH1D			*fSmearCrystalPb210S01M1;
+	TH1D			*fSmearCrystalPb210S1M1;
+	TH1D			*fSmearCrystalPb210S10M1;
+	TH1D			*fSmearCrystalPb210S100M1;
+
+	TH1D			*fSmearCrystalRa226BM1;
+	TH1D			*fSmearCrystalRa226S01M1;
+	TH1D			*fSmearCrystalRa226S1M1;
+	TH1D			*fSmearCrystalRa226S10M1;
+	TH1D			*fSmearCrystalRa226S100M1;
+
+	TH1D			*fSmearFramePb210BM1;
+	TH1D			*fSmearFramePb210S01M1;
+	TH1D			*fSmearFramePb210S1M1;
+	TH1D			*fSmearFramePb210S10M1;
+	TH1D			*fSmearFramePb210S100M1;
+
+	// TH1D			*fSmearFrameRa226BM1;
+	TH1D			*fSmearFrameRa226S01M1;
+	TH1D			*fSmearFrameRa226S1M1;
+	TH1D			*fSmearFrameRa226S10M1;
+	TH1D			*fSmearFrameRa226S100M1;
+
+	// M2 Alphas
+	TH1D			*fSmearCrystalPt190BM2;
+	TH1D			*fSmearCrystalPt190S01M2;
+	TH1D			*fSmearCrystalPt190S1M2;
+	TH1D			*fSmearCrystalPt190S10M2;
+	TH1D			*fSmearCrystalPt190S100M2;
+
+	TH1D			*fSmearCrystalPb210BM2;
+	TH1D			*fSmearCrystalPb210S01M2;
+	TH1D			*fSmearCrystalPb210S1M2;
+	TH1D			*fSmearCrystalPb210S10M2;
+	TH1D			*fSmearCrystalPb210S100M2;
+
+	TH1D			*fSmearCrystalRa226BM2;
+	TH1D			*fSmearCrystalRa226S01M2;
+	TH1D			*fSmearCrystalRa226S1M2;
+	TH1D			*fSmearCrystalRa226S10M2;
+	TH1D			*fSmearCrystalRa226S100M2;
+
+	TH1D			*fSmearFramePb210BM2;
+	TH1D			*fSmearFramePb210S01M2;
+	TH1D			*fSmearFramePb210S1M2;
+	TH1D			*fSmearFramePb210S10M2;
+	TH1D			*fSmearFramePb210S100M2;
+
+	// TH1D			*fSmearFrameRa226BM2;
+	TH1D			*fSmearFrameRa226S01M2;
+	TH1D			*fSmearFrameRa226S1M2;
+	TH1D			*fSmearFrameRa226S10M2;
+	TH1D			*fSmearFrameRa226S100M2;
+
+
 	// Adaptive binned histograms
 
 	TH1D *fAdapFrameThM1;
@@ -658,18 +758,6 @@ private:
 	TH1D *fAdap2NDBDM1;
 	TH1D *fAdapBiM1;
 
-	TH1D *fAdapCrystalPtM1;
-	TH1D *fAdapCrystalPbBM1;
-	TH1D *fAdapCrystalPbS01M1;
-	TH1D *fAdapCrystalPbS1M1;
-	TH1D *fAdapCrystalPbS10M1;
-	TH1D *fAdapCrystalPbS100M1;
-	TH1D *fAdapFramePbBM1;
-	TH1D *fAdapFramePbS01M1;
-	TH1D *fAdapFramePbS1M1;
-	TH1D *fAdapFramePbS10M1;
-	TH1D *fAdapFramePbS100M1;
-
 
 
 	TH1D *fAdapFrameThM2;
@@ -706,18 +794,68 @@ private:
 	TH1D *fAdapCrystalBi2M2;
 	TH1D *fAdapFrameBi2M2;
 
-	TH1D *fAdapCrystalPtM2;
-	TH1D *fAdapCrystalPbBM2;
-	TH1D *fAdapCrystalPbS01M2;
-	TH1D *fAdapCrystalPbS1M2;
-	TH1D *fAdapCrystalPbS10M2;
-	TH1D *fAdapCrystalPbS100M2;
-	TH1D *fAdapFramePbBM2;
-	TH1D *fAdapFramePbS01M2;
-	TH1D *fAdapFramePbS1M2;
-	TH1D *fAdapFramePbS10M2;
-	TH1D *fAdapFramePbS100M2;
 
+	// M1 Alphas
+	TH1D			*fAdapCrystalPt190BM1;
+	TH1D			*fAdapCrystalPt190S01M1;
+	TH1D			*fAdapCrystalPt190S1M1;
+	TH1D			*fAdapCrystalPt190S10M1;
+	TH1D			*fAdapCrystalPt190S100M1;
+
+	TH1D			*fAdapCrystalPb210BM1;
+	TH1D			*fAdapCrystalPb210S01M1;
+	TH1D			*fAdapCrystalPb210S1M1;
+	TH1D			*fAdapCrystalPb210S10M1;
+	TH1D			*fAdapCrystalPb210S100M1;
+
+	TH1D			*fAdapCrystalRa226BM1;
+	TH1D			*fAdapCrystalRa226S01M1;
+	TH1D			*fAdapCrystalRa226S1M1;
+	TH1D			*fAdapCrystalRa226S10M1;
+	TH1D			*fAdapCrystalRa226S100M1;
+
+	TH1D			*fAdapFramePb210BM1;
+	TH1D			*fAdapFramePb210S01M1;
+	TH1D			*fAdapFramePb210S1M1;
+	TH1D			*fAdapFramePb210S10M1;
+	TH1D			*fAdapFramePb210S100M1;
+
+	// TH1D			*fAdapFrameRa226BM1;
+	TH1D			*fAdapFrameRa226S01M1;
+	TH1D			*fAdapFrameRa226S1M1;
+	TH1D			*fAdapFrameRa226S10M1;
+	TH1D			*fAdapFrameRa226S100M1;
+
+	// M2 Alphas
+	TH1D			*fAdapCrystalPt190BM2;
+	TH1D			*fAdapCrystalPt190S01M2;
+	TH1D			*fAdapCrystalPt190S1M2;
+	TH1D			*fAdapCrystalPt190S10M2;
+	TH1D			*fAdapCrystalPt190S100M2;
+
+	TH1D			*fAdapCrystalPb210BM2;
+	TH1D			*fAdapCrystalPb210S01M2;
+	TH1D			*fAdapCrystalPb210S1M2;
+	TH1D			*fAdapCrystalPb210S10M2;
+	TH1D			*fAdapCrystalPb210S100M2;
+
+	TH1D			*fAdapCrystalRa226BM2;
+	TH1D			*fAdapCrystalRa226S01M2;
+	TH1D			*fAdapCrystalRa226S1M2;
+	TH1D			*fAdapCrystalRa226S10M2;
+	TH1D			*fAdapCrystalRa226S100M2;
+
+	TH1D			*fAdapFramePb210BM2;
+	TH1D			*fAdapFramePb210S01M2;
+	TH1D			*fAdapFramePb210S1M2;
+	TH1D			*fAdapFramePb210S10M2;
+	TH1D			*fAdapFramePb210S100M2;
+
+	// TH1D			*fAdapFrameRa226BM2;
+	TH1D			*fAdapFrameRa226S01M2;
+	TH1D			*fAdapFrameRa226S1M2;
+	TH1D			*fAdapFrameRa226S10M2;
+	TH1D			*fAdapFrameRa226S100M2;
 
 
 
@@ -807,7 +945,7 @@ private:
 	TH1D *fBiM1;
 
 	TFile *fFileCorrection;
-	TH1D *fCorrectionM2;
+	TH1D *fCorrectionM2; // Correction spectra for M2 (for accidental coincidences)
 	TH1D *fCorrectionM2Tot;
 	TH1D *fTotCorrection;
 
