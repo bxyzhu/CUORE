@@ -20,6 +20,8 @@ public:
 	vector<double> AdaptiveBinning(TH1D *h1);
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid);
+
+	TGraphErrors *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
   
 	double GetChiSquare();
 
@@ -305,6 +307,18 @@ private:
 	TH1D			*fModelTotPtM1;
 	TH1D			*fModelTotPbM1;
 
+	TH1D			*fModelTotAdapM1;
+	TH1D			*fModelTotAdapThM1;
+	TH1D			*fModelTotAdapRaM1;
+	TH1D			*fModelTotAdapKM1;
+	TH1D			*fModelTotAdapCoM1;
+	TH1D			*fModelTotAdapMnM1;
+	TH1D			*fModelTotAdapNDBDM1;
+	TH1D			*fModelTotAdap2NDBDM1;
+	TH1D			*fModelTotAdapBiM1;
+	TH1D			*fModelTotAdapPtM1;
+	TH1D			*fModelTotAdapPbM1;
+
 	TH1D			*fModelNDBDM1;
 	TH1D			*fModel2NDBDM1;
 	TH1D			*fModelBiM1;
@@ -373,6 +387,18 @@ private:
 	TH1D			*fModelTotBiM2;
 	TH1D			*fModelTotPtM2;
 	TH1D			*fModelTotPbM2;
+
+	TH1D			*fModelTotAdapM2;
+	TH1D			*fModelTotAdapThM2;
+	TH1D			*fModelTotAdapRaM2;
+	TH1D			*fModelTotAdapKM2;
+	TH1D			*fModelTotAdapCoM2;
+	TH1D			*fModelTotAdapMnM2;
+	TH1D			*fModelTotAdapNDBDM2;
+	TH1D			*fModelTotAdap2NDBDM2;
+	TH1D			*fModelTotAdapBiM2;
+	TH1D			*fModelTotAdapPtM2;
+	TH1D			*fModelTotAdapPbM2;
 
 	TH1D			*fModelNDBDM2;
 	TH1D			*fModel2NDBDM2;
