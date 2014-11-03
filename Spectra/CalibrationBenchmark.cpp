@@ -18,87 +18,77 @@
 #include <iostream>
 #include <vector>
 
-TH1D *SmearSpectra()
+
+TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, double resolution2)
 {
-	int dThres = 100;
-	int dMult = 1;
+	// Reset previously Modeled histogram
+	hSMC->Reset();
 
-	int n = 5;
-	double x[5] = {511., 911., 1593., 2104., 2615.};
-	double xerr[5] = {0};
-	double y[5] = {2.05809, 2.12562, 2.75657, 2.85122, 2.89484};
-	double yerr[5] = {0.0474224, 0.0314559, 0.0975996, 0.0825752, 0.0243212};
-
-
-    TCanvas *cResolution = new TCanvas("cResolution", "cResolution", 1100, 750);
-
-	TGraphErrors *g1 = new TGraphErrors(n, x, y, xerr, yerr);
-	
-    TF1 *fFitRes = new TF1("fFitRes","pol1(0)", 0, 3000);
-    g1->SetTitle("Resolution vs Energy");
-    g1->GetXaxis()->SetTitle("Energy (keV)");
-    g1->GetYaxis()->SetTitle("Resolution (keV)");
-    g1->Draw("A*");  
-    g1->Fit("fFitRes","R");
-
-
-    // Area not correct with larger bins?
-    int bin = 3000;
-    double binsize = 3000/bin;
-
-	TH1D *hMC = new TH1D("hMC","MC Smearing", bin, 0, 3000);
-	TH1D *hSmeared = new TH1D("hSmeared","hSmeared", bin, 0, 3000);
-
-
-	TChain *outTree = new TChain("outTree");
-	// outTree->Add(Form("/Users/brian/macros/Simulations/Calib/Unsmeared/Calib-C0-M%d-T%d-r3.2537-c0.10000-Test.root", dMult, dThres));
-	outTree->Add(Form("/Users/brian/macros/Simulations/Calib/Jon/Calib-M%d-T%d-r3.2537.root", dMult, dThres));
-	outTree->Project("hMC","Ener1");
-
-
-
-	TF1 *gaus = new TF1("gaus","gaus(0)", 0, 3000);
-	
-    TCanvas *cSmear = new TCanvas("cSmear", "cSmear", 1100, 750);
-
-	double dArea;
+	double dNorm;
+    double dNorm2;
 	double dSmearedValue;
 
-	for(int i = 0; i<bin; i++)
+	TF1 *gaus1 = new TF1("gaus","gaus(0)", 0, 3500);
+	TF1 *gaus2 = new TF1("gaus","gaus(0)", 0, 3500);
+
+
+	for(int i = 0; i<1750; i++)
 	{
-		for(int j = 0; j<bin; j++)
+		for(int j = 0; j<1750; j++)
 		{
-			// Normalization of gaussian = (bin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-			dArea = binsize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*fFitRes->Eval(hMC->GetBinCenter(j)));
+			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+			dNorm = (853.3/1215.8)*2*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+    	    dNorm2 = (362.5/1215.8)*2*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution2);
 
-			// Set parameters of gaussian 
-			gaus->SetParameters(dArea, hMC->GetBinCenter(j), fFitRes->Eval(hMC->GetBinCenter(j)));
-			
-			// Smeared contribution from gaussian at bin j for bin i 
-			dSmearedValue = gaus->Eval(hSmeared->GetBinCenter(i));
+			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+     	    gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, resolution2);
 
-			hSmeared->Fill(hSmeared->GetBinCenter(i), dSmearedValue);
+			// Smeared contribution from gaussian centered at bin j for bin i 
+			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
+
+			// Fill bin i with contribution from gaussian centered at bin j
+			hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
 		}
-
-
 	}
 	
-	hMC->SetLineColor(kBlue);
-	// hMC->Rebin(5);
-	hSmeared->SetLineColor(kRed);
-	// hSmeared->Rebin(5);
-	hMC->Draw();
-	hSmeared->Draw("SAME");
-
-	// Check that areas are the same
-	cout << "hMC Integral: " << hMC->Integral(0, bin-1) << endl;
-	cout << "hSmeared Integral: " << hSmeared->Integral(0, bin-1) << endl;
-
-
-	return hSmeared;
+	return hSMC;
 }
 
 
+
+void FitCalib()
+{
+
+	gStyle->SetOptFit();
+
+	TChain *qtree = new TChain("qredtree", "qredtree");
+	qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_CalibrationSignalData.root");
+
+
+	TH1D *hCal = new TH1D("hCal", "", 15, 2600, 2630);
+
+	qtree->Project("hCal","Energy", "Multiplicity == 1");
+
+
+	// TF1 *f1 = new TF1("f1", "gaus(0)+gaus(3)");
+	TF1 *f1 = new TF1("f1", "gaus(0)");
+	f1->SetParameter(0, 100);
+	f1->SetParameter(1, 2615);
+	f1->SetParameter(2, 2);
+	// f1->SetParameter(3, 10);
+	// f1->SetParameter(4, 2612);
+	// f1->SetParameter(5, 4);
+
+
+
+	// hCal->SetTitle("Double Gaussian Fit");
+	hCal->GetXaxis()->SetTitle("Energy (keV)");
+	hCal->GetYaxis()->SetTitle("Counts/keV");
+	hCal->Fit("f1");
+	hCal->Draw();
+
+}
 
 
 // Choose multiplicity, saving plots, and energy range for plots
@@ -146,7 +136,7 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	int dBin = (dEMax - dEMin)/dBinSize;
 
 	// Set up range for residuals plot
-	int dRebin = 2; // Rebin value (for residuals)
+	int dRebin = 5; // Rebin value (for residuals)
 	int dEMinRes, dEMaxRes;
 	if (dEMin < 300)
 	{
@@ -170,7 +160,7 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	double dCal, dCal2;
 	double dMCFull;
 	double dCalFull;
-	double dCutMin 		= 	2600; // first normalization
+	double dCutMin 		= 	2590; // first normalization
 	double dCutMax 		= 	2630;
 	double dCutMin2 	= 	1000; // second normalization
 	double dCutMax2 	= 	2000;
@@ -178,41 +168,13 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	double Normalization2;
 	double dRatio, dRatio2;
 
-	int angleList[] = {0};
-	vector<int> angle;
-	for (unsigned int i = 0; i<sizeof(angleList)/sizeof(angleList[0]); ++i)
-	{
-		angle.push_back(angleList[i]);
-	}
+	int dThres = 50;
 
-	int threshList[] = {100};
-	vector<int> thresh;
-	for (unsigned int i = 0; i<sizeof(threshList)/sizeof(threshList[0]); ++i)
-	{
-		thresh.push_back(threshList[i]);
-	}
-	int dThres = 100;
-
-//	float coinList[] = {0.10000, 0.01000, 0.00100, 0.00010, 0.00001};
-	float coinList[] = {0.10000};
-	vector<double> coin;
-	for (unsigned int i = 0; i<sizeof(coinList)/sizeof(coinList[0]); ++i)
-	{
-		coin.push_back(coinList[i]);
-	}
-
-	// float rateList[] = {5.3000};
-	float rateList[] = {3.2537};
-	vector<double> rate;
-	for (unsigned int i = 0; i<sizeof(rateList)/sizeof(rateList[0]); ++i)
-	{
-		rate.push_back(rateList[i]);
-	}
 
 
 	TChain *qtree;
 	TChain *qtree_bkg;
-	TChain *outTreeM1;
+	TChain *outTree;
 	TH1D *hMC;
 	TH1D *hCal;
 	TH1D *hBkg;
@@ -227,10 +189,11 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	p2->cd();
 	p2->SetLogy();
 
-	qtree = new TChain("qtree", "qtree");
+	qtree = new TChain("qredtree", "qredtree");
+	qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_CalibrationSignalData.root");
 	// qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedCalib-ds2061.root"); // for 50 keV
-	qtree->Add(Form("/Users/brian/data/CUOREZ/BlindedReduced_200730_C_p001_T%d.root", dThres));
-	qtree->Add(Form("/Users/brian/data/CUOREZ/BlindedReduced_200757_C_p001_T%d.root", dThres));
+	// qtree->Add(Form("/Users/brian/data/CUOREZ/BlindedReduced_200730_C_p001_T%d.root", dThres));
+	// qtree->Add(Form("/Users/brian/data/CUOREZ/BlindedReduced_200757_C_p001_T%d.root", dThres));
 
 
 	// qtree_bkg = new TChain("qtree","qtree");
@@ -239,14 +202,15 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	// TCut base_cut("IsSignal");
 	TCut base_cut;
 	// base_cut = base_cut && "Filter_RejectBadIntervals";
-	base_cut = base_cut && "NumberOfPulses==1";
-	base_cut = base_cut && "TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0";
-	base_cut = base_cut && "TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0";
-	base_cut = base_cut && "abs(BaselineSlope)<0.1";
-	base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+	// base_cut = base_cut && "NumberOfPulses==1";
+	// base_cut = base_cut && "TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0";
+	// base_cut = base_cut && "TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0";
+	// base_cut = base_cut && "abs(BaselineSlope)<0.1";
+	// base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
 	// base_cut = base_cut && "Run == 200730 || Run == 200757";
 
-	TCut mult_cut(Form("Multiplicity_OFTime==%d", dMult));
+	// TCut mult_cut(Form("Multiplicity_OFTime==%d", dMult));
+	TCut mult_cut(Form("Multiplicity==%d", dMult));
 
 	// Calibration histogram
 	hCal = new TH1D("hCal", Form("Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
@@ -287,78 +251,103 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 
 	TCut MC_cut = Form("Ener1 > %f && Ener1 < %f", dEMin, dEMax);
 
-	// Int to set number for histogram color (when iterating over multiple values)
-	int j = 2;
-
-	for (vector<int>::const_iterator angle_itr = angle.begin(); angle_itr != angle.end(); angle_itr++)
+	// Multiplicity
+	for (int k = 1; k <= 1; k++)
 	{
-		for (vector<int>::const_iterator thresh_itr = thresh.begin(); thresh_itr != thresh.end(); thresh_itr++)
-		{
-			for (vector<double>::const_iterator coin_itr = coin.begin(); coin_itr != coin.end(); coin_itr++)
-			{
-				for (vector<double>::const_iterator rate_itr = rate.begin(); rate_itr != rate.end(); rate_itr++)
-				{
-				outTreeM1 = new TChain("outTree");
-				// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib2/Left-209cm-C%d-M%d-T%d-r%.4f-c%.5f.root", 
-										// *angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
-				// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib2/Right-207cm-C%d-M%d-T%d-r%.4f-c%.5f.root", 
-										// *angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
 
-				// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Calib-C%d-M%d-T%d-r%.4f-c%.5f.root",
-										// *angle_itr, dMult, *thresh_itr, *rate_itr, *coin_itr));
+					
+		outTree = new TChain("outTree");
 
-				outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Jon/Calib-M%d-T50.root",
-										dMult));
+		// outTreeM1->Add(Form("/Users/brian/macros/Simulations/Calib/Jon/Calib-M%d-T50.root", dMult));
+		outTree->Add("/Users/brian/macros/Simulations/Calib_new/Calib-p*-r2.root");
 
-				hMC = new TH1D(Form("hC%d",*angle_itr), Form("MC Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
-				outTreeM1->Project(Form("hC%d",*angle_itr), "Ener1", MC_cut);
-				// hMC = SmearSpectra();
-				// hMC->Rebin(dBinSize); // To match the bin size
-
-				dMCFull = outTreeM1->GetEntries(Form("Ener1 > %f && Ener1 < %f", dEMin, dEMax));
 				
-				// Normalization calculation
-				dMC = outTreeM1->GetEntries(Form("Ener1 > %f && Ener1 < %f", dCutMin, dCutMax)); // 2600 to 2630 keV
-				dMC2 = outTreeM1->GetEntries(Form("Ener1 > %f && Ener1 < %f", dCutMin2, dCutMax2)); // 1000 to 2000 keV
-				Normalization = dCal/dMC; // 2600 to 2630 keV
-				// Normalization2 = dCal2/dMC2; // 1000 to 2000 keV
+		// Old
+		/*
+		hMC = new TH1D(Form("hC%d",*angle_itr), Form("MC Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
+		outTreeM1->Project(Form("hC%d",*angle_itr), "Ener1", MC_cut);
+		// hMC = SmearSpectra();
+		// hMC->Rebin(dBinSize); // To match the bin size
+		*/
 
-				// Normalization = 0.314588;
-				// Normalization = 0.294221; // for T50 using reduced calib
-				// Normalization = 0.313728; // for T100
-				// Normalization = 0.35293;
+		hMC = new TH1D("hMC", Form("MC Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
 
-				// Old normalization calculations
-//				Normalization = 1.33944; // With PSA
-//				Normalization = 1.44676; // w/out PSA
-				cout << "Normalization (2600 to 2630 keV): " << Normalization << endl;
-				// cout << "Normalization (1000 to 2000 keV): " << Normalization2 << endl;				
+		outTree->Project("hMC", "Ener1", Form("Multiplicity == %d", dMult));
+		dMCFull = outTree->GetEntries(Form("Ener1 > %f && Ener1 < %f", dEMin, dEMax));
 
-				cout << "Full Integral Cal: " << dCalFull << endl;
-				cout << "Full Integral MC: " << dMCFull << endl;
-				dRatio = dCalFull/dMCFull/Normalization;
-				// dRatio2 = dCalFull/dMCFull/Normalization2;
+/*
+		double resolution1 = 2.1512;
+		double resolution2 = 4.9617;
 
-				hMC->Scale(Normalization);
-				hMC->GetXaxis()->SetTitle("Energy (keV)");
-				hMC->GetYaxis()->SetTitle("Counts/(5 keV)");
-				hMC->GetXaxis()->SetLabelSize(0.04);
-				hMC->GetYaxis()->SetLabelSize(0.04);
-				hMC->SetStats(0);
-				hMC->SetLineColor(j);	
-				hMC->Draw("SAME");
 
-				// leg->AddEntry(hMC, Form("MC Calib/MC Ratio = %f", dRatio), "l");
-				leg->AddEntry(hMC, "MC", "l");
-				// leg->AddEntry(hMC, Form("%s",hMC->GetName()),"l");
+		hSmeared = new TH1D("hSmeared", Form("MC Energy Spectrum (M%d)", dMult), dBin, dEMin, dEMax);
 
-				++j;
-				}
+
+		double dNorm;
+	    double dNorm2;
+		double dSmearedValue;
+		TF1 *gaus1 = new TF1("gaus","gaus(0)", 0, 3500);
+		TF1 *gaus2 = new TF1("gaus","gaus(0)", 0, 3500);
+		for(int i = 0; i<dBin; i++)
+		{
+			for(int j = 0; j<dBin; j++)
+			{
+			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+			dNorm = (57.584/80.296)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+    		dNorm2 = (22.712/80.296)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution2);
+
+			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+     		gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-2, resolution2);
+
+			// Smeared contribution from gaussian centered at bin j for bin i 
+			dSmearedValue = gaus->Eval(hSmeared->GetBinCenter(i)) + gaus2->Eval(hSmeared->GetBinCenter(i));
+
+			// Fill bin i with contribution from gaussian centered at bin j
+			hSmeared->Fill(hSmeared->GetBinCenter(i), dSmearedValue);
 			}
 		}
+*/
+	
+		// Normalization calculation
+		// dMC = outTree->GetEntries(Form("Ener1 > %f && Ener1 < %f", dCutMin, dCutMax)); // 2600 to 2630 keV
+		// dMC = hMC->Integral(2600/dBinSize, 2630/dBinSize);
+
+
+		dMC = hMC->Integral(2600/dBinSize, 2630/dBinSize);
+		Normalization = dCal/dMC; // 2600 to 2630 keV
+
+		// Normalization = 184.394;
+
+		// Normalization = 148.555; // r2.5
+		Normalization = 129.293; // r2.0
+
+		cout << "Normalization (2600 to 2630 keV): " << Normalization << endl;
+
+		cout << "Full Integral Cal: " << dCalFull << endl;
+		cout << "Full Integral MC: " << dMCFull << endl;
+		dRatio = dCalFull/dMCFull/Normalization;
+		cout << "Ratio: " << dRatio << endl;
+
+		hCal->Scale(1/Normalization);
+		// hMC->Scale(Normalization);
+		hMC->GetXaxis()->SetTitle("Energy (keV)");
+		hMC->GetYaxis()->SetTitle("Counts/(5 keV)");
+		hMC->GetXaxis()->SetLabelSize(0.04);
+		hMC->GetYaxis()->SetLabelSize(0.04);
+		hMC->SetStats(0);
+		hMC->SetLineColor(kRed);	
+		hMC->Draw("SAME");
+
+		leg->AddEntry(hMC, "MC", "l");
+
 	}
+
 //	leg->SetTextSize(0.02);
 	leg->Draw();
+
+
+
 
 
 
@@ -413,6 +402,8 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 	line->DrawLine(300,3,3000,3);
 	line->DrawLine(300,-3,3000,-3);
 
+
+/*
 	TCanvas *c2 = new TCanvas("c2","c2",1200,800);
 //	TStyle *style2 = (TStyle)gStyle->Clone("new style");
 //	style2->SetOptStat(1111);
@@ -425,6 +416,8 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 ///////////////////////////////////////////////////////////////////////
 // Fitting
 ///////////////////////////////////////////////////////////////////////
+
+
 
 	TCanvas *c3 = new TCanvas("c3","c3", 1600, 1200);
 	c3->Divide(1,2);
@@ -583,5 +576,7 @@ void CalibrationBenchmark(int dMult = 1, bool bSavePlot = false, double dEMin = 
 		FitResolutions.close();
 
 	}
+*/
+
 
 }
