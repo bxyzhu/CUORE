@@ -27,8 +27,6 @@ public:
 
 	double GetChiSquareAdaptive();
 
-	double GetMCEff(TH1D *h1);
-
 	bool DoTheFit();
 
 	bool DoTheFitAdaptive();
@@ -53,10 +51,6 @@ public:
 	void PrintParameters();
 
 	void ReadMC();
-
-	void SaveAlpha();
-
-	void SaveGamma();
 
 	void SetParameters(int index, double value);
 
@@ -106,194 +100,6 @@ private:
 	TH1D			*fAdapDataHistoM2;
 
 
-	// Toy data
-	TH1D			*fToyData;
-	TH1D			*fToyDataThTot;
-	TH1D			*fToyDataRaTot;
-	TH1D			*fToyDataCoTot;
-	TH1D			*fToyDataKTot;
-
-	TH1D			*fToyDataTh;
-	TH1D			*fToyDataRa;
-	TH1D			*fToyDataCo;
-	TH1D			*fToyDataK;
-	TH1D			*fToyDataNDBD;
-	TH1D			*fToyDataBi;
-
-	TChain			*outTreeToyTh;
-	TChain			*outTreeToyRa;
-	TChain			*outTreeToyCo;
-	TChain			*outTreeToyK;
-	TChain			*outTreeToyNDBD;
-	TChain			*outTreeToyBi;
-
-	// Model M1
-	TChain			*outTreeFrameThS01M1;
-	TChain			*outTreeFrameThS1M1;
-	TChain			*outTreeFrameThS10M1;
-	TChain			*outTreeFrameThS100M1;
-
-	TChain			*outTreeFrameRaS01M1;
-	TChain			*outTreeFrameRaS1M1;
-	TChain			*outTreeFrameRaS10M1;
-	TChain			*outTreeFrameRaS100M1;
-
-	TChain			*outTreeTShieldThS01M1;
-	TChain			*outTreeTShieldThS1M1;
-	TChain			*outTreeTShieldThS10M1;
-	TChain			*outTreeTShieldThS100M1;
-
-	TChain			*outTreeFrameThM1;
-	TChain			*outTreeTShieldThM1;	
-	TChain			*outTree50mKThM1;
-	TChain			*outTree600mKThM1;
-	TChain			*outTreeIVCThM1;
-	TChain			*outTreeOVCThM1;
-
-	TChain			*outTreeFrameRaM1;
-	TChain			*outTreeTShieldRaM1;
-	TChain			*outTree50mKRaM1;
-	TChain			*outTree600mKRaM1;
-	TChain			*outTreeIVCRaM1;
-	TChain			*outTreeOVCRaM1;
-
-	TChain			*outTreeFrameKM1;
-	TChain			*outTreeTShieldKM1;
-	TChain			*outTree50mKKM1;
-	TChain			*outTree600mKKM1;
-	TChain			*outTreeIVCKM1;
-	TChain			*outTreeOVCKM1;
-
-	TChain			*outTreeFrameCoM1;
-	TChain			*outTreeTShieldCoM1;
-	TChain			*outTree50mKCoM1;
-	TChain			*outTree600mKCoM1;
-	TChain			*outTreeIVCCoM1;
-	TChain			*outTreeOVCCoM1;
-
-	TChain			*outTreeTShieldMnM1;
-	TChain			*outTreeIVCMnM1;
-
-	TChain			*outTreeNDBDM1;
-	TChain			*outTree2NDBDM1;
-	TChain			*outTreeBiM1;
-
-
-	// Model M2
-	TChain			*outTreeFrameThS01M2;
-	TChain			*outTreeFrameThS1M2;
-	TChain			*outTreeFrameThS10M2;
-	TChain			*outTreeFrameThS100M2;
-
-	TChain			*outTreeFrameRaS01M2;
-	TChain			*outTreeFrameRaS1M2;
-	TChain			*outTreeFrameRaS10M2;
-	TChain			*outTreeFrameRaS100M2;
-
-	TChain			*outTreeTShieldThS01M2;
-	TChain			*outTreeTShieldThS1M2;
-	TChain			*outTreeTShieldThS10M2;
-	TChain			*outTreeTShieldThS100M2;
-
-	TChain			*outTreeFrameThM2;
-	TChain			*outTreeTShieldThM2;	
-	TChain			*outTree50mKThM2;
-	TChain			*outTree600mKThM2;
-	TChain			*outTreeIVCThM2;
-	TChain			*outTreeOVCThM2;
-
-	TChain			*outTreeFrameRaM2;
-	TChain			*outTreeTShieldRaM2;
-	TChain			*outTree50mKRaM2;
-	TChain			*outTree600mKRaM2;
-	TChain			*outTreeIVCRaM2;
-	TChain			*outTreeOVCRaM2;
-
-	TChain			*outTreeFrameKM2;
-	TChain			*outTreeTShieldKM2;
-	TChain			*outTree50mKKM2;
-	TChain			*outTree600mKKM2;
-	TChain			*outTreeIVCKM2;
-	TChain			*outTreeOVCKM2;
-
-	TChain			*outTreeFrameCoM2;
-	TChain			*outTreeTShieldCoM2;
-	TChain			*outTree50mKCoM2;
-	TChain			*outTree600mKCoM2;
-	TChain			*outTreeIVCCoM2;
-	TChain			*outTreeOVCCoM2;
-
-	TChain			*outTreeTShieldMnM2;
-	TChain			*outTreeIVCMnM2;
-
-	TChain			*outTreeNDBDM2;
-	TChain			*outTree2NDBDM2;	
-	TChain			*outTreeBiM2;
-
-
-	// Alphas
-	TChain			*outTreeCrystalPt190BM1;
-	TChain			*outTreeCrystalPt190S01M1;
-	TChain			*outTreeCrystalPt190S1M1;
-	TChain			*outTreeCrystalPt190S10M1;
-	TChain			*outTreeCrystalPt190S100M1;
-
-	TChain			*outTreeCrystalPb210BM1;
-	TChain			*outTreeCrystalPb210S01M1;
-	TChain			*outTreeCrystalPb210S1M1;
-	TChain			*outTreeCrystalPb210S10M1;
-	TChain			*outTreeCrystalPb210S100M1;
-
-	TChain			*outTreeCrystalRa226BM1;
-	TChain			*outTreeCrystalRa226S01M1;
-	TChain			*outTreeCrystalRa226S1M1;
-	TChain			*outTreeCrystalRa226S10M1;
-	TChain			*outTreeCrystalRa226S100M1;
-
-	TChain			*outTreeFramePb210BM1;
-	TChain			*outTreeFramePb210S01M1;
-	TChain			*outTreeFramePb210S1M1;
-	TChain			*outTreeFramePb210S10M1;
-	TChain			*outTreeFramePb210S100M1;
-
-	TChain			*outTreeFrameRa226BM1;
-	TChain			*outTreeFrameRa226S01M1;
-	TChain			*outTreeFrameRa226S1M1;
-	TChain			*outTreeFrameRa226S10M1;
-	TChain			*outTreeFrameRa226S100M1;
-
-
-	TChain			*outTreeCrystalPt190BM2;
-	TChain			*outTreeCrystalPt190S01M2;
-	TChain			*outTreeCrystalPt190S1M2;
-	TChain			*outTreeCrystalPt190S10M2;
-	TChain			*outTreeCrystalPt190S100M2;
-
-	TChain			*outTreeCrystalPb210BM2;
-	TChain			*outTreeCrystalPb210S01M2;
-	TChain			*outTreeCrystalPb210S1M2;
-	TChain			*outTreeCrystalPb210S10M2;
-	TChain			*outTreeCrystalPb210S100M2;
-
-	TChain			*outTreeCrystalRa226BM2;
-	TChain			*outTreeCrystalRa226S01M2;
-	TChain			*outTreeCrystalRa226S1M2;
-	TChain			*outTreeCrystalRa226S10M2;
-	TChain			*outTreeCrystalRa226S100M2;
-
-	TChain			*outTreeFramePb210BM2;
-	TChain			*outTreeFramePb210S01M2;
-	TChain			*outTreeFramePb210S1M2;
-	TChain			*outTreeFramePb210S10M2;
-	TChain			*outTreeFramePb210S100M2;
-
-	TChain			*outTreeFrameRa226BM2;
-	TChain			*outTreeFrameRa226S01M2;
-	TChain			*outTreeFrameRa226S1M2;
-	TChain			*outTreeFrameRa226S10M2;
-	TChain			*outTreeFrameRa226S100M2;
-
-
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
 	TH1D			*fModelTotThM1;
@@ -319,10 +125,48 @@ private:
 	TH1D			*fModelTotAdapPtM1;
 	TH1D			*fModelTotAdapPbM1;
 
+	// Total PDFs M2
+	TH1D			*fModelTotM2;
+	TH1D			*fModelTotThM2;
+	TH1D			*fModelTotRaM2;
+	TH1D			*fModelTotKM2;
+	TH1D			*fModelTotCoM2;
+	TH1D			*fModelTotMnM2;
+	TH1D			*fModelTotNDBDM2;
+	TH1D			*fModelTot2NDBDM2;
+	TH1D			*fModelTotBiM2;
+	TH1D			*fModelTotPtM2;
+	TH1D			*fModelTotPbM2;
+
+	TH1D			*fModelTotAdapM2;
+	TH1D			*fModelTotAdapThM2;
+	TH1D			*fModelTotAdapRaM2;
+	TH1D			*fModelTotAdapKM2;
+	TH1D			*fModelTotAdapCoM2;
+	TH1D			*fModelTotAdapMnM2;
+	TH1D			*fModelTotAdapNDBDM2;
+	TH1D			*fModelTotAdap2NDBDM2;
+	TH1D			*fModelTotAdapBiM2;
+	TH1D			*fModelTotAdapPtM2;
+	TH1D			*fModelTotAdapPbM2;
+
+
+	// Residuals
+	TGraph			*gResidualM1;
+	TGraph 			*gResidualM2;
+
+	TH1D			*hResidualDistM1;
+	TH1D			*hResidualDistM2;
+
+	TH1D			*hResidualGausM1;
+	TH1D			*hResidualGausM2;
+
+	// Smeared PDFs M1
+	TH1D			*fModelDummyM1;
+
 	TH1D			*fModelNDBDM1;
 	TH1D			*fModel2NDBDM1;
 	TH1D			*fModelBiM1;
-	TH1D			*fModelBi2M1;
 
 	TH1D			*fModelFrameThS01M1;
 	TH1D			*fModelFrameThS1M1;
@@ -375,35 +219,25 @@ private:
 	TH1D			*fModelCrystalBi2M1;
 	TH1D			*fModelFrameBi2M1;
 
-	// Total PDFs M2
-	TH1D			*fModelTotM2;
-	TH1D			*fModelTotThM2;
-	TH1D			*fModelTotRaM2;
-	TH1D			*fModelTotKM2;
-	TH1D			*fModelTotCoM2;
-	TH1D			*fModelTotMnM2;
-	TH1D			*fModelTotNDBDM2;
-	TH1D			*fModelTot2NDBDM2;
-	TH1D			*fModelTotBiM2;
-	TH1D			*fModelTotPtM2;
-	TH1D			*fModelTotPbM2;
+	TH1D			*fModelCrystalPtM1;
+	TH1D			*fModelCrystalPbBM1;
+	TH1D			*fModelCrystalPbS01M1;
+	TH1D			*fModelCrystalPbS1M1;
+	TH1D			*fModelCrystalPbS10M1;
+	TH1D			*fModelCrystalPbS100M1;
+	TH1D			*fModelFramePbBM1;
+	TH1D			*fModelFramePbS01M1;
+	TH1D			*fModelFramePbS1M1;
+	TH1D			*fModelFramePbS10M1;
+	TH1D			*fModelFramePbS100M1;
 
-	TH1D			*fModelTotAdapM2;
-	TH1D			*fModelTotAdapThM2;
-	TH1D			*fModelTotAdapRaM2;
-	TH1D			*fModelTotAdapKM2;
-	TH1D			*fModelTotAdapCoM2;
-	TH1D			*fModelTotAdapMnM2;
-	TH1D			*fModelTotAdapNDBDM2;
-	TH1D			*fModelTotAdap2NDBDM2;
-	TH1D			*fModelTotAdapBiM2;
-	TH1D			*fModelTotAdapPtM2;
-	TH1D			*fModelTotAdapPbM2;
+
+	// Modeled PDFs M2
+	TH1D			*fModelDummyM2;
 
 	TH1D			*fModelNDBDM2;
 	TH1D			*fModel2NDBDM2;
 	TH1D			*fModelBiM2;
-	TH1D			*fModelBi2M2;
 
 	TH1D			*fModelFrameThS01M2;
 	TH1D			*fModelFrameThS1M2;
@@ -455,6 +289,19 @@ private:
 
 	TH1D			*fModelCrystalBi2M2;
 	TH1D			*fModelFrameBi2M2;
+
+	TH1D			*fModelCrystalPtM2;
+	TH1D			*fModelCrystalPbBM2;
+	TH1D			*fModelCrystalPbS01M2;
+	TH1D			*fModelCrystalPbS1M2;
+	TH1D			*fModelCrystalPbS10M2;
+	TH1D			*fModelCrystalPbS100M2;
+	TH1D			*fModelFramePbBM2;
+	TH1D			*fModelFramePbS01M2;
+	TH1D			*fModelFramePbS1M2;
+	TH1D			*fModelFramePbS10M2;
+	TH1D			*fModelFramePbS100M2;
+
 
 
 	// M1 Alphas
@@ -518,230 +365,6 @@ private:
 	TH1D			*fModelFrameRa226S1M2;
 	TH1D			*fModelFrameRa226S10M2;
 	TH1D			*fModelFrameRa226S100M2;
-
-
-
-	// Residuals
-	TGraph			*gResidualM1;
-	TGraph 			*gResidualM2;
-
-	TH1D			*hResidualDistM1;
-	TH1D			*hResidualDistM2;
-
-	TH1D			*hResidualGausM1;
-	TH1D			*hResidualGausM2;
-
-	// Smearing
-	TRandom3		*fRandomGenerator;	
-	TF1				*gaus;
-	TF1 			*gaus2;
-
-
-
-	// Smeared PDFs M1
-	TH1D			*fSmearDummyM1;
-
-	TH1D			*fSmearNDBDM1;
-	TH1D			*fSmear2NDBDM1;
-	TH1D			*fSmearBiM1;
-
-	TH1D			*fSmearFrameThS01M1;
-	TH1D			*fSmearFrameThS1M1;
-	TH1D			*fSmearFrameThS10M1;
-	TH1D			*fSmearFrameThS100M1;
-
-	TH1D			*fSmearFrameRaS01M1;
-	TH1D			*fSmearFrameRaS1M1;
-	TH1D			*fSmearFrameRaS10M1;
-	TH1D			*fSmearFrameRaS100M1;
-
-	TH1D			*fSmearTShieldThS01M1;
-	TH1D			*fSmearTShieldThS1M1;
-	TH1D			*fSmearTShieldThS10M1;
-	TH1D			*fSmearTShieldThS100M1;
-
-
-	TH1D			*fSmearFrameThM1;
-	TH1D			*fSmearTShieldThM1;
-	TH1D			*fSmear50mKThM1;
-	TH1D			*fSmear600mKThM1;	
-	TH1D			*fSmearIVCThM1;
-	TH1D			*fSmearOVCThM1;
-
-	TH1D			*fSmearFrameRaM1;
-	TH1D			*fSmearTShieldRaM1;
-	TH1D			*fSmear50mKRaM1;
-	TH1D			*fSmear600mKRaM1;
-	TH1D			*fSmearIVCRaM1;
-	TH1D			*fSmearOVCRaM1;
-
-	TH1D			*fSmearFrameKM1;
-	TH1D			*fSmearTShieldKM1;
-	TH1D			*fSmear50mKKM1;
-	TH1D			*fSmear600mKKM1;
-	TH1D			*fSmearIVCKM1;
-	TH1D			*fSmearOVCKM1;
-
-
-	TH1D			*fSmearFrameCoM1;
-	TH1D			*fSmearTShieldCoM1;
-	TH1D			*fSmear50mKCoM1;
-	TH1D			*fSmear600mKCoM1;
-	TH1D			*fSmearIVCCoM1;
-	TH1D			*fSmearOVCCoM1;
-
-	TH1D			*fSmearTShieldMnM1;
-	TH1D			*fSmearIVCMnM1;
-
-	TH1D			*fSmearCrystalBi2M1;
-	TH1D			*fSmearFrameBi2M1;
-
-	TH1D			*fSmearCrystalPtM1;
-	TH1D			*fSmearCrystalPbBM1;
-	TH1D			*fSmearCrystalPbS01M1;
-	TH1D			*fSmearCrystalPbS1M1;
-	TH1D			*fSmearCrystalPbS10M1;
-	TH1D			*fSmearCrystalPbS100M1;
-	TH1D			*fSmearFramePbBM1;
-	TH1D			*fSmearFramePbS01M1;
-	TH1D			*fSmearFramePbS1M1;
-	TH1D			*fSmearFramePbS10M1;
-	TH1D			*fSmearFramePbS100M1;
-
-
-	// Smeared PDFs M2
-	TH1D			*fSmearDummyM2;
-
-	TH1D			*fSmearNDBDM2;
-	TH1D			*fSmear2NDBDM2;
-	TH1D			*fSmearBiM2;
-
-	TH1D			*fSmearFrameThS01M2;
-	TH1D			*fSmearFrameThS1M2;
-	TH1D			*fSmearFrameThS10M2;
-	TH1D			*fSmearFrameThS100M2;
-
-	TH1D			*fSmearFrameRaS01M2;
-	TH1D			*fSmearFrameRaS1M2;
-	TH1D			*fSmearFrameRaS10M2;
-	TH1D			*fSmearFrameRaS100M2;
-
-	TH1D			*fSmearTShieldThS01M2;
-	TH1D			*fSmearTShieldThS1M2;
-	TH1D			*fSmearTShieldThS10M2;
-	TH1D			*fSmearTShieldThS100M2;
-
-
-	TH1D			*fSmearFrameThM2;
-	TH1D			*fSmearTShieldThM2;
-	TH1D			*fSmear50mKThM2;
-	TH1D			*fSmear600mKThM2;	
-	TH1D			*fSmearIVCThM2;
-	TH1D			*fSmearOVCThM2;
-
-	TH1D			*fSmearFrameRaM2;
-	TH1D			*fSmearTShieldRaM2;
-	TH1D			*fSmear50mKRaM2;
-	TH1D			*fSmear600mKRaM2;
-	TH1D			*fSmearIVCRaM2;
-	TH1D			*fSmearOVCRaM2;
-
-	TH1D			*fSmearFrameKM2;
-	TH1D			*fSmearTShieldKM2;
-	TH1D			*fSmear50mKKM2;
-	TH1D			*fSmear600mKKM2;
-	TH1D			*fSmearIVCKM2;
-	TH1D			*fSmearOVCKM2;
-
-
-	TH1D			*fSmearFrameCoM2;
-	TH1D			*fSmearTShieldCoM2;
-	TH1D			*fSmear50mKCoM2;
-	TH1D			*fSmear600mKCoM2;
-	TH1D			*fSmearIVCCoM2;
-	TH1D			*fSmearOVCCoM2;
-
-	TH1D			*fSmearTShieldMnM2;
-	TH1D			*fSmearIVCMnM2;
-
-	TH1D			*fSmearCrystalBi2M2;
-	TH1D			*fSmearFrameBi2M2;
-
-	TH1D			*fSmearCrystalPtM2;
-	TH1D			*fSmearCrystalPbBM2;
-	TH1D			*fSmearCrystalPbS01M2;
-	TH1D			*fSmearCrystalPbS1M2;
-	TH1D			*fSmearCrystalPbS10M2;
-	TH1D			*fSmearCrystalPbS100M2;
-	TH1D			*fSmearFramePbBM2;
-	TH1D			*fSmearFramePbS01M2;
-	TH1D			*fSmearFramePbS1M2;
-	TH1D			*fSmearFramePbS10M2;
-	TH1D			*fSmearFramePbS100M2;
-
-
-
-	// M1 Alphas
-	TH1D			*fSmearCrystalPt190BM1;
-	TH1D			*fSmearCrystalPt190S01M1;
-	TH1D			*fSmearCrystalPt190S1M1;
-	TH1D			*fSmearCrystalPt190S10M1;
-	TH1D			*fSmearCrystalPt190S100M1;
-
-	TH1D			*fSmearCrystalPb210BM1;
-	TH1D			*fSmearCrystalPb210S01M1;
-	TH1D			*fSmearCrystalPb210S1M1;
-	TH1D			*fSmearCrystalPb210S10M1;
-	TH1D			*fSmearCrystalPb210S100M1;
-
-	TH1D			*fSmearCrystalRa226BM1;
-	TH1D			*fSmearCrystalRa226S01M1;
-	TH1D			*fSmearCrystalRa226S1M1;
-	TH1D			*fSmearCrystalRa226S10M1;
-	TH1D			*fSmearCrystalRa226S100M1;
-
-	TH1D			*fSmearFramePb210BM1;
-	TH1D			*fSmearFramePb210S01M1;
-	TH1D			*fSmearFramePb210S1M1;
-	TH1D			*fSmearFramePb210S10M1;
-	TH1D			*fSmearFramePb210S100M1;
-
-	// TH1D			*fSmearFrameRa226BM1;
-	TH1D			*fSmearFrameRa226S01M1;
-	TH1D			*fSmearFrameRa226S1M1;
-	TH1D			*fSmearFrameRa226S10M1;
-	TH1D			*fSmearFrameRa226S100M1;
-
-	// M2 Alphas
-	TH1D			*fSmearCrystalPt190BM2;
-	TH1D			*fSmearCrystalPt190S01M2;
-	TH1D			*fSmearCrystalPt190S1M2;
-	TH1D			*fSmearCrystalPt190S10M2;
-	TH1D			*fSmearCrystalPt190S100M2;
-
-	TH1D			*fSmearCrystalPb210BM2;
-	TH1D			*fSmearCrystalPb210S01M2;
-	TH1D			*fSmearCrystalPb210S1M2;
-	TH1D			*fSmearCrystalPb210S10M2;
-	TH1D			*fSmearCrystalPb210S100M2;
-
-	TH1D			*fSmearCrystalRa226BM2;
-	TH1D			*fSmearCrystalRa226S01M2;
-	TH1D			*fSmearCrystalRa226S1M2;
-	TH1D			*fSmearCrystalRa226S10M2;
-	TH1D			*fSmearCrystalRa226S100M2;
-
-	TH1D			*fSmearFramePb210BM2;
-	TH1D			*fSmearFramePb210S01M2;
-	TH1D			*fSmearFramePb210S1M2;
-	TH1D			*fSmearFramePb210S10M2;
-	TH1D			*fSmearFramePb210S100M2;
-
-	// TH1D			*fSmearFrameRa226BM2;
-	TH1D			*fSmearFrameRa226S01M2;
-	TH1D			*fSmearFrameRa226S1M2;
-	TH1D			*fSmearFrameRa226S10M2;
-	TH1D			*fSmearFrameRa226S100M2;
 
 
 	// Adaptive binned histograms
@@ -887,89 +510,6 @@ private:
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
-
-	TH1D *fModelTestM1;
-	TH1D *fModelTestM2;
-	TH1D *fModelTest1;	
-	TH1D *fModelTest2;
-
-	TH1D *fFrameThM1; 
-	TH1D *fTShieldThM1;
-	TH1D *f50mKThM1;
-	TH1D *f600mKThM1;
-	TH1D *fIVCThM1;
-	TH1D *fOVCThM1;
-
-	TH1D *fFrameRaM1; 
-	TH1D *fTShieldRaM1;
-	TH1D *f50mKRaM1;
-	TH1D *f600mKRaM1;
-	TH1D *fIVCRaM1;
-	TH1D *fOVCRaM1;
-
-	TH1D *fFrameKM1; 
-	TH1D *fTShieldKM1;
-	TH1D *f50mKKM1;
-	TH1D *f600mKKM1;
-	TH1D *fIVCKM1;
-	TH1D *fOVCKM1;
-
-	TH1D *fFrameCoM1; 
-	TH1D *fTShieldCoM1;
-	TH1D *f50mKCoM1;
-	TH1D *f600mKCoM1;
-	TH1D *fIVCCoM1;
-	TH1D *fOVCCoM1;
-
-	TH1D *fTShieldMnM1;
-	TH1D *fIVCMnM1;
-
-	TH1D *fCrystalBi2M1;
-	TH1D *fFrameBi2M1;
-
-	TH1D *fNDBDM1;
-	TH1D *f2NDBDM1;
-	TH1D *fBiM1;
-
-
-	TH1D *fFrameThM1; 
-	TH1D *fTShieldThM1;
-	TH1D *f50mKThM1;
-	TH1D *f600mKThM1;
-	TH1D *fIVCThM1;
-	TH1D *fOVCThM1;
-
-	TH1D *fFrameRaM1; 
-	TH1D *fTShieldRaM1;
-	TH1D *f50mKRaM1;
-	TH1D *f600mKRaM1;
-	TH1D *fIVCRaM1;
-	TH1D *fOVCRaM1;
-
-	TH1D *fFrameKM1; 
-	TH1D *fTShieldKM1;
-	TH1D *f50mKKM1;
-	TH1D *f600mKKM1;
-	TH1D *fIVCKM1;
-	TH1D *fOVCKM1;
-
-	TH1D *fFrameCoM1; 
-	TH1D *fTShieldCoM1;
-	TH1D *f50mKCoM1;
-	TH1D *f600mKCoM1;
-	TH1D *fIVCCoM1;
-	TH1D *fOVCCoM1;
-
-	TH1D *fTShieldMnM1;
-	TH1D *fIVCMnM1;
-
-	TH1D *fCrystalBi2M1;
-	TH1D *fFrameBi2M1;
-
-	TH1D *fNDBDM1;
-	TH1D *f2NDBDM1;
-	TH1D *fBiM1;
-
 	TFile *fFileCorrection;
 	TH1D *fCorrectionM2; // Correction spectra for M2 (for accidental coincidences)
 	TH1D *fCorrectionM2Tot;
@@ -977,9 +517,8 @@ private:
 
 
 	std::string		dDataDir;
-	bool			bToyFit;
 	bool			bFixedRes;
-	bool			bUnSmeared;
+	bool			bAdaptiveBinning;
 	
 	int 			dNumCalls;
 	int 			dMult;
