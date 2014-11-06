@@ -98,6 +98,7 @@ private:
 	TH1D			*fAdapDataHistoM2;
 
 
+	// To be updated 11-05-2014
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
 	TH1D			*fModelTotThM1;

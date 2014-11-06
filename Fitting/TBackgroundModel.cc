@@ -195,325 +195,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotPtM2    = new TH1D("fModelTotPtM2",   "Total Pt190",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotPbM2    = new TH1D("fModelTotPbM2",   "Total Pb210",   dNBins, dMinEnergy, dMaxEnergy);
 
-
-
-  // Model Histograms M1
-  fModelFrameThS01M1   = new TH1D("fModelFrameThS01M1",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS1M1    = new TH1D("fModelFrameThS1M1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS10M1   = new TH1D("fModelFrameThS10M1",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS100M1  = new TH1D("fModelFrameThS100M1",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRaS01M1   = new TH1D("fModelFrameRaS01M1",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS1M1    = new TH1D("fModelFrameRaS1M1",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS10M1   = new TH1D("fModelFrameRaS10M1",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS100M1  = new TH1D("fModelFrameRaS100M1",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelTShieldThS01M1   = new TH1D("fModelTShieldThS01M1",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS1M1    = new TH1D("fModelTShieldThS1M1",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS10M1   = new TH1D("fModelTShieldThS10M1",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS100M1  = new TH1D("fModelTShieldThS100M1",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameThM1    = new TH1D("fModelFrameThM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThM1  = new TH1D("fModelTShieldThM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKThM1     = new TH1D("fModel50mKThM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKThM1    = new TH1D("fModel600mKThM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCThM1      = new TH1D("fModelIVCThM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCThM1      = new TH1D("fModelOVCThM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRaM1    = new TH1D("fModelFrameRaM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldRaM1  = new TH1D("fModelTShieldRaM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
-  fModel50mKRaM1     = new TH1D("fModel50mKRaM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKRaM1    = new TH1D("fModel600mKRaM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCRaM1      = new TH1D("fModelIVCRaM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCRaM1      = new TH1D("fModelOVCRaM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameKM1     = new TH1D("fModelFrameKM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldKM1   = new TH1D("fModelTShieldKM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKKM1      = new TH1D("fModel50mKKM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKKM1     = new TH1D("fModel600mKKM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCKM1       = new TH1D("fModelIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCKM1       = new TH1D("fModelOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameCoM1    = new TH1D("fModelFrameCoM1",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldCoM1  = new TH1D("fModelTShieldCoM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKCoM1     = new TH1D("fModel50mKCoM1",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKCoM1    = new TH1D("fModel600mKCoM1",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCCoM1      = new TH1D("fModelIVCCoM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCCoM1      = new TH1D("fModelOVCCoM1",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelTShieldMnM1  = new TH1D("fModelTShieldMnM1","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCMnM1      = new TH1D("fModelIVCMnM1",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalBi2M1  = new TH1D("fModelCrystalBi2M1","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameBi2M1    = new TH1D("fModelFrameBi2M1","Frame",  dNBins, dMinEnergy, dMaxEnergy);
-
-
-  fModelNDBDM1       = new TH1D("fModelNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
-  fModel2NDBDM1      = new TH1D("fModel2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelBiM1         = new TH1D("fModelBiM1",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalPt190BM1        = new TH1D("fModelCrystalPtBM1",       "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S01M1      = new TH1D("fModelCrystalPt190S01M1",  "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S1M1       = new TH1D("fModelCrystalPt190S1M1",   "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S10M1      = new TH1D("fModelCrystalPt190S10M1",  "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S100M1     = new TH1D("fModelCrystalPt190S100M1", "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalPb210BM1        = new TH1D("fModelCrystalPb210BM1",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S01M1      = new TH1D("fModelCrystalPb210S01M1",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S1M1       = new TH1D("fModelCrystalPb210S1M1",   "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S10M1      = new TH1D("fModelCrystalPb210S10M1",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S100M1     = new TH1D("fModelCrystalPb210S100M1", "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalRa226BM1        = new TH1D("fModelCrystalRa226BM1",    "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S01M1      = new TH1D("fModelCrystalRa226S01M1",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S1M1       = new TH1D("fModelCrystalRa226S1M1",   "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S10M1      = new TH1D("fModelCrystalRa226S10M1",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S100M1     = new TH1D("fModelCrystalRa226S100M1", "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFramePb210BM1        = new TH1D("fModelFramePb210BM1",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S01M1      = new TH1D("fModelFramePb210S01M1",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S1M1       = new TH1D("fModelFramePb210S1M1",   "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S10M1      = new TH1D("fModelFramePb210S10M1",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S100M1     = new TH1D("fModelFramePb210S100M1", "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRa226BM1        = new TH1D("fModelFrameRa226BM1",    "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S01M1      = new TH1D("fModelFrameRa226S01M1",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S1M1       = new TH1D("fModelFrameRa226S1M1",   "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S10M1      = new TH1D("fModelFrameRa226S10M1",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S100M1     = new TH1D("fModelFrameRa226S100M1", "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-
-
-  // Modeled Histograms M2
-  fModelDummyM2      = new TH1D("fModelDummyM2",  "Dummy Modeled",  dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameThS01M2   = new TH1D("fModelFrameThS01M2",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS1M2    = new TH1D("fModelFrameThS1M2",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS10M2   = new TH1D("fModelFrameThS10M2",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameThS100M2  = new TH1D("fModelFrameThS100M2",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRaS01M2   = new TH1D("fModelFrameRaS01M2",  "Frame Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS1M2    = new TH1D("fModelFrameRaS1M2",  "Frame Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS10M2   = new TH1D("fModelFrameRaS10M2",  "Frame Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRaS100M2  = new TH1D("fModelFrameRaS100M2",  "Frame Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelTShieldThS01M2   = new TH1D("fModelTShieldThS01M2",  "TShield Surface 0.1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS1M2    = new TH1D("fModelTShieldThS1M2",  "TShield Surface 1 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS10M2   = new TH1D("fModelTShieldThS10M2",  "TShield Surface 10 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThS100M2  = new TH1D("fModelTShieldThS100M2",  "TShield Surface 100 #mum",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameThM2    = new TH1D("fModelFrameThM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldThM2  = new TH1D("fModelTShieldThM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKThM2     = new TH1D("fModel50mKThM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKThM2    = new TH1D("fModel600mKThM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCThM2      = new TH1D("fModelIVCThM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCThM2      = new TH1D("fModelOVCThM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRaM2    = new TH1D("fModelFrameRaM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldRaM2  = new TH1D("fModelTShieldRaM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);  
-  fModel50mKRaM2     = new TH1D("fModel50mKRaM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKRaM2    = new TH1D("fModel600mKRaM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCRaM2      = new TH1D("fModelIVCRaM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCRaM2      = new TH1D("fModelOVCRaM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameKM2     = new TH1D("fModelFrameKM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldKM2   = new TH1D("fModelTShieldKM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKKM2      = new TH1D("fModel50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKKM2     = new TH1D("fModel600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCKM2       = new TH1D("fModelIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCKM2       = new TH1D("fModelOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameCoM2    = new TH1D("fModelFrameCoM2",  "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTShieldCoM2  = new TH1D("fModelTShieldCoM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModel50mKCoM2     = new TH1D("fModel50mKCoM2",   "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  fModel600mKCoM2    = new TH1D("fModel600mKCoM2",  "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCCoM2      = new TH1D("fModelIVCCoM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelOVCCoM2      = new TH1D("fModelOVCCoM2",    "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelTShieldMnM2  = new TH1D("fModelTShieldMnM2","TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelIVCMnM2      = new TH1D("fModelIVCMnM2",    "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalBi2M2  = new TH1D("fModelCrystalBi2M2","Crystal",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameBi2M2    = new TH1D("fModelFrameBi2M2","Frame",  dNBins, dMinEnergy, dMaxEnergy);
-
-
-  fModelNDBDM2       = new TH1D("fModelNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
-  fModel2NDBDM2      = new TH1D("fModel2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
-  fModelBiM2         = new TH1D("fModelBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalPt190BM2        = new TH1D("fModelCrystalPtBM2",       "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S01M2      = new TH1D("fModelCrystalPt190S01M2",  "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S1M2       = new TH1D("fModelCrystalPt190S1M2",   "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S10M2      = new TH1D("fModelCrystalPt190S10M2",  "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPt190S100M2     = new TH1D("fModelCrystalPt190S100M2", "Pt190",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalPb210BM2        = new TH1D("fModelCrystalPb210BM2",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S01M2      = new TH1D("fModelCrystalPb210S01M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S1M2       = new TH1D("fModelCrystalPb210S1M2",   "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S10M2      = new TH1D("fModelCrystalPb210S10M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalPb210S100M2     = new TH1D("fModelCrystalPb210S100M2", "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelCrystalRa226BM2        = new TH1D("fModelCrystalRa226BM2",    "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S01M2      = new TH1D("fModelCrystalRa226S01M2",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S1M2       = new TH1D("fModelCrystalRa226S1M2",   "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S10M2      = new TH1D("fModelCrystalRa226S10M2",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelCrystalRa226S100M2     = new TH1D("fModelCrystalRa226S100M2", "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFramePb210BM2        = new TH1D("fModelFramePb210BM2",    "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S01M2      = new TH1D("fModelFramePb210S01M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S1M2       = new TH1D("fModelFramePb210S1M2",   "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S10M2      = new TH1D("fModelFramePb210S10M2",  "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFramePb210S100M2     = new TH1D("fModelFramePb210S100M2", "Pb210",    dNBins, dMinEnergy, dMaxEnergy);
-
-  fModelFrameRa226BM2        = new TH1D("fModelFrameRa226BM2",    "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S01M2      = new TH1D("fModelFrameRa226S01M2",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S1M2       = new TH1D("fModelFrameRa226S1M2",   "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S10M2      = new TH1D("fModelFrameRa226S10M2",  "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelFrameRa226S100M2     = new TH1D("fModelFrameRa226S100M2", "Ra226",    dNBins, dMinEnergy, dMaxEnergy);
-
-
-
-//////////////// Adaptive binned histograms
-  fAdapFrameThM1    = new TH1D("fAdapFrameThM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapTShieldThM1  = new TH1D("fAdapTShieldThM1",  "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap50mKThM1     = new TH1D("fAdap50mKThM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap600mKThM1    = new TH1D("fAdap600mKThM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapIVCThM1      = new TH1D("fAdapIVCThM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapOVCThM1      = new TH1D("fAdapOVCThM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapFrameRaM1    = new TH1D("fAdapFrameRaM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapTShieldRaM1  = new TH1D("fAdapTShieldRaM1",  "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap50mKRaM1     = new TH1D("fAdap50mKRaM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap600mKRaM1    = new TH1D("fAdap600mKRaM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapIVCRaM1      = new TH1D("fAdapIVCRaM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapOVCRaM1      = new TH1D("fAdapOVCRaM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapFrameKM1     = new TH1D("fAdapFrameKM1",   "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapTShieldKM1   = new TH1D("fAdapTShieldKM1", "TShield",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap50mKKM1      = new TH1D("fAdap50mKKM1",    "50mK",     dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap600mKKM1     = new TH1D("fAdap600mKKM1",   "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapIVCKM1       = new TH1D("fAdapIVCKM1",     "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapOVCKM1       = new TH1D("fAdapOVCKM1",     "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapFrameCoM1    = new TH1D("fAdapFrameCoM1",  "Frame",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapTShieldCoM1  = new TH1D("fAdapTShieldCoM1", "TShield",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap50mKCoM1     = new TH1D("fAdap50mKCoM1",  "50mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap600mKCoM1    = new TH1D("fAdap600mKCoM1",  "600mK",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapIVCCoM1      = new TH1D("fAdapIVCCoM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapOVCCoM1      = new TH1D("fAdapOVCCoM1",    "OVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapTShieldMnM1  = new TH1D("fAdapTShieldMnM1",    "TShield",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapIVCMnM1      = new TH1D("fAdapIVCMnM1",    "IVC",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapCrystalBi2M1 = new TH1D("fAdapCrystalBi2M1",    "Crystal",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFrameBi2M1   = new TH1D("fAdapFrameBi2M1",    "Frame",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-
-  fAdapNDBDM1       = new TH1D("fAdapNDBDM1",   "NDBD",       dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdap2NDBDM1      = new TH1D("fAdap2NDBDM1",  "2NDBD",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapBiM1         = new TH1D("fAdapBiM1",     "Bi",         dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapCrystalPt190BM1        = new TH1D("fAdapCrystalPtBM1",       "Pt190",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPt190S01M1      = new TH1D("fAdapCrystalPt190S01M1",  "Pt190",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPt190S1M1       = new TH1D("fAdapCrystalPt190S1M1",   "Pt190",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPt190S10M1      = new TH1D("fAdapCrystalPt190S10M1",  "Pt190",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPt190S100M1     = new TH1D("fAdapCrystalPt190S100M1", "Pt190",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapCrystalPb210BM1        = new TH1D("fAdapCrystalPb210BM1",    "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPb210S01M1      = new TH1D("fAdapCrystalPb210S01M1",  "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPb210S1M1       = new TH1D("fAdapCrystalPb210S1M1",   "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPb210S10M1      = new TH1D("fAdapCrystalPb210S10M1",  "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalPb210S100M1     = new TH1D("fAdapCrystalPb210S100M1", "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapCrystalRa226BM1        = new TH1D("fAdapCrystalRa226BM1",    "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalRa226S01M1      = new TH1D("fAdapCrystalRa226S01M1",  "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalRa226S1M1       = new TH1D("fAdapCrystalRa226S1M1",   "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalRa226S10M1      = new TH1D("fAdapCrystalRa226S10M1",  "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapCrystalRa226S100M1     = new TH1D("fAdapCrystalRa226S100M1", "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapFramePb210BM1        = new TH1D("fAdapFramePb210BM1",    "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFramePb210S01M1      = new TH1D("fAdapFramePb210S01M1",  "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFramePb210S1M1       = new TH1D("fAdapFramePb210S1M1",   "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFramePb210S10M1      = new TH1D("fAdapFramePb210S10M1",  "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFramePb210S100M1     = new TH1D("fAdapFramePb210S100M1", "Pb210",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fAdapFrameRa226BM1        = new TH1D("fAdapFrameRa226BM1",    "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFrameRa226S01M1      = new TH1D("fAdapFrameRa226S01M1",  "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFrameRa226S1M1       = new TH1D("fAdapFrameRa226S1M1",   "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFrameRa226S10M1      = new TH1D("fAdapFrameRa226S10M1",  "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fAdapFrameRa226S100M1     = new TH1D("fAdapFrameRa226S100M1", "Ra226",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-
-
-  fAdapFrameThM2    = new TH1D("fAdapFrameThM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapTShieldThM2  = new TH1D("fAdapTShieldThM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap50mKThM2     = new TH1D("fAdap50mKThM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap600mKThM2    = new TH1D("fAdap600mKThM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapIVCThM2      = new TH1D("fAdapIVCThM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapOVCThM2      = new TH1D("fAdapOVCThM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapFrameRaM2    = new TH1D("fAdapFrameRaM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapTShieldRaM2  = new TH1D("fAdapTShieldRaM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap50mKRaM2     = new TH1D("fAdap50mKRaM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap600mKRaM2    = new TH1D("fAdap600mKRaM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapIVCRaM2      = new TH1D("fAdapIVCRaM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapOVCRaM2      = new TH1D("fAdapOVCRaM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapFrameKM2     = new TH1D("fAdapFrameKM2",   "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapTShieldKM2   = new TH1D("fAdapTShieldKM2", "TShield",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap50mKKM2      = new TH1D("fAdap50mKKM2",    "50mK",     dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap600mKKM2     = new TH1D("fAdap600mKKM2",   "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapIVCKM2       = new TH1D("fAdapIVCKM2",     "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapOVCKM2       = new TH1D("fAdapOVCKM2",     "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapFrameCoM2    = new TH1D("fAdapFrameCoM2",  "Frame",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapTShieldCoM2  = new TH1D("fAdapTShieldCoM2",  "TShield",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap50mKCoM2     = new TH1D("fAdap50mKCoM2",  "50mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap600mKCoM2    = new TH1D("fAdap600mKCoM2",  "600mK",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapIVCCoM2      = new TH1D("fAdapIVCCoM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapOVCCoM2      = new TH1D("fAdapOVCCoM2",    "OVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapTShieldMnM2  = new TH1D("fAdapTShieldMnM2",    "TShield",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapIVCMnM2      = new TH1D("fAdapIVCMnM2",    "IVC",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapCrystalBi2M2 = new TH1D("fAdapCrystalBi2M2",    "Crystal",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFrameBi2M2   = new TH1D("fAdapFrameBi2M2",    "Frame",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapNDBDM2       = new TH1D("fAdapNDBDM2",   "NDBD",       dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdap2NDBDM2      = new TH1D("fAdap2NDBDM2",  "2NDBD",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapBiM2         = new TH1D("fAdapBiM2",     "Bi",         dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-
-  fAdapCrystalPt190BM2        = new TH1D("fAdapCrystalPtBM2",       "Pt190",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPt190S01M2      = new TH1D("fAdapCrystalPt190S01M2",  "Pt190",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPt190S1M2       = new TH1D("fAdapCrystalPt190S1M2",   "Pt190",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPt190S10M2      = new TH1D("fAdapCrystalPt190S10M2",  "Pt190",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPt190S100M2     = new TH1D("fAdapCrystalPt190S100M2", "Pt190",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapCrystalPb210BM2        = new TH1D("fAdapCrystalPb210BM2",    "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPb210S01M2      = new TH1D("fAdapCrystalPb210S01M2",  "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPb210S1M2       = new TH1D("fAdapCrystalPb210S1M2",   "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPb210S10M2      = new TH1D("fAdapCrystalPb210S10M2",  "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalPb210S100M2     = new TH1D("fAdapCrystalPb210S100M2", "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapCrystalRa226BM2        = new TH1D("fAdapCrystalRa226BM2",    "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalRa226S01M2      = new TH1D("fAdapCrystalRa226S01M2",  "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalRa226S1M2       = new TH1D("fAdapCrystalRa226S1M2",   "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalRa226S10M2      = new TH1D("fAdapCrystalRa226S10M2",  "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapCrystalRa226S100M2     = new TH1D("fAdapCrystalRa226S100M2", "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapFramePb210BM2        = new TH1D("fAdapFramePb210BM2",    "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFramePb210S01M2      = new TH1D("fAdapFramePb210S01M2",  "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFramePb210S1M2       = new TH1D("fAdapFramePb210S1M2",   "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFramePb210S10M2      = new TH1D("fAdapFramePb210S10M2",  "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFramePb210S100M2     = new TH1D("fAdapFramePb210S100M2", "Pb210",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fAdapFrameRa226BM2        = new TH1D("fAdapFrameRa226BM2",    "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFrameRa226S01M2      = new TH1D("fAdapFrameRa226S01M2",  "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFrameRa226S1M2       = new TH1D("fAdapFrameRa226S1M2",   "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFrameRa226S10M2      = new TH1D("fAdapFrameRa226S10M2",  "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapFrameRa226S100M2     = new TH1D("fAdapFrameRa226S100M2", "Ra226",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-
   // Total Adaptive binning histograms M1
   fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
   fModelTotAdapThM1    = new TH1D("fModelTotAdapThM1",    "Total Th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -529,7 +210,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotAdapPtM1    = new TH1D("fModelTotAdapPtM1",   "Total Pt190",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotAdapPbM1    = new TH1D("fModelTotAdapPbM1",   "Total Pb210",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-
   // Total Adaptive binning histograms M2
   fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
   fModelTotAdapThM2    = new TH1D("fModelTotAdapThM2",    "Total Th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -544,6 +224,313 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotAdapBi2M2   = new TH1D("fModelTotAdapBi2M2",   "Total Bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotAdapPtM2    = new TH1D("fModelTotAdapPtM2",   "Total Pt190",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotAdapPbM2    = new TH1D("fModelTotAdapPbM2",   "Total Pb210",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+
+
+
+//////////// Bulk model histograms
+  // Crystal M1 and M2
+  hTeO20nuM1       = new TH1D("hTeO20nuM1",    "hTeO20nuM1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO22nuM1       = new TH1D("hTeO22nuM1",    "hTeO22nuM1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2co60M1      = new TH1D("hTeO2co60M1",   "hTeO2co60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2k40M1       = new TH1D("hTeO2k40M1",    "hTeO2k40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2pb210M1     = new TH1D("hTeO2pb210M1",  "hTeO2pb210M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2po210M1     = new TH1D("hTeO2po210M1",  "hTeO2po210M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2te125M1     = new TH1D("hTeO2te125M1",  "hTeO2te125M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2th232M1     = new TH1D("hTeO2th232M1",  "hTeO2th232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hTeO2th228M1     = new TH1D("hTeO2th228M1",  "hTeO2th228M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2ra226M1     = new TH1D("hTeO2ra226M1",  "hTeO2ra226M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2rn222M1     = new TH1D("hTeO2rn222M1",  "hTeO2rn222M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2u238M1      = new TH1D("hTeO2u238M1",   "hTeO2u238M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2th230M1     = new TH1D("hTeO2th230M1",  "hTeO2th230M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2u234M1      = new TH1D("hTeO2u234M1",   "hTeO2u234M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hTeO20nuM2       = new TH1D("hTeO20nuM2",    "hTeO20nuM2",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO22nuM2       = new TH1D("hTeO22nuM2",    "hTeO22nuM2",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2co60M2      = new TH1D("hTeO2co60M2",   "hTeO2co60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2k40M2       = new TH1D("hTeO2k40M2",    "hTeO2k40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2pb210M2     = new TH1D("hTeO2pb210M2",  "hTeO2pb210M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2po210M2     = new TH1D("hTeO2po210M2",  "hTeO2po210M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2te125M2     = new TH1D("hTeO2te125M2",  "hTeO2te125M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2th232M2     = new TH1D("hTeO2th232M2",  "hTeO2th232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hTeO2th228M2     = new TH1D("hTeO2th228M2",  "hTeO2th228M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2ra226M2     = new TH1D("hTeO2ra226M2",  "hTeO2ra226M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2rn222M2     = new TH1D("hTeO2rn222M2",  "hTeO2rn222M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2u238M2      = new TH1D("hTeO2u238M2",   "hTeO2u238M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2th230M2     = new TH1D("hTeO2th230M2",  "hTeO2th230M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2u234M2      = new TH1D("hTeO2u234M2",   "hTeO2u234M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+
+  // Frame M1 and M2
+  hCuFrameco58M1      = new TH1D("hCuFrameco58M1",   "hCuFrameco58M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameco60M1      = new TH1D("hCuFrameco60M1",   "hCuFrameco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramecs137M1     = new TH1D("hCuFramecs137M1",  "hCuFramecs137M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramek40M1       = new TH1D("hCuFramek40M1",    "hCuFramek40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramemn54M1      = new TH1D("hCuFramemn54M1",   "hCuFramemn54M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramepb210M1     = new TH1D("hCuFramepb210M1",  "hCuFramepb210M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameth232M1     = new TH1D("hCuFrameth232M1",  "hCuFrameth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hCuFrameu238M1      = new TH1D("hCuFrameu238M1",   "hCuFrameu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hCuFrameco58M2      = new TH1D("hCuFrameco58M2",   "hCuFrameco58M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameco60M2      = new TH1D("hCuFrameco60M2",   "hCuFrameco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramecs137M2     = new TH1D("hCuFramecs137M2",  "hCuFramecs137M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramek40M2       = new TH1D("hCuFramek40M2",    "hCuFramek40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramemn54M2      = new TH1D("hCuFramemn54M2",   "hCuFramemn54M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFramepb210M2     = new TH1D("hCuFramepb210M2",  "hCuFramepb210M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameth232M2     = new TH1D("hCuFrameth232M2",  "hCuFrameth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hCuFrameu238M2      = new TH1D("hCuFrameu238M2",   "hCuFrameu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  // CuBox (TShield) M1 and M2
+  hCuBoxco58M1      = new TH1D("hCuBoxco58M1",   "hCuBoxco58M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxco60M1      = new TH1D("hCuBoxco60M1",   "hCuBoxco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxcs137M1     = new TH1D("hCuBoxcs137M1",  "hCuBoxcs137M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxk40M1       = new TH1D("hCuBoxk40M1",    "hCuBoxk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxmn54M1      = new TH1D("hCuBoxmn54M1",   "hCuBoxmn54M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxpb210M1     = new TH1D("hCuBoxpb210M1",  "hCuBoxpb210M1",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxth232M1     = new TH1D("hCuBoxth232M1",  "hCuBoxth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hCuBoxu238M1      = new TH1D("hCuBoxu238M1",   "hCuBoxu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hCuBoxco58M2      = new TH1D("hCuBoxco58M2",   "hCuBoxco58M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxco60M2      = new TH1D("hCuBoxco60M2",   "hCuBoxco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxcs137M2     = new TH1D("hCuBoxcs137M2",  "hCuBoxcs137M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxk40M2       = new TH1D("hCuBoxk40M2",    "hCuBoxk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxmn54M2      = new TH1D("hCuBoxmn54M2",   "hCuBoxmn54M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxpb210M2     = new TH1D("hCuBoxpb210M2",  "hCuBoxpb210M2",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxth232M2     = new TH1D("hCuBoxth232M2",  "hCuBoxth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hCuBoxu238M2      = new TH1D("hCuBoxu238M2",   "hCuBoxu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  // 50mK M1 and M2
+  h50mKco58M1      = new TH1D("h50mKco58M1",   "h50mKco58M1",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKco60M1      = new TH1D("h50mKco60M1",   "h50mKco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKcs137M1     = new TH1D("h50mKcs137M1",  "h50mKcs137M1",  dNBins, dMinEnergy, dMaxEnergy);
+  h50mKk40M1       = new TH1D("h50mKk40M1",    "h50mKk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  h50mKmn54M1      = new TH1D("h50mKmn54M1",   "h50mKmn54M1",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKpb210M1     = new TH1D("h50mKpb210M1",  "h50mKpb210M1",  dNBins, dMinEnergy, dMaxEnergy);
+  h50mKth232M1     = new TH1D("h50mKth232M1",  "h50mKth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h50mKu238M1      = new TH1D("h50mKu238M1",   "h50mKu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  h50mKco58M2      = new TH1D("h50mKco58M2",   "h50mKco58M2",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKco60M2      = new TH1D("h50mKco60M2",   "h50mKco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKcs137M2     = new TH1D("h50mKcs137M2",  "h50mKcs137M2",  dNBins, dMinEnergy, dMaxEnergy);
+  h50mKk40M2       = new TH1D("h50mKk40M2",    "h50mKk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  h50mKmn54M2      = new TH1D("h50mKmn54M2",   "h50mKmn54M2",   dNBins, dMinEnergy, dMaxEnergy);
+  h50mKpb210M2     = new TH1D("h50mKpb210M2",  "h50mKpb210M2",  dNBins, dMinEnergy, dMaxEnergy);
+  h50mKth232M2     = new TH1D("h50mKth232M2",  "h50mKth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h50mKu238M2      = new TH1D("h50mKu238M2",   "h50mKu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  // 600mK M1 and M2
+  h600mKco60M1      = new TH1D("h600mKco60M1",   "h600mKco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  h600mKk40M1       = new TH1D("h600mKk40M1",    "h600mKk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  h600mKth232M1     = new TH1D("h600mKth232M1",  "h600mKth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKu238M1      = new TH1D("h600mKu238M1",   "h600mKu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  h600mKco60M2      = new TH1D("h600mKco60M2",   "h600mKco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  h600mKk40M2       = new TH1D("h600mKk40M2",    "h600mKk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  h600mKth232M2     = new TH1D("h600mKth232M2",  "h600mKth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKu238M2      = new TH1D("h600mKu238M2",   "h600mKu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
+
+  // Roman Lead M1 and M2
+  h600mKbi207M1     = new TH1D("h600mKbi207M1",  "h600mKbi207M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKco60M1      = new TH1D("h600mKco60M1",   "h600mKco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  h600mKcs137M1     = new TH1D("h600mKcs137M1",  "h600mKcs137M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKk40M1       = new TH1D("h600mKk40M1",    "h600mKk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  h600mKpb210M1     = new TH1D("h600mKpb210M1",  "h600mKpb210M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKth232M1     = new TH1D("h600mKth232M1",  "h600mKth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKu238M1      = new TH1D("h600mKu238M1",   "h600mKu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  h600mKbi207M2     = new TH1D("h600mKbi207M2",  "h600mKbi207M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKco60M2      = new TH1D("h600mKco60M2",   "h600mKco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  h600mKcs137M2     = new TH1D("h600mKcs137M2",  "h600mKcs137M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKk40M2       = new TH1D("h600mKk40M2",    "h600mKk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  h600mKpb210M2     = new TH1D("h600mKpb210M2",  "h600mKpb210M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKth232M2     = new TH1D("h600mKth232M2",  "h600mKth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  h600mKu238M2      = new TH1D("h600mKu238M2",   "h600mKu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  // Main bath M1 and M2
+  hMBco60M1      = new TH1D("hMBco60M1",   "hMBco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hMBk40M1       = new TH1D("hMBk40M1",    "hMBk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hMBth232M1     = new TH1D("hMBth232M1",  "hMBth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hMBu238M1      = new TH1D("hMBu238M1",   "hMBu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hMBco60M2      = new TH1D("hMBco60M2",   "hMBco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hMBk40M2       = new TH1D("hMBk40M2",    "hMBk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hMBth232M2     = new TH1D("hMBth232M2",  "hMBth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hMBu238M2      = new TH1D("hMBu238M2",   "hMBu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
+
+  // IVC M1 and M2
+  hIVCco60M1      = new TH1D("hIVCco60M1",   "hIVCco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hIVCk40M1       = new TH1D("hIVCk40M1",    "hIVCk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hIVCth232M1     = new TH1D("hIVCth232M1",  "hIVCth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hIVCu238M1      = new TH1D("hIVCu238M1",   "hIVCu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hIVCco60M2      = new TH1D("hIVCco60M2",   "hIVCco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hIVCk40M2       = new TH1D("hIVCk40M2",    "hIVCk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hIVCth232M2     = new TH1D("hIVCth232M2",  "hIVCth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hIVCu238M2      = new TH1D("hIVCu238M2",   "hIVCu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
+
+  // OVC M1 and M2
+  hOVCco60M1      = new TH1D("hOVCco60M1",   "hOVCco60M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hOVCk40M1       = new TH1D("hOVCk40M1",    "hOVCk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hOVCth232M1     = new TH1D("hOVCth232M1",  "hOVCth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hOVCu238M1      = new TH1D("hOVCu238M1",   "hOVCu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hOVCco60M2      = new TH1D("hOVCco60M2",   "hOVCco60M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hOVCk40M2       = new TH1D("hOVCk40M2",    "hOVCk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hOVCth232M2     = new TH1D("hOVCth232M2",  "hOVCth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hOVCu238M2      = new TH1D("hOVCu238M2",   "hOVCu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
+
+  
+//////////////// Adaptive binned histograms
+  // Crystal M1 and M2
+  hAdapTeO20nuM1       = new TH1D("hAdapTeO20nuM1",    "hAdapTeO20nuM1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO22nuM1       = new TH1D("hAdapTeO22nuM1",    "hAdapTeO22nuM1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2co60M1      = new TH1D("hAdapTeO2co60M1",   "hAdapTeO2co60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2k40M1       = new TH1D("hAdapTeO2k40M1",    "hAdapTeO2k40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2pb210M1     = new TH1D("hAdapTeO2pb210M1",  "hAdapTeO2pb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2po210M1     = new TH1D("hAdapTeO2po210M1",  "hAdapTeO2po210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2te125M1     = new TH1D("hAdapTeO2te125M1",  "hAdapTeO2te125M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2th232M1     = new TH1D("hAdapTeO2th232M1",  "hAdapTeO2th232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapTeO2th228M1     = new TH1D("hAdapTeO2th228M1",  "hAdapTeO2th228M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2ra226M1     = new TH1D("hAdapTeO2ra226M1",  "hAdapTeO2ra226M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2rn222M1     = new TH1D("hAdapTeO2rn222M1",  "hAdapTeO2rn222M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2u238M1      = new TH1D("hAdapTeO2u238M1",   "hAdapTeO2u238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2th230M1     = new TH1D("hAdapTeO2th230M1",  "hAdapTeO2th230M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2u234M1      = new TH1D("hAdapTeO2u234M1",   "hAdapTeO2u234M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapTeO20nuM2       = new TH1D("hAdapTeO20nuM2",    "hAdapTeO20nuM2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO22nuM2       = new TH1D("hAdapTeO22nuM2",    "hAdapTeO22nuM2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2co60M2      = new TH1D("hAdapTeO2co60M2",   "hAdapTeO2co60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2k40M2       = new TH1D("hAdapTeO2k40M2",    "hAdapTeO2k40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2pb210M2     = new TH1D("hAdapTeO2pb210M2",  "hAdapTeO2pb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2po210M2     = new TH1D("hAdapTeO2po210M2",  "hAdapTeO2po210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2te125M2     = new TH1D("hAdapTeO2te125M2",  "hAdapTeO2te125M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2th232M2     = new TH1D("hAdapTeO2th232M2",  "hAdapTeO2th232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapTeO2th228M2     = new TH1D("hAdapTeO2th228M2",  "hAdapTeO2th228M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2ra226M2     = new TH1D("hAdapTeO2ra226M2",  "hAdapTeO2ra226M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2rn222M2     = new TH1D("hAdapTeO2rn222M2",  "hAdapTeO2rn222M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2u238M2      = new TH1D("hAdapTeO2u238M2",   "hAdapTeO2u238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2th230M2     = new TH1D("hAdapTeO2th230M2",  "hAdapTeO2th230M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2u234M2      = new TH1D("hAdapTeO2u234M2",   "hAdapTeO2u234M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+
+  // Frame M1 and M2
+  hAdapCuFrameco58M1      = new TH1D("hAdapCuFrameco58M1",   "hAdapCuFrameco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameco60M1      = new TH1D("hAdapCuFrameco60M1",   "hAdapCuFrameco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramecs137M1     = new TH1D("hAdapCuFramecs137M1",  "hAdapCuFramecs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramek40M1       = new TH1D("hAdapCuFramek40M1",    "hAdapCuFramek40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramemn54M1      = new TH1D("hAdapCuFramemn54M1",   "hAdapCuFramemn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramepb210M1     = new TH1D("hAdapCuFramepb210M1",  "hAdapCuFramepb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameth232M1     = new TH1D("hAdapCuFrameth232M1",  "hAdapCuFrameth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapCuFrameu238M1      = new TH1D("hAdapCuFrameu238M1",   "hAdapCuFrameu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapCuFrameco58M2      = new TH1D("hAdapCuFrameco58M2",   "hAdapCuFrameco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameco60M2      = new TH1D("hAdapCuFrameco60M2",   "hAdapCuFrameco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramecs137M2     = new TH1D("hAdapCuFramecs137M2",  "hAdapCuFramecs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramek40M2       = new TH1D("hAdapCuFramek40M2",    "hAdapCuFramek40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramemn54M2      = new TH1D("hAdapCuFramemn54M2",   "hAdapCuFramemn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramepb210M2     = new TH1D("hAdapCuFramepb210M2",  "hAdapCuFramepb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameth232M2     = new TH1D("hAdapCuFrameth232M2",  "hAdapCuFrameth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapCuFrameu238M2      = new TH1D("hAdapCuFrameu238M2",   "hAdapCuFrameu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  // CuBox (TShield) M1 and M2
+  hAdapCuBoxco58M1      = new TH1D("hAdapCuBoxco58M1",   "hAdapCuBoxco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxco60M1      = new TH1D("hAdapCuBoxco60M1",   "hAdapCuBoxco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxcs137M1     = new TH1D("hAdapCuBoxcs137M1",  "hAdapCuBoxcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxk40M1       = new TH1D("hAdapCuBoxk40M1",    "hAdapCuBoxk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxmn54M1      = new TH1D("hAdapCuBoxmn54M1",   "hAdapCuBoxmn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxpb210M1     = new TH1D("hAdapCuBoxpb210M1",  "hAdapCuBoxpb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxth232M1     = new TH1D("hAdapCuBoxth232M1",  "hAdapCuBoxth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapCuBoxu238M1      = new TH1D("hAdapCuBoxu238M1",   "hAdapCuBoxu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapCuBoxco58M2      = new TH1D("hAdapCuBoxco58M2",   "hAdapCuBoxco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxco60M2      = new TH1D("hAdapCuBoxco60M2",   "hAdapCuBoxco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxcs137M2     = new TH1D("hAdapCuBoxcs137M2",  "hAdapCuBoxcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxk40M2       = new TH1D("hAdapCuBoxk40M2",    "hAdapCuBoxk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxmn54M2      = new TH1D("hAdapCuBoxmn54M2",   "hAdapCuBoxmn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxpb210M2     = new TH1D("hAdapCuBoxpb210M2",  "hAdapCuBoxpb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxth232M2     = new TH1D("hAdapCuBoxth232M2",  "hAdapCuBoxth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapCuBoxu238M2      = new TH1D("hAdapCuBoxu238M2",   "hAdapCuBoxu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  // 50mK M1 and M2
+  hAdap50mKco58M1      = new TH1D("hAdap50mKco58M1",   "hAdap50mKco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKco60M1      = new TH1D("hAdap50mKco60M1",   "hAdap50mKco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKcs137M1     = new TH1D("hAdap50mKcs137M1",  "hAdap50mKcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKk40M1       = new TH1D("hAdap50mKk40M1",    "hAdap50mKk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKmn54M1      = new TH1D("hAdap50mKmn54M1",   "hAdap50mKmn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKpb210M1     = new TH1D("hAdap50mKpb210M1",  "hAdap50mKpb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKth232M1     = new TH1D("hAdap50mKth232M1",  "hAdap50mKth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap50mKu238M1      = new TH1D("hAdap50mKu238M1",   "hAdap50mKu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdap50mKco58M2      = new TH1D("hAdap50mKco58M2",   "hAdap50mKco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKco60M2      = new TH1D("hAdap50mKco60M2",   "hAdap50mKco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKcs137M2     = new TH1D("hAdap50mKcs137M2",  "hAdap50mKcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKk40M2       = new TH1D("hAdap50mKk40M2",    "hAdap50mKk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKmn54M2      = new TH1D("hAdap50mKmn54M2",   "hAdap50mKmn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKpb210M2     = new TH1D("hAdap50mKpb210M2",  "hAdap50mKpb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKth232M2     = new TH1D("hAdap50mKth232M2",  "hAdap50mKth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap50mKu238M2      = new TH1D("hAdap50mKu238M2",   "hAdap50mKu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  // 600mK M1 and M2
+  hAdap600mKco60M1      = new TH1D("hAdap600mKco60M1",   "hAdap600mKco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKk40M1       = new TH1D("hAdap600mKk40M1",    "hAdap600mKk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKth232M1     = new TH1D("hAdap600mKth232M1",  "hAdap600mKth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKu238M1      = new TH1D("hAdap600mKu238M1",   "hAdap600mKu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdap600mKco60M2      = new TH1D("hAdap600mKco60M2",   "hAdap600mKco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKk40M2       = new TH1D("hAdap600mKk40M2",    "hAdap600mKk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKth232M2     = new TH1D("hAdap600mKth232M2",  "hAdap600mKth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKu238M2      = new TH1D("hAdap600mKu238M2",   "hAdap600mKu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
+  // Roman Lead M1 and M2
+  hAdap600mKbi207M1     = new TH1D("hAdap600mKbi207M1",  "hAdap600mKbi207M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKco60M1      = new TH1D("hAdap600mKco60M1",   "hAdap600mKco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKcs137M1     = new TH1D("hAdap600mKcs137M1",  "hAdap600mKcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKk40M1       = new TH1D("hAdap600mKk40M1",    "hAdap600mKk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKpb210M1     = new TH1D("hAdap600mKpb210M1",  "hAdap600mKpb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKth232M1     = new TH1D("hAdap600mKth232M1",  "hAdap600mKth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKu238M1      = new TH1D("hAdap600mKu238M1",   "hAdap600mKu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdap600mKbi207M2     = new TH1D("hAdap600mKbi207M2",  "hAdap600mKbi207M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKco60M2      = new TH1D("hAdap600mKco60M2",   "hAdap600mKco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKcs137M2     = new TH1D("hAdap600mKcs137M2",  "hAdap600mKcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKk40M2       = new TH1D("hAdap600mKk40M2",    "hAdap600mKk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKpb210M2     = new TH1D("hAdap600mKpb210M2",  "hAdap600mKpb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKth232M2     = new TH1D("hAdap600mKth232M2",  "hAdap600mKth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKu238M2      = new TH1D("hAdap600mKu238M2",   "hAdap600mKu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  // Main bath M1 and M2
+  hAdapMBco60M1      = new TH1D("hAdapMBco60M1",   "hAdapMBco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapMBk40M1       = new TH1D("hAdapMBk40M1",    "hAdapMBk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapMBth232M1     = new TH1D("hAdapMBth232M1",  "hAdapMBth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapMBu238M1      = new TH1D("hAdapMBu238M1",   "hAdapMBu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapMBco60M2      = new TH1D("hAdapMBco60M2",   "hAdapMBco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapMBk40M2       = new TH1D("hAdapMBk40M2",    "hAdapMBk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapMBth232M2     = new TH1D("hAdapMBth232M2",  "hAdapMBth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapMBu238M2      = new TH1D("hAdapMBu238M2",   "hAdapMBu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
+  // IVC M1 and M2
+  hAdapIVCco60M1      = new TH1D("hAdapIVCco60M1",   "hAdapIVCco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapIVCk40M1       = new TH1D("hAdapIVCk40M1",    "hAdapIVCk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapIVCth232M1     = new TH1D("hAdapIVCth232M1",  "hAdapIVCth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapIVCu238M1      = new TH1D("hAdapIVCu238M1",   "hAdapIVCu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapIVCco60M2      = new TH1D("hAdapIVCco60M2",   "hAdapIVCco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapIVCk40M2       = new TH1D("hAdapIVCk40M2",    "hAdapIVCk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapIVCth232M2     = new TH1D("hAdapIVCth232M2",  "hAdapIVCth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapIVCu238M2      = new TH1D("hAdapIVCu238M2",   "hAdapIVCu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
+  // OVC M1 and M2
+  hAdapOVCco60M1      = new TH1D("hAdapOVCco60M1",   "hAdapOVCco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVCk40M1       = new TH1D("hAdapOVCk40M1",    "hAdapOVCk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVCth232M1     = new TH1D("hAdapOVCth232M1",  "hAdapOVCth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapOVCu238M1      = new TH1D("hAdapOVCu238M1",   "hAdapOVCu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapOVCco60M2      = new TH1D("hAdapOVCco60M2",   "hAdapOVCco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapOVCk40M2       = new TH1D("hAdapOVCk40M2",    "hAdapOVCk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapOVCth232M2     = new TH1D("hAdapOVCth232M2",  "hAdapOVCth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapOVCu238M2      = new TH1D("hAdapOVCu238M2",   "hAdapOVCu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
 
 
   // Set Initial Parameters/Errors to 0
@@ -607,92 +594,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fCorrectionM2     = new TH1D("fCorrectionM2",      "Correction Spectra",        dNBins, dMinEnergy, dMaxEnergy);  
   fCorrectionM2Tot     = new TH1D("fCorrectionM2Tot",      "Total Correction Spectra",        dNBins, dMinEnergy, dMaxEnergy);  
   fTotCorrection     = new TH1D("fTotCorrection",      "Total Correction Spectra",        dNBins, dMinEnergy, dMaxEnergy);  
-
-
-  fModelTestM1      = new TH1D("fModelTestM1",    "Test",        dNBins, dMinEnergy, dMaxEnergy);  
-  fModelTest2      = new TH1D("fModelTest2",      "Test",        dNBins, dMinEnergy, dMaxEnergy);  
-
-  fFrameThM1     = new TH1D("fFrameThM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldThM1   = new TH1D("fTShieldThM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKThM1      = new TH1D("f50mKThM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKThM1     = new TH1D("f600mKThM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCThM1       = new TH1D("fIVCThM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCThM1       = new TH1D("fOVCThM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameRaM1     = new TH1D("fFrameRaM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldRaM1   = new TH1D("fTShieldRaM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKRaM1      = new TH1D("f50mKRaM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKRaM1     = new TH1D("f600mKRaM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCRaM1       = new TH1D("fIVCRaM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCRaM1       = new TH1D("fOVCRaM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameKM1     = new TH1D("fFrameKM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldKM1   = new TH1D("fTShieldKM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKKM1      = new TH1D("f50mKKM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKKM1     = new TH1D("f600mKKM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCKM1       = new TH1D("fIVCKM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCKM1       = new TH1D("fOVCKM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameCoM1     = new TH1D("fFrameCoM1",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldCoM1   = new TH1D("fTShieldCoM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKCoM1      = new TH1D("f50mKCoM1",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKCoM1     = new TH1D("f600mKCoM1",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCCoM1       = new TH1D("fIVCCoM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCCoM1       = new TH1D("fOVCCoM1",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-
-  fTShieldMnM1     = new TH1D("fTShieldMnM1", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  fIVCMnM1         = new TH1D("fIVCMnM1",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fCrystalBi2M1    = new TH1D("fCrystalBi2M1",  "Crystal",    dNBins, dMinEnergy, dMaxEnergy);
-  fFrameBi2M1      = new TH1D("fFrameBi2M1",    "Frame",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fNDBDM1       = new TH1D("fNDBDM1",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
-  f2NDBDM1      = new TH1D("f2NDBDM1",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
-  fBiM1         = new TH1D("fBiM1",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
-
-
-  fFrameThM2     = new TH1D("fFrameThM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldThM2   = new TH1D("fTShieldThM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKThM2      = new TH1D("f50mKThM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKThM2     = new TH1D("f600mKThM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCThM2       = new TH1D("fIVCThM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCThM2       = new TH1D("fOVCThM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameRaM2     = new TH1D("fFrameRaM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldRaM2   = new TH1D("fTShieldRaM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKRaM2      = new TH1D("f50mKRaM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKRaM2     = new TH1D("f600mKRaM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCRaM2       = new TH1D("fIVCRaM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCRaM2       = new TH1D("fOVCRaM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameKM2     = new TH1D("fFrameKM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldKM2   = new TH1D("fTShieldKM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKKM2      = new TH1D("f50mKKM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKKM2     = new TH1D("f600mKKM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCKM2       = new TH1D("fIVCKM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCKM2       = new TH1D("fOVCKM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fFrameCoM2     = new TH1D("fFrameCoM2",   "Frame",    dNBins, dMinEnergy, dMaxEnergy);
-  fTShieldCoM2   = new TH1D("fTShieldCoM2", "TShield",  dNBins, dMinEnergy, dMaxEnergy);
-  f50mKCoM2      = new TH1D("f50mKCoM2",    "50mK",     dNBins, dMinEnergy, dMaxEnergy);
-  f600mKCoM2     = new TH1D("f600mKCoM2",   "600mK",    dNBins, dMinEnergy, dMaxEnergy);
-  fIVCCoM2       = new TH1D("fIVCCoM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-  fOVCCoM2       = new TH1D("fOVCCoM2",     "OVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-
-  fTShieldMnM2   = new TH1D("fTShieldMnM2", "TShield",      dNBins, dMinEnergy, dMaxEnergy);
-  fIVCMnM2       = new TH1D("fIVCMnM2",     "IVC",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fCrystalBi2M2    = new TH1D("fCrystalBi2M2",  "Crystal",      dNBins, dMinEnergy, dMaxEnergy);
-  fFrameBi2M2      = new TH1D("fFrameBi2M2",    "Frame",      dNBins, dMinEnergy, dMaxEnergy);
-
-  fNDBDM2       = new TH1D("fNDBDM2",   "NDBD",       dNBins, dMinEnergy, dMaxEnergy);
-  f2NDBDM2      = new TH1D("f2NDBDM2",  "2NDBD",      dNBins, dMinEnergy, dMaxEnergy);
-  fBiM2         = new TH1D("fBiM2",     "Bi",         dNBins, dMinEnergy, dMaxEnergy);
-
   // Correction for accidental coincidence
-  fFileCorrection = new TFile(Form("MCCorrection-%dkeV.root", dBinSize));
+  // fFileCorrection = new TFile(Form("MCCorrection-%dkeV.root", dBinSize));
   fCorrectionM2 = (TH1D*)fFileCorrection->Get("fModelTotM1");
 
 }
