@@ -942,161 +942,6 @@ bool TBackgroundModel::DoTheFit()
 
 
   ///////////////////////////////////////////
-  //// Few Parameters - Pre-smeared
-  ///////////////////////////////////////////
-  /// Add Modeled Histograms after chi-squared minimization
-/*
-  // Surface....
-  // fModelTotThM1->Add(fModelTShieldThS10,   fParameters[0]);
-
-  // M1 Parameters
-  fModelTotThM1->Add(fModelFrameThM1,   fParameters[0]);
-  fModelTotThM1->Add(fModelTShieldThM1, fParameters[0]);
-  fModelTotThM1->Add(fModel50mKThM1,    fParameters[0]);
-  fModelTotThM1->Add(fModel600mKThM1,   fParameters[0]);
-  fModelTotThM1->Add(fModelIVCThM1,     fParameters[1]);
-  fModelTotThM1->Add(fModelOVCThM1,     fParameters[1]);
-
-  fModelTotRaM1->Add(fModelFrameRaM1,   fParameters[2]);
-  fModelTotRaM1->Add(fModelTShieldRaM1, fParameters[2]);
-  fModelTotRaM1->Add(fModel50mKRaM1,    fParameters[2]);
-  fModelTotRaM1->Add(fModel600mKRaM1,   fParameters[2]);
-  fModelTotRaM1->Add(fModelIVCRaM1,     fParameters[3]);
-  fModelTotRaM1->Add(fModelOVCRaM1,     fParameters[3]);
-
-  fModelTotKM1->Add(fModelFrameKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelTShieldKM1,   fParameters[4]);
-  fModelTotKM1->Add(fModel50mKKM1,      fParameters[4]);
-  fModelTotKM1->Add(fModel600mKKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelIVCKM1,       fParameters[5]);
-  fModelTotKM1->Add(fModelOVCKM1,       fParameters[5]);
-
-  fModelTotCoM1->Add(fModelFrameCoM1,   fParameters[6]);
-  fModelTotCoM1->Add(fModelTShieldCoM1, fParameters[6]);
-  fModelTotCoM1->Add(fModel50mKCoM1,    fParameters[6]);
-  fModelTotCoM1->Add(fModel600mKCoM1,   fParameters[6]);
-  fModelTotCoM1->Add(fModelIVCCoM1,     fParameters[7]);
-  fModelTotCoM1->Add(fModelOVCCoM1,     fParameters[7]);
-
-  fModelTotNDBDM1->Add(fModelNDBDM1,    fParameters[9]);
-  fModelTot2NDBDM1->Add(fModel2NDBDM1,  fParameters[11]);
-  fModelTotBiM1->Add(fModelBiM1,        fParameters[10]);
-
-  // M2 Parameters
-  fModelTotThM2->Add(fModelFrameThM2,   fParameters[0]);
-  fModelTotThM2->Add(fModelTShieldThM2, fParameters[0]);
-  fModelTotThM2->Add(fModel50mKThM2,    fParameters[0]);
-  fModelTotThM2->Add(fModel600mKThM2,   fParameters[0]);
-  fModelTotThM2->Add(fModelIVCThM2,     fParameters[1]);
-  fModelTotThM2->Add(fModelOVCThM2,     fParameters[1]);
-
-  fModelTotRaM2->Add(fModelFrameRaM2,   fParameters[2]);
-  fModelTotRaM2->Add(fModelTShieldRaM2, fParameters[2]);
-  fModelTotRaM2->Add(fModel50mKRaM2,    fParameters[2]);
-  fModelTotRaM2->Add(fModel600mKRaM2,   fParameters[2]);
-  fModelTotRaM2->Add(fModelIVCRaM2,     fParameters[3]);
-  fModelTotRaM2->Add(fModelOVCRaM2,     fParameters[3]);
-
-  fModelTotKM2->Add(fModelFrameKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelTShieldKM2,   fParameters[4]);
-  fModelTotKM2->Add(fModel50mKKM2,      fParameters[4]);
-  fModelTotKM2->Add(fModel600mKKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelIVCKM2,       fParameters[5]);
-  fModelTotKM2->Add(fModelOVCKM2,       fParameters[5]);
-
-  fModelTotCoM2->Add(fModelFrameCoM2,   fParameters[6]);
-  fModelTotCoM2->Add(fModelTShieldCoM2, fParameters[6]);
-  fModelTotCoM2->Add(fModel50mKCoM2,    fParameters[6]);
-  fModelTotCoM2->Add(fModel600mKCoM2,   fParameters[6]);
-  fModelTotCoM2->Add(fModelIVCCoM2,     fParameters[7]);
-  fModelTotCoM2->Add(fModelOVCCoM2,     fParameters[7]);
-
-  fModelTotNDBDM2->Add(fModelNDBDM2,    fParameters[9]);
-  fModelTot2NDBDM2->Add(fModel2NDBDM2,  fParameters[11]);
-  fModelTotBiM2->Add(fModelBiM2,        fParameters[10]);
-*/
-
-
-  ///////////////////////////////////////////
-  //// Few Parameters - no smear
-  ///////////////////////////////////////////
-  /// Add Smeared Histograms after chi-squared minimization
-/*
-  // M1 Parameters
-  fModelTotThM1->Add(fModelFrameThM1,   fParameters[0]);
-  fModelTotThM1->Add(fModelTShieldThM1, fParameters[0]);
-  fModelTotThM1->Add(fModel50mKThM1,    fParameters[0]);
-  fModelTotThM1->Add(fModel600mKThM1,   fParameters[0]);
-  fModelTotThM1->Add(fModelIVCThM1,     fParameters[1]);
-  fModelTotThM1->Add(fModelOVCThM1,     fParameters[1]);
-
-  fModelTotRaM1->Add(fModelFrameRaM1,   fParameters[2]);
-  fModelTotRaM1->Add(fModelTShieldRaM1, fParameters[2]);
-  fModelTotRaM1->Add(fModel50mKRaM1,    fParameters[2]);
-  fModelTotRaM1->Add(fModel600mKRaM1,   fParameters[2]);
-  fModelTotRaM1->Add(fModelIVCRaM1,     fParameters[3]);
-  // fModelTotRaM1->Add(fModelOVCRaM1,     fParameters[3]);
-
-  // fModelTotKM1->Add(fModelFrameKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelTShieldKM1,   fParameters[4]);
-  fModelTotKM1->Add(fModel50mKKM1,      fParameters[4]);
-  fModelTotKM1->Add(fModel600mKKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelIVCKM1,       fParameters[5]);
-  // fModelTotKM1->Add(fModelOVCKM1,       fParameters[5]);
-
-  // fModelTotCoM1->Add(fModelFrameCoM1,   fParameters[6]);
-  fModelTotCoM1->Add(fModelTShieldCoM1, fParameters[6]);
-  fModelTotCoM1->Add(fModel50mKCoM1,    fParameters[6]);
-  fModelTotCoM1->Add(fModel600mKCoM1,   fParameters[6]);
-  fModelTotCoM1->Add(fModelIVCCoM1,     fParameters[7]);
-  // fModelTotCoM1->Add(fModelOVCCoM1,     fParameters[7]);
-
-  fModelTotMnM1->Add(fModelTShieldMnM1, fParameters[11]);
-  fModelTotMnM1->Add(fModelIVCMnM1,     fParameters[12]);
-
-  fModelTotNDBDM1->Add(fModelNDBDM1,    fParameters[9]);
-  fModelTot2NDBDM1->Add(fModel2NDBDM1,  fParameters[8]);
-  fModelTotBiM1->Add(fModelBiM1,        fParameters[10]);
-
-
-  // M2 Parameters
-  fModelTotThM2->Add(fModelFrameThM2,   fParameters[0]);
-  fModelTotThM2->Add(fModelTShieldThM2, fParameters[0]);
-  fModelTotThM2->Add(fModel50mKThM2,    fParameters[0]);
-  fModelTotThM2->Add(fModel600mKThM2,   fParameters[0]);
-  fModelTotThM2->Add(fModelIVCThM2,     fParameters[1]);
-  fModelTotThM2->Add(fModelOVCThM2,     fParameters[1]);
-
-  fModelTotRaM2->Add(fModelFrameRaM2,   fParameters[2]);
-  fModelTotRaM2->Add(fModelTShieldRaM2, fParameters[2]);
-  fModelTotRaM2->Add(fModel50mKRaM2,    fParameters[2]);
-  fModelTotRaM2->Add(fModel600mKRaM2,   fParameters[2]);
-  fModelTotRaM2->Add(fModelIVCRaM2,     fParameters[3]);
-  // fModelTotRaM2->Add(fModelOVCRaM2,     fParameters[3]);
-
-  // fModelTotKM2->Add(fModelFrameKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelTShieldKM2,   fParameters[4]);
-  fModelTotKM2->Add(fModel50mKKM2,      fParameters[4]);
-  fModelTotKM2->Add(fModel600mKKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelIVCKM2,       fParameters[5]);
-  // fModelTotKM2->Add(fModelOVCKM2,       fParameters[5]);
-
-  // fModelTotCoM2->Add(fModelFrameCoM2,   fParameters[6]);
-  fModelTotCoM2->Add(fModelTShieldCoM2, fParameters[6]);
-  fModelTotCoM2->Add(fModel50mKCoM2,    fParameters[6]);
-  fModelTotCoM2->Add(fModel600mKCoM2,   fParameters[6]);
-  fModelTotCoM2->Add(fModelIVCCoM2,     fParameters[7]);
-  // fModelTotCoM2->Add(fModelOVCCoM2,     fParameters[7]);
-
-  fModelTotMnM2->Add(fModelTShieldMnM2, fParameters[11]);
-  fModelTotMnM2->Add(fModelIVCMnM2,     fParameters[12]);
-
-  fModelTotNDBDM2->Add(fModelNDBDM2,    fParameters[9]);
-  fModelTot2NDBDM2->Add(fModel2NDBDM2,  fParameters[8]);
-  fModelTotBiM2->Add(fModelBiM2,      fParameters[10]);
-*/
-
-  ///////////////////////////////////////////
   //// Many Parameters
   ///////////////////////////////////////////
   /// Use only after previous step converges!
@@ -1267,20 +1112,6 @@ bool TBackgroundModel::DoTheFit()
 
     fModelTotPbM1->Draw("SAME");
 
-/*
-    // Few Parameters
-    TPaveText *pt1 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
-    pt1->AddText(Form("Fit Range (M1): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
-    pt1->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-    // pt1->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-    pt1->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
-    pt1->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
-    pt1->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
-    pt1->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-    pt1->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
-    pt1->AddText(Form("2NDBD: %0.2E#pm%0.2E", fParameters[8], fParError[8] ));
-*/
-
 
     // Many Parameters
     TPaveText *pt1 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
@@ -1365,19 +1196,6 @@ bool TBackgroundModel::DoTheFit()
 
     fModelTotPbM2->Draw("SAME");
     fTotCorrection->Draw("SAME");    
-/*
-    // Few Parameters
-    TPaveText *pt2 = new TPaveText(0.35,0.78,0.70,0.98,"NB NDC");
-    pt2->AddText(Form("Fit Range (M2): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
-    pt2->AddText(Form("Close Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-    // pt2->AddText(Form("Surface Th: %0.2E#pm%0.2E --- Far Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
-    pt2->AddText(Form("Close Ra: %0.2E#pm%0.2E --- Far Ra: %0.2E#pm%0.2E", fParameters[2], fParError[2], fParameters[3], fParError[3] ));
-    pt2->AddText(Form("Close K: %0.2E#pm%0.2E --- Far K: %0.2E#pm%0.2E", fParameters[4], fParError[4], fParameters[5], fParError[5] ));
-    pt2->AddText(Form("Close Co: %0.2E#pm%0.2E --- Far Co: %0.2E#pm%0.2E", fParameters[6], fParError[6], fParameters[7], fParError[7] ));
-    pt2->AddText(Form("Bi-207: %0.2E#pm%0.2E --- NDBD: %0.2E#pm%0.2E", fParameters[10], fParError[10], fParameters[9], fParError[9] ));
-    pt2->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
-    pt2->AddText(Form("2NDBD: %0.2E#pm%0.2E", fParameters[8], fParError[8] ));
-*/
 
     // Many Parameters
     TPaveText *pt2 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
@@ -2064,163 +1882,164 @@ void TBackgroundModel::Initialize()
 
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
-  // fFile = new TFile(Form("MCHist-%dkeV.root", dBinSize));
-  // fFile = new TFile("MCAdaptiveGamma.root");   
-  // fFile = new TFile(Form("MCData-%dkeV.root", dBinSize));
   fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk_1104.root"); 
 
+///////////// Bulk Histograms
+  // Crystal M1 and M2
+  hTeO20nuM1     = (TH1D*)fFile->Get("hTeO20nuM1");
+  hTeO22nuM1     = (TH1D*)fFile->Get("hTeO22nuM1");
+  hTeO2co60M1    = (TH1D*)fFile->Get("hTeO2co60M1");
+  hTeO2k40M1     = (TH1D*)fFile->Get("hTeO2k40M1");
+  hTeO2pb210M1   = (TH1D*)fFile->Get("hTeO2pb210M1");
+  hTeO2po210M1   = (TH1D*)fFile->Get("hTeO2po210M1");
+  hTeO2te125M1   = (TH1D*)fFile->Get("hTeO2te125M1");
+  hTeO2th232M1   = (TH1D*)fFile->Get("hTeO2th232M1");
+  hTeO2th228M1   = (TH1D*)fFile->Get("hTeO2th228M1");
+  hTeO2ra226M1   = (TH1D*)fFile->Get("hTeO2ra226M1");
+  hTeO2rn222M1   = (TH1D*)fFile->Get("hTeO2rn222M1");
+  hTeO2u238M1    = (TH1D*)fFile->Get("hTeO2u238M1");
+  hTeO2th230M1   = (TH1D*)fFile->Get("hTeO2th230M1");
+  hTeO2u234M1    = (TH1D*)fFile->Get("hTeO2u234M1");
 
-  fModelFrameThM1   = (TH1D*)fFile->Get("hCuFrameth232M1");
-  fModelTShieldThM1 = (TH1D*)fFile->Get("hCuBoxth232M1");
-  fModel50mKThM1    = (TH1D*)fFile->Get("h50mKth232M1");
-  fModel600mKThM1   = (TH1D*)fFile->Get("h600mKth232M1");
-  fModelIVCThM1     = (TH1D*)fFile->Get("hIVCth232M1");
-  fModelOVCThM1     = (TH1D*)fFile->Get("hOVCth232M1");
-  fModelMBThM1      = (TH1D*)fFile->Get("hMBth232M1");
+  hTeO20nuM2     = (TH1D*)fFile->Get("hTeO20nuM2");
+  hTeO22nuM2     = (TH1D*)fFile->Get("hTeO22nuM2");
+  hTeO2co60M2    = (TH1D*)fFile->Get("hTeO2co60M2");
+  hTeO2k40M2     = (TH1D*)fFile->Get("hTeO2k40M2");
+  hTeO2pb210M2   = (TH1D*)fFile->Get("hTeO2pb210M2");
+  hTeO2po210M2   = (TH1D*)fFile->Get("hTeO2po210M2");
+  hTeO2te125M2   = (TH1D*)fFile->Get("hTeO2te125M2");
+  hTeO2th232M2   = (TH1D*)fFile->Get("hTeO2th232M2");
+  hTeO2th228M2   = (TH1D*)fFile->Get("hTeO2th228M2");
+  hTeO2ra226M2   = (TH1D*)fFile->Get("hTeO2ra226M2");
+  hTeO2rn222M2   = (TH1D*)fFile->Get("hTeO2rn222M2");
+  hTeO2u238M2    = (TH1D*)fFile->Get("hTeO2u238M2");
+  hTeO2th230M2   = (TH1D*)fFile->Get("hTeO2th230M2");
+  hTeO2u234M2    = (TH1D*)fFile->Get("hTeO2u234M2");
 
+  // Frame M1 and M2
+  hCuFrameco58M1    = (TH1D*)fFile->Get("hCuFrameco58M1");
+  hCuFrameco60M1    = (TH1D*)fFile->Get("hCuFrameco60M1");
+  hCuFramecs137M1   = (TH1D*)fFile->Get("hCuFramecs137M1");
+  hCuFramek40M1     = (TH1D*)fFile->Get("hCuFramek40M1");
+  hCuFramemn54M1    = (TH1D*)fFile->Get("hCuFramemn54M1");
+  hCuFramepb210M1   = (TH1D*)fFile->Get("hCuFramepb210M1");
+  hCuFrameth232M1   = (TH1D*)fFile->Get("hCuFrameth232M1");
+  hCuFrameu238M1    = (TH1D*)fFile->Get("hCuFrameu238M1");
+   
+  hCuFrameco58M2    = (TH1D*)fFile->Get("hCuFrameco58M2");
+  hCuFrameco60M2    = (TH1D*)fFile->Get("hCuFrameco60M2");
+  hCuFramecs137M2   = (TH1D*)fFile->Get("hCuFramecs137M2");
+  hCuFramek40M2     = (TH1D*)fFile->Get("hCuFramek40M2");
+  hCuFramemn54M2    = (TH1D*)fFile->Get("hCuFramemn54M2");
+  hCuFramepb210M2   = (TH1D*)fFile->Get("hCuFramepb210M2");
+  hCuFrameth232M2   = (TH1D*)fFile->Get("hCuFrameth232M2");
+  hCuFrameu238M2    = (TH1D*)fFile->Get("hCuFrameu238M2");
 
+  // CuBox (TShield) M1 and M2
+  hCuBoxco58M1    = (TH1D*)fFile->Get("hCuBoxco58M1");
+  hCuBoxco60M1    = (TH1D*)fFile->Get("hCuBoxco60M1");
+  hCuBoxcs137M1   = (TH1D*)fFile->Get("hCuBoxcs137M1");
+  hCuBoxk40M1     = (TH1D*)fFile->Get("hCuBoxk40M1");
+  hCuBoxmn54M1    = (TH1D*)fFile->Get("hCuBoxmn54M1");
+  hCuBoxpb210M1   = (TH1D*)fFile->Get("hCuBoxpb210M1");
+  hCuBoxth232M1   = (TH1D*)fFile->Get("hCuBoxth232M1");
+  hCuBoxu238M1    = (TH1D*)fFile->Get("hCuBoxu238M1");
+   
+  hCuBoxco58M2    = (TH1D*)fFile->Get("hCuBoxco58M2");
+  hCuBoxco60M2    = (TH1D*)fFile->Get("hCuBoxco60M2");
+  hCuBoxcs137M2   = (TH1D*)fFile->Get("hCuBoxcs137M2");
+  hCuBoxk40M2     = (TH1D*)fFile->Get("hCuBoxk40M2");
+  hCuBoxmn54M2    = (TH1D*)fFile->Get("hCuBoxmn54M2");
+  hCuBoxpb210M2   = (TH1D*)fFile->Get("hCuBoxpb210M2");
+  hCuBoxth232M2   = (TH1D*)fFile->Get("hCuBoxth232M2");
+  hCuBoxu238M2    = (TH1D*)fFile->Get("hCuBoxu238M2");
 
-  fModelFrameRaM1   = (TH1D*)fFile->Get("hCuFrameu238M1");
-  fModelTShieldRaM1 = (TH1D*)fFile->Get("hCuBoxu238M1");
-  fModel50mKRaM1    = (TH1D*)fFile->Get("hModel50mKRaM1");
-  fModel600mKRaM1   = (TH1D*)fFile->Get("hModel600mKRaM1");
-  fModelIVCRaM1     = (TH1D*)fFile->Get("hModelIVCRaM1");
-  fModelOVCRaM1     = (TH1D*)fFile->Get("hModelOVCRaM1");
-
-  fModelFrameCoM1   = (TH1D*)fFile->Get("hModelFrameCoM1");
-  fModelTShieldCoM1 = (TH1D*)fFile->Get("hModelTShieldCoM1");
-  fModel50mKCoM1    = (TH1D*)fFile->Get("hModel50mKCoM1");
-  fModel600mKCoM1   = (TH1D*)fFile->Get("hModel600mKCoM1");
-  fModelIVCCoM1     = (TH1D*)fFile->Get("hModelIVCCoM1");
-  fModelOVCCoM1     = (TH1D*)fFile->Get("hModelOVCCoM1");    
-
-  fModelFrameKM1    = (TH1D*)fFile->Get("hModelFrameKM1");
-  fModelTShieldKM1  = (TH1D*)fFile->Get("hModelTShieldKM1");
-  fModel50mKKM1     = (TH1D*)fFile->Get("hModel50mKKM1");
-  fModel600mKKM1    = (TH1D*)fFile->Get("hModel600mKKM1");
-  fModelIVCKM1      = (TH1D*)fFile->Get("hModelIVCKM1");
-  fModelOVCKM1      = (TH1D*)fFile->Get("hModelOVCKM1");    
-
-  fModelTShieldMnM1 = (TH1D*)fFile->Get("hModelTShieldMnM1");
-  fModelIVCMnM1     = (TH1D*)fFile->Get("hModelIVCMnM1");
-
-  fModelCrystalBi2M1 = (TH1D*)fFile->Get("hModelCrystalBi2M1");
-  fModelFrameBi2M1 = (TH1D*)fFile->Get("hModelFrameBi2M1");
-
-
-  fModel2NDBDM1     = (TH1D*)fFile->Get("hModel2NDBDM1");
-  fModelNDBDM1      = (TH1D*)fFile->Get("hModelNDBDM1");
-  fModelBiM1        = (TH1D*)fFile->Get("hModelBiM1");
-
-  fModelCrystalPtM1 = (TH1D*)fFile->Get("hModelCrystalPtM1");
-  fModelCrystalPbBM1 = (TH1D*)fFile->Get("hModelCrystalPbBM1");
-  fModelCrystalPbS01M1 = (TH1D*)fFile->Get("hModelCrystalPbS01M1");
-  fModelCrystalPbS1M1 = (TH1D*)fFile->Get("hModelCrystalPbS1M1");
-  fModelCrystalPbS10M1 = (TH1D*)fFile->Get("hModelCrystalPbS10M1");
-  fModelCrystalPbS100M1 = (TH1D*)fFile->Get("hModelCrystalPbS100M1");
-  fModelFramePbBM1 = (TH1D*)fFile->Get("hModelFramePbBM1");
-  fModelFramePbS01M1 = (TH1D*)fFile->Get("hModelFramePbS01M1");
-  fModelFramePbS1M1 = (TH1D*)fFile->Get("hModelFramePbS1M1");
-  fModelFramePbS10M1 = (TH1D*)fFile->Get("hModelFramePbS10M1");
-  fModelFramePbS100M1 = (TH1D*)fFile->Get("hModelFramePbS100M1");
-
-  fModelFrameThM2   = (TH1D*)fFile->Get("hModelFrameThM2");
-  fModelTShieldThM2 = (TH1D*)fFile->Get("hModelTShieldThM2");
-  fModel50mKThM2    = (TH1D*)fFile->Get("hModel50mKThM2");
-  fModel600mKThM2   = (TH1D*)fFile->Get("hModel600mKThM2");
-  fModelIVCThM2     = (TH1D*)fFile->Get("hModelIVCThM2");
-  fModelOVCThM2     = (TH1D*)fFile->Get("hModelOVCThM2");
-
-  fModelFrameRaM2   = (TH1D*)fFile->Get("hModelFrameRaM2");
-  fModelTShieldRaM2 = (TH1D*)fFile->Get("hModelTShieldRaM2");
-  fModel50mKRaM2    = (TH1D*)fFile->Get("hModel50mKRaM2");
-  fModel600mKRaM2   = (TH1D*)fFile->Get("hModel600mKRaM2");
-  fModelIVCRaM2     = (TH1D*)fFile->Get("hModelIVCRaM2");
-  fModelOVCRaM2     = (TH1D*)fFile->Get("hModelOVCRaM2");
-
-  fModelFrameCoM2   = (TH1D*)fFile->Get("hModelFrameCoM2");
-  fModelTShieldCoM2 = (TH1D*)fFile->Get("hModelTShieldCoM2");
-  fModel50mKCoM2    = (TH1D*)fFile->Get("hModel50mKCoM2");
-  fModel600mKCoM2   = (TH1D*)fFile->Get("hModel600mKCoM2");
-  fModelIVCCoM2     = (TH1D*)fFile->Get("hModelIVCCoM2");
-  fModelOVCCoM2     = (TH1D*)fFile->Get("hModelOVCCoM2");    
-
-  fModelFrameKM2    = (TH1D*)fFile->Get("hModelFrameKM2");
-  fModelTShieldKM2  = (TH1D*)fFile->Get("hModelTShieldKM2");
-  fModel50mKKM2     = (TH1D*)fFile->Get("hModel50mKKM2");
-  fModel600mKKM2    = (TH1D*)fFile->Get("hModel600mKKM2");
-  fModelIVCKM2      = (TH1D*)fFile->Get("hModelIVCKM2");
-  fModelOVCKM2      = (TH1D*)fFile->Get("hModelOVCKM2");    
-
-  fModelTShieldMnM2 = (TH1D*)fFile->Get("hModelTShieldMnM2");
-  fModelIVCMnM2     = (TH1D*)fFile->Get("hModelIVCMnM2");
-
-  fModelCrystalBi2M2 = (TH1D*)fFile->Get("hModelCrystalBi2M2");
-  fModelFrameBi2M2 = (TH1D*)fFile->Get("hModelFrameBi2M2");
-
-  fModel2NDBDM2     = (TH1D*)fFile->Get("hModel2NDBDM2");
-  fModelNDBDM2      = (TH1D*)fFile->Get("hModelNDBDM2");
-  fModelBiM2        = (TH1D*)fFile->Get("hModelBiM2");    
- 
-  fModelCrystalPtM2 = (TH1D*)fFile->Get("hModelCrystalPtM2");
-  fModelCrystalPbBM2 = (TH1D*)fFile->Get("hModelCrystalPbBM2");
-  fModelCrystalPbS01M2 = (TH1D*)fFile->Get("hModelCrystalPbS01M2");
-  fModelCrystalPbS1M2 = (TH1D*)fFile->Get("hModelCrystalPbS1M2");
-  fModelCrystalPbS10M2 = (TH1D*)fFile->Get("hModelCrystalPbS10M2");
-  fModelCrystalPbS100M2 = (TH1D*)fFile->Get("hModelCrystalPbS100M2");
-  fModelFramePbBM2 = (TH1D*)fFile->Get("hModelFramePbBM2");
-  fModelFramePbS01M2 = (TH1D*)fFile->Get("hModelFramePbS01M2"); 
-  fModelFramePbS1M2 = (TH1D*)fFile->Get("hModelFramePbS1M2"); 
-  fModelFramePbS10M2 = (TH1D*)fFile->Get("hModelFramePbS10M2"); 
-  fModelFramePbS100M2 = (TH1D*)fFile->Get("hModelFramePbS100M2"); 
-
-  // Adaptively binned
-  fAdap600mKThM1   = (TH1D*)fFile->Get("fAdap600mKThM1");
-  fAdapIVCThM1     = (TH1D*)fFile->Get("fAdapIVCThM1");
-  fAdapOVCThM1     = (TH1D*)fFile->Get("fAdapOVCThM1");
-
-  fAdap600mKRaM1   = (TH1D*)fFile->Get("fAdap600mKRaM1");
-  fAdapOVCRaM1     = (TH1D*)fFile->Get("fAdapOVCRaM1");
-
-  fAdapFrameCoM1   = (TH1D*)fFile->Get("fAdapFrameCoM1");
-  fAdapOVCCoM1     = (TH1D*)fFile->Get("fAdapOVCCoM1");    
-
-  fAdapFrameKM1    = (TH1D*)fFile->Get("fAdapFrameKM1");
-  fAdapTShieldKM1  = (TH1D*)fFile->Get("fAdapTShieldKM1");
-  fAdap50mKKM1     = (TH1D*)fFile->Get("fAdap50mKKM1");
-  fAdap600mKKM1    = (TH1D*)fFile->Get("fAdap600mKKM1");
-  fAdapIVCKM1      = (TH1D*)fFile->Get("fAdapIVCKM1");
-  fAdapOVCKM1      = (TH1D*)fFile->Get("fAdapOVCKM1");    
-
-  fAdapIVCMnM1     = (TH1D*)fFile->Get("fAdapIVCMnM1");
-
-  fAdap2NDBDM1     = (TH1D*)fFile->Get("fAdap2NDBDM1");
-  fAdapNDBDM1      = (TH1D*)fFile->Get("fAdapNDBDM1");
-  fAdapBiM1        = (TH1D*)fFile->Get("fAdapBiM1");  
+  // 50mK M1 and M2
+  h50mKco58M1    = (TH1D*)fFile->Get("h50mKco58M1");
+  h50mKco60M1    = (TH1D*)fFile->Get("h50mKco60M1");
+  h50mKcs137M1   = (TH1D*)fFile->Get("h50mKcs137M1");
+  h50mKk40M1     = (TH1D*)fFile->Get("h50mKk40M1");
+  h50mKmn54M1    = (TH1D*)fFile->Get("h50mKmn54M1");
+  h50mKpb210M1   = (TH1D*)fFile->Get("h50mKpb210M1");
+  h50mKth232M1   = (TH1D*)fFile->Get("h50mKth232M1");
+  h50mKu238M1    = (TH1D*)fFile->Get("h50mKu238M1");
+   
+  h50mKco58M2    = (TH1D*)fFile->Get("h50mKco58M2");
+  h50mKco60M2    = (TH1D*)fFile->Get("h50mKco60M2");
+  h50mKcs137M2   = (TH1D*)fFile->Get("h50mKcs137M2");
+  h50mKk40M2     = (TH1D*)fFile->Get("h50mKk40M2");
+  h50mKmn54M2    = (TH1D*)fFile->Get("h50mKmn54M2");
+  h50mKpb210M2   = (TH1D*)fFile->Get("h50mKpb210M2");
+  h50mKth232M2   = (TH1D*)fFile->Get("h50mKth232M2");
+  h50mKu238M2    = (TH1D*)fFile->Get("h50mKu238M2");
 
 
-  fAdap600mKThM2   = (TH1D*)fFile->Get("fAdap600mKThM2");
-  fAdapIVCThM2     = (TH1D*)fFile->Get("fAdapIVCThM2");
-  fAdapOVCThM2     = (TH1D*)fFile->Get("fAdapOVCThM2");
+  // 600mK M1 and M2
+  h600mKco60M1    = (TH1D*)fFile->Get("h600mKco60M1");
+  h600mKk40M1     = (TH1D*)fFile->Get("h600mKk40M1");
+  h600mKth232M1   = (TH1D*)fFile->Get("h600mKth232M1");
+  h600mKu238M1    = (TH1D*)fFile->Get("h600mKu238M1");
+   
+  h600mKco60M2    = (TH1D*)fFile->Get("h600mKco60M2");
+  h600mKk40M2     = (TH1D*)fFile->Get("h600mKk40M2");
+  h600mKth232M2   = (TH1D*)fFile->Get("h600mKth232M2");
+  h600mKu238M2    = (TH1D*)fFile->Get("h600mKu238M2");
 
-  fAdap600mKRaM2   = (TH1D*)fFile->Get("fAdap600mKRaM2");
-  fAdapOVCRaM2     = (TH1D*)fFile->Get("fAdapOVCRaM2");
 
-  fAdapFrameCoM2   = (TH1D*)fFile->Get("fAdapFrameCoM2");
-  fAdapOVCCoM2     = (TH1D*)fFile->Get("fAdapOVCCoM2");    
+  // Roman Lead M1 and M2
+  hPbRombi207M1   = (TH1D*)fFile->Get("hPbRombi207M1");
+  hPbRomco60M1    = (TH1D*)fFile->Get("hPbRomco60M1");
+  hPbRomcs137M1   = (TH1D*)fFile->Get("hPbRomcs137M1");
+  hPbRomk40M1     = (TH1D*)fFile->Get("hPbRomk40M1");
+  hPbRompb210M1   = (TH1D*)fFile->Get("hPbRompb210M1");
+  hPbRomth232M1   = (TH1D*)fFile->Get("hPbRomth232M1");
+  hPbRomu238M1    = (TH1D*)fFile->Get("hPbRomu238M1");
+   
+  hPbRombi207M2   = (TH1D*)fFile->Get("hPbRombi207M2");
+  hPbRomco60M2    = (TH1D*)fFile->Get("hPbRomco60M2");
+  hPbRomcs137M2   = (TH1D*)fFile->Get("hPbRomcs137M2");
+  hPbRomk40M2     = (TH1D*)fFile->Get("hPbRomk40M2");
+  hPbRompb210M2   = (TH1D*)fFile->Get("hPbRompb210M2");
+  hPbRomth232M2   = (TH1D*)fFile->Get("hPbRomth232M2");
+  hPbRomu238M2    = (TH1D*)fFile->Get("hPbRomu238M2");
 
-  fAdapFrameKM2    = (TH1D*)fFile->Get("fAdapFrameKM2");
-  fAdapTShieldKM2  = (TH1D*)fFile->Get("fAdapTShieldKM2");
-  fAdap50mKKM2     = (TH1D*)fFile->Get("fAdap50mKKM2");
-  fAdap600mKKM2    = (TH1D*)fFile->Get("fAdap600mKKM2");
-  fAdapIVCKM2      = (TH1D*)fFile->Get("fAdapIVCKM2");
-  fAdapOVCKM2      = (TH1D*)fFile->Get("fAdapOVCKM2");    
+  // Main Bath M1 and M2
+  hMBco60M1    = (TH1D*)fFile->Get("hMBco60M1");
+  hMBk40M1     = (TH1D*)fFile->Get("hMBk40M1");
+  hMBth232M1   = (TH1D*)fFile->Get("hMBth232M1");
+  hMBu238M1    = (TH1D*)fFile->Get("hMBu238M1");
+   
+  hMBco60M2    = (TH1D*)fFile->Get("hMBco60M2");
+  hMBk40M2     = (TH1D*)fFile->Get("hMBk40M2");
+  hMBth232M2   = (TH1D*)fFile->Get("hMBth232M2");
+  hMBu238M2    = (TH1D*)fFile->Get("hMBu238M2");
 
-  fAdapIVCMnM2     = (TH1D*)fFile->Get("fAdapIVCMnM2");
 
-  fAdap2NDBDM2     = (TH1D*)fFile->Get("fAdap2NDBDM2");
-  fAdapNDBDM2      = (TH1D*)fFile->Get("fAdapNDBDM2");
-  fAdapBiM2        = (TH1D*)fFile->Get("fAdapBiM2");   
+  // IVC M1 and M2
+  hIVCco60M1    = (TH1D*)fFile->Get("hIVCco60M1");
+  hIVCk40M1     = (TH1D*)fFile->Get("hIVCk40M1");
+  hIVCth232M1   = (TH1D*)fFile->Get("hIVCth232M1");
+  hIVCu238M1    = (TH1D*)fFile->Get("hIVCu238M1");
+   
+  hIVCco60M2    = (TH1D*)fFile->Get("hIVCco60M2");
+  hIVCk40M2     = (TH1D*)fFile->Get("hIVCk40M2");
+  hIVCth232M2   = (TH1D*)fFile->Get("hIVCth232M2");
+  hIVCu238M2    = (TH1D*)fFile->Get("hIVCu238M2");
+
+  // OVC M1 and M2
+  hOVCco60M1    = (TH1D*)fFile->Get("hOVCco60M1");
+  hOVCk40M1     = (TH1D*)fFile->Get("hOVCk40M1");
+  hOVCth232M1   = (TH1D*)fFile->Get("hOVCth232M1");
+  hOVCu238M1    = (TH1D*)fFile->Get("hOVCu238M1");
+   
+  hOVCco60M2    = (TH1D*)fFile->Get("hOVCco60M2");
+  hOVCk40M2     = (TH1D*)fFile->Get("hOVCk40M2");
+  hOVCth232M2   = (TH1D*)fFile->Get("hOVCth232M2");
+  hOVCu238M2    = (TH1D*)fFile->Get("hOVCu238M2");
+
+
+//////// Surface PDFs
+  
 
 }
 
@@ -2424,170 +2243,11 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Reset();
 
 	// Create model
-
-
-	////////////////////////////////////////
-	// Few parameters
-	////////////////////////////////////////
   dNumCalls++;
   if(dNumCalls%50==0)
   {
     cout << "Call #: "<< dNumCalls << endl;
   }
-
-  /////////////////////////////////////////////////
-  //// Few Parameters //////////////// Smeared 
-  ////////////////////////////////////////////////
-  /*
-  // M1
-  fModelTotM1->Add( fModelFrameThM1,    fParameters[0]);
-  fModelTotM1->Add( fModelTShieldThM1,  fParameters[0]);  
-  fModelTotM1->Add( fModel50mKThM1,     fParameters[0]);
-  fModelTotM1->Add( fModel600mKThM1,    fParameters[0]);
-  fModelTotM1->Add( fModelIVCThM1,      fParameters[1]);
-  fModelTotM1->Add( fModelOVCThM1,      fParameters[1]);
-
-  fModelTotM1->Add( fModelFrameRaM1,    fParameters[2]);
-  fModelTotM1->Add( fModelTShieldRaM1,  fParameters[2]);  
-  fModelTotM1->Add( fModel50mKRaM1,     fParameters[2]);
-  fModelTotM1->Add( fModel600mKRaM1,    fParameters[2]);
-  fModelTotM1->Add( fModelIVCRaM1,      fParameters[3]);
-  fModelTotM1->Add( fModelOVCRaM1,      fParameters[3]);
-
-  fModelTotM1->Add( fModelFrameKM1,    fParameters[4]);
-  fModelTotM1->Add( fModelTShieldKM1,  fParameters[4]);
-  fModelTotM1->Add( fModel50mKKM1,     fParameters[4]);
-  fModelTotM1->Add( fModel600mKKM1,    fParameters[4]);
-  fModelTotM1->Add( fModelIVCKM1,      fParameters[5]);
-  fModelTotM1->Add( fModelOVCKM1,      fParameters[5]); 
-
-  fModelTotM1->Add( fModelFrameCoM1,    fParameters[6]);
-  fModelTotM1->Add( fModelTShieldCoM1,  fParameters[6]);
-  fModelTotM1->Add( fModel50mKCoM1,     fParameters[6]);
-  fModelTotM1->Add( fModel600mKCoM1,    fParameters[6]);
-  fModelTotM1->Add( fModelIVCCoM1,      fParameters[7]);
-  fModelTotM1->Add( fModelOVCCoM1,      fParameters[7]);  
-
-  fModelTotM1->Add( fModelNDBDM1,      fParameters[9]);  
-  fModelTotM1->Add( fModel2NDBDM1,     fParameters[11]);  
-  fModelTotM1->Add( fModelBiM1,        fParameters[10]);  
-
-
-
-  // M2
-  fModelTotM2->Add( fModelFrameThM2,    fParameters[0]);
-  fModelTotM2->Add( fModelTShieldThM2,  fParameters[0]);  
-  fModelTotM2->Add( fModel50mKThM2,     fParameters[0]);
-  fModelTotM2->Add( fModel600mKThM2,    fParameters[0]);
-  fModelTotM2->Add( fModelIVCThM2,      fParameters[1]);
-  fModelTotM2->Add( fModelOVCThM2,      fParameters[1]);
-
-  fModelTotM2->Add( fModelFrameRaM2,    fParameters[2]);
-  fModelTotM2->Add( fModelTShieldRaM2,  fParameters[2]);  
-  fModelTotM2->Add( fModel50mKRaM2,     fParameters[2]);
-  fModelTotM2->Add( fModel600mKRaM2,    fParameters[2]);
-  fModelTotM2->Add( fModelIVCRaM2,      fParameters[3]);
-  fModelTotM2->Add( fModelOVCRaM2,      fParameters[3]);
-
-  fModelTotM2->Add( fModelFrameKM2,    fParameters[4]);
-  fModelTotM2->Add( fModelTShieldKM2,  fParameters[4]);
-  fModelTotM2->Add( fModel50mKKM2,     fParameters[4]);
-  fModelTotM2->Add( fModel600mKKM2,    fParameters[4]);
-  fModelTotM2->Add( fModelIVCKM2,      fParameters[5]);
-  fModelTotM2->Add( fModelOVCKM2,      fParameters[5]); 
-
-  fModelTotM2->Add( fModelFrameCoM2,    fParameters[6]);
-  fModelTotM2->Add( fModelTShieldCoM2,  fParameters[6]);
-  fModelTotM2->Add( fModel50mKCoM2,     fParameters[6]);
-  fModelTotM2->Add( fModel600mKCoM2,    fParameters[6]);
-  fModelTotM2->Add( fModelIVCCoM2,      fParameters[7]);
-  fModelTotM2->Add( fModelOVCCoM2,      fParameters[7]);  
-
-  fModelTotM2->Add( fModelNDBDM2,      fParameters[9]);  
-  fModelTotM2->Add( fModel2NDBDM2,     fParameters[11]);  
-  fModelTotM2->Add( fModelBiM2,        fParameters[10]);  
-*/
-
-
-
-
-  ///////////////////////////////////////////////////
-  //// Few Parameters //////////////// Unsmeared
-  //////////////////////////////////////////////////
-  // M1
-/*
-  fModelTotM1->Add( fModelFrameThM1,    fParameters[0]);
-  fModelTotM1->Add( fModelTShieldThM1,  fParameters[0]);  
-  fModelTotM1->Add( fModel50mKThM1,     fParameters[0]);
-  fModelTotM1->Add( fModel600mKThM1,    fParameters[0]);
-  fModelTotM1->Add( fModelIVCThM1,      fParameters[1]);
-  fModelTotM1->Add( fModelOVCThM1,      fParameters[1]);
-
-  fModelTotM1->Add( fModelFrameRaM1,    fParameters[2]);
-  fModelTotM1->Add( fModelTShieldRaM1,  fParameters[2]);  
-  fModelTotM1->Add( fModel50mKRaM1,     fParameters[2]);
-  fModelTotM1->Add( fModel600mKRaM1,    fParameters[2]);
-  fModelTotM1->Add( fModelIVCRaM1,      fParameters[3]);
-  // fModelTotM1->Add( fModelOVCRaM1,      fParameters[3]);
-
-  // fModelTotM1->Add( fModelFrameKM1,    fParameters[4]);
-  fModelTotM1->Add( fModelTShieldKM1,  fParameters[4]);
-  fModelTotM1->Add( fModel50mKKM1,     fParameters[4]);
-  fModelTotM1->Add( fModel600mKKM1,    fParameters[4]);
-  fModelTotM1->Add( fModelIVCKM1,      fParameters[5]);
-  // fModelTotM1->Add( fModelOVCKM1,      fParameters[5]); 
-
-  // fModelTotM1->Add( fModelFrameCoM1,    fParameters[6]);
-  fModelTotM1->Add( fModelTShieldCoM1,  fParameters[6]);
-  fModelTotM1->Add( fModel50mKCoM1,     fParameters[6]);
-  fModelTotM1->Add( fModel600mKCoM1,    fParameters[6]);
-  fModelTotM1->Add( fModelIVCCoM1,      fParameters[7]);
-  // fModelTotM1->Add( fModelOVCCoM1,      fParameters[7]);  
-
-  fModelTotM1->Add( fModelTShieldMnM1,  fParameters[11]);
-  fModelTotM1->Add( fModelIVCMnM1,      fParameters[12]);
-
-  fModelTotM1->Add( fModelNDBDM1,      fParameters[9]);  
-  fModelTotM1->Add( fModel2NDBDM1,     fParameters[8]);  
-  fModelTotM1->Add( fModelBiM1,        fParameters[10]);  
-
-  // M2
-  fModelTotM2->Add( fModelFrameThM2,    fParameters[0]);
-  fModelTotM2->Add( fModelTShieldThM2,  fParameters[0]);  
-  fModelTotM2->Add( fModel50mKThM2,     fParameters[0]);
-  fModelTotM2->Add( fModel600mKThM2,    fParameters[0]);
-  fModelTotM2->Add( fModelIVCThM2,      fParameters[1]);
-  fModelTotM2->Add( fModelOVCThM2,      fParameters[1]);
-
-  fModelTotM2->Add( fModelFrameRaM2,    fParameters[2]);
-  fModelTotM2->Add( fModelTShieldRaM2,  fParameters[2]);  
-  fModelTotM2->Add( fModel50mKRaM2,     fParameters[2]);
-  fModelTotM2->Add( fModel600mKRaM2,    fParameters[2]);
-  fModelTotM2->Add( fModelIVCRaM2,      fParameters[3]);
-  // fModelTotM2->Add( fModelOVCRaM2,      fParameters[3]);
-
-  // fModelTotM2->Add( fModelFrameKM2,    fParameters[4]);
-  fModelTotM2->Add( fModelTShieldKM2,  fParameters[4]);
-  fModelTotM2->Add( fModel50mKKM2,     fParameters[4]);
-  fModelTotM2->Add( fModel600mKKM2,    fParameters[4]);
-  fModelTotM2->Add( fModelIVCKM2,      fParameters[5]);
-  // fModelTotM2->Add( fModelOVCKM2,      fParameters[5]); 
-
-  // fModelTotM2->Add( fModelFrameCoM2,    fParameters[6]);
-  fModelTotM2->Add( fModelTShieldCoM2,  fParameters[6]);
-  fModelTotM2->Add( fModel50mKCoM2,     fParameters[6]);
-  fModelTotM2->Add( fModel600mKCoM2,    fParameters[6]);
-  fModelTotM2->Add( fModelIVCCoM2,      fParameters[7]);
-  // fModelTotM2->Add( fModelOVCCoM2,      fParameters[7]);  
-
-  fModelTotM2->Add( fModelTShieldMnM2,  fParameters[11]);
-  fModelTotM2->Add( fModelIVCMnM2,      fParameters[12]);
-
-  fModelTotM2->Add( fModelNDBDM2,      fParameters[9]);  
-  fModelTotM2->Add( fModel2NDBDM2,     fParameters[8]);  
-  fModelTotM2->Add( fModelBiM2,        fParameters[10]);  
-*/
-
 
   /////////////////////////////////////
   //// Many parameters
