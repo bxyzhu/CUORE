@@ -42,8 +42,6 @@ public:
 
 	void LoadPDFs();
 
-	TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource, std::string dSType, int dMult);
-
 	void NormalizePDF(TH1D *h1, int minE, int maxE);
 
 	void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE);
@@ -161,350 +159,313 @@ private:
 	TH1D			*hResidualGausM1;
 	TH1D			*hResidualGausM2;
 
-	// Smeared PDFs M1
+
+
 	TH1D			*fModelDummyM1;
 
-	TH1D			*fModelNDBDM1;
-	TH1D			*fModel2NDBDM1;
-	TH1D			*fModelBiM1;
 
-	TH1D			*fModelFrameThS01M1;
-	TH1D			*fModelFrameThS1M1;
-	TH1D			*fModelFrameThS10M1;
-	TH1D			*fModelFrameThS100M1;
+//////////// Bulk Histograms
+	// Crystal M1 and M2
+	TH1D			*hTeO20nuM1;
+	TH1D			*hTeO22nuM1;
+	TH1D			*hTeO2co60M1;
+	TH1D			*hTeO2k40M1;
+	TH1D			*hTeO2pb210M1;
+	TH1D			*hTeO2po210M1;
+	TH1D			*hTeO2te125M1;
+	TH1D			*hTeO2th232M1;
+	TH1D			*hTeO2th228M1;
+	TH1D			*hTeO2ra226M1;
+	TH1D			*hTeO2rn222M1;
+	TH1D			*hTeO2u238M1;
+	TH1D			*hTeO2th230M1;
+	TH1D			*hTeO2u234M1;
 
-	TH1D			*fModelFrameRaS01M1;
-	TH1D			*fModelFrameRaS1M1;
-	TH1D			*fModelFrameRaS10M1;
-	TH1D			*fModelFrameRaS100M1;
+	TH1D			*hTeO20nuM2;
+	TH1D			*hTeO22nuM2;
+	TH1D			*hTeO2co60M2;
+	TH1D			*hTeO2k40M2;
+	TH1D			*hTeO2pb210M2;
+	TH1D			*hTeO2po210M2;
+	TH1D			*hTeO2te125M2;
+	TH1D			*hTeO2th232M2;
+	TH1D			*hTeO2th228M2;
+	TH1D			*hTeO2ra226M2;
+	TH1D			*hTeO2rn222M2;
+	TH1D			*hTeO2u238M2;
+	TH1D			*hTeO2th230M2;
+	TH1D			*hTeO2u234M2;
 
-	TH1D			*fModelTShieldThS01M1;
-	TH1D			*fModelTShieldThS1M1;
-	TH1D			*fModelTShieldThS10M1;
-	TH1D			*fModelTShieldThS100M1;
+	// Frame M1 and M2
+	TH1D			*hCuFrameco58M1;
+	TH1D			*hCuFrameco60M1;
+	TH1D			*hCuFramecs137M1;
+	TH1D			*hCuFramek40M1;
+	TH1D			*hCuFramemn54M1;
+	TH1D			*hCuFramepb210M1;
+	TH1D			*hCuFrameth232M1;
+	TH1D			*hCuFrameu238M1;
 
+	TH1D			*hCuFrameco58M2;
+	TH1D			*hCuFrameco60M2;
+	TH1D			*hCuFramecs137M2;
+	TH1D			*hCuFramek40M2;
+	TH1D			*hCuFramemn54M2;
+	TH1D			*hCuFramepb210M2;
+	TH1D			*hCuFrameth232M2;
+	TH1D			*hCuFrameu238M2;
 
-	TH1D			*fModelFrameThM1;
-	TH1D			*fModelTShieldThM1;
-	TH1D			*fModel50mKThM1;
-	TH1D			*fModel600mKThM1;	
-	TH1D			*fModelIVCThM1;
-	TH1D			*fModelOVCThM1;
+	// CuBox (TShield) M1 and M2
+	TH1D			*hCuBoxco58M1;
+	TH1D			*hCuBoxco60M1;
+	TH1D			*hCuBoxcs137M1;
+	TH1D			*hCuBoxk40M1;
+	TH1D			*hCuBoxmn54M1;
+	TH1D			*hCuBoxpb210M1;
+	TH1D			*hCuBoxth232M1;
+	TH1D			*hCuBoxu238M1;	
 
-	TH1D			*fModelFrameRaM1;
-	TH1D			*fModelTShieldRaM1;
-	TH1D			*fModel50mKRaM1;
-	TH1D			*fModel600mKRaM1;
-	TH1D			*fModelIVCRaM1;
-	TH1D			*fModelOVCRaM1;
+	TH1D			*hCuBoxco58M2;
+	TH1D			*hCuBoxco60M2;
+	TH1D			*hCuBoxcs137M2;
+	TH1D			*hCuBoxk40M2;
+	TH1D			*hCuBoxmn54M2;
+	TH1D			*hCuBoxpb210M2;
+	TH1D			*hCuBoxth232M2;
+	TH1D			*hCuBoxu238M2;	
 
-	TH1D			*fModelFrameKM1;
-	TH1D			*fModelTShieldKM1;
-	TH1D			*fModel50mKKM1;
-	TH1D			*fModel600mKKM1;
-	TH1D			*fModelIVCKM1;
-	TH1D			*fModelOVCKM1;
+	// 50mK M1 and M2
+	TH1D			*h50mKco58M1;
+	TH1D			*h50mKco60M1;
+	TH1D			*h50mKcs137M1;
+	TH1D			*h50mKk40M1;
+	TH1D			*h50mKmn54M1;
+	TH1D			*h50mKpb210M1;
+	TH1D			*h50mKth232M1;
+	TH1D			*h50mKu238M1;		
 
+	TH1D			*h50mKco58M2;
+	TH1D			*h50mKco60M2;
+	TH1D			*h50mKcs137M2;
+	TH1D			*h50mKk40M2;
+	TH1D			*h50mKmn54M2;
+	TH1D			*h50mKpb210M2;
+	TH1D			*h50mKth232M2;
+	TH1D			*h50mKu238M2;	
 
-	TH1D			*fModelFrameCoM1;
-	TH1D			*fModelTShieldCoM1;
-	TH1D			*fModel50mKCoM1;
-	TH1D			*fModel600mKCoM1;
-	TH1D			*fModelIVCCoM1;
-	TH1D			*fModelOVCCoM1;
+	// 600mK M1 and M2
+	TH1D			*h600mKco60M1;
+	TH1D			*h600mKk40M1;
+	TH1D			*h600mKth232M1;
+	TH1D			*h600mKu238M1;		
 
-	TH1D			*fModelTShieldMnM1;
-	TH1D			*fModelIVCMnM1;
+	TH1D			*h600mKco60M2;
+	TH1D			*h600mKk40M2;
+	TH1D			*h600mKth232M2;
+	TH1D			*h600mKu238M2;	
 
-	TH1D			*fModelCrystalBi2M1;
-	TH1D			*fModelFrameBi2M1;
+	// Roman Lead M1 and M2
+	TH1D			*hPbRombi207M1;
+	TH1D			*hPbRomco60M1;
+	TH1D			*hPbRomcs137M1;
+	TH1D			*hPbRomk40M1;
+	TH1D			*hPbRompb210M1;
+	TH1D			*hPbRomth232M1;
+	TH1D			*hPbRomu238M1;		
 
-	TH1D			*fModelCrystalPtM1;
-	TH1D			*fModelCrystalPbBM1;
-	TH1D			*fModelCrystalPbS01M1;
-	TH1D			*fModelCrystalPbS1M1;
-	TH1D			*fModelCrystalPbS10M1;
-	TH1D			*fModelCrystalPbS100M1;
-	TH1D			*fModelFramePbBM1;
-	TH1D			*fModelFramePbS01M1;
-	TH1D			*fModelFramePbS1M1;
-	TH1D			*fModelFramePbS10M1;
-	TH1D			*fModelFramePbS100M1;
-
-
-	// Modeled PDFs M2
-	TH1D			*fModelDummyM2;
-
-	TH1D			*fModelNDBDM2;
-	TH1D			*fModel2NDBDM2;
-	TH1D			*fModelBiM2;
-
-	TH1D			*fModelFrameThS01M2;
-	TH1D			*fModelFrameThS1M2;
-	TH1D			*fModelFrameThS10M2;
-	TH1D			*fModelFrameThS100M2;
-
-	TH1D			*fModelFrameRaS01M2;
-	TH1D			*fModelFrameRaS1M2;
-	TH1D			*fModelFrameRaS10M2;
-	TH1D			*fModelFrameRaS100M2;
-
-	TH1D			*fModelTShieldThS01M2;
-	TH1D			*fModelTShieldThS1M2;
-	TH1D			*fModelTShieldThS10M2;
-	TH1D			*fModelTShieldThS100M2;
-
-
-	TH1D			*fModelFrameThM2;
-	TH1D			*fModelTShieldThM2;
-	TH1D			*fModel50mKThM2;
-	TH1D			*fModel600mKThM2;	
-	TH1D			*fModelIVCThM2;
-	TH1D			*fModelOVCThM2;
-
-	TH1D			*fModelFrameRaM2;
-	TH1D			*fModelTShieldRaM2;
-	TH1D			*fModel50mKRaM2;
-	TH1D			*fModel600mKRaM2;
-	TH1D			*fModelIVCRaM2;
-	TH1D			*fModelOVCRaM2;
-
-	TH1D			*fModelFrameKM2;
-	TH1D			*fModelTShieldKM2;
-	TH1D			*fModel50mKKM2;
-	TH1D			*fModel600mKKM2;
-	TH1D			*fModelIVCKM2;
-	TH1D			*fModelOVCKM2;
-
-
-	TH1D			*fModelFrameCoM2;
-	TH1D			*fModelTShieldCoM2;
-	TH1D			*fModel50mKCoM2;
-	TH1D			*fModel600mKCoM2;
-	TH1D			*fModelIVCCoM2;
-	TH1D			*fModelOVCCoM2;
-
-	TH1D			*fModelTShieldMnM2;
-	TH1D			*fModelIVCMnM2;
-
-	TH1D			*fModelCrystalBi2M2;
-	TH1D			*fModelFrameBi2M2;
-
-	TH1D			*fModelCrystalPtM2;
-	TH1D			*fModelCrystalPbBM2;
-	TH1D			*fModelCrystalPbS01M2;
-	TH1D			*fModelCrystalPbS1M2;
-	TH1D			*fModelCrystalPbS10M2;
-	TH1D			*fModelCrystalPbS100M2;
-	TH1D			*fModelFramePbBM2;
-	TH1D			*fModelFramePbS01M2;
-	TH1D			*fModelFramePbS1M2;
-	TH1D			*fModelFramePbS10M2;
-	TH1D			*fModelFramePbS100M2;
+	TH1D			*hPbRombi207M2;
+	TH1D			*hPbRomco60M2;
+	TH1D			*hPbRomcs137M2;
+	TH1D			*hPbRomk40M2;
+	TH1D			*hPbRompb210M2;
+	TH1D			*hPbRomth232M2;
+	TH1D			*hPbRomu238M2;		
 
 
+	// Main Bath M1 and M2
+	TH1D			*hMBco60M1;
+	TH1D			*hMBk40M1;
+	TH1D			*hMBth232M1;
+	TH1D			*hMBu238M1;		
 
-	// M1 Alphas
-	TH1D			*fModelCrystalPt190BM1;
-	TH1D			*fModelCrystalPt190S01M1;
-	TH1D			*fModelCrystalPt190S1M1;
-	TH1D			*fModelCrystalPt190S10M1;
-	TH1D			*fModelCrystalPt190S100M1;
+	TH1D			*hMBco60M2;
+	TH1D			*hMBk40M2;
+	TH1D			*hMBth232M2;
+	TH1D			*hMBu238M2;	
 
-	TH1D			*fModelCrystalPb210BM1;
-	TH1D			*fModelCrystalPb210S01M1;
-	TH1D			*fModelCrystalPb210S1M1;
-	TH1D			*fModelCrystalPb210S10M1;
-	TH1D			*fModelCrystalPb210S100M1;
+	// IVC M1 and M2
+	TH1D			*hIVCco60M1;
+	TH1D			*hIVCk40M1;
+	TH1D			*hIVCth232M1;
+	TH1D			*hIVCu238M1;		
 
-	TH1D			*fModelCrystalRa226BM1;
-	TH1D			*fModelCrystalRa226S01M1;
-	TH1D			*fModelCrystalRa226S1M1;
-	TH1D			*fModelCrystalRa226S10M1;
-	TH1D			*fModelCrystalRa226S100M1;
+	TH1D			*hIVCco60M2;
+	TH1D			*hIVCk40M2;
+	TH1D			*hIVCth232M2;
+	TH1D			*hIVCu238M2;	
 
-	TH1D			*fModelFramePb210BM1;
-	TH1D			*fModelFramePb210S01M1;
-	TH1D			*fModelFramePb210S1M1;
-	TH1D			*fModelFramePb210S10M1;
-	TH1D			*fModelFramePb210S100M1;
+	// OVC M1 and M2
+	TH1D			*hOVCco60M1;
+	TH1D			*hOVCk40M1;
+	TH1D			*hOVCth232M1;
+	TH1D			*hOVCu238M1;		
 
-	// TH1D			*fModelFrameRa226BM1;
-	TH1D			*fModelFrameRa226S01M1;
-	TH1D			*fModelFrameRa226S1M1;
-	TH1D			*fModelFrameRa226S10M1;
-	TH1D			*fModelFrameRa226S100M1;
-
-	// M2 Alphas
-	TH1D			*fModelCrystalPt190BM2;
-	TH1D			*fModelCrystalPt190S01M2;
-	TH1D			*fModelCrystalPt190S1M2;
-	TH1D			*fModelCrystalPt190S10M2;
-	TH1D			*fModelCrystalPt190S100M2;
-
-	TH1D			*fModelCrystalPb210BM2;
-	TH1D			*fModelCrystalPb210S01M2;
-	TH1D			*fModelCrystalPb210S1M2;
-	TH1D			*fModelCrystalPb210S10M2;
-	TH1D			*fModelCrystalPb210S100M2;
-
-	TH1D			*fModelCrystalRa226BM2;
-	TH1D			*fModelCrystalRa226S01M2;
-	TH1D			*fModelCrystalRa226S1M2;
-	TH1D			*fModelCrystalRa226S10M2;
-	TH1D			*fModelCrystalRa226S100M2;
-
-	TH1D			*fModelFramePb210BM2;
-	TH1D			*fModelFramePb210S01M2;
-	TH1D			*fModelFramePb210S1M2;
-	TH1D			*fModelFramePb210S10M2;
-	TH1D			*fModelFramePb210S100M2;
-
-	// TH1D			*fModelFrameRa226BM2;
-	TH1D			*fModelFrameRa226S01M2;
-	TH1D			*fModelFrameRa226S1M2;
-	TH1D			*fModelFrameRa226S10M2;
-	TH1D			*fModelFrameRa226S100M2;
+	TH1D			*hOVCco60M2;
+	TH1D			*hOVCk40M2;
+	TH1D			*hOVCth232M2;
+	TH1D			*hOVCu238M2;	
 
 
-	// Adaptive binned histograms
+//////// Adaptive binned histograms
+	// Crystal M1 and M2
+	TH1D			*hAdapTeO20nuM1;
+	TH1D			*hAdapTeO22nuM1;
+	TH1D			*hAdapTeO2co60M1;
+	TH1D			*hAdapTeO2k40M1;
+	TH1D			*hAdapTeO2pb210M1;
+	TH1D			*hAdapTeO2po210M1;
+	TH1D			*hAdapTeO2te125M1;
+	TH1D			*hAdapTeO2th232M1;
+	TH1D			*hAdapTeO2th228M1;
+	TH1D			*hAdapTeO2ra226M1;
+	TH1D			*hAdapTeO2rn222M1;
+	TH1D			*hAdapTeO2u238M1;
+	TH1D			*hAdapTeO2th230M1;
+	TH1D			*hAdapTeO2u234M1;
 
-	TH1D *fAdapFrameThM1;
-	TH1D *fAdapTShieldThM1;
-	TH1D *fAdap50mKThM1;
-	TH1D *fAdap600mKThM1;
-	TH1D *fAdapIVCThM1;
-	TH1D *fAdapOVCThM1;
+	TH1D			*hAdapTeO20nuM2;
+	TH1D			*hAdapTeO22nuM2;
+	TH1D			*hAdapTeO2co60M2;
+	TH1D			*hAdapTeO2k40M2;
+	TH1D			*hAdapTeO2pb210M2;
+	TH1D			*hAdapTeO2po210M2;
+	TH1D			*hAdapTeO2te125M2;
+	TH1D			*hAdapTeO2th232M2;
+	TH1D			*hAdapTeO2th228M2;
+	TH1D			*hAdapTeO2ra226M2;
+	TH1D			*hAdapTeO2rn222M2;
+	TH1D			*hAdapTeO2u238M2;
+	TH1D			*hAdapTeO2th230M2;
+	TH1D			*hAdapTeO2u234M2;
 
-	TH1D *fAdapFrameRaM1;
-	TH1D *fAdapTShieldRaM1;
-	TH1D *fAdap50mKRaM1;
-	TH1D *fAdap600mKRaM1;
-	TH1D *fAdapIVCRaM1;
-	TH1D *fAdapOVCRaM1;
-	
-	TH1D *fAdapFrameKM1;
-	TH1D *fAdapTShieldKM1;
-	TH1D *fAdap50mKKM1;
-	TH1D *fAdap600mKKM1;
-	TH1D *fAdapIVCKM1;
-	TH1D *fAdapOVCKM1;
-	
-	TH1D *fAdapFrameCoM1;
-	TH1D *fAdapTShieldCoM1;
-	TH1D *fAdap50mKCoM1;
-	TH1D *fAdap600mKCoM1;
-	TH1D *fAdapIVCCoM1;
-	TH1D *fAdapOVCCoM1;
-	
-	TH1D *fAdapTShieldMnM1;
-	TH1D *fAdapIVCMnM1;
-	
-	TH1D *fAdapCrystalBi2M1;
-	TH1D *fAdapFrameBi2M1;
+	// Frame M1 and M2
+	TH1D			*hAdapCuFrameco58M1;
+	TH1D			*hAdapCuFrameco60M1;
+	TH1D			*hAdapCuFramecs137M1;
+	TH1D			*hAdapCuFramek40M1;
+	TH1D			*hAdapCuFramemn54M1;
+	TH1D			*hAdapCuFramepb210M1;
+	TH1D			*hAdapCuFrameth232M1;
+	TH1D			*hAdapCuFrameu238M1;
 
-	TH1D *fAdapNDBDM1;
-	TH1D *fAdap2NDBDM1;
-	TH1D *fAdapBiM1;
+	TH1D			*hAdapCuFrameco58M2;
+	TH1D			*hAdapCuFrameco60M2;
+	TH1D			*hAdapCuFramecs137M2;
+	TH1D			*hAdapCuFramek40M2;
+	TH1D			*hAdapCuFramemn54M2;
+	TH1D			*hAdapCuFramepb210M2;
+	TH1D			*hAdapCuFrameth232M2;
+	TH1D			*hAdapCuFrameu238M2;
+
+	// CuBox (TShield) M1 and M2
+	TH1D			*hAdapCuBoxco58M1;
+	TH1D			*hAdapCuBoxco60M1;
+	TH1D			*hAdapCuBoxcs137M1;
+	TH1D			*hAdapCuBoxk40M1;
+	TH1D			*hAdapCuBoxmn54M1;
+	TH1D			*hAdapCuBoxpb210M1;
+	TH1D			*hAdapCuBoxth232M1;
+	TH1D			*hAdapCuBoxu238M1;	
+
+	TH1D			*hAdapCuBoxco58M2;
+	TH1D			*hAdapCuBoxco60M2;
+	TH1D			*hAdapCuBoxcs137M2;
+	TH1D			*hAdapCuBoxk40M2;
+	TH1D			*hAdapCuBoxmn54M2;
+	TH1D			*hAdapCuBoxpb210M2;
+	TH1D			*hAdapCuBoxth232M2;
+	TH1D			*hAdapCuBoxu238M2;	
+
+	// 50mK M1 and M2
+	TH1D			*hAdap50mKco58M1;
+	TH1D			*hAdap50mKco60M1;
+	TH1D			*hAdap50mKcs137M1;
+	TH1D			*hAdap50mKk40M1;
+	TH1D			*hAdap50mKmn54M1;
+	TH1D			*hAdap50mKpb210M1;
+	TH1D			*hAdap50mKth232M1;
+	TH1D			*hAdap50mKu238M1;		
+
+	TH1D			*hAdap50mKco58M2;
+	TH1D			*hAdap50mKco60M2;
+	TH1D			*hAdap50mKcs137M2;
+	TH1D			*hAdap50mKk40M2;
+	TH1D			*hAdap50mKmn54M2;
+	TH1D			*hAdap50mKpb210M2;
+	TH1D			*hAdap50mKth232M2;
+	TH1D			*hAdap50mKu238M2;	
+
+	// 600mK M1 and M2
+	TH1D			*hAdap600mKco60M1;
+	TH1D			*hAdap600mKk40M1;
+	TH1D			*hAdap600mKth232M1;
+	TH1D			*hAdap600mKu238M1;		
+
+	TH1D			*hAdap600mKco60M2;
+	TH1D			*hAdap600mKk40M2;
+	TH1D			*hAdap600mKth232M2;
+	TH1D			*hAdap600mKu238M2;	
+
+	// Roman Lead M1 and M2
+	TH1D			*hAdapPbRombi207M1;
+	TH1D			*hAdapPbRomco60M1;
+	TH1D			*hAdapPbRomcs137M1;
+	TH1D			*hAdapPbRomk40M1;
+	TH1D			*hAdapPbRompb210M1;
+	TH1D			*hAdapPbRomth232M1;
+	TH1D			*hAdapPbRomu238M1;		
+
+	TH1D			*hAdapPbRombi207M2;
+	TH1D			*hAdapPbRomco60M2;
+	TH1D			*hAdapPbRomcs137M2;
+	TH1D			*hAdapPbRomk40M2;
+	TH1D			*hAdapPbRompb210M2;
+	TH1D			*hAdapPbRomth232M2;
+	TH1D			*hAdapPbRomu238M2;		
 
 
+	// Main Bath M1 and M2
+	TH1D			*hAdapMBco60M1;
+	TH1D			*hAdapMBk40M1;
+	TH1D			*hAdapMBth232M1;
+	TH1D			*hAdapMBu238M1;		
 
-	TH1D *fAdapFrameThM2;
-	TH1D *fAdapTShieldThM2;
-	TH1D *fAdap50mKThM2;
-	TH1D *fAdap600mKThM2;
-	TH1D *fAdapIVCThM2;
-	TH1D *fAdapOVCThM2;
+	TH1D			*hAdapMBco60M2;
+	TH1D			*hAdapMBk40M2;
+	TH1D			*hAdapMBth232M2;
+	TH1D			*hAdapMBu238M2;	
 
-	TH1D *fAdapFrameRaM2;
-	TH1D *fAdapTShieldRaM2;
-	TH1D *fAdap50mKRaM2;
-	TH1D *fAdap600mKRaM2;
-	TH1D *fAdapIVCRaM2;
-	TH1D *fAdapOVCRaM2;
-	
-	TH1D *fAdapFrameKM2;
-	TH1D *fAdapTShieldKM2;
-	TH1D *fAdap50mKKM2;
-	TH1D *fAdap600mKKM2;
-	TH1D *fAdapIVCKM2;
-	TH1D *fAdapOVCKM2;
-	
-	TH1D *fAdapFrameCoM2;
-	TH1D *fAdapTShieldCoM2;
-	TH1D *fAdap50mKCoM2;
-	TH1D *fAdap600mKCoM2;
-	TH1D *fAdapIVCCoM2;
-	TH1D *fAdapOVCCoM2;
-	
-	TH1D *fAdapTShieldMnM2;
-	TH1D *fAdapIVCMnM2;
-	
-	TH1D *fAdapCrystalBi2M2;
-	TH1D *fAdapFrameBi2M2;
+	// IVC M1 and M2
+	TH1D			*hAdapIVCco60M1;
+	TH1D			*hAdapIVCk40M1;
+	TH1D			*hAdapIVCth232M1;
+	TH1D			*hAdapIVCu238M1;		
 
+	TH1D			*hAdapIVCco60M2;
+	TH1D			*hAdapIVCk40M2;
+	TH1D			*hAdapIVCth232M2;
+	TH1D			*hAdapIVCu238M2;	
 
-	// M1 Alphas
-	TH1D			*fAdapCrystalPt190BM1;
-	TH1D			*fAdapCrystalPt190S01M1;
-	TH1D			*fAdapCrystalPt190S1M1;
-	TH1D			*fAdapCrystalPt190S10M1;
-	TH1D			*fAdapCrystalPt190S100M1;
+	// OVC M1 and M2
+	TH1D			*hAdapOVCco60M1;
+	TH1D			*hAdapOVCk40M1;
+	TH1D			*hAdapOVCth232M1;
+	TH1D			*hAdapOVCu238M1;		
 
-	TH1D			*fAdapCrystalPb210BM1;
-	TH1D			*fAdapCrystalPb210S01M1;
-	TH1D			*fAdapCrystalPb210S1M1;
-	TH1D			*fAdapCrystalPb210S10M1;
-	TH1D			*fAdapCrystalPb210S100M1;
-
-	TH1D			*fAdapCrystalRa226BM1;
-	TH1D			*fAdapCrystalRa226S01M1;
-	TH1D			*fAdapCrystalRa226S1M1;
-	TH1D			*fAdapCrystalRa226S10M1;
-	TH1D			*fAdapCrystalRa226S100M1;
-
-	TH1D			*fAdapFramePb210BM1;
-	TH1D			*fAdapFramePb210S01M1;
-	TH1D			*fAdapFramePb210S1M1;
-	TH1D			*fAdapFramePb210S10M1;
-	TH1D			*fAdapFramePb210S100M1;
-
-	// TH1D			*fAdapFrameRa226BM1;
-	TH1D			*fAdapFrameRa226S01M1;
-	TH1D			*fAdapFrameRa226S1M1;
-	TH1D			*fAdapFrameRa226S10M1;
-	TH1D			*fAdapFrameRa226S100M1;
-
-	// M2 Alphas
-	TH1D			*fAdapCrystalPt190BM2;
-	TH1D			*fAdapCrystalPt190S01M2;
-	TH1D			*fAdapCrystalPt190S1M2;
-	TH1D			*fAdapCrystalPt190S10M2;
-	TH1D			*fAdapCrystalPt190S100M2;
-
-	TH1D			*fAdapCrystalPb210BM2;
-	TH1D			*fAdapCrystalPb210S01M2;
-	TH1D			*fAdapCrystalPb210S1M2;
-	TH1D			*fAdapCrystalPb210S10M2;
-	TH1D			*fAdapCrystalPb210S100M2;
-
-	TH1D			*fAdapCrystalRa226BM2;
-	TH1D			*fAdapCrystalRa226S01M2;
-	TH1D			*fAdapCrystalRa226S1M2;
-	TH1D			*fAdapCrystalRa226S10M2;
-	TH1D			*fAdapCrystalRa226S100M2;
-
-	TH1D			*fAdapFramePb210BM2;
-	TH1D			*fAdapFramePb210S01M2;
-	TH1D			*fAdapFramePb210S1M2;
-	TH1D			*fAdapFramePb210S10M2;
-	TH1D			*fAdapFramePb210S100M2;
-
-	// TH1D			*fAdapFrameRa226BM2;
-	TH1D			*fAdapFrameRa226S01M2;
-	TH1D			*fAdapFrameRa226S1M2;
-	TH1D			*fAdapFrameRa226S10M2;
-	TH1D			*fAdapFrameRa226S100M2;
+	TH1D			*hAdapOVCco60M2;
+	TH1D			*hAdapOVCk40M2;
+	TH1D			*hAdapOVCth232M2;
+	TH1D			*hAdapOVCu238M2;	
 
 
 
