@@ -77,7 +77,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
-  dDataDir =  "/Users/brian/macros/Simulations/Bkg/Unsmeared/";
+  dDataDir =  "/Users/brian/macros/Simulations/Production/";
   dDataIntegral = 0;
   bAdaptiveBinning = false; // Start off false, can be turned on with DoTheFitAdaptive()
 
@@ -1064,7 +1064,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotPbM1->Draw("SAME");
 
 
-  // Many Parameters
+/*
   TPaveText *pt1 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
   pt1->AddText(Form("Fit Range (M1): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt1->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
@@ -1079,6 +1079,8 @@ bool TBackgroundModel::DoTheFit()
   pt1->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
   pt1->AddText(Form("2NDBD: %0.2E#pm%0.2E -- Bi-210: %0.2E#pm%0.2E" , fParameters[8], fParError[8], fParameters[25], fParError[25] ));
   pt1->Draw();
+*/
+
 
   TLegend *legfit1 = new TLegend(0.8,0.8,0.97,0.97);
   legfit1->AddEntry(fModelTotM1, "Total PDF", "l");
@@ -1148,7 +1150,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotPbM2->Draw("SAME");
   fTotCorrection->Draw("SAME");    
 
-  // Many Parameters
+/*
   TPaveText *pt2 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
   pt2->AddText(Form("Fit Range (M2): %.0f to %.0f keV -- #chi^{2}/NDF: %0.3f", dFitMin, dFitMax, (GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters)) ));
   pt2->AddText(Form("Frame Th: %0.2E#pm%0.2E --- TShield Th: %0.2E#pm%0.2E", fParameters[0], fParError[0], fParameters[1], fParError[1] ));
@@ -1163,6 +1165,8 @@ bool TBackgroundModel::DoTheFit()
   pt2->AddText(Form("Close Mn-54: %0.2E#pm%0.2E --- Far Mn-54: %0.2E#pm%0.2E", fParameters[11], fParError[11], fParameters[12], fParError[12] ));
   pt2->AddText(Form("2NDBD: %0.2E#pm%0.2E -- Bi-210: %0.2E#pm%0.2E" , fParameters[8], fParError[8], fParameters[25], fParError[25] ));
   pt2->Draw();
+*/
+
 
 
   TLegend *legfit2 = new TLegend(0.8,0.8,0.97,0.97);
@@ -2088,86 +2092,150 @@ void TBackgroundModel::UpdateModel()
   /////////////////////////////////////
   //// Many parameters
   ////////////////////////////////////
-
   // M1
-  fModelTotM1->Add( fModelFrameThM1,    fParameters[0]);
-  fModelTotM1->Add( fModelTShieldThM1,  fParameters[1]);  
-  fModelTotM1->Add( fModel50mKThM1,     fParameters[13]);
-  fModelTotM1->Add( fModel600mKThM1,    fParameters[14]);
-  fModelTotM1->Add( fModelIVCThM1,      fParameters[15]);
-  fModelTotM1->Add( fModelOVCThM1,      fParameters[16]);
+  fModelTotM1->Add( hTeO20nuM1,      fParameters[0]);
+  fModelTotM1->Add( hTeO22nuM1,      fParameters[1]);
+  fModelTotM1->Add( hTeO2co60M1,     fParameters[2]);
+  fModelTotM1->Add( hTeO2k40M1,      fParameters[3]);
+  fModelTotM1->Add( hTeO2pb210M1,    fParameters[4]);
+  fModelTotM1->Add( hTeO2po210M1,    fParameters[5]);
+  fModelTotM1->Add( hTeO2te125M1,    fParameters[6]);
+  fModelTotM1->Add( hTeO2th232M1,    fParameters[7]);
+  fModelTotM1->Add( hTeO2th228M1,    fParameters[8]);
+  fModelTotM1->Add( hTeO2ra226M1,    fParameters[9]);
+  fModelTotM1->Add( hTeO2rn222M1,    fParameters[10]);
+  fModelTotM1->Add( hTeO2u238M1,     fParameters[11]);
+  fModelTotM1->Add( hTeO2th230M1,    fParameters[12]);
+  fModelTotM1->Add( hTeO2u234M1,     fParameters[13]);
 
-  fModelTotM1->Add( fModelFrameRaM1,    fParameters[2]);
-  fModelTotM1->Add( fModelTShieldRaM1,  fParameters[3]);  
-  fModelTotM1->Add( fModel50mKRaM1,     fParameters[17]);
-  fModelTotM1->Add( fModel600mKRaM1,    fParameters[18]);
-  fModelTotM1->Add( fModelIVCRaM1,      fParameters[19]);
-  fModelTotM1->Add( fModelOVCRaM1,      fParameters[20]);
+  fModelTotM1->Add( hCuFrameco58M1,  fParameters[14]);
+  fModelTotM1->Add( hCuFrameco60M1,  fParameters[15]);
+  fModelTotM1->Add( hCuFramecs137M1, fParameters[16]);
+  fModelTotM1->Add( hCuFramek40M1,   fParameters[17]);
+  fModelTotM1->Add( hCuFramemn54M1,  fParameters[18]);
+  fModelTotM1->Add( hCuFramepb210M1, fParameters[19]);
+  fModelTotM1->Add( hCuFrameth232M1, fParameters[20]);
+  fModelTotM1->Add( hCuFrameu238M1,  fParameters[21]);
 
-  fModelTotM1->Add( fModelFrameKM1,     fParameters[4]);
-  fModelTotM1->Add( fModelTShieldKM1,   fParameters[4]);
-  fModelTotM1->Add( fModel50mKKM1,      fParameters[4]);
-  fModelTotM1->Add( fModel600mKKM1,     fParameters[4]);
-  fModelTotM1->Add( fModelIVCKM1,       fParameters[5]);
-  fModelTotM1->Add( fModelOVCKM1,       fParameters[5]); 
+  fModelTotM1->Add( hCuBoxco58M1,    fParameters[22]);
+  fModelTotM1->Add( hCuBoxco60M1,    fParameters[23]);
+  fModelTotM1->Add( hCuBoxcs137M1,   fParameters[24]);
+  fModelTotM1->Add( hCuBoxk40M1,     fParameters[25]);
+  fModelTotM1->Add( hCuBoxmn54M1,    fParameters[26]);
+  fModelTotM1->Add( hCuBoxpb210M1,   fParameters[27]);
+  fModelTotM1->Add( hCuBoxth232M1,   fParameters[28]);
+  fModelTotM1->Add( hCuBoxu238M1,    fParameters[29]);
 
-  fModelTotM1->Add( fModelFrameCoM1,    fParameters[6]);
-  fModelTotM1->Add( fModelTShieldCoM1,  fParameters[7]);
-  fModelTotM1->Add( fModel50mKCoM1,     fParameters[21]);
-  fModelTotM1->Add( fModel600mKCoM1,    fParameters[22]);
-  fModelTotM1->Add( fModelIVCCoM1,      fParameters[23]);
-  fModelTotM1->Add( fModelOVCCoM1,      fParameters[24]);  
+  fModelTotM1->Add( h50mKco58M1,     fParameters[30]);
+  fModelTotM1->Add( h50mKco60M1,     fParameters[31]);
+  fModelTotM1->Add( h50mKcs137M1,    fParameters[32]);
+  fModelTotM1->Add( h50mKk40M1,      fParameters[33]);
+  fModelTotM1->Add( h50mKmn54M1,     fParameters[34]);
+  fModelTotM1->Add( h50mKpb210M1,    fParameters[35]);
+  fModelTotM1->Add( h50mKth232M1,    fParameters[36]);
+  fModelTotM1->Add( h50mKu238M1,     fParameters[37]);
 
-  fModelTotM1->Add( fModelTShieldMnM1,  fParameters[11]);
-  fModelTotM1->Add( fModelIVCMnM1,      fParameters[12]);
+  fModelTotM1->Add( h600mKco60M1,    fParameters[38]);
+  fModelTotM1->Add( h600mKk40M1,     fParameters[39]);
+  fModelTotM1->Add( h600mKth232M1,   fParameters[40]);
+  fModelTotM1->Add( h600mKu238M1,    fParameters[41]);
 
-  fModelTotM1->Add( fModelNDBDM1,      fParameters[9]);  
-  fModelTotM1->Add( fModel2NDBDM1,     fParameters[8]);  
-  fModelTotM1->Add( fModelBiM1,        fParameters[10]);  
+  fModelTotM1->Add( hPbRombi207M1,   fParameters[42]);
+  fModelTotM1->Add( hPbRomco60M1,    fParameters[43]);
+  fModelTotM1->Add( hPbRomcs137M1,   fParameters[44]);
+  fModelTotM1->Add( hPbRomk40M1,     fParameters[45]);
+  fModelTotM1->Add( hPbRompb210M1,   fParameters[46]);
+  fModelTotM1->Add( hPbRomth232M1,   fParameters[47]);
+  fModelTotM1->Add( hPbRomu238M1,    fParameters[48]);
 
-  fModelTotM1->Add( fModelCrystalBi2M1, fParameters[25]);  
+  fModelTotM1->Add( hMBco60M1,       fParameters[49]);
+  fModelTotM1->Add( hMBk40M1,        fParameters[50]);
+  fModelTotM1->Add( hMBth232M1,      fParameters[51]);
+  fModelTotM1->Add( hMBu238M1,       fParameters[52]);
 
-  // M2
-  fModelTotM2->Add( fModelFrameThM2,    fParameters[0]);
-  fModelTotM2->Add( fModelTShieldThM2,  fParameters[1]);  
-  fModelTotM2->Add( fModel50mKThM2,     fParameters[13]);
-  fModelTotM2->Add( fModel600mKThM2,    fParameters[14]);
-  fModelTotM2->Add( fModelIVCThM2,      fParameters[15]);
-  fModelTotM2->Add( fModelOVCThM2,      fParameters[16]);
+  fModelTotM1->Add( hIVCco60M1,      fParameters[53]);
+  fModelTotM1->Add( hIVCk40M1,       fParameters[54]);
+  fModelTotM1->Add( hIVCth232M1,     fParameters[55]);
+  fModelTotM1->Add( hIVCu238M1,      fParameters[56]);
 
-  fModelTotM2->Add( fModelFrameRaM2,    fParameters[2]);
-  fModelTotM2->Add( fModelTShieldRaM2,  fParameters[3]);  
-  fModelTotM2->Add( fModel50mKRaM2,     fParameters[17]);
-  fModelTotM2->Add( fModel600mKRaM2,    fParameters[18]);
-  fModelTotM2->Add( fModelIVCRaM2,      fParameters[19]);
-  fModelTotM2->Add( fModelOVCRaM2,      fParameters[20]);
+  fModelTotM1->Add( hOVCco60M1,      fParameters[57]);
+  fModelTotM1->Add( hOVCk40M1,       fParameters[58]);
+  fModelTotM1->Add( hOVCth232M1,     fParameters[59]);
+  fModelTotM1->Add( hOVCu238M1,      fParameters[60]);
 
-  fModelTotM2->Add( fModelFrameKM2,     fParameters[4]);
-  fModelTotM2->Add( fModelTShieldKM2,   fParameters[4]);
-  fModelTotM2->Add( fModel50mKKM2,      fParameters[4]);
-  fModelTotM2->Add( fModel600mKKM2,     fParameters[4]);
-  fModelTotM2->Add( fModelIVCKM2,       fParameters[5]);
-  fModelTotM2->Add( fModelOVCKM2,       fParameters[5]); 
+// M2
+  fModelTotM2->Add( hTeO20nuM2,      fParameters[0]);
+  fModelTotM2->Add( hTeO22nuM2,      fParameters[1]);
+  fModelTotM2->Add( hTeO2co60M2,     fParameters[2]);
+  fModelTotM2->Add( hTeO2k40M2,      fParameters[3]);
+  fModelTotM2->Add( hTeO2pb210M2,    fParameters[4]);
+  fModelTotM2->Add( hTeO2po210M2,    fParameters[5]);
+  fModelTotM2->Add( hTeO2te125M2,    fParameters[6]);
+  fModelTotM2->Add( hTeO2th232M2,    fParameters[7]);
+  fModelTotM2->Add( hTeO2th228M2,    fParameters[8]);
+  fModelTotM2->Add( hTeO2ra226M2,    fParameters[9]);
+  fModelTotM2->Add( hTeO2rn222M2,    fParameters[10]);
+  fModelTotM2->Add( hTeO2u238M2,     fParameters[11]);
+  fModelTotM2->Add( hTeO2th230M2,    fParameters[12]);
+  fModelTotM2->Add( hTeO2u234M2,     fParameters[13]);
 
-  fModelTotM2->Add( fModelFrameCoM2,    fParameters[6]);
-  fModelTotM2->Add( fModelTShieldCoM2,  fParameters[7]);
-  fModelTotM2->Add( fModel50mKCoM2,     fParameters[21]);
-  fModelTotM2->Add( fModel600mKCoM2,    fParameters[22]);
-  fModelTotM2->Add( fModelIVCCoM2,      fParameters[23]);
-  fModelTotM2->Add( fModelOVCCoM2,      fParameters[24]);  
+  fModelTotM2->Add( hCuFrameco58M2,  fParameters[14]);
+  fModelTotM2->Add( hCuFrameco60M2,  fParameters[15]);
+  fModelTotM2->Add( hCuFramecs137M2, fParameters[16]);
+  fModelTotM2->Add( hCuFramek40M2,   fParameters[17]);
+  fModelTotM2->Add( hCuFramemn54M2,  fParameters[18]);
+  fModelTotM2->Add( hCuFramepb210M2, fParameters[19]);
+  fModelTotM2->Add( hCuFrameth232M2, fParameters[20]);
+  fModelTotM2->Add( hCuFrameu238M2,  fParameters[21]);
 
-  fModelTotM2->Add( fModelTShieldMnM2,  fParameters[11]);
-  fModelTotM2->Add( fModelIVCMnM2,      fParameters[12]);
+  fModelTotM2->Add( hCuBoxco58M2,    fParameters[22]);
+  fModelTotM2->Add( hCuBoxco60M2,    fParameters[23]);
+  fModelTotM2->Add( hCuBoxcs137M2,   fParameters[24]);
+  fModelTotM2->Add( hCuBoxk40M2,     fParameters[25]);
+  fModelTotM2->Add( hCuBoxmn54M2,    fParameters[26]);
+  fModelTotM2->Add( hCuBoxpb210M2,   fParameters[27]);
+  fModelTotM2->Add( hCuBoxth232M2,   fParameters[28]);
+  fModelTotM2->Add( hCuBoxu238M2,    fParameters[29]);
 
-  fModelTotM2->Add( fModelNDBDM2,      fParameters[9]);  
-  fModelTotM2->Add( fModel2NDBDM2,     fParameters[8]);  
-  fModelTotM2->Add( fModelBiM2,        fParameters[10]);  
+  fModelTotM2->Add( h50mKco58M2,     fParameters[30]);
+  fModelTotM2->Add( h50mKco60M2,     fParameters[31]);
+  fModelTotM2->Add( h50mKcs137M2,    fParameters[32]);
+  fModelTotM2->Add( h50mKk40M2,      fParameters[33]);
+  fModelTotM2->Add( h50mKmn54M2,     fParameters[34]);
+  fModelTotM2->Add( h50mKpb210M2,    fParameters[35]);
+  fModelTotM2->Add( h50mKth232M2,    fParameters[36]);
+  fModelTotM2->Add( h50mKu238M2,     fParameters[37]);
 
-  fModelTotM1->Add( fModelCrystalBi2M2 , fParameters[25]);  
+  fModelTotM2->Add( h600mKco60M2,    fParameters[38]);
+  fModelTotM2->Add( h600mKk40M2,     fParameters[39]);
+  fModelTotM2->Add( h600mKth232M2,   fParameters[40]);
+  fModelTotM2->Add( h600mKu238M2,    fParameters[41]);
 
+  fModelTotM2->Add( hPbRombi207M2,   fParameters[42]);
+  fModelTotM2->Add( hPbRomco60M2,    fParameters[43]);
+  fModelTotM2->Add( hPbRomcs137M2,   fParameters[44]);
+  fModelTotM2->Add( hPbRomk40M2,     fParameters[45]);
+  fModelTotM2->Add( hPbRompb210M2,   fParameters[46]);
+  fModelTotM2->Add( hPbRomth232M2,   fParameters[47]);
+  fModelTotM2->Add( hPbRomu238M2,    fParameters[48]);
+
+  fModelTotM2->Add( hMBco60M2,       fParameters[49]);
+  fModelTotM2->Add( hMBk40M2,        fParameters[50]);
+  fModelTotM2->Add( hMBth232M2,      fParameters[51]);
+  fModelTotM2->Add( hMBu238M2,       fParameters[52]);
+
+  fModelTotM2->Add( hIVCco60M2,      fParameters[53]);
+  fModelTotM2->Add( hIVCk40M2,       fParameters[54]);
+  fModelTotM2->Add( hIVCth232M2,     fParameters[55]);
+  fModelTotM2->Add( hIVCu238M2,      fParameters[56]);
+
+  fModelTotM2->Add( hOVCco60M2,      fParameters[57]);
+  fModelTotM2->Add( hOVCk40M2,       fParameters[58]);
+  fModelTotM2->Add( hOVCth232M2,     fParameters[59]);
+  fModelTotM2->Add( hOVCu238M2,      fParameters[60]);  
 
   // Adding on correction for M2.. (just the M1 spectrum)
-  fModelTotM2->Add( fCorrectionM2, 180197*(1-TMath::Exp(-2*0.05*0.1)) );
+  // fModelTotM2->Add( fCorrectionM2, 180197*(1-TMath::Exp(-2*0.05*0.1)) );
 
 
 
@@ -2175,7 +2243,7 @@ void TBackgroundModel::UpdateModel()
 
 void TBackgroundModel::UpdateModelAdaptive()
 {
-  if(fModelTotM1 == NULL) 
+  if(fModelTotAdapM1 == NULL) 
   {
     cout << "Model Histogram Not Created" << endl;
     return;
@@ -2196,78 +2264,147 @@ void TBackgroundModel::UpdateModelAdaptive()
   /////////////////////////////////////
   //// Adaptive Binning parameters
   ////////////////////////////////////
-
   // M1
-  fModelTotAdapM1->Add( fAdapFrameThM1,    fParameters[0]);
-  fModelTotAdapM1->Add( fAdapTShieldThM1,  fParameters[1]);  
-  fModelTotAdapM1->Add( fAdap50mKThM1,     fParameters[13]);
-  fModelTotAdapM1->Add( fAdap600mKThM1,    fParameters[14]);
-  fModelTotAdapM1->Add( fAdapIVCThM1,      fParameters[15]);
-  fModelTotAdapM1->Add( fAdapOVCThM1,      fParameters[16]);
+  fModelTotAdapM1->Add( hAdapTeO20nuM1,      fParameters[0]);
+  fModelTotAdapM1->Add( hAdapTeO22nuM1,      fParameters[1]);
+  fModelTotAdapM1->Add( hAdapTeO2co60M1,     fParameters[2]);
+  fModelTotAdapM1->Add( hAdapTeO2k40M1,      fParameters[3]);
+  fModelTotAdapM1->Add( hAdapTeO2pb210M1,    fParameters[4]);
+  fModelTotAdapM1->Add( hAdapTeO2po210M1,    fParameters[5]);
+  fModelTotAdapM1->Add( hAdapTeO2te125M1,    fParameters[6]);
+  fModelTotAdapM1->Add( hAdapTeO2th232M1,    fParameters[7]);
+  fModelTotAdapM1->Add( hAdapTeO2th228M1,    fParameters[8]);
+  fModelTotAdapM1->Add( hAdapTeO2ra226M1,    fParameters[9]);
+  fModelTotAdapM1->Add( hAdapTeO2rn222M1,    fParameters[10]);
+  fModelTotAdapM1->Add( hAdapTeO2u238M1,     fParameters[11]);
+  fModelTotAdapM1->Add( hAdapTeO2th230M1,    fParameters[12]);
+  fModelTotAdapM1->Add( hAdapTeO2u234M1,     fParameters[13]);
 
-  fModelTotAdapM1->Add( fAdapFrameRaM1,    fParameters[2]);
-  fModelTotAdapM1->Add( fAdapTShieldRaM1,  fParameters[3]);  
-  fModelTotAdapM1->Add( fAdap50mKRaM1,     fParameters[17]);
-  fModelTotAdapM1->Add( fAdap600mKRaM1,    fParameters[18]);
-  fModelTotAdapM1->Add( fAdapIVCRaM1,      fParameters[19]);
-  fModelTotAdapM1->Add( fAdapOVCRaM1,      fParameters[20]);
+  fModelTotAdapM1->Add( hAdapCuFrameco58M1,  fParameters[14]);
+  fModelTotAdapM1->Add( hAdapCuFrameco60M1,  fParameters[15]);
+  fModelTotAdapM1->Add( hAdapCuFramecs137M1, fParameters[16]);
+  fModelTotAdapM1->Add( hAdapCuFramek40M1,   fParameters[17]);
+  fModelTotAdapM1->Add( hAdapCuFramemn54M1,  fParameters[18]);
+  fModelTotAdapM1->Add( hAdapCuFramepb210M1, fParameters[19]);
+  fModelTotAdapM1->Add( hAdapCuFrameth232M1, fParameters[20]);
+  fModelTotAdapM1->Add( hAdapCuFrameu238M1,  fParameters[21]);
 
-  fModelTotAdapM1->Add( fAdapFrameKM1,     fParameters[4]);
-  fModelTotAdapM1->Add( fAdapTShieldKM1,   fParameters[4]);
-  fModelTotAdapM1->Add( fAdap50mKKM1,      fParameters[4]);
-  fModelTotAdapM1->Add( fAdap600mKKM1,     fParameters[4]);
-  fModelTotAdapM1->Add( fAdapIVCKM1,       fParameters[5]);
-  fModelTotAdapM1->Add( fAdapOVCKM1,       fParameters[5]); 
+  fModelTotAdapM1->Add( hAdapCuBoxco58M1,    fParameters[22]);
+  fModelTotAdapM1->Add( hAdapCuBoxco60M1,    fParameters[23]);
+  fModelTotAdapM1->Add( hAdapCuBoxcs137M1,   fParameters[24]);
+  fModelTotAdapM1->Add( hAdapCuBoxk40M1,     fParameters[25]);
+  fModelTotAdapM1->Add( hAdapCuBoxmn54M1,    fParameters[26]);
+  fModelTotAdapM1->Add( hAdapCuBoxpb210M1,   fParameters[27]);
+  fModelTotAdapM1->Add( hAdapCuBoxth232M1,   fParameters[28]);
+  fModelTotAdapM1->Add( hAdapCuBoxu238M1,    fParameters[29]);
 
-  fModelTotAdapM1->Add( fAdapFrameCoM1,    fParameters[6]);
-  fModelTotAdapM1->Add( fAdapTShieldCoM1,  fParameters[7]);
-  fModelTotAdapM1->Add( fAdap50mKCoM1,     fParameters[21]);
-  fModelTotAdapM1->Add( fAdap600mKCoM1,    fParameters[22]);
-  fModelTotAdapM1->Add( fAdapIVCCoM1,      fParameters[23]);
-  fModelTotAdapM1->Add( fAdapOVCCoM1,      fParameters[24]);  
+  fModelTotAdapM1->Add( hAdap50mKco58M1,     fParameters[30]);
+  fModelTotAdapM1->Add( hAdap50mKco60M1,     fParameters[31]);
+  fModelTotAdapM1->Add( hAdap50mKcs137M1,    fParameters[32]);
+  fModelTotAdapM1->Add( hAdap50mKk40M1,      fParameters[33]);
+  fModelTotAdapM1->Add( hAdap50mKmn54M1,     fParameters[34]);
+  fModelTotAdapM1->Add( hAdap50mKpb210M1,    fParameters[35]);
+  fModelTotAdapM1->Add( hAdap50mKth232M1,    fParameters[36]);
+  fModelTotAdapM1->Add( hAdap50mKu238M1,     fParameters[37]);
 
-  fModelTotAdapM1->Add( fAdapTShieldMnM1,  fParameters[11]);
-  fModelTotAdapM1->Add( fAdapIVCMnM1,      fParameters[12]);
+  fModelTotAdapM1->Add( hAdap600mKco60M1,    fParameters[38]);
+  fModelTotAdapM1->Add( hAdap600mKk40M1,     fParameters[39]);
+  fModelTotAdapM1->Add( hAdap600mKth232M1,   fParameters[40]);
+  fModelTotAdapM1->Add( hAdap600mKu238M1,    fParameters[41]);
 
-  fModelTotAdapM1->Add( fAdapNDBDM1,      fParameters[9]);  
-  fModelTotAdapM1->Add( fAdap2NDBDM1,     fParameters[8]);  
-  fModelTotAdapM1->Add( fAdapBiM1,        fParameters[10]);  
+  fModelTotAdapM1->Add( hAdapPbRombi207M1,   fParameters[42]);
+  fModelTotAdapM1->Add( hAdapPbRomco60M1,    fParameters[43]);
+  fModelTotAdapM1->Add( hAdapPbRomcs137M1,   fParameters[44]);
+  fModelTotAdapM1->Add( hAdapPbRomk40M1,     fParameters[45]);
+  fModelTotAdapM1->Add( hAdapPbRompb210M1,   fParameters[46]);
+  fModelTotAdapM1->Add( hAdapPbRomth232M1,   fParameters[47]);
+  fModelTotAdapM1->Add( hAdapPbRomu238M1,    fParameters[48]);
 
-  // M2
-  fModelTotAdapM2->Add( fAdapFrameThM2,    fParameters[0]);
-  fModelTotAdapM2->Add( fAdapTShieldThM2,  fParameters[1]);  
-  fModelTotAdapM2->Add( fAdap50mKThM2,     fParameters[13]);
-  fModelTotAdapM2->Add( fAdap600mKThM2,    fParameters[14]);
-  fModelTotAdapM2->Add( fAdapIVCThM2,      fParameters[15]);
-  fModelTotAdapM2->Add( fAdapOVCThM2,      fParameters[16]);
+  fModelTotAdapM1->Add( hAdapMBco60M1,       fParameters[49]);
+  fModelTotAdapM1->Add( hAdapMBk40M1,        fParameters[50]);
+  fModelTotAdapM1->Add( hAdapMBth232M1,      fParameters[51]);
+  fModelTotAdapM1->Add( hAdapMBu238M1,       fParameters[52]);
 
-  fModelTotAdapM2->Add( fAdapFrameRaM2,    fParameters[2]);
-  fModelTotAdapM2->Add( fAdapTShieldRaM2,  fParameters[3]);  
-  fModelTotAdapM2->Add( fAdap50mKRaM2,     fParameters[17]);
-  fModelTotAdapM2->Add( fAdap600mKRaM2,    fParameters[18]);
-  fModelTotAdapM2->Add( fAdapIVCRaM2,      fParameters[19]);
-  fModelTotAdapM2->Add( fAdapOVCRaM2,      fParameters[20]);
+  fModelTotAdapM1->Add( hAdapIVCco60M1,      fParameters[53]);
+  fModelTotAdapM1->Add( hAdapIVCk40M1,       fParameters[54]);
+  fModelTotAdapM1->Add( hAdapIVCth232M1,     fParameters[55]);
+  fModelTotAdapM1->Add( hAdapIVCu238M1,      fParameters[56]);
 
-  fModelTotAdapM2->Add( fAdapFrameKM2,     fParameters[4]);
-  fModelTotAdapM2->Add( fAdapTShieldKM2,   fParameters[4]);
-  fModelTotAdapM2->Add( fAdap50mKKM2,      fParameters[4]);
-  fModelTotAdapM2->Add( fAdap600mKKM2,     fParameters[4]);
-  fModelTotAdapM2->Add( fAdapIVCKM2,       fParameters[5]);
-  fModelTotAdapM2->Add( fAdapOVCKM2,       fParameters[5]); 
+  fModelTotAdapM1->Add( hAdapOVCco60M1,      fParameters[57]);
+  fModelTotAdapM1->Add( hAdapOVCk40M1,       fParameters[58]);
+  fModelTotAdapM1->Add( hAdapOVCth232M1,     fParameters[59]);
+  fModelTotAdapM1->Add( hAdapOVCu238M1,      fParameters[60]);
 
-  fModelTotAdapM2->Add( fAdapFrameCoM2,    fParameters[6]);
-  fModelTotAdapM2->Add( fAdapTShieldCoM2,  fParameters[7]);
-  fModelTotAdapM2->Add( fAdap50mKCoM2,     fParameters[21]);
-  fModelTotAdapM2->Add( fAdap600mKCoM2,    fParameters[22]);
-  fModelTotAdapM2->Add( fAdapIVCCoM2,      fParameters[23]);
-  fModelTotAdapM2->Add( fAdapOVCCoM2,      fParameters[24]);  
+// M2
+  fModelTotAdapM2->Add( hAdapTeO20nuM2,      fParameters[0]);
+  fModelTotAdapM2->Add( hAdapTeO22nuM2,      fParameters[1]);
+  fModelTotAdapM2->Add( hAdapTeO2co60M2,     fParameters[2]);
+  fModelTotAdapM2->Add( hAdapTeO2k40M2,      fParameters[3]);
+  fModelTotAdapM2->Add( hAdapTeO2pb210M2,    fParameters[4]);
+  fModelTotAdapM2->Add( hAdapTeO2po210M2,    fParameters[5]);
+  fModelTotAdapM2->Add( hAdapTeO2te125M2,    fParameters[6]);
+  fModelTotAdapM2->Add( hAdapTeO2th232M2,    fParameters[7]);
+  fModelTotAdapM2->Add( hAdapTeO2th228M2,    fParameters[8]);
+  fModelTotAdapM2->Add( hAdapTeO2ra226M2,    fParameters[9]);
+  fModelTotAdapM2->Add( hAdapTeO2rn222M2,    fParameters[10]);
+  fModelTotAdapM2->Add( hAdapTeO2u238M2,     fParameters[11]);
+  fModelTotAdapM2->Add( hAdapTeO2th230M2,    fParameters[12]);
+  fModelTotAdapM2->Add( hAdapTeO2u234M2,     fParameters[13]);
 
-  fModelTotAdapM2->Add( fAdapTShieldMnM2,  fParameters[11]);
-  fModelTotAdapM2->Add( fAdapIVCMnM2,      fParameters[12]);
+  fModelTotAdapM2->Add( hAdapCuFrameco58M2,  fParameters[14]);
+  fModelTotAdapM2->Add( hAdapCuFrameco60M2,  fParameters[15]);
+  fModelTotAdapM2->Add( hAdapCuFramecs137M2, fParameters[16]);
+  fModelTotAdapM2->Add( hAdapCuFramek40M2,   fParameters[17]);
+  fModelTotAdapM2->Add( hAdapCuFramemn54M2,  fParameters[18]);
+  fModelTotAdapM2->Add( hAdapCuFramepb210M2, fParameters[19]);
+  fModelTotAdapM2->Add( hAdapCuFrameth232M2, fParameters[20]);
+  fModelTotAdapM2->Add( hAdapCuFrameu238M2,  fParameters[21]);
 
-  fModelTotAdapM2->Add( fAdapNDBDM2,      fParameters[9]);  
-  fModelTotAdapM2->Add( fAdap2NDBDM2,     fParameters[8]);  
-  fModelTotAdapM2->Add( fAdapBiM2,        fParameters[10]);  
+  fModelTotAdapM2->Add( hAdapCuBoxco58M2,    fParameters[22]);
+  fModelTotAdapM2->Add( hAdapCuBoxco60M2,    fParameters[23]);
+  fModelTotAdapM2->Add( hAdapCuBoxcs137M2,   fParameters[24]);
+  fModelTotAdapM2->Add( hAdapCuBoxk40M2,     fParameters[25]);
+  fModelTotAdapM2->Add( hAdapCuBoxmn54M2,    fParameters[26]);
+  fModelTotAdapM2->Add( hAdapCuBoxpb210M2,   fParameters[27]);
+  fModelTotAdapM2->Add( hAdapCuBoxth232M2,   fParameters[28]);
+  fModelTotAdapM2->Add( hAdapCuBoxu238M2,    fParameters[29]);
+
+  fModelTotAdapM2->Add( hAdap50mKco58M2,     fParameters[30]);
+  fModelTotAdapM2->Add( hAdap50mKco60M2,     fParameters[31]);
+  fModelTotAdapM2->Add( hAdap50mKcs137M2,    fParameters[32]);
+  fModelTotAdapM2->Add( hAdap50mKk40M2,      fParameters[33]);
+  fModelTotAdapM2->Add( hAdap50mKmn54M2,     fParameters[34]);
+  fModelTotAdapM2->Add( hAdap50mKpb210M2,    fParameters[35]);
+  fModelTotAdapM2->Add( hAdap50mKth232M2,    fParameters[36]);
+  fModelTotAdapM2->Add( hAdap50mKu238M2,     fParameters[37]);
+
+  fModelTotAdapM2->Add( hAdap600mKco60M2,    fParameters[38]);
+  fModelTotAdapM2->Add( hAdap600mKk40M2,     fParameters[39]);
+  fModelTotAdapM2->Add( hAdap600mKth232M2,   fParameters[40]);
+  fModelTotAdapM2->Add( hAdap600mKu238M2,    fParameters[41]);
+
+  fModelTotAdapM2->Add( hAdapPbRombi207M2,   fParameters[42]);
+  fModelTotAdapM2->Add( hAdapPbRomco60M2,    fParameters[43]);
+  fModelTotAdapM2->Add( hAdapPbRomcs137M2,   fParameters[44]);
+  fModelTotAdapM2->Add( hAdapPbRomk40M2,     fParameters[45]);
+  fModelTotAdapM2->Add( hAdapPbRompb210M2,   fParameters[46]);
+  fModelTotAdapM2->Add( hAdapPbRomth232M2,   fParameters[47]);
+  fModelTotAdapM2->Add( hAdapPbRomu238M2,    fParameters[48]);
+
+  fModelTotAdapM2->Add( hAdapMBco60M2,       fParameters[49]);
+  fModelTotAdapM2->Add( hAdapMBk40M2,        fParameters[50]);
+  fModelTotAdapM2->Add( hAdapMBth232M2,      fParameters[51]);
+  fModelTotAdapM2->Add( hAdapMBu238M2,       fParameters[52]);
+
+  fModelTotAdapM2->Add( hAdapIVCco60M2,      fParameters[53]);
+  fModelTotAdapM2->Add( hAdapIVCk40M2,       fParameters[54]);
+  fModelTotAdapM2->Add( hAdapIVCth232M2,     fParameters[55]);
+  fModelTotAdapM2->Add( hAdapIVCu238M2,      fParameters[56]);
+
+  fModelTotAdapM2->Add( hAdapOVCco60M2,      fParameters[57]);
+  fModelTotAdapM2->Add( hAdapOVCk40M2,       fParameters[58]);
+  fModelTotAdapM2->Add( hAdapOVCth232M2,     fParameters[59]);
+  fModelTotAdapM2->Add( hAdapOVCu238M2,      fParameters[60]);  
 
 }
 
