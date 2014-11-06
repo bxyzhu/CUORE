@@ -33,8 +33,6 @@ public:
 
 	void DrawBkg();
 
-	void DrawMC();
-
 	void Initialize();
 
 	// Dumb to have all of these but w/e
