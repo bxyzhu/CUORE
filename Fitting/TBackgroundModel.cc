@@ -12,8 +12,7 @@
 
 using namespace std;
 
-// In an effort to make things more legible...
-
+// In an effort to make things more legible I'm trying to clean up the code...
 
 //ClassImp(TBackgroundModel)
   
@@ -113,6 +112,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dSecToYears = 1./(60*60*24*365);
 
   dDataDir =  "/Users/brian/macros/Simulations/Production/";
+  // dDataDir =  "/Users/brian/macros/CUOREZ/Bkg/";
   dDataIntegral = 0;
   bAdaptiveBinning = false; // Start off false, can be turned on with DoTheFitAdaptive()
 
@@ -138,7 +138,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fDataHistoM1   = new TH1D("fDataHistoM1",   "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM2   = new TH1D("fDataHistoM2",   "", dNBins, dMinEnergy, dMaxEnergy);
 
-  qtree = new TChain("qredtree");
+  // Data variables change when switching between Toy/Real data
+  // qtree = new TChain("qredtree");
+  qtree = new TChain("CombiTree");
   // Data cuts 
   // qtree = new TChain("qtree");
   // base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
@@ -151,7 +153,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   cout << "Loaded Data" << endl;
 
-  // Scaling by livetime, should change this part when using Toy data
+/*
+  // Scaling by livetime, don't use with Toy data
   dDataIntegral = fDataHistoM1->Integral(1, dNBins);
   int dDataIntegralTot = qtree->GetEntries();
 
@@ -164,67 +167,83 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fDataHistoM2->Scale(1/((936398+14647393.0) * dSecToYears));  
 
   cout << "Normalized Data using Livetime of: " << (936398+14647393.0) * dSecToYears << " years" << endl;
-
+*/
 
   // Total model histograms M1
   fModelTotM1      = new TH1D("fModelTotM1",      "Frame",        dNBins, dMinEnergy, dMaxEnergy);  
-  fModelTotThM1    = new TH1D("fModelTotThM1",    "Total Th232",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotRaM1    = new TH1D("fModelTotRaM1",    "Total Ra226",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotKM1     = new TH1D("fModelTotKM1",     "Total K40",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotCoM1    = new TH1D("fModelTotCoM1",    "Total Co60",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotMnM1    = new TH1D("fModelTotMnM1",    "Total Mn54",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotthM1    = new TH1D("fModelTotthM1",    "Total th232",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotuM1     = new TH1D("fModelTotuM1",     "Total u238",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotkM1     = new TH1D("fModelTotkM1",     "Total k40",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotcoM1    = new TH1D("fModelTotvoM1",    "Total co60",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotmnM1    = new TH1D("fModelTotmnM1",    "Total mn54",   dNBins, dMinEnergy, dMaxEnergy);
 
   fModelTotNDBDM1  = new TH1D("fModelTotNDBDM1",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTot2NDBDM1 = new TH1D("fModelTot2NDBDM1", "Total 2NDBD",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotBiM1    = new TH1D("fModelTotBiM1",   "Total Bi207",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotBi2M1   = new TH1D("fModelTotBi2M1",   "Total Bi210",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotPtM1    = new TH1D("fModelTotPtM1",   "Total Pt190",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotPbM1    = new TH1D("fModelTotPbM1",   "Total Pb210",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotbiM1    = new TH1D("fModelTotbiM1",    "Total bi207",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotbi2M1   = new TH1D("fModelTotbi2M1",   "Total bi210",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotptM1    = new TH1D("fModelTotptM1",    "Total pt190",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotpbM1    = new TH1D("fModelTotpbM1",    "Total pb210",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotcsM1    = new TH1D("fModelTotcsM1",    "Total cs137",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotco2M1   = new TH1D("fModelTotco2M1",   "Total co58",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotteo2M1  = new TH1D("fModelTotteo2M1",  "Total TeO2",   dNBins, dMinEnergy, dMaxEnergy);
+
 
   // Total model histograms M2
   fModelTotM2      = new TH1D("fModelTotM2",      "Frame",        dNBins, dMinEnergy, dMaxEnergy);  
-  fModelTotThM2    = new TH1D("fModelTotThM2",    "Total Th232",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotRaM2    = new TH1D("fModelTotRaM2",    "Total Ra226",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotKM2     = new TH1D("fModelTotKM2",     "Total K40",    dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotCoM2    = new TH1D("fModelTotCoM2",    "Total Co60",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotMnM2    = new TH1D("fModelTotMnM2",    "Total Mn54",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotthM2    = new TH1D("fModelTotthM2",    "Total th232",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotuM2     = new TH1D("fModelTotuM2",     "Total u238",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotkM2     = new TH1D("fModelTotkM2",     "Total k40",    dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotcoM2    = new TH1D("fModelTotcoM2",    "Total co60",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotmnM2    = new TH1D("fModelTotmnM2",    "Total mn54",   dNBins, dMinEnergy, dMaxEnergy);
 
   fModelTotNDBDM2  = new TH1D("fModelTotNDBDM2",  "Total NDBD",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTot2NDBDM2 = new TH1D("fModelTot2NDBDM2", "Total 2NDBD",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotBiM2    = new TH1D("fModelTotBiM2",    "Total Bi207",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotBi2M2   = new TH1D("fModelTotBi2M2",   "Total Bi210",  dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotPtM2    = new TH1D("fModelTotPtM2",   "Total Pt190",   dNBins, dMinEnergy, dMaxEnergy);
-  fModelTotPbM2    = new TH1D("fModelTotPbM2",   "Total Pb210",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotbiM2    = new TH1D("fModelTotbiM2",    "Total bi207",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotbi2M2   = new TH1D("fModelTotbi2M2",   "Total bi210",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotptM2    = new TH1D("fModelTotptM2",    "Total pt190",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotpbM2    = new TH1D("fModelTotpbM2",    "Total pb210",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotcsM2    = new TH1D("fModelTotcsM2",    "Total cs137",  dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotco2M2   = new TH1D("fModelTotco2M2",   "Total co58",   dNBins, dMinEnergy, dMaxEnergy);
+  fModelTotteo2M2  = new TH1D("fModelTotteo2M2",  "Total TeO2",   dNBins, dMinEnergy, dMaxEnergy);
+
+
 
   // Total Adaptive binning histograms M1
   fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  fModelTotAdapThM1    = new TH1D("fModelTotAdapThM1",    "Total Th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapRaM1    = new TH1D("fModelTotAdapRaM1",    "Total Ra226",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapKM1     = new TH1D("fModelTotAdapKM1",     "Total K40",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapCoM1    = new TH1D("fModelTotAdapCoM1",    "Total Co60",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapMnM1    = new TH1D("fModelTotAdapMnM1",    "Total Mn54",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapthM1    = new TH1D("fModelTotAdapthM1",    "Total th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapuM1     = new TH1D("fModelTotAdapuM1",     "Total u238",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapkM1     = new TH1D("fModelTotAdapkM1",     "Total k40",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapcoM1    = new TH1D("fModelTotAdapcoM1",    "Total co60",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapmnM1    = new TH1D("fModelTotAdapmnM1",    "Total mn54",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
   fModelTotAdapNDBDM1  = new TH1D("fModelTotAdapNDBDM1",  "Total NDBD",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotAdap2NDBDM1 = new TH1D("fModelTotAdap2NDBDM1", "Total 2NDBD",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapBiM1    = new TH1D("fModelTotAdapBiM1",   "Total Bi207",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapBi2M1   = new TH1D("fModelTotAdapBi2M1",   "Total Bi210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapPtM1    = new TH1D("fModelTotAdapPtM1",   "Total Pt190",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapPbM1    = new TH1D("fModelTotAdapPbM1",   "Total Pb210",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapbiM1    = new TH1D("fModelTotAdapbiM1",    "Total bi207",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapbi2M1   = new TH1D("fModelTotAdapbi2M1",   "Total bi210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapptM1    = new TH1D("fModelTotAdapptM1",    "Total pt190",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdappbM1    = new TH1D("fModelTotAdappbM1",    "Total pb210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapcsM1    = new TH1D("fModelTotAdapcsM1",    "Total cs137",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapco2M1   = new TH1D("fModelTotAdapco2M1",   "Total co58",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapteo2M1  = new TH1D("fModelTotAdapteo2M1",  "Total TeO2",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
 
   // Total Adaptive binning histograms M2
   fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  fModelTotAdapThM2    = new TH1D("fModelTotAdapThM2",    "Total Th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapRaM2    = new TH1D("fModelTotAdapRaM2",    "Total Ra226",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapKM2     = new TH1D("fModelTotAdapKM2",     "Total K40",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapCoM2    = new TH1D("fModelTotAdapCoM2",    "Total Co60",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapMnM2    = new TH1D("fModelTotAdapMnM2",    "Total Mn54",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapthM2    = new TH1D("fModelTotAdapthM2",    "Total th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapuM2     = new TH1D("fModelTotAdapuM2",     "Total u238",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapkM2     = new TH1D("fModelTotAdapkM2",     "Total k40",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapcoM2    = new TH1D("fModelTotAdapcoM2",    "Total co60",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapmnM2    = new TH1D("fModelTotAdapmnM2",    "Total mn54",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   fModelTotAdapNDBDM2  = new TH1D("fModelTotAdapNDBDM2",  "Total NDBD",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotAdap2NDBDM2 = new TH1D("fModelTotAdap2NDBDM2", "Total 2NDBD",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapBiM2    = new TH1D("fModelTotAdapBiM2",    "Total Bi207",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapBi2M2   = new TH1D("fModelTotAdapBi2M2",   "Total Bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapPtM2    = new TH1D("fModelTotAdapPtM2",   "Total Pt190",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapPbM2    = new TH1D("fModelTotAdapPbM2",   "Total Pb210",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapbiM2    = new TH1D("fModelTotAdapbiM2",    "Total bi207",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapbi2M2   = new TH1D("fModelTotAdapbi2M2",   "Total bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapptM2    = new TH1D("fModelTotAdapotM2",    "Total pt190",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdappbM2    = new TH1D("fModelTotAdappbM2",    "Total pb210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapcsM2    = new TH1D("fModelTotAdapcsM2",    "Total cs137",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapco2M2   = new TH1D("fModelTotAdapco2M2",   "Total co58",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapteo2M2  = new TH1D("fModelTotAdapteo2M2",  "Total TeO2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
 
 
@@ -965,7 +984,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1)
     dDummy = h1->GetBinContent(i);
     dDummyFill += dDummy;
 
-    if(dDummyFill >= 50)
+    if(dDummyFill >= 10)
     {
       dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
       dDummyFill = 0;
@@ -1280,84 +1299,150 @@ bool TBackgroundModel::DoTheFit()
   ///////////////////////////////////////////
   /// Use only after previous step converges!
   // 
-
   // M1 Parameters
-  fModelTotThM1->Add(fModelFrameThM1,   fParameters[0]);
-  fModelTotThM1->Add(fModelTShieldThM1, fParameters[1]);
-  fModelTotThM1->Add(fModel50mKThM1,    fParameters[13]);
-  fModelTotThM1->Add(fModel600mKThM1,   fParameters[14]);
-  fModelTotThM1->Add(fModelIVCThM1,     fParameters[15]);
-  fModelTotThM1->Add(fModelOVCThM1,     fParameters[16]);
+  fModelTotthM1->Add( hTeO2th232M1,     fParameters[7]  );
+  fModelTotthM1->Add( hCuFrameth232M1,  fParameters[20] );
+  fModelTotthM1->Add( hCuBoxth232M1,    fParameters[28] );
+  fModelTotthM1->Add( h50mKth232M1,     fParameters[36] );
+  fModelTotthM1->Add( h600mKth232M1,    fParameters[40] );
+  fModelTotthM1->Add( hPbRomth232M1,    fParameters[47] );
+  fModelTotthM1->Add( hMBth232M1,       fParameters[51] );
+  fModelTotthM1->Add( hIVCth232M1,      fParameters[55] );
+  fModelTotthM1->Add( hOVCth232M1,      fParameters[59] );
 
-  fModelTotRaM1->Add(fModelFrameRaM1,   fParameters[2]);
-  fModelTotRaM1->Add(fModelTShieldRaM1, fParameters[3]);
-  fModelTotRaM1->Add(fModel50mKRaM1,    fParameters[17]);
-  fModelTotRaM1->Add(fModel600mKRaM1,   fParameters[18]);
-  fModelTotRaM1->Add(fModelIVCRaM1,     fParameters[19]);
-  fModelTotRaM1->Add(fModelOVCRaM1,     fParameters[20]);
+  fModelTotuM1->Add( hTeO2u238M1,       fParameters[11] );
+  fModelTotuM1->Add( hCuFrameu238M1,    fParameters[21] );
+  fModelTotuM1->Add( hCuBoxu238M1,      fParameters[29] );
+  fModelTotuM1->Add( h50mKu238M1,       fParameters[37] );
+  fModelTotuM1->Add( h600mKu238M1,      fParameters[41] );
+  fModelTotuM1->Add( hPbRomu238M1,      fParameters[48] );
+  fModelTotuM1->Add( hMBu238M1,         fParameters[52] );
+  fModelTotuM1->Add( hIVCu238M1,        fParameters[56] );
+  fModelTotuM1->Add( hOVCu238M1,        fParameters[60] );
 
-  fModelTotKM1->Add(fModelFrameKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelTShieldKM1,   fParameters[4]);
-  fModelTotKM1->Add(fModel50mKKM1,      fParameters[4]);
-  fModelTotKM1->Add(fModel600mKKM1,     fParameters[4]);
-  fModelTotKM1->Add(fModelIVCKM1,       fParameters[5]);
-  fModelTotKM1->Add(fModelOVCKM1,       fParameters[5]);
+  fModelTotkM1->Add( hTeO2k40M1,        fParameters[3]  );
+  fModelTotkM1->Add( hCuFramek40M1,     fParameters[17] );
+  fModelTotkM1->Add( hCuBoxk40M1,       fParameters[25] );
+  fModelTotkM1->Add( h50mKk40M1,        fParameters[33] );
+  fModelTotkM1->Add( h600mKk40M1,       fParameters[39] );
+  fModelTotkM1->Add( hPbRomk40M1,       fParameters[45] );
+  fModelTotkM1->Add( hMBk40M1,          fParameters[50] );
+  fModelTotkM1->Add( hIVCk40M1,         fParameters[54] );
+  fModelTotkM1->Add( hOVCk40M1,         fParameters[58] ); 
 
-  fModelTotCoM1->Add(fModelFrameCoM1,   fParameters[6]);
-  fModelTotCoM1->Add(fModelTShieldCoM1, fParameters[7]);
-  fModelTotCoM1->Add(fModel50mKCoM1,    fParameters[21]);
-  fModelTotCoM1->Add(fModel600mKCoM1,   fParameters[22]);
-  fModelTotCoM1->Add(fModelIVCCoM1,     fParameters[23]);
-  fModelTotCoM1->Add(fModelOVCCoM1,     fParameters[24]);
+  fModelTotcoM1->Add( hTeO2co60M1,      fParameters[2]  );
+  fModelTotcoM1->Add( hCuFrameco60M1,   fParameters[15] );
+  fModelTotcoM1->Add( hCuBoxco60M1,     fParameters[23] );
+  fModelTotcoM1->Add( h50mKco60M1,      fParameters[31] );
+  fModelTotcoM1->Add( h600mKco60M1,     fParameters[38] );
+  fModelTotcoM1->Add( hPbRomco60M1,     fParameters[43] );
+  fModelTotcoM1->Add( hMBco60M1,        fParameters[49] );
+  fModelTotcoM1->Add( hIVCco60M1,       fParameters[53] );
+  fModelTotcoM1->Add( hOVCco60M1,       fParameters[57] );
 
-  fModelTotMnM1->Add(fModelTShieldMnM1, fParameters[11]);
-  fModelTotMnM1->Add(fModelIVCMnM1,     fParameters[12]);
+  fModelTotpbM1->Add( hTeO2pb210M1,     fParameters[4]  );
+  fModelTotpbM1->Add( hCuFramepb210M1,  fParameters[15] );
+  fModelTotpbM1->Add( hCuBoxpb210M1,    fParameters[27] );
+  fModelTotpbM1->Add( h50mKpb210M1,     fParameters[35] );
+  fModelTotpbM1->Add( hPbRompb210M1,    fParameters[46] );
+
+  fModelTotcsM1->Add( hCuFramecs137M1,  fParameters[16] );
+  fModelTotcsM1->Add( hCuBoxcs137M1,    fParameters[24] );
+  fModelTotcsM1->Add( h50mKcs137M1,     fParameters[32] );
+  fModelTotcsM1->Add( hPbRomcs137M1,    fParameters[44] );
+
+  fModelTotcoM1->Add( hCuFrameco58M1,   fParameters[14] );
+  fModelTotcoM1->Add( hCuBoxco58M1,     fParameters[22] );
+  fModelTotcoM1->Add( h50mKco58M1,      fParameters[30] );
+
+  fModelTotteo2M1->Add( hTeO2po210M1,   fParameters[5] );
+  fModelTotteo2M1->Add( hTeO2te125M1,   fParameters[6] );
+  fModelTotteo2M1->Add( hTeO2th228M1,   fParameters[8] );
+  fModelTotteo2M1->Add( hTeO2ra226M1,   fParameters[9] );
+  fModelTotteo2M1->Add( hTeO2rn222M1,   fParameters[10] );
+  fModelTotteo2M1->Add( hTeO2th230M1,   fParameters[12] );
+  fModelTotteo2M1->Add( hTeO2u234M1,    fParameters[13] );
+
+  fModelTotmnM1->Add( hCuFramemn54M1,   fParameters[18] );
+  fModelTotmnM1->Add( hCuBoxmn54M1,     fParameters[26] );
+  fModelTotmnM1->Add( h50mKmn54M1,      fParameters[34] );
+
+  fModelTotbiM1->Add( hPbRombi207M1,    fParameters[42] );
+  fModelTotNDBDM1->Add( hTeO20nuM1,     fParameters[0] );
+  fModelTot2NDBDM1->Add( hTeO22nuM1,    fParameters[1] );
 
 
-  fModelTotNDBDM1->Add(fModelNDBDM1,    fParameters[9]);
-  fModelTot2NDBDM1->Add(fModel2NDBDM1,  fParameters[8]);
-  fModelTotBiM1->Add(fModelBiM1,        fParameters[10]);
+// M2
+  fModelTotthM2->Add( hTeO2th232M2,     fParameters[7]  );
+  fModelTotthM2->Add( hCuFrameth232M2,  fParameters[20] );
+  fModelTotthM2->Add( hCuBoxth232M2,    fParameters[28] );
+  fModelTotthM2->Add( h50mKth232M2,     fParameters[36] );
+  fModelTotthM2->Add( h600mKth232M2,    fParameters[40] );
+  fModelTotthM2->Add( hPbRomth232M2,    fParameters[47] );
+  fModelTotthM2->Add( hMBth232M2,       fParameters[51] );
+  fModelTotthM2->Add( hIVCth232M2,      fParameters[55] );
+  fModelTotthM2->Add( hOVCth232M2,      fParameters[59] );
 
-  fModelTotPbM1->Add(fModelCrystalBi2M1, fParameters[25]);
+  fModelTotuM2->Add( hTeO2u238M2,       fParameters[11] );
+  fModelTotuM2->Add( hCuFrameu238M2,    fParameters[21] );
+  fModelTotuM2->Add( hCuBoxu238M2,      fParameters[29] );
+  fModelTotuM2->Add( h50mKu238M2,       fParameters[37] );
+  fModelTotuM2->Add( h600mKu238M2,      fParameters[41] );
+  fModelTotuM2->Add( hPbRomu238M2,      fParameters[48] );
+  fModelTotuM2->Add( hMBu238M2,         fParameters[52] );
+  fModelTotuM2->Add( hIVCu238M2,        fParameters[56] );
+  fModelTotuM2->Add( hOVCu238M2,        fParameters[60] );
 
+  fModelTotkM2->Add( hTeO2k40M2,        fParameters[3]  );
+  fModelTotkM2->Add( hCuFramek40M2,     fParameters[17] );
+  fModelTotkM2->Add( hCuBoxk40M2,       fParameters[25] );
+  fModelTotkM2->Add( h50mKk40M2,        fParameters[33] );
+  fModelTotkM2->Add( h600mKk40M2,       fParameters[39] );
+  fModelTotkM2->Add( hPbRomk40M2,       fParameters[45] );
+  fModelTotkM2->Add( hMBk40M2,          fParameters[50] );
+  fModelTotkM2->Add( hIVCk40M2,         fParameters[54] );
+  fModelTotkM2->Add( hOVCk40M2,         fParameters[58] ); 
 
-  // M2 Parameters
-  fModelTotThM2->Add(fModelFrameThM2,   fParameters[0]);
-  fModelTotThM2->Add(fModelTShieldThM2, fParameters[1]);
-  fModelTotThM2->Add(fModel50mKThM2,    fParameters[13]);
-  fModelTotThM2->Add(fModel600mKThM2,   fParameters[14]);
-  fModelTotThM2->Add(fModelIVCThM2,     fParameters[15]);
-  fModelTotThM2->Add(fModelOVCThM2,     fParameters[16]);
+  fModelTotcoM2->Add( hTeO2co60M2,      fParameters[2]  );
+  fModelTotcoM2->Add( hCuFrameco60M2,   fParameters[15] );
+  fModelTotcoM2->Add( hCuBoxco60M2,     fParameters[23] );
+  fModelTotcoM2->Add( h50mKco60M2,      fParameters[31] );
+  fModelTotcoM2->Add( h600mKco60M2,     fParameters[38] );
+  fModelTotcoM2->Add( hPbRomco60M2,     fParameters[43] );
+  fModelTotcoM2->Add( hMBco60M2,        fParameters[49] );
+  fModelTotcoM2->Add( hIVCco60M2,       fParameters[53] );
+  fModelTotcoM2->Add( hOVCco60M2,       fParameters[57] );
 
-  fModelTotRaM2->Add(fModelFrameRaM2,   fParameters[2]);
-  fModelTotRaM2->Add(fModelTShieldRaM2, fParameters[3]);
-  fModelTotRaM2->Add(fModel50mKRaM2,    fParameters[17]);
-  fModelTotRaM2->Add(fModel600mKRaM2,   fParameters[18]);
-  fModelTotRaM2->Add(fModelIVCRaM2,     fParameters[19]);
-  fModelTotRaM2->Add(fModelOVCRaM2,     fParameters[20]);
+  fModelTotpbM2->Add( hTeO2pb210M2,     fParameters[4]  );
+  fModelTotpbM2->Add( hCuFramepb210M2,  fParameters[15] );
+  fModelTotpbM2->Add( hCuBoxpb210M2,    fParameters[27] );
+  fModelTotpbM2->Add( h50mKpb210M2,     fParameters[35] );
+  fModelTotpbM2->Add( hPbRompb210M2,    fParameters[46] );
 
-  fModelTotKM2->Add(fModelFrameKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelTShieldKM2,   fParameters[4]);
-  fModelTotKM2->Add(fModel50mKKM2,      fParameters[4]);
-  fModelTotKM2->Add(fModel600mKKM2,     fParameters[4]);
-  fModelTotKM2->Add(fModelIVCKM2,       fParameters[5]);
-  fModelTotKM2->Add(fModelOVCKM2,       fParameters[5]);
+  fModelTotcsM2->Add( hCuFramecs137M2,  fParameters[16] );
+  fModelTotcsM2->Add( hCuBoxcs137M2,    fParameters[24] );
+  fModelTotcsM2->Add( h50mKcs137M2,     fParameters[32] );
+  fModelTotcsM2->Add( hPbRomcs137M2,    fParameters[44] );
 
-  fModelTotCoM2->Add(fModelFrameCoM2,   fParameters[6]);
-  fModelTotCoM2->Add(fModelTShieldCoM2, fParameters[7]);
-  fModelTotCoM2->Add(fModel50mKCoM2,    fParameters[21]);
-  fModelTotCoM2->Add(fModel600mKCoM2,   fParameters[22]);
-  fModelTotCoM2->Add(fModelIVCCoM2,     fParameters[23]);
-  fModelTotCoM2->Add(fModelOVCCoM2,     fParameters[24]);
+  fModelTotcoM2->Add( hCuFrameco58M2,   fParameters[14] );
+  fModelTotcoM2->Add( hCuBoxco58M2,     fParameters[22] );
+  fModelTotcoM2->Add( h50mKco58M2,      fParameters[30] );
 
-  fModelTotMnM2->Add(fModelTShieldMnM2, fParameters[11]);
-  fModelTotMnM2->Add(fModelIVCMnM2,     fParameters[12]);
+  fModelTotteo2M2->Add( hTeO2po210M2,   fParameters[5] );
+  fModelTotteo2M2->Add( hTeO2te125M2,   fParameters[6] );
+  fModelTotteo2M2->Add( hTeO2th228M2,   fParameters[8] );
+  fModelTotteo2M2->Add( hTeO2ra226M2,   fParameters[9] );
+  fModelTotteo2M2->Add( hTeO2rn222M2,   fParameters[10] );
+  fModelTotteo2M2->Add( hTeO2th230M2,   fParameters[12] );
+  fModelTotteo2M2->Add( hTeO2u234M2,    fParameters[13] );
 
-  fModelTotNDBDM2->Add(fModelNDBDM2,    fParameters[9]);
-  fModelTot2NDBDM2->Add(fModel2NDBDM2,  fParameters[8]);
-  fModelTotBiM2->Add(fModelBiM2,      fParameters[10]);
+  fModelTotmnM2->Add( hCuFramemn54M2,   fParameters[18] );
+  fModelTotmnM2->Add( hCuBoxmn54M2,     fParameters[26] );
+  fModelTotmnM2->Add( h50mKmn54M2,      fParameters[34] );
 
-  fModelTotPbM2->Add( fModelCrystalBi2M2, fParameters[25]);
+  fModelTotbiM2->Add( hPbRombi207M2,    fParameters[42] );
+  fModelTotNDBDM2->Add( hTeO20nuM2,     fParameters[0] );
+  fModelTot2NDBDM2->Add( hTeO22nuM2,    fParameters[1] );
 
   ////////// Only for testing
   // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(2*R*T)
@@ -1398,37 +1483,37 @@ bool TBackgroundModel::DoTheFit()
     */
 //////////////////////////////////////////
 
-  fModelTotThM1->SetLineColor(3);
-  fModelTotThM1->SetLineStyle(2);
-  fModelTotRaM1->SetLineColor(4);
-  fModelTotRaM1->SetLineStyle(2);
-  fModelTotKM1->SetLineColor(6);
-  fModelTotKM1->SetLineStyle(2);
-  fModelTotCoM1->SetLineColor(7);
-  fModelTotCoM1->SetLineStyle(2);
+  fModelTotthM1->SetLineColor(3);
+  fModelTotthM1->SetLineStyle(2);
+  fModelTotuM1->SetLineColor(4);
+  fModelTotuM1->SetLineStyle(2);
+  fModelTotkM1->SetLineColor(6);
+  fModelTotkM1->SetLineStyle(2);
+  fModelTotcoM1->SetLineColor(7);
+  fModelTotcoM1->SetLineStyle(2);
   fModelTotNDBDM1->SetLineColor(42);
   fModelTotNDBDM1->SetLineStyle(2);
   fModelTot2NDBDM1->SetLineColor(46);
   fModelTot2NDBDM1->SetLineStyle(2);
-  fModelTotBiM1->SetLineColor(5);
-  fModelTotBiM1->SetLineStyle(2);
-  fModelTotMnM1->SetLineColor(40);
-  fModelTotMnM1->SetLineStyle(2);
+  fModelTotbiM1->SetLineColor(5);
+  fModelTotbiM1->SetLineStyle(2);
+  fModelTotmnM1->SetLineColor(40);
+  fModelTotmnM1->SetLineStyle(2);
 
 
-  fModelTotPbM1->SetLineStyle(2);
-  fModelTotPbM1->SetLineColor(38);
+  fModelTotpbM1->SetLineStyle(2);
+  fModelTotpbM1->SetLineColor(38);
 
-  fModelTotThM1->Draw("SAME");
-  fModelTotRaM1->Draw("SAME");
-  fModelTotKM1->Draw("SAME");
-  fModelTotCoM1->Draw("SAME");
+  fModelTotthM1->Draw("SAME");
+  fModelTotuM1->Draw("SAME");
+  fModelTotkM1->Draw("SAME");
+  fModelTotcoM1->Draw("SAME");
   fModelTotNDBDM1->Draw("SAME");
   fModelTot2NDBDM1->Draw("SAME");
-  fModelTotBiM1->Draw("SAME");
-  fModelTotMnM1->Draw("SAME");
+  fModelTotbiM1->Draw("SAME");
+  fModelTotmnM1->Draw("SAME");
 
-  fModelTotPbM1->Draw("SAME");
+  fModelTotpbM1->Draw("SAME");
 
 
 /*
@@ -1451,15 +1536,15 @@ bool TBackgroundModel::DoTheFit()
 
   TLegend *legfit1 = new TLegend(0.8,0.8,0.97,0.97);
   legfit1->AddEntry(fModelTotM1, "Total PDF", "l");
-  legfit1->AddEntry(fModelTotThM1, "Total Th-232", "l");
-  legfit1->AddEntry(fModelTotRaM1, "Total Ra-226", "l");
-  legfit1->AddEntry(fModelTotKM1, "Total K-40", "l");
-  legfit1->AddEntry(fModelTotCoM1, "Total Co-60", "l");
+  legfit1->AddEntry(fModelTotthM1, "Total th-232", "l");
+  legfit1->AddEntry(fModelTotuM1, "Total u-238", "l");
+  legfit1->AddEntry(fModelTotkM1, "Total k-40", "l");
+  legfit1->AddEntry(fModelTotcoM1, "Total co-60", "l");
   legfit1->AddEntry(fModelTotNDBDM1, "NDBD", "l");
   legfit1->AddEntry(fModelTot2NDBDM1, "2NDBD", "l");
-  legfit1->AddEntry(fModelTotBiM1, "Bi-207", "l");
-  legfit1->AddEntry(fModelTotMnM1, "Mn-54", "l");
-  legfit1->AddEntry(fModelTotPbM1 , "Bi-210", "l");    
+  legfit1->AddEntry(fModelTotbiM1, "bi-207", "l");
+  legfit1->AddEntry(fModelTotmnM1, "mn-54", "l");
+  legfit1->AddEntry(fModelTotpbM1 , "pb-210", "l");    
   legfit1->Draw();
 
 
@@ -1483,39 +1568,39 @@ bool TBackgroundModel::DoTheFit()
   fModelTotM2->SetLineWidth(1);
   fModelTotM2->Draw("SAME");
 
-  fModelTotThM2->SetLineColor(3);
-  fModelTotThM2->SetLineStyle(2);
-  fModelTotRaM2->SetLineColor(4);
-  fModelTotRaM2->SetLineStyle(2);
-  fModelTotKM2->SetLineColor(6);
-  fModelTotKM2->SetLineStyle(2);
-  fModelTotCoM2->SetLineColor(7);
-  fModelTotCoM2->SetLineStyle(2);
+  fModelTotthM2->SetLineColor(3);
+  fModelTotthM2->SetLineStyle(2);
+  fModelTotuM2->SetLineColor(4);
+  fModelTotuM2->SetLineStyle(2);
+  fModelTotkM2->SetLineColor(6);
+  fModelTotkM2->SetLineStyle(2);
+  fModelTotcoM2->SetLineColor(7);
+  fModelTotcoM2->SetLineStyle(2);
   fModelTotNDBDM2->SetLineColor(42);
   fModelTotNDBDM2->SetLineStyle(2);
   fModelTot2NDBDM2->SetLineColor(46);
   fModelTot2NDBDM2->SetLineStyle(2);
-  fModelTotBiM2->SetLineColor(5);
-  fModelTotBiM2->SetLineStyle(2);
-  fModelTotMnM2->SetLineColor(40);
-  fModelTotMnM2->SetLineStyle(2);
+  fModelTotbiM2->SetLineColor(5);
+  fModelTotbiM2->SetLineStyle(2);
+  fModelTotmnM2->SetLineColor(40);
+  fModelTotmnM2->SetLineStyle(2);
 
-  fModelTotPbM2->SetLineStyle(2);
-  fModelTotPbM2->SetLineColor(38);
-  fTotCorrection->SetLineStyle(2);
-  fTotCorrection->SetLineColor(kBlue+2);
+  fModelTotpbM2->SetLineStyle(2);
+  fModelTotpbM2->SetLineColor(38);
+  // fTotCorrection->SetLineStyle(2);
+  // fTotCorrection->SetLineColor(kBlue+2);
 
-  fModelTotThM2->Draw("SAME");
-  fModelTotRaM2->Draw("SAME");
-  fModelTotKM2->Draw("SAME");
-  fModelTotCoM2->Draw("SAME");
+  fModelTotthM2->Draw("SAME");
+  fModelTotuM2->Draw("SAME");
+  fModelTotkM2->Draw("SAME");
+  fModelTotcoM2->Draw("SAME");
   fModelTotNDBDM2->Draw("SAME");
   fModelTot2NDBDM2->Draw("SAME");
-  fModelTotBiM2->Draw("SAME");    
-  fModelTotMnM2->Draw("SAME");
+  fModelTotbiM2->Draw("SAME");    
+  fModelTotmnM2->Draw("SAME");
 
-  fModelTotPbM2->Draw("SAME");
-  fTotCorrection->Draw("SAME");    
+  fModelTotpbM2->Draw("SAME");
+  // fTotCorrection->Draw("SAME");    
 
 /*
   TPaveText *pt2 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
@@ -1538,16 +1623,16 @@ bool TBackgroundModel::DoTheFit()
 
   TLegend *legfit2 = new TLegend(0.8,0.8,0.97,0.97);
   legfit2->AddEntry(fModelTotM2, "Total PDF", "l");
-  legfit2->AddEntry(fModelTotThM2, "Total Th-232", "l");
-  legfit2->AddEntry(fModelTotRaM2, "Total Ra-226", "l");
-  legfit2->AddEntry(fModelTotKM2, "Total K-40", "l");
-  legfit2->AddEntry(fModelTotCoM2, "Total Co-60", "l");
+  legfit2->AddEntry(fModelTotthM2, "Total th-232", "l");
+  legfit2->AddEntry(fModelTotuM2, "Total u-238", "l");
+  legfit2->AddEntry(fModelTotkM2, "Total k-40", "l");
+  legfit2->AddEntry(fModelTotcoM2, "Total co-60", "l");
   legfit2->AddEntry(fModelTotNDBDM2, "NDBD", "l");
   legfit2->AddEntry(fModelTot2NDBDM2, "2NDBD", "l");
-  legfit2->AddEntry(fModelTotBiM2, "Bi-207", "l");
-  legfit2->AddEntry(fModelTotMnM2, "Mn-54", "l");
-  legfit2->AddEntry(fModelTotPbM2 , "Bi-210", "l");
-  legfit2->AddEntry(fTotCorrection, "Accidental coincidence correction", "l");
+  legfit2->AddEntry(fModelTotbiM2, "bi-207", "l");
+  legfit2->AddEntry(fModelTotmnM2, "mn-54", "l");
+  legfit2->AddEntry(fModelTotpbM2 , "bi-210", "l");
+  // legfit2->AddEntry(fTotCorrection, "Accidental coincidence correction", "l");
   legfit2->Draw();
 
 
@@ -1597,20 +1682,13 @@ bool TBackgroundModel::DoTheFit()
   // Output integrals of stuff for limits
   cout << "Integral Data in ROI: " << fDataHistoM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fDataHistoM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
   cout << "Integral Total PDF in ROI: " << fModelTotM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Total Th PDF in ROI: " << fModelTotThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotThM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Total Ra PDF in ROI: " << fModelTotRaM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotRaM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Total Co PDF in ROI: " << fModelTotCoM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotCoM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Total K PDF in ROI: " << fModelTotKM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotKM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Total Bi-207 PDF in ROI: " << fModelTotBiM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotBiM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;  
+  cout << "Integral Total Th PDF in ROI: " << fModelTotthM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotthM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
+  cout << "Integral Total Ra PDF in ROI: " << fModelTotuM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotuM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
+  cout << "Integral Total Co PDF in ROI: " << fModelTotcoM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotcoM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
+  cout << "Integral Total K PDF in ROI: " << fModelTotkM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotkM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
+  cout << "Integral Total Bi-207 PDF in ROI: " << fModelTotbiM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotbiM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;  
   cout << "Integral Total 2NDBD PDF in ROI: " << fModelTot2NDBDM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTot2NDBDM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotNDBDM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotNDBDM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
-  cout << "Integral Frame Th PDF in ROI: " << fParameters[0]*fSmearFrameThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral TShield Th PDF in ROI: " << fParameters[1]*fSmearTShieldThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral 50mK Th PDF in ROI: " << fParameters[13]*fSmear50mKThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral 600mK Th PDF in ROI: " << fParameters[14]*fSmear600mKThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral IVC Th PDF in ROI: " << fParameters[15]*fSmearIVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral OVC Th PDF in ROI: " << fParameters[16]*fSmearOVCThM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << endl;
-  cout << "Integral Bi-210 (300 keV to 1000 keV): " << fParameters[25]*fSmearCrystalBi2M1->Integral(300/dBinSize, 1000/dBinSize) << " +/- " << endl;
 
   cout << "M2/(M1+M2) = " << (double)fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)/(fModelTotM1->Integral(300/dBinSize, 3000/dBinSize)+fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)) << endl;
 
@@ -2213,10 +2291,10 @@ void TBackgroundModel::LoadData()
 	}
 
   // Currently using Jon's reduced file -- change for other input files
-  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
-  qtree->Project("fDataHistoTot", "Energy", base_cut);
-  qtree->Project("fDataHistoM1",  "Energy", base_cut && "Multiplicity == 1");
-  qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity == 2");
+  qtree->Add("/Users/brian/macros/Simulations/Toy/combi1/combi1.root"); 
+  qtree->Project("fDataHistoTot", "Ener2");
+  qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
+  qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
 
   cout << "Loaded Data" << endl;
 }
@@ -3023,84 +3101,150 @@ bool TBackgroundModel::DoTheFitAdaptive()
   ///////////////////////////////////////////
   /// Use only after previous step converges!
   // 
-
   // M1 Parameters
-  fModelTotAdapThM1->Add(fAdapFrameThM1,   fParameters[0]);
-  fModelTotAdapThM1->Add(fAdapTShieldThM1, fParameters[1]);
-  fModelTotAdapThM1->Add(fAdap50mKThM1,    fParameters[13]);
-  fModelTotAdapThM1->Add(fAdap600mKThM1,   fParameters[14]);
-  fModelTotAdapThM1->Add(fAdapIVCThM1,     fParameters[15]);
-  fModelTotAdapThM1->Add(fAdapOVCThM1,     fParameters[16]);
+  fModelTotAdapthM1->Add( hAdapTeO2th232M1,     fParameters[7]  );
+  fModelTotAdapthM1->Add( hAdapCuFrameth232M1,  fParameters[20] );
+  fModelTotAdapthM1->Add( hAdapCuBoxth232M1,    fParameters[28] );
+  fModelTotAdapthM1->Add( hAdap50mKth232M1,     fParameters[36] );
+  fModelTotAdapthM1->Add( hAdap600mKth232M1,    fParameters[40] );
+  fModelTotAdapthM1->Add( hAdapPbRomth232M1,    fParameters[47] );
+  fModelTotAdapthM1->Add( hAdapMBth232M1,       fParameters[51] );
+  fModelTotAdapthM1->Add( hAdapIVCth232M1,      fParameters[55] );
+  fModelTotAdapthM1->Add( hAdapOVCth232M1,      fParameters[59] );
 
-  fModelTotAdapRaM1->Add(fAdapFrameRaM1,   fParameters[2]);
-  fModelTotAdapRaM1->Add(fAdapTShieldRaM1, fParameters[3]);
-  fModelTotAdapRaM1->Add(fAdap50mKRaM1,    fParameters[17]);
-  fModelTotAdapRaM1->Add(fAdap600mKRaM1,   fParameters[18]);
-  fModelTotAdapRaM1->Add(fAdapIVCRaM1,     fParameters[19]);
-  fModelTotAdapRaM1->Add(fAdapOVCRaM1,     fParameters[20]);
+  fModelTotAdapuM1->Add( hAdapTeO2u238M1,       fParameters[11] );
+  fModelTotAdapuM1->Add( hAdapCuFrameu238M1,    fParameters[21] );
+  fModelTotAdapuM1->Add( hAdapCuBoxu238M1,      fParameters[29] );
+  fModelTotAdapuM1->Add( hAdap50mKu238M1,       fParameters[37] );
+  fModelTotAdapuM1->Add( hAdap600mKu238M1,      fParameters[41] );
+  fModelTotAdapuM1->Add( hAdapPbRomu238M1,      fParameters[48] );
+  fModelTotAdapuM1->Add( hAdapMBu238M1,         fParameters[52] );
+  fModelTotAdapuM1->Add( hAdapIVCu238M1,        fParameters[56] );
+  fModelTotAdapuM1->Add( hAdapOVCu238M1,        fParameters[60] );
 
-  fModelTotAdapKM1->Add(fAdapFrameKM1,     fParameters[4]);
-  fModelTotAdapKM1->Add(fAdapTShieldKM1,   fParameters[4]);
-  fModelTotAdapKM1->Add(fAdap50mKKM1,      fParameters[4]);
-  fModelTotAdapKM1->Add(fAdap600mKKM1,     fParameters[4]);
-  fModelTotAdapKM1->Add(fAdapIVCKM1,       fParameters[5]);
-  fModelTotAdapKM1->Add(fAdapOVCKM1,       fParameters[5]);
+  fModelTotAdapkM1->Add( hAdapTeO2k40M1,        fParameters[3]  );
+  fModelTotAdapkM1->Add( hAdapCuFramek40M1,     fParameters[17] );
+  fModelTotAdapkM1->Add( hAdapCuBoxk40M1,       fParameters[25] );
+  fModelTotAdapkM1->Add( hAdap50mKk40M1,        fParameters[33] );
+  fModelTotAdapkM1->Add( hAdap600mKk40M1,       fParameters[39] );
+  fModelTotAdapkM1->Add( hAdapPbRomk40M1,       fParameters[45] );
+  fModelTotAdapkM1->Add( hAdapMBk40M1,          fParameters[50] );
+  fModelTotAdapkM1->Add( hAdapIVCk40M1,         fParameters[54] );
+  fModelTotAdapkM1->Add( hAdapOVCk40M1,         fParameters[58] ); 
 
-  fModelTotAdapCoM1->Add(fAdapFrameCoM1,   fParameters[6]);
-  fModelTotAdapCoM1->Add(fAdapTShieldCoM1, fParameters[7]);
-  fModelTotAdapCoM1->Add(fAdap50mKCoM1,    fParameters[21]);
-  fModelTotAdapCoM1->Add(fAdap600mKCoM1,   fParameters[22]);
-  fModelTotAdapCoM1->Add(fAdapIVCCoM1,     fParameters[23]);
-  fModelTotAdapCoM1->Add(fAdapOVCCoM1,     fParameters[24]);
+  fModelTotAdapcoM1->Add( hAdapTeO2co60M1,      fParameters[2]  );
+  fModelTotAdapcoM1->Add( hAdapCuFrameco60M1,   fParameters[15] );
+  fModelTotAdapcoM1->Add( hAdapCuBoxco60M1,     fParameters[23] );
+  fModelTotAdapcoM1->Add( hAdap50mKco60M1,      fParameters[31] );
+  fModelTotAdapcoM1->Add( hAdap600mKco60M1,     fParameters[38] );
+  fModelTotAdapcoM1->Add( hAdapPbRomco60M1,     fParameters[43] );
+  fModelTotAdapcoM1->Add( hAdapMBco60M1,        fParameters[49] );
+  fModelTotAdapcoM1->Add( hAdapIVCco60M1,       fParameters[53] );
+  fModelTotAdapcoM1->Add( hAdapOVCco60M1,       fParameters[57] );
 
-  fModelTotAdapMnM1->Add(fAdapTShieldMnM1, fParameters[11]);
-  fModelTotAdapMnM1->Add(fAdapIVCMnM1,     fParameters[12]);
+  fModelTotAdappbM1->Add( hAdapTeO2pb210M1,     fParameters[4]  );
+  fModelTotAdappbM1->Add( hAdapCuFramepb210M1,  fParameters[15] );
+  fModelTotAdappbM1->Add( hAdapCuBoxpb210M1,    fParameters[27] );
+  fModelTotAdappbM1->Add( hAdap50mKpb210M1,     fParameters[35] );
+  fModelTotAdappbM1->Add( hAdapPbRompb210M1,    fParameters[46] );
+
+  fModelTotAdapcsM1->Add( hAdapCuFramecs137M1,  fParameters[16] );
+  fModelTotAdapcsM1->Add( hAdapCuBoxcs137M1,    fParameters[24] );
+  fModelTotAdapcsM1->Add( hAdap50mKcs137M1,     fParameters[32] );
+  fModelTotAdapcsM1->Add( hAdapPbRomcs137M1,    fParameters[44] );
+
+  fModelTotAdapcoM1->Add( hAdapCuFrameco58M1,   fParameters[14] );
+  fModelTotAdapcoM1->Add( hAdapCuBoxco58M1,     fParameters[22] );
+  fModelTotAdapcoM1->Add( hAdap50mKco58M1,      fParameters[30] );
+
+  fModelTotAdapteo2M1->Add( hAdapTeO2po210M1,   fParameters[5] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2te125M1,   fParameters[6] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2th228M1,   fParameters[8] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2ra226M1,   fParameters[9] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2rn222M1,   fParameters[10] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2th230M1,   fParameters[12] );
+  fModelTotAdapteo2M1->Add( hAdapTeO2u234M1,    fParameters[13] );
+
+  fModelTotAdapmnM1->Add( hAdapCuFramemn54M1,   fParameters[18] );
+  fModelTotAdapmnM1->Add( hAdapCuBoxmn54M1,     fParameters[26] );
+  fModelTotAdapmnM1->Add( hAdap50mKmn54M1,      fParameters[34] );
+
+  fModelTotAdapbiM1->Add( hAdapPbRombi207M1,    fParameters[42] );
+  fModelTotAdapNDBDM1->Add( hAdapTeO20nuM1,     fParameters[0] );
+  fModelTotAdap2NDBDM1->Add( hAdapTeO22nuM1,    fParameters[1] );
 
 
-  fModelTotAdapNDBDM1->Add(fAdapNDBDM1,    fParameters[9]);
-  fModelTotAdap2NDBDM1->Add(fAdap2NDBDM1,  fParameters[8]);
-  fModelTotAdapBiM1->Add(fAdapBiM1,        fParameters[10]);
+// M2
+  fModelTotAdapthM2->Add( hAdapTeO2th232M2,     fParameters[7]  );
+  fModelTotAdapthM2->Add( hAdapCuFrameth232M2,  fParameters[20] );
+  fModelTotAdapthM2->Add( hAdapCuBoxth232M2,    fParameters[28] );
+  fModelTotAdapthM2->Add( hAdap50mKth232M2,     fParameters[36] );
+  fModelTotAdapthM2->Add( hAdap600mKth232M2,    fParameters[40] );
+  fModelTotAdapthM2->Add( hAdapPbRomth232M2,    fParameters[47] );
+  fModelTotAdapthM2->Add( hAdapMBth232M2,       fParameters[51] );
+  fModelTotAdapthM2->Add( hAdapIVCth232M2,      fParameters[55] );
+  fModelTotAdapthM2->Add( hAdapOVCth232M2,      fParameters[59] );
 
-  // fModelTotAdapPbM1->Add(fAdapCrystalPbBM1, fParameters[25]);
+  fModelTotAdapuM2->Add( hAdapTeO2u238M2,       fParameters[11] );
+  fModelTotAdapuM2->Add( hAdapCuFrameu238M2,    fParameters[21] );
+  fModelTotAdapuM2->Add( hAdapCuBoxu238M2,      fParameters[29] );
+  fModelTotAdapuM2->Add( hAdap50mKu238M2,       fParameters[37] );
+  fModelTotAdapuM2->Add( hAdap600mKu238M2,      fParameters[41] );
+  fModelTotAdapuM2->Add( hAdapPbRomu238M2,      fParameters[48] );
+  fModelTotAdapuM2->Add( hAdapMBu238M2,         fParameters[52] );
+  fModelTotAdapuM2->Add( hAdapIVCu238M2,        fParameters[56] );
+  fModelTotAdapuM2->Add( hAdapOVCu238M2,        fParameters[60] );
 
+  fModelTotAdapkM2->Add( hAdapTeO2k40M2,        fParameters[3]  );
+  fModelTotAdapkM2->Add( hAdapCuFramek40M2,     fParameters[17] );
+  fModelTotAdapkM2->Add( hAdapCuBoxk40M2,       fParameters[25] );
+  fModelTotAdapkM2->Add( hAdap50mKk40M2,        fParameters[33] );
+  fModelTotAdapkM2->Add( hAdap600mKk40M2,       fParameters[39] );
+  fModelTotAdapkM2->Add( hAdapPbRomk40M2,       fParameters[45] );
+  fModelTotAdapkM2->Add( hAdapMBk40M2,          fParameters[50] );
+  fModelTotAdapkM2->Add( hAdapIVCk40M2,         fParameters[54] );
+  fModelTotAdapkM2->Add( hAdapOVCk40M2,         fParameters[58] ); 
 
-  // M2 Parameters
-  fModelTotAdapThM2->Add(fAdapFrameThM2,   fParameters[0]);
-  fModelTotAdapThM2->Add(fAdapTShieldThM2, fParameters[1]);
-  fModelTotAdapThM2->Add(fAdap50mKThM2,    fParameters[13]);
-  fModelTotAdapThM2->Add(fAdap600mKThM2,   fParameters[14]);
-  fModelTotAdapThM2->Add(fAdapIVCThM2,     fParameters[15]);
-  fModelTotAdapThM2->Add(fAdapOVCThM2,     fParameters[16]);
+  fModelTotAdapcoM2->Add( hAdapTeO2co60M2,      fParameters[2]  );
+  fModelTotAdapcoM2->Add( hAdapCuFrameco60M2,   fParameters[15] );
+  fModelTotAdapcoM2->Add( hAdapCuBoxco60M2,     fParameters[23] );
+  fModelTotAdapcoM2->Add( hAdap50mKco60M2,      fParameters[31] );
+  fModelTotAdapcoM2->Add( hAdap600mKco60M2,     fParameters[38] );
+  fModelTotAdapcoM2->Add( hAdapPbRomco60M2,     fParameters[43] );
+  fModelTotAdapcoM2->Add( hAdapMBco60M2,        fParameters[49] );
+  fModelTotAdapcoM2->Add( hAdapIVCco60M2,       fParameters[53] );
+  fModelTotAdapcoM2->Add( hAdapOVCco60M2,       fParameters[57] );
 
-  fModelTotAdapRaM2->Add(fAdapFrameRaM2,   fParameters[2]);
-  fModelTotAdapRaM2->Add(fAdapTShieldRaM2, fParameters[3]);
-  fModelTotAdapRaM2->Add(fAdap50mKRaM2,    fParameters[17]);
-  fModelTotAdapRaM2->Add(fAdap600mKRaM2,   fParameters[18]);
-  fModelTotAdapRaM2->Add(fAdapIVCRaM2,     fParameters[19]);
-  fModelTotAdapRaM2->Add(fAdapOVCRaM2,     fParameters[20]);
+  fModelTotAdappbM2->Add( hAdapTeO2pb210M2,     fParameters[4]  );
+  fModelTotAdappbM2->Add( hAdapCuFramepb210M2,  fParameters[15] );
+  fModelTotAdappbM2->Add( hAdapCuBoxpb210M2,    fParameters[27] );
+  fModelTotAdappbM2->Add( hAdap50mKpb210M2,     fParameters[35] );
+  fModelTotAdappbM2->Add( hAdapPbRompb210M2,    fParameters[46] );
 
-  fModelTotAdapKM2->Add(fAdapFrameKM2,     fParameters[4]);
-  fModelTotAdapKM2->Add(fAdapTShieldKM2,   fParameters[4]);
-  fModelTotAdapKM2->Add(fAdap50mKKM2,      fParameters[4]);
-  fModelTotAdapKM2->Add(fAdap600mKKM2,     fParameters[4]);
-  fModelTotAdapKM2->Add(fAdapIVCKM2,       fParameters[5]);
-  fModelTotAdapKM2->Add(fAdapOVCKM2,       fParameters[5]);
+  fModelTotAdapcsM2->Add( hAdapCuFramecs137M2,  fParameters[16] );
+  fModelTotAdapcsM2->Add( hAdapCuBoxcs137M2,    fParameters[24] );
+  fModelTotAdapcsM2->Add( hAdap50mKcs137M2,     fParameters[32] );
+  fModelTotAdapcsM2->Add( hAdapPbRomcs137M2,    fParameters[44] );
 
-  fModelTotAdapCoM2->Add(fAdapFrameCoM2,   fParameters[6]);
-  fModelTotAdapCoM2->Add(fAdapTShieldCoM2, fParameters[7]);
-  fModelTotAdapCoM2->Add(fAdap50mKCoM2,    fParameters[21]);
-  fModelTotAdapCoM2->Add(fAdap600mKCoM2,   fParameters[22]);
-  fModelTotAdapCoM2->Add(fAdapIVCCoM2,     fParameters[23]);
-  fModelTotAdapCoM2->Add(fAdapOVCCoM2,     fParameters[24]);
+  fModelTotAdapcoM2->Add( hAdapCuFrameco58M2,   fParameters[14] );
+  fModelTotAdapcoM2->Add( hAdapCuBoxco58M2,     fParameters[22] );
+  fModelTotAdapcoM2->Add( hAdap50mKco58M2,      fParameters[30] );
 
-  fModelTotAdapMnM2->Add(fAdapTShieldMnM2, fParameters[11]);
-  fModelTotAdapMnM2->Add(fAdapIVCMnM2,     fParameters[12]);
+  fModelTotAdapteo2M2->Add( hAdapTeO2po210M2,   fParameters[5] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2te125M2,   fParameters[6] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2th228M2,   fParameters[8] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2ra226M2,   fParameters[9] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2rn222M2,   fParameters[10] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2th230M2,   fParameters[12] );
+  fModelTotAdapteo2M2->Add( hAdapTeO2u234M2,    fParameters[13] );
 
-  fModelTotAdapNDBDM2->Add(fAdapNDBDM2,    fParameters[9]);
-  fModelTotAdap2NDBDM2->Add(fAdap2NDBDM2,  fParameters[8]);
-  fModelTotAdapBiM2->Add(fAdapBiM2,      fParameters[10]);
+  fModelTotAdapmnM2->Add( hAdapCuFramemn54M2,   fParameters[18] );
+  fModelTotAdapmnM2->Add( hAdapCuBoxmn54M2,     fParameters[26] );
+  fModelTotAdapmnM2->Add( hAdap50mKmn54M2,      fParameters[34] );
 
-  // fModelTotPbM2->Add(fAdapCrystalPbBM2, fParameters[25]);
+  fModelTotAdapbiM2->Add( hAdapPbRombi207M2,    fParameters[42] );
+  fModelTotAdapNDBDM2->Add( hAdapTeO20nuM2,     fParameters[0] );
+  fModelTotAdap2NDBDM2->Add( hAdapTeO22nuM2,    fParameters[1] );
 
   ////////// Only for testing
   // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(R*T)
@@ -3124,35 +3268,35 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapM1->SetLineWidth(1);
   fModelTotAdapM1->Draw("SAME");
 
-  fModelTotAdapThM1->SetLineColor(3);
-  fModelTotAdapThM1->SetLineStyle(2);
-  fModelTotAdapRaM1->SetLineColor(4);
-  fModelTotAdapRaM1->SetLineStyle(2);
-  fModelTotAdapKM1->SetLineColor(6);
-  fModelTotAdapKM1->SetLineStyle(2);
-  fModelTotAdapCoM1->SetLineColor(7);
-  fModelTotAdapCoM1->SetLineStyle(2);
+  fModelTotAdapthM1->SetLineColor(3);
+  fModelTotAdapthM1->SetLineStyle(2);
+  fModelTotAdapuM1->SetLineColor(4);
+  fModelTotAdapuM1->SetLineStyle(2);
+  fModelTotAdapkM1->SetLineColor(6);
+  fModelTotAdapkM1->SetLineStyle(2);
+  fModelTotAdapcoM1->SetLineColor(7);
+  fModelTotAdapcoM1->SetLineStyle(2);
   fModelTotAdapNDBDM1->SetLineColor(42);
   fModelTotAdapNDBDM1->SetLineStyle(2);
   fModelTotAdap2NDBDM1->SetLineColor(46);
   fModelTotAdap2NDBDM1->SetLineStyle(2);
-  fModelTotAdapBiM1->SetLineColor(5);
-  fModelTotAdapBiM1->SetLineStyle(2);
-  fModelTotAdapMnM1->SetLineColor(40);
-  fModelTotAdapMnM1->SetLineStyle(2);
+  fModelTotAdapbiM1->SetLineColor(5);
+  fModelTotAdapbiM1->SetLineStyle(2);
+  fModelTotAdapmnM1->SetLineColor(40);
+  fModelTotAdapmnM1->SetLineStyle(2);
 
 
-  fModelTotAdapPbM1->SetLineStyle(2);
-  fModelTotAdapPbM1->SetLineColor(38);
+  fModelTotAdappbM1->SetLineStyle(2);
+  fModelTotAdappbM1->SetLineColor(38);
 
-  fModelTotAdapThM1->Draw("SAME");
-  fModelTotAdapRaM1->Draw("SAME");
-  fModelTotAdapKM1->Draw("SAME");
-  fModelTotAdapCoM1->Draw("SAME");
+  fModelTotAdapthM1->Draw("SAME");
+  fModelTotAdapuM1->Draw("SAME");
+  fModelTotAdapkM1->Draw("SAME");
+  fModelTotAdapcoM1->Draw("SAME");
   fModelTotAdapNDBDM1->Draw("SAME");
   fModelTotAdap2NDBDM1->Draw("SAME");
-  fModelTotAdapBiM1->Draw("SAME");
-  fModelTotAdapMnM1->Draw("SAME");
+  fModelTotAdapbiM1->Draw("SAME");
+  fModelTotAdapmnM1->Draw("SAME");
 
   // fModelTotAdapPbM1->Draw("SAME");
 /*
@@ -3174,14 +3318,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
 */
   TLegend *legfit1 = new TLegend(0.8,0.8,0.97,0.97);
   legfit1->AddEntry(fModelTotAdapM1, "Total PDF", "l");
-  legfit1->AddEntry(fModelTotAdapThM1, "Total Th-232", "l");
-  legfit1->AddEntry(fModelTotAdapRaM1, "Total Ra-226", "l");
-  legfit1->AddEntry(fModelTotAdapKM1, "Total K-40", "l");
-  legfit1->AddEntry(fModelTotAdapCoM1, "Total Co-60", "l");
+  legfit1->AddEntry(fModelTotAdapthM1, "Total th-232", "l");
+  legfit1->AddEntry(fModelTotAdapuM1, "Total u-238", "l");
+  legfit1->AddEntry(fModelTotAdapkM1, "Total k-40", "l");
+  legfit1->AddEntry(fModelTotAdapcoM1, "Total co-60", "l");
   legfit1->AddEntry(fModelTotAdapNDBDM1, "NDBD", "l");
   legfit1->AddEntry(fModelTotAdap2NDBDM1, "2NDBD", "l");
-  legfit1->AddEntry(fModelTotAdapBiM1, "Bi-207", "l");
-  legfit1->AddEntry(fModelTotAdapMnM1, "Mn-54", "l");
+  legfit1->AddEntry(fModelTotAdapbiM1, "bi-207", "l");
+  legfit1->AddEntry(fModelTotAdapmnM1, "mn-54", "l");
   legfit1->Draw();
 
 
@@ -3205,34 +3349,34 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapM2->SetLineWidth(1);
   fModelTotAdapM2->Draw("SAME");
 
-  fModelTotAdapThM2->SetLineColor(3);
-  fModelTotAdapThM2->SetLineStyle(2);
-  fModelTotAdapRaM2->SetLineColor(4);
-  fModelTotAdapRaM2->SetLineStyle(2);
-  fModelTotAdapKM2->SetLineColor(6);
-  fModelTotAdapKM2->SetLineStyle(2);
-  fModelTotAdapCoM2->SetLineColor(7);
-  fModelTotAdapCoM2->SetLineStyle(2);
+  fModelTotAdapthM2->SetLineColor(3);
+  fModelTotAdapthM2->SetLineStyle(2);
+  fModelTotAdapuM2->SetLineColor(4);
+  fModelTotAdapuM2->SetLineStyle(2);
+  fModelTotAdapkM2->SetLineColor(6);
+  fModelTotAdapkM2->SetLineStyle(2);
+  fModelTotAdapcoM2->SetLineColor(7);
+  fModelTotAdapcoM2->SetLineStyle(2);
   fModelTotAdapNDBDM2->SetLineColor(42);
   fModelTotAdapNDBDM2->SetLineStyle(2);
   fModelTotAdap2NDBDM2->SetLineColor(46);
   fModelTotAdap2NDBDM2->SetLineStyle(2);
-  fModelTotAdapBiM2->SetLineColor(5);
-  fModelTotAdapBiM2->SetLineStyle(2);
-  fModelTotAdapMnM2->SetLineColor(40);
-  fModelTotAdapMnM2->SetLineStyle(2);
+  fModelTotAdapbiM2->SetLineColor(5);
+  fModelTotAdapbiM2->SetLineStyle(2);
+  fModelTotAdapmnM2->SetLineColor(40);
+  fModelTotAdapmnM2->SetLineStyle(2);
 
   // fTotCorrection->SetLineStyle(2);
   // fTotCorrection->SetLineColor(38);
 
-  fModelTotAdapThM2->Draw("SAME");
-  fModelTotAdapRaM2->Draw("SAME");
-  fModelTotAdapKM2->Draw("SAME");
-  fModelTotAdapCoM2->Draw("SAME");
+  fModelTotAdapthM2->Draw("SAME");
+  fModelTotAdapuM2->Draw("SAME");
+  fModelTotAdapkM2->Draw("SAME");
+  fModelTotAdapcoM2->Draw("SAME");
   fModelTotAdapNDBDM2->Draw("SAME");
   fModelTotAdap2NDBDM2->Draw("SAME");
-  fModelTotAdapBiM2->Draw("SAME");    
-  fModelTotAdapMnM2->Draw("SAME"); 
+  fModelTotAdapbiM2->Draw("SAME");    
+  fModelTotAdapmnM2->Draw("SAME"); 
 
 /* 
   // Many Parameters
@@ -3254,14 +3398,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   TLegend *legfit2 = new TLegend(0.8,0.8,0.97,0.97);
   legfit2->AddEntry(fModelTotAdapM2, "Total PDF", "l");
-  legfit2->AddEntry(fModelTotAdapThM2, "Total Th-232", "l");
-  legfit2->AddEntry(fModelTotAdapRaM2, "Total Ra-226", "l");
-  legfit2->AddEntry(fModelTotAdapKM2, "Total K-40", "l");
-  legfit2->AddEntry(fModelTotAdapCoM2, "Total Co-60", "l");
+  legfit2->AddEntry(fModelTotAdapthM2, "Total th-232", "l");
+  legfit2->AddEntry(fModelTotAdapuM2, "Total u-238", "l");
+  legfit2->AddEntry(fModelTotAdapkM2, "Total k-40", "l");
+  legfit2->AddEntry(fModelTotAdapcoM2, "Total co-60", "l");
   legfit2->AddEntry(fModelTotAdapNDBDM2, "NDBD", "l");
   legfit2->AddEntry(fModelTotAdap2NDBDM2, "2NDBD", "l");
-  legfit2->AddEntry(fModelTotAdapBiM2, "Bi-207", "l");
-  legfit2->AddEntry(fModelTotAdapMnM2, "Mn-54", "l");
+  legfit2->AddEntry(fModelTotAdapbiM2, "bi-207", "l");
+  legfit2->AddEntry(fModelTotAdapmnM2, "mn-54", "l");
 
   legfit2->Draw();
 
@@ -3313,20 +3457,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "ROI bin: " << fAdapDataHistoM1->FindBin(2470) << " " << fAdapDataHistoM1->FindBin(2570) << endl;
   cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470)) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Th PDF in ROI: " << fModelTotAdapThM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fModelTotAdapThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Ra PDF in ROI: " << fModelTotAdapRaM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapRaM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapCoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapCoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total K PDF in ROI: " << fModelTotAdapKM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapKM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Bi PDF in ROI: " << fModelTotAdapBiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapBiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;  
+  cout << "Integral Total Th PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+  cout << "Integral Total Ra PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+  cout << "Integral Total K PDF in ROI: " << fModelTotAdapkM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapkM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+  cout << "Integral Total Bi PDF in ROI: " << fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;  
   cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Frame Th PDF in ROI: " << fParameters[0]*fSmearFrameThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-  cout << "Integral TShield Th PDF in ROI: " << fParameters[1]*fSmearTShieldThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-  cout << "Integral 50mK Th PDF in ROI: " << fParameters[13]*fSmear50mKThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-  cout << "Integral 600mK Th PDF in ROI: " << fParameters[14]*fSmear600mKThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-  cout << "Integral IVC Th PDF in ROI: " << fParameters[15]*fSmearIVCThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-  cout << "Integral OVC Th PDF in ROI: " << fParameters[16]*fSmearOVCThM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << endl;
-
 
   return true;
 

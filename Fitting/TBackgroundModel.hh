@@ -99,53 +99,67 @@ private:
 	// To be updated 11-05-2014
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
-	TH1D			*fModelTotThM1;
-	TH1D			*fModelTotRaM1;
-	TH1D			*fModelTotKM1;
-	TH1D			*fModelTotCoM1;
-	TH1D			*fModelTotMnM1;
+	TH1D			*fModelTotthM1;
+	TH1D			*fModelTotuM1;
+	TH1D			*fModelTotkM1;
+	TH1D			*fModelTotcoM1;
+	TH1D			*fModelTotmnM1;
 	TH1D			*fModelTotNDBDM1;
 	TH1D			*fModelTot2NDBDM1;
-	TH1D			*fModelTotBiM1;
-	TH1D			*fModelTotPtM1;
-	TH1D			*fModelTotPbM1;
+	TH1D			*fModelTotbiM1;
+	TH1D			*fModelTotptM1;
+	TH1D			*fModelTotpbM1;
+	TH1D			*fModelTotcsM1;
+	TH1D			*fModelTotco2M1;
+	TH1D			*fModelTotteo2M1;
+
 
 	TH1D			*fModelTotAdapM1;
-	TH1D			*fModelTotAdapThM1;
-	TH1D			*fModelTotAdapRaM1;
-	TH1D			*fModelTotAdapKM1;
-	TH1D			*fModelTotAdapCoM1;
-	TH1D			*fModelTotAdapMnM1;
+	TH1D			*fModelTotAdapthM1;
+	TH1D			*fModelTotAdapuM1;
+	TH1D			*fModelTotAdapkM1;
+	TH1D			*fModelTotAdapcoM1;
+	TH1D			*fModelTotAdapmnM1;
 	TH1D			*fModelTotAdapNDBDM1;
 	TH1D			*fModelTotAdap2NDBDM1;
-	TH1D			*fModelTotAdapBiM1;
-	TH1D			*fModelTotAdapPtM1;
-	TH1D			*fModelTotAdapPbM1;
+	TH1D			*fModelTotAdapbiM1;
+	TH1D			*fModelTotAdapptM1;
+	TH1D			*fModelTotAdappbM1;
+	TH1D			*fModelTotAdapcsM1;
+	TH1D			*fModelTotAdapco2M1;
+	TH1D			*fModelTotAdapteo2M1;
 
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
-	TH1D			*fModelTotThM2;
-	TH1D			*fModelTotRaM2;
-	TH1D			*fModelTotKM2;
-	TH1D			*fModelTotCoM2;
-	TH1D			*fModelTotMnM2;
+	TH1D			*fModelTotthM2;
+	TH1D			*fModelTotuM2;
+	TH1D			*fModelTotkM2;
+	TH1D			*fModelTotcoM2;
+	TH1D			*fModelTotnnM2;
 	TH1D			*fModelTotNDBDM2;
 	TH1D			*fModelTot2NDBDM2;
-	TH1D			*fModelTotBiM2;
-	TH1D			*fModelTotPtM2;
-	TH1D			*fModelTotPbM2;
+	TH1D			*fModelTotbiM2;
+	TH1D			*fModelTotptM2;
+	TH1D			*fModelTotpbM2;
+	TH1D			*fModelTotcsM2;
+	TH1D			*fModelTotco2M2;
+	TH1D			*fModelTotteo2M2;
+
 
 	TH1D			*fModelTotAdapM2;
-	TH1D			*fModelTotAdapThM2;
-	TH1D			*fModelTotAdapRaM2;
-	TH1D			*fModelTotAdapKM2;
-	TH1D			*fModelTotAdapCoM2;
-	TH1D			*fModelTotAdapMnM2;
+	TH1D			*fModelTotAdapthM2;
+	TH1D			*fModelTotAdapuM2;
+	TH1D			*fModelTotAdapkM2;
+	TH1D			*fModelTotAdapcoM2;
+	TH1D			*fModelTotAdapmnM2;
 	TH1D			*fModelTotAdapNDBDM2;
 	TH1D			*fModelTotAdap2NDBDM2;
-	TH1D			*fModelTotAdapBiM2;
-	TH1D			*fModelTotAdapPtM2;
-	TH1D			*fModelTotAdapPbM2;
+	TH1D			*fModelTotAdapbiM2;
+	TH1D			*fModelTotAdapptM2;
+	TH1D			*fModelTotAdappbM2;
+	TH1D			*fModelTotAdapcsM2;
+	TH1D			*fModelTotAdapco2M2;
+	TH1D			*fModelTotAdapteo2M2;
 
 
 	// Residuals
