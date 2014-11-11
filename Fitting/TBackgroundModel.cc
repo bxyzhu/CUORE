@@ -92,17 +92,8 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
-  // if(bAdaptiveBinning)
-  // {
-    Obj->UpdateModelAdaptive();
-    fval = Obj->GetChiSquareAdaptive();
-  // }
-  // else
-  // {
-  	// Obj->UpdateModel();
-    // fval = Obj->GetChiSquare();
-  // }
-
+    Obj->UpdateModel();
+    fval = Obj->GetChiSquare();
 }
 
 
@@ -204,46 +195,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fModelTotcsM2    = new TH1D("fModelTotcsM2",    "Total cs137",  dNBins, dMinEnergy, dMaxEnergy);
   fModelTotco2M2   = new TH1D("fModelTotco2M2",   "Total co58",   dNBins, dMinEnergy, dMaxEnergy);
   fModelTotteo2M2  = new TH1D("fModelTotteo2M2",  "Total TeO2",   dNBins, dMinEnergy, dMaxEnergy);
-
-
-
-  // Total Adaptive binning histograms M1
-  fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  fModelTotAdapthM1    = new TH1D("fModelTotAdapthM1",    "Total th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapuM1     = new TH1D("fModelTotAdapuM1",     "Total u238",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapkM1     = new TH1D("fModelTotAdapkM1",     "Total k40",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapcoM1    = new TH1D("fModelTotAdapcoM1",    "Total co60",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapmnM1    = new TH1D("fModelTotAdapmnM1",    "Total mn54",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  fModelTotAdapNDBDM1  = new TH1D("fModelTotAdapNDBDM1",  "Total NDBD",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdap2NDBDM1 = new TH1D("fModelTotAdap2NDBDM1", "Total 2NDBD",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapbiM1    = new TH1D("fModelTotAdapbiM1",    "Total bi207",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapbi2M1   = new TH1D("fModelTotAdapbi2M1",   "Total bi210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapptM1    = new TH1D("fModelTotAdapptM1",    "Total pt190",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdappbM1    = new TH1D("fModelTotAdappbM1",    "Total pb210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapcsM1    = new TH1D("fModelTotAdapcsM1",    "Total cs137",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapco2M1   = new TH1D("fModelTotAdapco2M1",   "Total co58",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapteo2M1  = new TH1D("fModelTotAdapteo2M1",  "Total TeO2",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-
-  // Total Adaptive binning histograms M2
-  fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  fModelTotAdapthM2    = new TH1D("fModelTotAdapthM2",    "Total th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapuM2     = new TH1D("fModelTotAdapuM2",     "Total u238",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapkM2     = new TH1D("fModelTotAdapkM2",     "Total k40",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapcoM2    = new TH1D("fModelTotAdapcoM2",    "Total co60",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapmnM2    = new TH1D("fModelTotAdapmnM2",    "Total mn54",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  fModelTotAdapNDBDM2  = new TH1D("fModelTotAdapNDBDM2",  "Total NDBD",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdap2NDBDM2 = new TH1D("fModelTotAdap2NDBDM2", "Total 2NDBD",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapbiM2    = new TH1D("fModelTotAdapbiM2",    "Total bi207",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapbi2M2   = new TH1D("fModelTotAdapbi2M2",   "Total bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapptM2    = new TH1D("fModelTotAdapotM2",    "Total pt190",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdappbM2    = new TH1D("fModelTotAdappbM2",    "Total pb210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapcsM2    = new TH1D("fModelTotAdapcsM2",    "Total cs137",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapco2M2   = new TH1D("fModelTotAdapco2M2",   "Total co58",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fModelTotAdapteo2M2  = new TH1D("fModelTotAdapteo2M2",  "Total TeO2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-
 
 
 
@@ -433,6 +384,43 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   dFitMaxBinM2 = fAdapDataHistoM2->FindBin(dFitMax);
 
 //////////////// Adaptive binned histograms
+  // Total Adaptive binning histograms M1
+  fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  fModelTotAdapthM1    = new TH1D("fModelTotAdapthM1",    "Total th232",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapuM1     = new TH1D("fModelTotAdapuM1",     "Total u238",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapkM1     = new TH1D("fModelTotAdapkM1",     "Total k40",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapcoM1    = new TH1D("fModelTotAdapcoM1",    "Total co60",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapmnM1    = new TH1D("fModelTotAdapmnM1",    "Total mn54",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  fModelTotAdapNDBDM1  = new TH1D("fModelTotAdapNDBDM1",  "Total NDBD",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdap2NDBDM1 = new TH1D("fModelTotAdap2NDBDM1", "Total 2NDBD",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapbiM1    = new TH1D("fModelTotAdapbiM1",    "Total bi207",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapbi2M1   = new TH1D("fModelTotAdapbi2M1",   "Total bi210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapptM1    = new TH1D("fModelTotAdapptM1",    "Total pt190",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdappbM1    = new TH1D("fModelTotAdappbM1",    "Total pb210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapcsM1    = new TH1D("fModelTotAdapcsM1",    "Total cs137",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapco2M1   = new TH1D("fModelTotAdapco2M1",   "Total co58",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapteo2M1  = new TH1D("fModelTotAdapteo2M1",  "Total TeO2",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+
+  // Total Adaptive binning histograms M2
+  fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  fModelTotAdapthM2    = new TH1D("fModelTotAdapthM2",    "Total th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapuM2     = new TH1D("fModelTotAdapuM2",     "Total u238",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapkM2     = new TH1D("fModelTotAdapkM2",     "Total k40",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapcoM2    = new TH1D("fModelTotAdapcoM2",    "Total co60",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapmnM2    = new TH1D("fModelTotAdapmnM2",    "Total mn54",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  fModelTotAdapNDBDM2  = new TH1D("fModelTotAdapNDBDM2",  "Total NDBD",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdap2NDBDM2 = new TH1D("fModelTotAdap2NDBDM2", "Total 2NDBD",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapbiM2    = new TH1D("fModelTotAdapbiM2",    "Total bi207",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapbi2M2   = new TH1D("fModelTotAdapbi2M2",   "Total bi210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapptM2    = new TH1D("fModelTotAdapotM2",    "Total pt190",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdappbM2    = new TH1D("fModelTotAdappbM2",    "Total pb210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapcsM2    = new TH1D("fModelTotAdapcsM2",    "Total cs137",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapco2M2   = new TH1D("fModelTotAdapco2M2",   "Total co58",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapteo2M2  = new TH1D("fModelTotAdapteo2M2",  "Total TeO2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
   // Crystal M1 and M2
   hAdapTeO20nuM1       = new TH1D("hAdapTeO20nuM1",    "hAdapTeO20nuM1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO22nuM1       = new TH1D("hAdapTeO22nuM1",    "hAdapTeO22nuM1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -586,6 +574,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 
   // Loads all of the PDFs from file
   Initialize();
+
 }
   
 TBackgroundModel::~TBackgroundModel()
@@ -983,7 +972,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1)
     dDummy = h1->GetBinContent(i);
     dDummyFill += dDummy;
 
-    if(dDummyFill >= 10)
+    if(dDummyFill >= 50)
     {
       dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
       dDummyFill = 0;
@@ -3015,7 +3004,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    int dNumParameters = 4;
 
    //Tell minuit what external function to use 
-   minuit.SetFCN(myExternal_FCN);
+   minuit.SetFCN(myExternal_FCNAdap);
    
    int status = minuit.Migrad(); // this actually does the minimisation
 
@@ -3461,4 +3450,82 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 }
 
+void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code)
+{
+  // Required External Wrapper for function to be minimized by Minuit 
+ 
+  // This gets called for each value of the parameters minuit tries
+  // here the x array contains the parameters you are trying to fit
+  
+  // here myClass should inherit from TObject
+  TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
+
+  // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
+  Obj->SetParameters(0, x[0]);   
+  Obj->SetParameters(1, x[1]);  
+  Obj->SetParameters(2, x[2]);
+  Obj->SetParameters(3, x[3]);
+  Obj->SetParameters(4, x[4]);
+  Obj->SetParameters(5, x[5]);   
+  Obj->SetParameters(6, x[6]);  
+  Obj->SetParameters(7, x[7]);
+  Obj->SetParameters(8, x[8]);
+  Obj->SetParameters(9, x[9]);
+  Obj->SetParameters(10, x[10]);
+  Obj->SetParameters(11, x[11]);
+  Obj->SetParameters(12, x[12]);
+  Obj->SetParameters(13, x[13]);
+  Obj->SetParameters(14, x[14]);
+  Obj->SetParameters(15, x[15]);
+  Obj->SetParameters(16, x[16]);
+  Obj->SetParameters(17, x[17]);
+  Obj->SetParameters(18, x[18]);
+  Obj->SetParameters(19, x[19]);
+  Obj->SetParameters(20, x[20]);
+  Obj->SetParameters(21, x[21]);
+  Obj->SetParameters(22, x[22]);
+  Obj->SetParameters(23, x[23]);
+  Obj->SetParameters(24, x[24]);
+  Obj->SetParameters(25, x[25]);
+  Obj->SetParameters(26, x[26]);
+  Obj->SetParameters(27, x[27]);
+  Obj->SetParameters(28, x[28]);
+  Obj->SetParameters(29, x[29]);
+  Obj->SetParameters(30, x[30]);
+  Obj->SetParameters(31, x[31]);
+  Obj->SetParameters(32, x[32]);
+  Obj->SetParameters(33, x[33]);
+  Obj->SetParameters(34, x[34]);
+  Obj->SetParameters(35, x[35]);
+  Obj->SetParameters(36, x[36]);
+  Obj->SetParameters(37, x[37]);
+  Obj->SetParameters(38, x[38]);
+  Obj->SetParameters(39, x[39]);
+  Obj->SetParameters(40, x[40]);
+  Obj->SetParameters(41, x[41]);
+  Obj->SetParameters(42, x[42]);
+  Obj->SetParameters(43, x[43]);
+  Obj->SetParameters(44, x[44]);
+  Obj->SetParameters(45, x[45]);
+  Obj->SetParameters(46, x[46]);
+  Obj->SetParameters(47, x[47]);
+  Obj->SetParameters(48, x[48]);
+  Obj->SetParameters(49, x[49]);
+  Obj->SetParameters(50, x[50]);
+  Obj->SetParameters(51, x[51]);
+  Obj->SetParameters(52, x[52]);
+  Obj->SetParameters(53, x[53]);
+  Obj->SetParameters(54, x[54]);
+  Obj->SetParameters(55, x[55]);
+  Obj->SetParameters(56, x[56]);
+  Obj->SetParameters(57, x[57]);
+  Obj->SetParameters(58, x[58]);
+  Obj->SetParameters(59, x[59]);
+  Obj->SetParameters(60, x[60]); 
+
+
+  // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
+    Obj->UpdateModelAdaptive();
+    fval = Obj->GetChiSquareAdaptive();
+}
 
