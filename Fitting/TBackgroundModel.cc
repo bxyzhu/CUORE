@@ -92,16 +92,17 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
-  if(bAdaptiveBinning)
-  {
+  // if(bAdaptiveBinning)
+  // {
     Obj->UpdateModelAdaptive();
     fval = Obj->GetChiSquareAdaptive();
-  }
-  else
-  {
-  	Obj->UpdateModel();
-    fval = Obj->GetChiSquare();
-  }
+  // }
+  // else
+  // {
+  	// Obj->UpdateModel();
+    // fval = Obj->GetChiSquare();
+  // }
+
 }
 
 
@@ -1080,81 +1081,81 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    // Using more parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "hTeO20nuM1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(1, "hTeO22nuM1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(2, "hTeO2co60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(3, "hTeO2k40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(4, "hTeO2pb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(5, "hTeO2po210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(6, "hTeO2te125M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(7, "hTeO2th232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(8, "hTeO2th228M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(9, "hTeO2ra226M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(10, "hTeO2rn222M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(11, "hTeO2u238M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(12, "hTeO2th230M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(13, "hTeO2u234M1",  0., 10.0, 0., 10000);
+   minuit.DefineParameter(0, "hTeO20nuM1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(1, "hTeO22nuM1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(2, "hTeO2co60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(3, "hTeO2k40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(4, "hTeO2pb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(5, "hTeO2po210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(6, "hTeO2te125M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(7, "hTeO2th232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(8, "hTeO2th228M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(9, "hTeO2ra226M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(10, "hTeO2rn222M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(11, "hTeO2u238M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(12, "hTeO2th230M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(13, "hTeO2u234M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(14, "hCuFrameco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(15, "hCuFrameco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(16, "hCuFramecs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(17, "hCuFramek40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(18, "hCuFramemn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(19, "hCuFramepb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(20, "hCuFrameth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(21, "hCuFrameu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(14, "hCuFrameco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(15, "hCuFrameco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(16, "hCuFramecs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(17, "hCuFramek40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(18, "hCuFramemn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(19, "hCuFramepb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(20, "hCuFrameth232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(21, "hCuFrameu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(22, "hCuBoxco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(23, "hCuBoxco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(24, "hCuBoxcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(25, "hCuBoxk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(26, "hCuBoxmn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(27, "hCuBoxpb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(28, "hCuBoxth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(29, "hCuBoxu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(22, "hCuBoxco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(23, "hCuBoxco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(24, "hCuBoxcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(25, "hCuBoxk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(26, "hCuBoxmn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(27, "hCuBoxpb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(28, "hCuBoxth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(29, "hCuBoxu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(30, "h50mKco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(31, "h50mKco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(32, "h50mKcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(33, "h50mKk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(34, "h50mKmn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(35, "h50mKpb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(36, "h50mKth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(37, "h50mKu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(30, "h50mKco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(31, "h50mKco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(32, "h50mKcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(33, "h50mKk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(34, "h50mKmn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(35, "h50mKpb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(36, "h50mKth232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(37, "h50mKu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(38, "h600mKco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(39, "h600mKk40M1",  1000., 10.0, 0., 10000); 
-   minuit.DefineParameter(40, "h600mKth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(41, "h600mKu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(38, "h600mKco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(39, "h600mKk40M1",  0., 10.0, 0., 1000000); 
+   minuit.DefineParameter(40, "h600mKth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(41, "h600mKu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(42, "hPbRombi207M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(43, "hPbRomco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(44, "hPbRomcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(45, "hPbRomk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(46, "hPbRompb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(47, "hPbRomth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(48, "hPbRomu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(42, "hPbRombi207M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(43, "hPbRomco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(44, "hPbRomcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(45, "hPbRomk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(46, "hPbRompb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(47, "hPbRomth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(48, "hPbRomu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(49, "hMBco60M1",  1000., 10.0, 0., 10000); 
-   minuit.DefineParameter(50, "hMBk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(51, "hMBth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(52, "hMBu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(49, "hMBco60M1",  0., 10.0, 0., 1000000); 
+   minuit.DefineParameter(50, "hMBk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(51, "hMBth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(52, "hMBu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(53, "hIVCco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(54, "hIVCk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(55, "hIVCth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(56, "hIVCu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(53, "hIVCco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(54, "hIVCk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(55, "hIVCth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(56, "hIVCu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(57, "hOVCco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(58, "hOVCk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(59, "hOVCth232M1",  1000., 10.0, 0., 10000);    
-   minuit.DefineParameter(60, "hOVCu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(57, "hOVCco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(58, "hOVCk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(59, "hOVCth232M1",  0., 10.0, 0., 1000000);    
+   minuit.DefineParameter(60, "hOVCu238M1",  0., 10.0, 0., 1000000);
 
    // Fix parameters here
    minuit.FixParameter(0); // TeO2 0nu
    minuit.FixParameter(1); // TeO2 2nu
-   // minuit.FixParameter(2); // TeO2 co60
-   // minuit.FixParameter(3); // TeO2 k40
+   minuit.FixParameter(2); // TeO2 co60
+   minuit.FixParameter(3); // TeO2 k40
    minuit.FixParameter(4); // TeO2 pb210
    minuit.FixParameter(5); // TeO2 po210
    minuit.FixParameter(6); // TeO2 te125m
@@ -1166,29 +1167,29 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(12); // TeO2 u238-th230
    minuit.FixParameter(13); // TeO2 u238-u234
    minuit.FixParameter(14); // Frame co58
-   // minuit.FixParameter(15); // Frame co60
+   minuit.FixParameter(15); // Frame co60
    minuit.FixParameter(16); // Frame cs137
-   // minuit.FixParameter(17); // Frame k40
+   minuit.FixParameter(17); // Frame k40
    minuit.FixParameter(18); // Frame mn54
    minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   // minuit.FixParameter(21); // Frame u238
+   minuit.FixParameter(21); // Frame u238
    minuit.FixParameter(22); // CuBox co58
-   // minuit.FixParameter(23); // CuBox co60
+   minuit.FixParameter(23); // CuBox co60
    minuit.FixParameter(24); // CuBox cs137
-   // minuit.FixParameter(25); // CuBox k40
+   minuit.FixParameter(25); // CuBox k40
    minuit.FixParameter(26); // CuBox mn54
    minuit.FixParameter(27); // CuBox pb210
-   // minuit.FixParameter(28); // CuBox th232
-   // minuit.FixParameter(29); // CuBox u238
+   minuit.FixParameter(28); // CuBox th232
+   minuit.FixParameter(29); // CuBox u238
    minuit.FixParameter(30); // 50mK co58
-   // minuit.FixParameter(31); // 50mK co60
+   minuit.FixParameter(31); // 50mK co60
    minuit.FixParameter(32); // 50mK cs137
-   // minuit.FixParameter(33); // 50mK k40
+   minuit.FixParameter(33); // 50mK k40
    minuit.FixParameter(34); // 50mK mn54
    minuit.FixParameter(35); // 50mK pb210
    // minuit.FixParameter(36); // 50mK th232
-   // minuit.FixParameter(37); // 50mK u238
+   minuit.FixParameter(37); // 50mK u238
    minuit.FixParameter(38); // 600mK co60
    minuit.FixParameter(39); // 600mK k40
    minuit.FixParameter(40); // 600mK th232
@@ -1213,7 +1214,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(59); // OVC th232
    minuit.FixParameter(60); // OVC u238
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 16;
+   int dNumParameters = 4;
 
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
@@ -1493,7 +1494,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotbiM1->SetLineColor(5);
   fModelTotbiM1->SetLineStyle(2);
   fModelTotmnM1->SetLineColor(40);
-  fModelTotmnM1->SetLineStyle(2);
+  fModelTotmnM1->SetLineStyle(20);
 
 
   fModelTotpbM1->SetLineStyle(2);
@@ -1632,7 +1633,7 @@ bool TBackgroundModel::DoTheFit()
 
 
 
-
+/*
 	// Residuals
 	TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
   hResidualGausM1 = new TH1D("hResidualGausM1", "Residual Distribution (M1)", 100, -50, 50);
@@ -1686,7 +1687,7 @@ bool TBackgroundModel::DoTheFit()
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotNDBDM1->Integral(2470/dBinSize, 2570/dBinSize) << " +/- " << sqrt(fModelTotNDBDM1->Integral(2470/dBinSize, 2570/dBinSize)) << endl;
 
   cout << "M2/(M1+M2) = " << (double)fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)/(fModelTotM1->Integral(300/dBinSize, 3000/dBinSize)+fModelTotM2->Integral(300/dBinSize, 3000/dBinSize)) << endl;
-
+*/
 
   // cout << fTotCorrection->Integral(1300/dBinSize, 1400/dBinSize) << endl;
 
@@ -1811,7 +1812,8 @@ void TBackgroundModel::Initialize()
 
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
-  fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk.root"); 
+  fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk_nonnormalized.root"); 
+  // fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk.root"); 
 
 ///////////// Bulk Histograms
   // Crystal M1 and M2
@@ -2623,8 +2625,6 @@ void TBackgroundModel::UpdateModel()
   fModelTotM2->Add( hOVCth232M2,     fParameters[59]);
   fModelTotM2->Add( hOVCu238M2,      fParameters[60]);  
 
-  // Adding on correction for M2.. (just the M1 spectrum)
-  // fModelTotM2->Add( fCorrectionM2, 180197*(1-TMath::Exp(-2*0.05*0.1)) );
 }
 
 void TBackgroundModel::UpdateModelAdaptive()
@@ -2879,140 +2879,140 @@ bool TBackgroundModel::DoTheFitAdaptive()
    ////////////////////////////////////////////////
    // Using more parameters
    ////////////////////////////////////////////////
-   minuit.DefineParameter(0, "hTeO20nuM1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(1, "hTeO22nuM1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(2, "hTeO2co60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(3, "hTeO2k40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(4, "hTeO2pb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(5, "hTeO2po210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(6, "hTeO2te125M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(7, "hTeO2th232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(8, "hTeO2th228M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(9, "hTeO2ra226M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(10, "hTeO2rn222M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(11, "hTeO2u238M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(12, "hTeO2th230M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(13, "hTeO2u234M1",  0., 10.0, 0., 10000);
+   minuit.DefineParameter(0, "hTeO20nuM1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(1, "hTeO22nuM1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(2, "hTeO2co60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(3, "hTeO2k40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(4, "hTeO2pb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(5, "hTeO2po210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(6, "hTeO2te125M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(7, "hTeO2th232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(8, "hTeO2th228M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(9, "hTeO2ra226M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(10, "hTeO2rn222M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(11, "hTeO2u238M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(12, "hTeO2th230M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(13, "hTeO2u234M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(14, "hCuFrameco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(15, "hCuFrameco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(16, "hCuFramecs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(17, "hCuFramek40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(18, "hCuFramemn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(19, "hCuFramepb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(20, "hCuFrameth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(21, "hCuFrameu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(14, "hCuFrameco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(15, "hCuFrameco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(16, "hCuFramecs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(17, "hCuFramek40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(18, "hCuFramemn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(19, "hCuFramepb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(20, "hCuFrameth232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(21, "hCuFrameu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(22, "hCuBoxco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(23, "hCuBoxco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(24, "hCuBoxcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(25, "hCuBoxk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(26, "hCuBoxmn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(27, "hCuBoxpb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(28, "hCuBoxth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(29, "hCuBoxu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(22, "hCuBoxco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(23, "hCuBoxco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(24, "hCuBoxcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(25, "hCuBoxk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(26, "hCuBoxmn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(27, "hCuBoxpb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(28, "hCuBoxth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(29, "hCuBoxu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(30, "h50mKco58M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(31, "h50mKco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(32, "h50mKcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(33, "h50mKk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(34, "h50mKmn54M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(35, "h50mKpb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(36, "h50mKth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(37, "h50mKu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(30, "h50mKco58M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(31, "h50mKco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(32, "h50mKcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(33, "h50mKk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(34, "h50mKmn54M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(35, "h50mKpb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(36, "h50mKth232M1",  10., 10.0, 0., 1000000);
+   minuit.DefineParameter(37, "h50mKu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(38, "h600mKco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(39, "h600mKk40M1",  1000., 10.0, 0., 10000); 
-   minuit.DefineParameter(40, "h600mKth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(41, "h600mKu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(38, "h600mKco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(39, "h600mKk40M1",  0., 10.0, 0., 1000000); 
+   minuit.DefineParameter(40, "h600mKth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(41, "h600mKu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(42, "hPbRombi207M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(43, "hPbRomco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(44, "hPbRomcs137M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(45, "hPbRomk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(46, "hPbRompb210M1",  0., 10.0, 0., 10000);
-   minuit.DefineParameter(47, "hPbRomth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(48, "hPbRomu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(42, "hPbRombi207M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(43, "hPbRomco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(44, "hPbRomcs137M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(45, "hPbRomk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(46, "hPbRompb210M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(47, "hPbRomth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(48, "hPbRomu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(49, "hMBco60M1",  1000., 10.0, 0., 10000); 
-   minuit.DefineParameter(50, "hMBk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(51, "hMBth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(52, "hMBu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(49, "hMBco60M1",  0., 10.0, 0., 1000000); 
+   minuit.DefineParameter(50, "hMBk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(51, "hMBth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(52, "hMBu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(53, "hIVCco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(54, "hIVCk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(55, "hIVCth232M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(56, "hIVCu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(53, "hIVCco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(54, "hIVCk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(55, "hIVCth232M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(56, "hIVCu238M1",  0., 10.0, 0., 1000000);
 
-   minuit.DefineParameter(57, "hOVCco60M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(58, "hOVCk40M1",  1000., 10.0, 0., 10000);
-   minuit.DefineParameter(59, "hOVCth232M1",  1000., 10.0, 0., 10000);    
-   minuit.DefineParameter(60, "hOVCu238M1",  1000., 10.0, 0., 10000);
+   minuit.DefineParameter(57, "hOVCco60M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(58, "hOVCk40M1",  0., 10.0, 0., 1000000);
+   minuit.DefineParameter(59, "hOVCth232M1",  0., 10.0, 0., 1000000);    
+   minuit.DefineParameter(60, "hOVCu238M1",  0., 10.0, 0., 1000000);
 
    // Fix parameters here
-   // minuit.FixParameter(0); // TeO2 0nu
-   // minuit.FixParameter(1); // TeO2 2nu
-   // minuit.FixParameter(2); // TeO2 co60
-   // minuit.FixParameter(3); // TeO2 k40
-   // minuit.FixParameter(4); // TeO2 pb210
-   // minuit.FixParameter(5); // TeO2 po210
-   // minuit.FixParameter(6); // TeO2 te125m
+   minuit.FixParameter(0); // TeO2 0nu
+   minuit.FixParameter(1); // TeO2 2nu
+   minuit.FixParameter(2); // TeO2 co60
+   minuit.FixParameter(3); // TeO2 k40
+   minuit.FixParameter(4); // TeO2 pb210
+   minuit.FixParameter(5); // TeO2 po210
+   minuit.FixParameter(6); // TeO2 te125m
    // minuit.FixParameter(7); // TeO2 th232
-   // minuit.FixParameter(8); // TeO2 th232-th228
-   // minuit.FixParameter(9); // TeO2 u238-ra226
-   // minuit.FixParameter(10); // TeO2 u238-rn222
+   minuit.FixParameter(8); // TeO2 th232-th228
+   minuit.FixParameter(9); // TeO2 u238-ra226
+   minuit.FixParameter(10); // TeO2 u238-rn222
    // minuit.FixParameter(11); // TeO2 u238
-   // minuit.FixParameter(12); // TeO2 u238-th230
-   // minuit.FixParameter(13); // TeO2 u238-u234
-   // minuit.FixParameter(14); // Frame co58
-   // minuit.FixParameter(15); // Frame co60
-   // minuit.FixParameter(16); // Frame cs137
-   // minuit.FixParameter(17); // Frame k40
-   // minuit.FixParameter(18); // Frame mn54
-   // minuit.FixParameter(19); // Frame pb210
+   minuit.FixParameter(12); // TeO2 u238-th230
+   minuit.FixParameter(13); // TeO2 u238-u234
+   minuit.FixParameter(14); // Frame co58
+   minuit.FixParameter(15); // Frame co60
+   minuit.FixParameter(16); // Frame cs137
+   minuit.FixParameter(17); // Frame k40
+   minuit.FixParameter(18); // Frame mn54
+   minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   // minuit.FixParameter(21); // Frame u238
-   // minuit.FixParameter(22); // CuBox co58
-   // minuit.FixParameter(23); // CuBox co60
-   // minuit.FixParameter(24); // CuBox cs137
-   // minuit.FixParameter(25); // CuBox k40
-   // minuit.FixParameter(26); // CuBox mn54
-   // minuit.FixParameter(27); // CuBox pb210
-   // minuit.FixParameter(28); // CuBox th232
-   // minuit.FixParameter(29); // CuBox u238
-   // minuit.FixParameter(30); // 50mK co58
-   // minuit.FixParameter(31); // 50mK co60
-   // minuit.FixParameter(32); // 50mK cs137
-   // minuit.FixParameter(33); // 50mK k40
-   // minuit.FixParameter(34); // 50mK mn54
-   // minuit.FixParameter(35); // 50mK pb210
+   minuit.FixParameter(21); // Frame u238
+   minuit.FixParameter(22); // CuBox co58
+   minuit.FixParameter(23); // CuBox co60
+   minuit.FixParameter(24); // CuBox cs137
+   minuit.FixParameter(25); // CuBox k40
+   minuit.FixParameter(26); // CuBox mn54
+   minuit.FixParameter(27); // CuBox pb210
+   minuit.FixParameter(28); // CuBox th232
+   minuit.FixParameter(29); // CuBox u238
+   minuit.FixParameter(30); // 50mK co58
+   minuit.FixParameter(31); // 50mK co60
+   minuit.FixParameter(32); // 50mK cs137
+   minuit.FixParameter(33); // 50mK k40
+   minuit.FixParameter(34); // 50mK mn54
+   minuit.FixParameter(35); // 50mK pb210
    // minuit.FixParameter(36); // 50mK th232
-   // minuit.FixParameter(37); // 50mK u238
-   // minuit.FixParameter(38); // 600mK co60
-   // minuit.FixParameter(39); // 600mK k40
-   // minuit.FixParameter(40); // 600mK th232
-   // minuit.FixParameter(41); // 600mK u238
-   // minuit.FixParameter(42); // RLead bi207
-   // minuit.FixParameter(43); // RLead co60
-   // minuit.FixParameter(44); // RLead cs137
-   // minuit.FixParameter(45); // RLead k40
-   // minuit.FixParameter(46); // RLead pb210
-   // minuit.FixParameter(47); // RLead th232
-   // minuit.FixParameter(48); // RLead u238
-   // minuit.FixParameter(49); // MB co60
-   // minuit.FixParameter(50); // MB k40
-   // minuit.FixParameter(51); // MB th232
-   // minuit.FixParameter(52); // MB u238
-   // minuit.FixParameter(53); // IVC co60
-   // minuit.FixParameter(54); // IVC k40
-   // minuit.FixParameter(55); // IVC th232
-   // minuit.FixParameter(56); // IVC u238
-   // minuit.FixParameter(57); // OVC co60
-   // minuit.FixParameter(58); // OVC k40
-   // minuit.FixParameter(59); // OVC th232
-   // minuit.FixParameter(60); // OVC u238
-  // Number of Parameters (for Chi-squared/NDF calculation)
-  int dNumParameters = 61;
+   minuit.FixParameter(37); // 50mK u238
+   minuit.FixParameter(38); // 600mK co60
+   minuit.FixParameter(39); // 600mK k40
+   minuit.FixParameter(40); // 600mK th232
+   minuit.FixParameter(41); // 600mK u238
+   minuit.FixParameter(42); // RLead bi207
+   minuit.FixParameter(43); // RLead co60
+   minuit.FixParameter(44); // RLead cs137
+   minuit.FixParameter(45); // RLead k40
+   minuit.FixParameter(46); // RLead pb210
+   minuit.FixParameter(47); // RLead th232
+   minuit.FixParameter(48); // RLead u238
+   minuit.FixParameter(49); // MB co60
+   minuit.FixParameter(50); // MB k40
+   minuit.FixParameter(51); // MB th232
+   minuit.FixParameter(52); // MB u238
+   minuit.FixParameter(53); // IVC co60
+   minuit.FixParameter(54); // IVC k40
+   minuit.FixParameter(55); // IVC th232
+   minuit.FixParameter(56); // IVC u238
+   minuit.FixParameter(57); // OVC co60
+   minuit.FixParameter(58); // OVC k40
+   minuit.FixParameter(59); // OVC th232
+   minuit.FixParameter(60); // OVC u238
+   // Number of Parameters (for Chi-squared/NDF calculation)
+   int dNumParameters = 4;
 
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
@@ -3443,7 +3443,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   TCanvas *cres2 = new TCanvas();
   hResidualGausM2->Draw();
 */
-
+/*
   // Output integrals of stuff for limits
   cout << "ROI bin: " << fAdapDataHistoM1->FindBin(2470) << " " << fAdapDataHistoM1->FindBin(2570) << endl;
   cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
@@ -3455,6 +3455,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total Bi PDF in ROI: " << fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;  
   cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
+*/
 
   return true;
 

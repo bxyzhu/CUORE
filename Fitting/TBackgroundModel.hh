@@ -135,7 +135,7 @@ private:
 	TH1D			*fModelTotuM2;
 	TH1D			*fModelTotkM2;
 	TH1D			*fModelTotcoM2;
-	TH1D			*fModelTotnnM2;
+	TH1D			*fModelTotmnM2;
 	TH1D			*fModelTotNDBDM2;
 	TH1D			*fModelTot2NDBDM2;
 	TH1D			*fModelTotbiM2;
@@ -498,11 +498,11 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[26];
-	double				fParError[26];
+	double				fParameters[62];
+	double				fParError[62];
 	double				fResolution[52];
 	double				dSecToYears;
-	double				fMCEff[26];
+	double				fMCEff[62];
 
 //  ClassDef(TMyFitter,1) // 
     };

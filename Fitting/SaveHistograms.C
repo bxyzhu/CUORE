@@ -423,78 +423,79 @@ void SaveHistogramsBulk()
 
 	//////////////////////////////////
 
-	NormalizePDFPair(h50mKco58M1, h50mKco58M2, 0, 10000);
-	NormalizePDFPair(h50mKco60M1, h50mKco60M2, 0, 10000);
-	NormalizePDFPair(h50mKcs137M1, h50mKcs137M2, 0, 10000);
-	NormalizePDFPair(h50mKk40M1, h50mKk40M2, 0, 10000);
-	NormalizePDFPair(h50mKmn54M1, h50mKmn54M2, 0, 10000);
-	NormalizePDFPair(h50mKpb210M1, h50mKpb210M2, 0, 10000);
-	NormalizePDFPair(h50mKth232M1, h50mKth232M2, 0, 10000);
-	NormalizePDFPair(h50mKu238M1, h50mKu238M2, 0, 10000);
+/*
+	NormalizePDFPair(h50mKco58M1, h50mKco58M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKco60M1, h50mKco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKcs137M1, h50mKcs137M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKk40M1, h50mKk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKmn54M1, h50mKmn54M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKpb210M1, h50mKpb210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKth232M1, h50mKth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h50mKu238M1, h50mKu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(h600mKco60M1, h600mKco60M2, 0, 10000);
-	NormalizePDFPair(h600mKk40M1, h600mKk40M2, 0, 10000);
-	NormalizePDFPair(h600mKth232M1, h600mKth232M2, 0, 10000);
-	NormalizePDFPair(h600mKu238M1, h600mKu238M2, 0, 10000);
+	NormalizePDFPair(h600mKco60M1, h600mKco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h600mKk40M1, h600mKk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h600mKth232M1, h600mKth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(h600mKu238M1, h600mKu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hCuBoxco58M1, hCuBoxco58M2, 0, 10000);
-	NormalizePDFPair(hCuBoxco60M1, hCuBoxco60M2, 0, 10000);
-	NormalizePDFPair(hCuBoxcs137M1, hCuBoxcs137M2, 0, 10000);
-	NormalizePDFPair(hCuBoxk40M1, hCuBoxk40M2, 0, 10000);
-	NormalizePDFPair(hCuBoxmn54M1, hCuBoxmn54M2, 0, 10000);
-	NormalizePDFPair(hCuBoxpb210M1, hCuBoxpb210M2, 0, 10000);
-	NormalizePDFPair(hCuBoxth232M1, hCuBoxth232M2, 0, 10000);
-	NormalizePDFPair(hCuBoxu238M1, hCuBoxu238M2, 0, 10000);
+	NormalizePDFPair(hCuBoxco58M1, hCuBoxco58M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxco60M1, hCuBoxco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxcs137M1, hCuBoxcs137M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxk40M1, hCuBoxk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxmn54M1, hCuBoxmn54M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxpb210M1, hCuBoxpb210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxth232M1, hCuBoxth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxu238M1, hCuBoxu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hCuFrameco58M1, hCuFrameco58M2, 0, 10000);
-	NormalizePDFPair(hCuFrameco60M1, hCuFrameco60M2, 0, 10000);
-	NormalizePDFPair(hCuFramecs137M1, hCuFramecs137M2, 0, 10000);
-	NormalizePDFPair(hCuFramek40M1, hCuFramek40M2, 0, 10000);
-	NormalizePDFPair(hCuFramemn54M1, hCuFramemn54M2, 0, 10000);
-	NormalizePDFPair(hCuFramepb210M1, hCuFramepb210M2, 0, 10000);
-	NormalizePDFPair(hCuFrameth232M1, hCuFrameth232M2, 0, 10000);
-	NormalizePDFPair(hCuFrameu238M1, hCuFrameu238M2, 0, 10000);
+	NormalizePDFPair(hCuFrameco58M1, hCuFrameco58M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFrameco60M1, hCuFrameco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFramecs137M1, hCuFramecs137M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFramek40M1, hCuFramek40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFramemn54M1, hCuFramemn54M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFramepb210M1, hCuFramepb210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFrameth232M1, hCuFrameth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuFrameu238M1, hCuFrameu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hIVCco60M1, hIVCco60M2, 0, 10000);
-	NormalizePDFPair(hIVCk40M1, hIVCk40M2, 0, 10000);
-	NormalizePDFPair(hIVCth232M1, hIVCth232M2, 0, 10000);
-	NormalizePDFPair(hIVCu238M1, hIVCu238M2, 0, 10000);
+	NormalizePDFPair(hIVCco60M1, hIVCco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hIVCk40M1, hIVCk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hIVCth232M1, hIVCth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hIVCu238M1, hIVCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hOVCco60M1, hOVCco60M2, 0, 10000);
-	NormalizePDFPair(hOVCk40M1, hOVCk40M2, 0, 10000);
-	NormalizePDFPair(hOVCth232M1, hOVCth232M2, 0, 10000);
-	NormalizePDFPair(hOVCu238M1, hOVCu238M2, 0, 10000);
+	NormalizePDFPair(hOVCco60M1, hOVCco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hOVCk40M1, hOVCk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hOVCth232M1, hOVCth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hOVCu238M1, hOVCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hMBco60M1, hMBco60M2, 0, 10000);
-	NormalizePDFPair(hMBk40M1, hMBk40M2, 0, 10000);
-	NormalizePDFPair(hMBth232M1, hMBth232M2, 0, 10000);
-	NormalizePDFPair(hMBu238M1, hMBu238M2, 0, 10000);
+	NormalizePDFPair(hMBco60M1, hMBco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hMBk40M1, hMBk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hMBth232M1, hMBth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hMBu238M1, hMBu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hPbRombi207M1, hPbRombi207M2, 0, 10000);
-	NormalizePDFPair(hPbRomco60M1, hPbRomco60M2, 0, 10000);
-	NormalizePDFPair(hPbRomcs137M1, hPbRomcs137M2, 0, 10000);
-	NormalizePDFPair(hPbRomk40M1, hPbRomk40M2, 0, 10000);
-	NormalizePDFPair(hPbRompb210M1, hPbRompb210M2, 0, 10000);
-	NormalizePDFPair(hPbRomth232M1, hPbRomth232M2, 0, 10000);
-	NormalizePDFPair(hPbRomu238M1, hPbRomu238M2, 0, 10000);
+	NormalizePDFPair(hPbRombi207M1, hPbRombi207M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRomco60M1, hPbRomco60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRomcs137M1, hPbRomcs137M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRomk40M1, hPbRomk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRompb210M1, hPbRompb210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRomth232M1, hPbRomth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hPbRomu238M1, hPbRomu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair(hTeO20nuM1, hTeO20nuM2, 0, 10000);
-	NormalizePDFPair(hTeO22nuM1, hTeO22nuM2, 0, 10000);
-	NormalizePDFPair(hTeO2co60M1, hTeO2co60M2, 0, 10000);
-	NormalizePDFPair(hTeO2k40M1, hTeO2k40M2, 0, 10000);
-	NormalizePDFPair(hTeO2pb210M1, hTeO2pb210M2, 0, 10000);
-	NormalizePDFPair(hTeO2po210M1, hTeO2po210M2, 0, 10000);
-	NormalizePDFPair(hTeO2te125M1, hTeO2te125M2, 0, 10000);
-	NormalizePDFPair(hTeO2th232M1, hTeO2th232M2, 0, 10000);
-	NormalizePDFPair(hTeO2th228M1, hTeO2th228M2, 0, 10000);
-	NormalizePDFPair(hTeO2ra226M1, hTeO2ra226M2, 0, 10000);
-	NormalizePDFPair(hTeO2rn222M1, hTeO2rn222M2, 0, 10000);
-	NormalizePDFPair(hTeO2u238M1, hTeO2u238M2, 0, 10000);
-	NormalizePDFPair(hTeO2th230M1, hTeO2th230M2, 0, 10000);
-	NormalizePDFPair(hTeO2u234M1, hTeO2u234M2, 0, 10000);
+	NormalizePDFPair(hTeO20nuM1, hTeO20nuM2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO22nuM1, hTeO22nuM2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2co60M1, hTeO2co60M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2k40M1, hTeO2k40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2pb210M1, hTeO2pb210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2po210M1, hTeO2po210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2te125M1, hTeO2te125M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2th232M1, hTeO2th232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2th228M1, hTeO2th228M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2ra226M1, hTeO2ra226M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2rn222M1, hTeO2rn222M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2u238M1, hTeO2u238M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2th230M1, hTeO2th230M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2u234M1, hTeO2u234M2, dMinEnergy, dMaxEnergy);
+*/
 
-
-	TFile *file1 = new TFile("MCProduction_Bulk.root", "RECREATE");
+	TFile *file1 = new TFile("MCProduction_Bulk_nonnormalized.root", "RECREATE");
 
 	h50mKco58M1->Write();
 	h50mKco60M1->Write();
