@@ -1446,7 +1446,7 @@ bool TBackgroundModel::DoTheFit()
   fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
   fDataHistoM1->SetMaximum(90000);
-  fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
+  // fDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
   fDataHistoM1->Draw("E");
 
 
@@ -1545,7 +1545,7 @@ bool TBackgroundModel::DoTheFit()
   fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
   fDataHistoM2->SetMaximum(9000);
-  fDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
+  // fDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
   fDataHistoM2->Draw("E");
 
   
@@ -3231,8 +3231,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // fTotCorrection->Add(fCorrectionM2, 180197*(1-TMath::Exp(-0.05*0.1)));
 
 
-  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
-  c1->SetLogy();
+  TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
+  cadap1->SetLogy();
 
   ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(1);
@@ -3240,7 +3240,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/yr");
   fAdapDataHistoM1->SetMaximum(90000);
-  fAdapDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
+  // fAdapDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
   fAdapDataHistoM1->Draw();
 
 
@@ -3312,8 +3312,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 
 
-  TCanvas *c2 = new TCanvas("c2", "c2", 1200, 800);
-  c2->SetLogy();
+  TCanvas *cadap2 = new TCanvas("cadap2", "cadap2", 1200, 800);
+  cadap2->SetLogy();
 
   ///// Draw Data M2
   fAdapDataHistoM2->SetLineColor(1);
@@ -3321,7 +3321,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/yr");
   fAdapDataHistoM2->SetMaximum(9000);
-  fAdapDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
+  // fAdapDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
   fAdapDataHistoM2->Draw();
 
   
