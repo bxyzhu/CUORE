@@ -215,6 +215,28 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hTeO2th230M1     = new TH1D("hTeO2th230M1",  "hTeO2th230M1",  dNBins, dMinEnergy, dMaxEnergy);
   hTeO2u234M1      = new TH1D("hTeO2u234M1",   "hTeO2u234M1",   dNBins, dMinEnergy, dMaxEnergy);
 
+  hTeO2Spb210M1_01      = new TH1D("hTeO2Spb210M1_01",   "hTeO2Spb210M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Spo210M1_001     = new TH1D("hTeO2Spo210M1_001",  "hTeO2Spo210M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Spo210M1_01      = new TH1D("hTeO2Spo210M1_01",   "hTeO2Spo210M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sth232M1_01      = new TH1D("hTeO2Sth232M1_01",   "hTeO2Sth232M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Su238M1_01       = new TH1D("hTeO2Su238M1_01",    "hTeO2Su238M1_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M1_001    = new TH1D("hTeO2Sxpb210M1_001", "hTeO2Sxpb210M1_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M1_01     = new TH1D("hTeO2Sxpb210M1_01",  "hTeO2Sxpb210M1_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M1_1      = new TH1D("hTeO2Sxpb210M1_1",   "hTeO2Sxpb210M1_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M1_10     = new TH1D("hTeO2Sxpb210M1_10",  "hTeO2Sxpb210M1_10",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M1_001    = new TH1D("hTeO2Sxpo210M1_001", "hTeO2Sxpo210M1_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M1_01     = new TH1D("hTeO2Sxpo210M1_01",  "hTeO2Sxpo210M1_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M1_1      = new TH1D("hTeO2Sxpo210M1_1",   "hTeO2Sxpo210M1_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M1_001    = new TH1D("hTeO2Sxth232M1_001", "hTeO2Sxth232M1_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M1_01     = new TH1D("hTeO2Sxth232M1_01",  "hTeO2Sxth232M1_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M1_1      = new TH1D("hTeO2Sxth232M1_1",   "hTeO2Sxth232M1_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M1_10     = new TH1D("hTeO2Sxth232M1_10",  "hTeO2Sxth232M1_10",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M1_001     = new TH1D("hTeO2Sxu238M1_001",  "hTeO2Sxu238M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M1_01      = new TH1D("hTeO2Sxu238M1_01",   "hTeO2Sxu238M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M1_1       = new TH1D("hTeO2Sxu238M1_1",    "hTeO2Sxu238M1_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M1_10      = new TH1D("hTeO2Sxu238M1_10",   "hTeO2Sxu238M1_10",   dNBins, dMinEnergy, dMaxEnergy);
+
+
   hTeO20nuM2       = new TH1D("hTeO20nuM2",    "hTeO20nuM2",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO22nuM2       = new TH1D("hTeO22nuM2",    "hTeO22nuM2",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO2co60M2      = new TH1D("hTeO2co60M2",   "hTeO2co60M2",   dNBins, dMinEnergy, dMaxEnergy);
@@ -230,6 +252,27 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hTeO2th230M2     = new TH1D("hTeO2th230M2",  "hTeO2th230M2",  dNBins, dMinEnergy, dMaxEnergy);
   hTeO2u234M2      = new TH1D("hTeO2u234M2",   "hTeO2u234M2",   dNBins, dMinEnergy, dMaxEnergy);
 
+  hTeO2Spb210M2_01      = new TH1D("hTeO2Spb210M2_01",   "hTeO2Spb210M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Spo210M2_001     = new TH1D("hTeO2Spo210M2_001",  "hTeO2Spo210M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Spo210M2_01      = new TH1D("hTeO2Spo210M2_01",   "hTeO2Spo210M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sth232M2_01      = new TH1D("hTeO2Sth232M2_01",   "hTeO2Sth232M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Su238M2_01       = new TH1D("hTeO2Su238M2_01",    "hTeO2Su238M2_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M2_001    = new TH1D("hTeO2Sxpb210M2_001", "hTeO2Sxpb210M2_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M2_01     = new TH1D("hTeO2Sxpb210M2_01",  "hTeO2Sxpb210M2_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M2_1      = new TH1D("hTeO2Sxpb210M2_1",   "hTeO2Sxpb210M2_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpb210M2_10     = new TH1D("hTeO2Sxpb210M2_10",  "hTeO2Sxpb210M2_10",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M2_001    = new TH1D("hTeO2Sxpo210M2_001", "hTeO2Sxpo210M2_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M2_01     = new TH1D("hTeO2Sxpo210M2_01",  "hTeO2Sxpo210M2_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxpo210M2_1      = new TH1D("hTeO2Sxpo210M2_1",   "hTeO2Sxpo210M2_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M2_001    = new TH1D("hTeO2Sxth232M2_001", "hTeO2Sxth232M2_001", dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M2_01     = new TH1D("hTeO2Sxth232M2_01",  "hTeO2Sxth232M2_01",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M2_1      = new TH1D("hTeO2Sxth232M2_1",   "hTeO2Sxth232M2_1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxth232M2_10     = new TH1D("hTeO2Sxth232M2_10",  "hTeO2Sxth232M2_10",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M2_001     = new TH1D("hTeO2Sxu238M2_001",  "hTeO2Sxu238M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M2_01      = new TH1D("hTeO2Sxu238M2_01",   "hTeO2Sxu238M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M2_1       = new TH1D("hTeO2Sxu238M2_1",    "hTeO2Sxu238M2_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2Sxu238M2_10      = new TH1D("hTeO2Sxu238M2_10",   "hTeO2Sxu238M2_10",   dNBins, dMinEnergy, dMaxEnergy);
+
 
   // Frame M1 and M2
   hCuFrameco58M1      = new TH1D("hCuFrameco58M1",   "hCuFrameco58M1",   dNBins, dMinEnergy, dMaxEnergy);
@@ -241,6 +284,22 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hCuFrameth232M1     = new TH1D("hCuFrameth232M1",  "hCuFrameth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
   hCuFrameu238M1      = new TH1D("hCuFrameu238M1",   "hCuFrameu238M1",   dNBins, dMinEnergy, dMaxEnergy);
 
+  hCuFrameSth232M1_1     = new TH1D("hCuFrameSth232M1_1",    "hCuFrameSth232M1_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSu238M1_1      = new TH1D("hCuFrameSu238M1_1",     "hCuFrameSu238M1_1",      dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M1_001  = new TH1D("hCuFrameSxpb210M1_001", "hCuFrameSxpb210M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M1_01   = new TH1D("hCuFrameSxpb210M1_01",  "hCuFrameSxpb210M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M1_1    = new TH1D("hCuFrameSxpb210M1_1",   "hCuFrameSxpb210M1_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M1_10   = new TH1D("hCuFrameSxpb210M1_10",  "hCuFrameSxpb210M1_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M1_001  = new TH1D("hCuFrameSxth232M1_001", "hCuFrameSxth232M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M1_01   = new TH1D("hCuFrameSxth232M1_01",  "hCuFrameSxth232M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M1_1    = new TH1D("hCuFrameSxth232M1_1",   "hCuFrameSxth232M1_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M1_10   = new TH1D("hCuFrameSxth232M1_10",  "hCuFrameSxth232M1_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M1_001   = new TH1D("hCuFrameSxu238M1_001",  "hCuFrameSxu238M1_001",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M1_01    = new TH1D("hCuFrameSxu238M1_01",   "hCuFrameSxu238M1_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M1_1     = new TH1D("hCuFrameSxu238M1_1",    "hCuFrameSxu238M1_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M1_10    = new TH1D("hCuFrameSxu238M1_10",   "hCuFrameSxu238M1_10",    dNBins, dMinEnergy, dMaxEnergy);
+
+
   hCuFrameco58M2      = new TH1D("hCuFrameco58M2",   "hCuFrameco58M2",   dNBins, dMinEnergy, dMaxEnergy);
   hCuFrameco60M2      = new TH1D("hCuFrameco60M2",   "hCuFrameco60M2",   dNBins, dMinEnergy, dMaxEnergy);
   hCuFramecs137M2     = new TH1D("hCuFramecs137M2",  "hCuFramecs137M2",  dNBins, dMinEnergy, dMaxEnergy);
@@ -249,6 +308,21 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hCuFramepb210M2     = new TH1D("hCuFramepb210M2",  "hCuFramepb210M2",  dNBins, dMinEnergy, dMaxEnergy);
   hCuFrameth232M2     = new TH1D("hCuFrameth232M2",  "hCuFrameth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hCuFrameu238M2      = new TH1D("hCuFrameu238M2",   "hCuFrameu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hCuFrameSth232M2_1     = new TH1D("hCuFrameSth232M2_1",    "hCuFrameSth232M2_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSu238M2_1      = new TH1D("hCuFrameSu238M2_1",     "hCuFrameSu238M2_1",      dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M2_001  = new TH1D("hCuFrameSxpb210M2_001", "hCuFrameSxpb210M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M2_01   = new TH1D("hCuFrameSxpb210M2_01",  "hCuFrameSxpb210M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M2_1    = new TH1D("hCuFrameSxpb210M2_1",   "hCuFrameSxpb210M2_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxpb210M2_10   = new TH1D("hCuFrameSxpb210M2_10",  "hCuFrameSxpb210M2_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M2_001  = new TH1D("hCuFrameSxth232M2_001", "hCuFrameSxth232M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M2_01   = new TH1D("hCuFrameSxth232M2_01",  "hCuFrameSxth232M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M2_1    = new TH1D("hCuFrameSxth232M2_1",   "hCuFrameSxth232M2_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxth232M2_10   = new TH1D("hCuFrameSxth232M2_10",  "hCuFrameSxth232M2_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M2_001   = new TH1D("hCuFrameSxu238M2_001",  "hCuFrameSxu238M2_001",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M2_01    = new TH1D("hCuFrameSxu238M2_01",   "hCuFrameSxu238M2_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M2_1     = new TH1D("hCuFrameSxu238M2_1",    "hCuFrameSxu238M2_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuFrameSxu238M2_10    = new TH1D("hCuFrameSxu238M2_10",   "hCuFrameSxu238M2_10",    dNBins, dMinEnergy, dMaxEnergy);
 
   // CuBox (TShield) M1 and M2
   hCuBoxco58M1      = new TH1D("hCuBoxco58M1",   "hCuBoxco58M1",   dNBins, dMinEnergy, dMaxEnergy);
@@ -260,6 +334,21 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hCuBoxth232M1     = new TH1D("hCuBoxth232M1",  "hCuBoxth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
   hCuBoxu238M1      = new TH1D("hCuBoxu238M1",   "hCuBoxu238M1",   dNBins, dMinEnergy, dMaxEnergy);
 
+  hCuBoxSth232M1_1     = new TH1D("hCuBoxSth232M1_1",    "hCuBoxSth232M1_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSu238M1_1      = new TH1D("hCuBoxSu238M1_1",     "hCuBoxSu238M1_1",      dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M1_001  = new TH1D("hCuBoxSxpb210M1_001", "hCuBoxSxpb210M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M1_01   = new TH1D("hCuBoxSxpb210M1_01",  "hCuBoxSxpb210M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M1_1    = new TH1D("hCuBoxSxpb210M1_1",   "hCuBoxSxpb210M1_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M1_10   = new TH1D("hCuBoxSxpb210M1_10",  "hCuBoxSxpb210M1_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M1_001  = new TH1D("hCuBoxSxth232M1_001", "hCuBoxSxth232M1_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M1_01   = new TH1D("hCuBoxSxth232M1_01",  "hCuBoxSxth232M1_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M1_1    = new TH1D("hCuBoxSxth232M1_1",   "hCuBoxSxth232M1_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M1_10   = new TH1D("hCuBoxSxth232M1_10",  "hCuBoxSxth232M1_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M1_001   = new TH1D("hCuBoxSxu238M1_001",  "hCuBoxSxu238M1_001",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M1_01    = new TH1D("hCuBoxSxu238M1_01",   "hCuBoxSxu238M1_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M1_1     = new TH1D("hCuBoxSxu238M1_1",    "hCuBoxSxu238M1_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M1_10    = new TH1D("hCuBoxSxu238M1_10",   "hCuBoxSxu238M1_10",    dNBins, dMinEnergy, dMaxEnergy);
+
   hCuBoxco58M2      = new TH1D("hCuBoxco58M2",   "hCuBoxco58M2",   dNBins, dMinEnergy, dMaxEnergy);
   hCuBoxco60M2      = new TH1D("hCuBoxco60M2",   "hCuBoxco60M2",   dNBins, dMinEnergy, dMaxEnergy);
   hCuBoxcs137M2     = new TH1D("hCuBoxcs137M2",  "hCuBoxcs137M2",  dNBins, dMinEnergy, dMaxEnergy);
@@ -268,6 +357,21 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hCuBoxpb210M2     = new TH1D("hCuBoxpb210M2",  "hCuBoxpb210M2",  dNBins, dMinEnergy, dMaxEnergy);
   hCuBoxth232M2     = new TH1D("hCuBoxth232M2",  "hCuBoxth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hCuBoxu238M2      = new TH1D("hCuBoxu238M2",   "hCuBoxu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hCuBoxSth232M2_1     = new TH1D("hCuBoxSth232M2_1",    "hCuBoxSth232M2_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSu238M2_1      = new TH1D("hCuBoxSu238M2_1",     "hCuBoxSu238M2_1",      dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M2_001  = new TH1D("hCuBoxSxpb210M2_001", "hCuBoxSxpb210M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M2_01   = new TH1D("hCuBoxSxpb210M2_01",  "hCuBoxSxpb210M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M2_1    = new TH1D("hCuBoxSxpb210M2_1",   "hCuBoxSxpb210M2_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxpb210M2_10   = new TH1D("hCuBoxSxpb210M2_10",  "hCuBoxSxpb210M2_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M2_001  = new TH1D("hCuBoxSxth232M2_001", "hCuBoxSxth232M2_001",  dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M2_01   = new TH1D("hCuBoxSxth232M2_01",  "hCuBoxSxth232M2_01",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M2_1    = new TH1D("hCuBoxSxth232M2_1",   "hCuBoxSxth232M2_1",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxth232M2_10   = new TH1D("hCuBoxSxth232M2_10",  "hCuBoxSxth232M2_10",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M2_001   = new TH1D("hCuBoxSxu238M2_001",  "hCuBoxSxu238M2_001",   dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M2_01    = new TH1D("hCuBoxSxu238M2_01",   "hCuBoxSxu238M2_01",    dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M2_1     = new TH1D("hCuBoxSxu238M2_1",    "hCuBoxSxu238M2_1",     dNBins, dMinEnergy, dMaxEnergy);
+  hCuBoxSxu238M2_10    = new TH1D("hCuBoxSxu238M2_10",   "hCuBoxSxu238M2_10",    dNBins, dMinEnergy, dMaxEnergy);
 
   // 50mK M1 and M2
   h50mKco58M1      = new TH1D("h50mKco58M1",   "h50mKco58M1",   dNBins, dMinEnergy, dMaxEnergy);
@@ -1140,6 +1244,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(59, "hOVCth232M1",  0., 10.0, 0., 1000000);    
    minuit.DefineParameter(60, "hOVCu238M1",  0., 10.0, 0., 1000000);
 
+
    // Fix parameters here
    minuit.FixParameter(0); // TeO2 0nu
    minuit.FixParameter(1); // TeO2 2nu
@@ -1162,15 +1267,15 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(18); // Frame mn54
    minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   minuit.FixParameter(21); // Frame u238
+   // minuit.FixParameter(21); // Frame u238
    minuit.FixParameter(22); // CuBox co58
    minuit.FixParameter(23); // CuBox co60
    minuit.FixParameter(24); // CuBox cs137
    minuit.FixParameter(25); // CuBox k40
    minuit.FixParameter(26); // CuBox mn54
    minuit.FixParameter(27); // CuBox pb210
-   minuit.FixParameter(28); // CuBox th232
-   minuit.FixParameter(29); // CuBox u238
+   // minuit.FixParameter(28); // CuBox th232
+   // minuit.FixParameter(29); // CuBox u238
    minuit.FixParameter(30); // 50mK co58
    minuit.FixParameter(31); // 50mK co60
    minuit.FixParameter(32); // 50mK cs137
@@ -1178,7 +1283,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(34); // 50mK mn54
    minuit.FixParameter(35); // 50mK pb210
    // minuit.FixParameter(36); // 50mK th232
-   minuit.FixParameter(37); // 50mK u238
+   // minuit.FixParameter(37); // 50mK u238
    minuit.FixParameter(38); // 600mK co60
    minuit.FixParameter(39); // 600mK k40
    minuit.FixParameter(40); // 600mK th232
@@ -1188,23 +1293,22 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(44); // RLead cs137
    minuit.FixParameter(45); // RLead k40
    minuit.FixParameter(46); // RLead pb210
-   minuit.FixParameter(47); // RLead th232
-   minuit.FixParameter(48); // RLead u238
+   // minuit.FixParameter(47); // RLead th232
+   // minuit.FixParameter(48); // RLead u238
    minuit.FixParameter(49); // MB co60
    minuit.FixParameter(50); // MB k40
-   minuit.FixParameter(51); // MB th232
-   minuit.FixParameter(52); // MB u238
+   // minuit.FixParameter(51); // MB th232
+   // minuit.FixParameter(52); // MB u238
    minuit.FixParameter(53); // IVC co60
    minuit.FixParameter(54); // IVC k40
-   minuit.FixParameter(55); // IVC th232
-   minuit.FixParameter(56); // IVC u238
+   // minuit.FixParameter(55); // IVC th232
+   // minuit.FixParameter(56); // IVC u238
    minuit.FixParameter(57); // OVC co60
    minuit.FixParameter(58); // OVC k40
-   minuit.FixParameter(59); // OVC th232
-   minuit.FixParameter(60); // OVC u238
+   // minuit.FixParameter(59); // OVC th232
+   // minuit.FixParameter(60); // OVC u238
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 4;
-
+   int dNumParameters = 16;
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
    
@@ -1804,6 +1908,9 @@ void TBackgroundModel::Initialize()
   fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk_nonnormalized.root"); 
   // fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk.root"); 
 
+  fFile2 = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Surface.root");
+
+
 ///////////// Bulk Histograms
   // Crystal M1 and M2
   hTeO20nuM1     = (TH1D*)fFile->Get("hTeO20nuM1");
@@ -1958,6 +2065,111 @@ void TBackgroundModel::Initialize()
   hOVCu238M2    = (TH1D*)fFile->Get("hOVCu238M2");
 
 //////// Surface PDFs
+  // Crystal M1 and M2
+  hTeO2Spb210M1_01    = (TH1D*)fFile2->Get("hTeO2Spb210M1_01");
+  hTeO2Spo210M1_001   = (TH1D*)fFile2->Get("hTeO2Spo210M1_001");
+  hTeO2Spo210M1_01    = (TH1D*)fFile2->Get("hTeO2Spo210M1_01");
+  hTeO2Sth232M1_01    = (TH1D*)fFile2->Get("hTeO2Sth232M1_01");
+  hTeO2Su238M1_01     = (TH1D*)fFile2->Get("hTeO2Su238M1_01");
+  hTeO2Sxpb210M1_001  = (TH1D*)fFile2->Get("hTeO2Sxpb210M1_001");
+  hTeO2Sxpb210M1_01   = (TH1D*)fFile2->Get("hTeO2Sxpb210M1_01");
+  hTeO2Sxpb210M1_1    = (TH1D*)fFile2->Get("hTeO2Sxpb210M1_1");
+  hTeO2Sxpb210M1_10   = (TH1D*)fFile2->Get("hTeO2Sxpb210M1_10");
+  hTeO2Sxpo210M1_001  = (TH1D*)fFile2->Get("hTeO2Sxpo210M1_001");
+  hTeO2Sxpo210M1_01   = (TH1D*)fFile2->Get("hTeO2Sxpo210M1_01");
+  hTeO2Sxpo210M1_1    = (TH1D*)fFile2->Get("hTeO2Sxpo210M1_1");
+  hTeO2Sxth232M1_001  = (TH1D*)fFile2->Get("hTeO2Sxth232M1_001");
+  hTeO2Sxth232M1_01   = (TH1D*)fFile2->Get("hTeO2Sxth232M1_01");
+  hTeO2Sxth232M1_1    = (TH1D*)fFile2->Get("hTeO2Sxth232M1_1");
+  hTeO2Sxth232M1_10   = (TH1D*)fFile2->Get("hTeO2Sxth232M1_10");
+  hTeO2Sxu238M1_001   = (TH1D*)fFile2->Get("hTeO2Sxu238M1_001");
+  hTeO2Sxu238M1_01    = (TH1D*)fFile2->Get("hTeO2Sxu238M1_01");
+  hTeO2Sxu238M1_1     = (TH1D*)fFile2->Get("hTeO2Sxu238M1_1");
+  hTeO2Sxu238M1_10    = (TH1D*)fFile2->Get("hTeO2Sxu238M1_10");
+
+  hTeO2Spb210M2_01    = (TH1D*)fFile2->Get("hTeO2Spb210M2_01");
+  hTeO2Spo210M2_001   = (TH1D*)fFile2->Get("hTeO2Spo210M2_001");
+  hTeO2Spo210M2_01    = (TH1D*)fFile2->Get("hTeO2Spo210M2_01");
+  hTeO2Sth232M2_01    = (TH1D*)fFile2->Get("hTeO2Sth232M2_01");
+  hTeO2Su238M2_01     = (TH1D*)fFile2->Get("hTeO2Su238M2_01");
+  hTeO2Sxpb210M2_001  = (TH1D*)fFile2->Get("hTeO2Sxpb210M2_001");
+  hTeO2Sxpb210M2_01   = (TH1D*)fFile2->Get("hTeO2Sxpb210M2_01");
+  hTeO2Sxpb210M2_1    = (TH1D*)fFile2->Get("hTeO2Sxpb210M2_1");
+  hTeO2Sxpb210M2_10   = (TH1D*)fFile2->Get("hTeO2Sxpb210M2_10");
+  hTeO2Sxpo210M2_001  = (TH1D*)fFile2->Get("hTeO2Sxpo210M2_001");
+  hTeO2Sxpo210M2_01   = (TH1D*)fFile2->Get("hTeO2Sxpo210M2_01");
+  hTeO2Sxpo210M2_1    = (TH1D*)fFile2->Get("hTeO2Sxpo210M2_1");
+  hTeO2Sxth232M2_001  = (TH1D*)fFile2->Get("hTeO2Sxth232M2_001");
+  hTeO2Sxth232M2_01   = (TH1D*)fFile2->Get("hTeO2Sxth232M2_01");
+  hTeO2Sxth232M2_1    = (TH1D*)fFile2->Get("hTeO2Sxth232M2_1");
+  hTeO2Sxth232M2_10   = (TH1D*)fFile2->Get("hTeO2Sxth232M2_10");
+  hTeO2Sxu238M2_001   = (TH1D*)fFile2->Get("hTeO2Sxu238M2_001");
+  hTeO2Sxu238M2_01    = (TH1D*)fFile2->Get("hTeO2Sxu238M2_01");
+  hTeO2Sxu238M2_1     = (TH1D*)fFile2->Get("hTeO2Sxu238M2_1");
+  hTeO2Sxu238M2_10    = (TH1D*)fFile2->Get("hTeO2Sxu238M2_10");
+
+  // Frame M1 and M2
+  hCuFrameSth232M1_1    = (TH1D*)fFile2->Get("hCuFrameSth232M1_1");
+  hCuFrameSu238M1_1     = (TH1D*)fFile2->Get("hCuFrameSu238M1_1");
+  hCuFrameSxpb210M1_001 = (TH1D*)fFile2->Get("hCuFrameSxpb210M1_001");
+  hCuFrameSxpb210M1_01  = (TH1D*)fFile2->Get("hCuFrameSxpb210M1_01");
+  hCuFrameSxpb210M1_1   = (TH1D*)fFile2->Get("hCuFrameSxpb210M1_1");
+  hCuFrameSxpb210M1_10  = (TH1D*)fFile2->Get("hCuFrameSxpb210M1_10");
+  hCuFrameSxth232M1_001 = (TH1D*)fFile2->Get("hCuFrameSxth232M1_001");
+  hCuFrameSxth232M1_01  = (TH1D*)fFile2->Get("hCuFrameSxth232M1_01");
+  hCuFrameSxth232M1_1   = (TH1D*)fFile2->Get("hCuFrameSxth232M1_1");
+  hCuFrameSxth232M1_10  = (TH1D*)fFile2->Get("hCuFrameSxth232M1_10");
+  hCuFrameSxu238M1_001  = (TH1D*)fFile2->Get("hCuFrameSxu238M1_001");
+  hCuFrameSxu238M1_01   = (TH1D*)fFile2->Get("hCuFrameSxu238M1_01");
+  hCuFrameSxu238M1_1    = (TH1D*)fFile2->Get("hCuFrameSxu238M1_1");
+  hCuFrameSxu238M1_10   = (TH1D*)fFile2->Get("hCuFrameSxu238M1_10");
+
+  hCuFrameSth232M2_1    = (TH1D*)fFile2->Get("hCuFrameSth232M2_1");
+  hCuFrameSu238M2_1     = (TH1D*)fFile2->Get("hCuFrameSu238M2_1");
+  hCuFrameSxpb210M2_001 = (TH1D*)fFile2->Get("hCuFrameSxpb210M2_001");
+  hCuFrameSxpb210M2_01  = (TH1D*)fFile2->Get("hCuFrameSxpb210M2_01");
+  hCuFrameSxpb210M2_1   = (TH1D*)fFile2->Get("hCuFrameSxpb210M2_1");
+  hCuFrameSxpb210M2_10  = (TH1D*)fFile2->Get("hCuFrameSxpb210M2_10");
+  hCuFrameSxth232M2_001 = (TH1D*)fFile2->Get("hCuFrameSxth232M2_001");
+  hCuFrameSxth232M2_01  = (TH1D*)fFile2->Get("hCuFrameSxth232M2_01");
+  hCuFrameSxth232M2_1   = (TH1D*)fFile2->Get("hCuFrameSxth232M2_1");
+  hCuFrameSxth232M2_10  = (TH1D*)fFile2->Get("hCuFrameSxth232M2_10");
+  hCuFrameSxu238M2_001  = (TH1D*)fFile2->Get("hCuFrameSxu238M2_001");
+  hCuFrameSxu238M2_01   = (TH1D*)fFile2->Get("hCuFrameSxu238M2_01");
+  hCuFrameSxu238M2_1    = (TH1D*)fFile2->Get("hCuFrameSxu238M2_1");
+  hCuFrameSxu238M2_10   = (TH1D*)fFile2->Get("hCuFrameSxu238M2_10");
+
+  // CuBox M1 and M2
+  hCuBoxSth232M1_1    = (TH1D*)fFile2->Get("hCuBoxSth232M1_1");
+  hCuBoxSu238M1_1     = (TH1D*)fFile2->Get("hCuBoxSu238M1_1");
+  hCuBoxSxpb210M1_001 = (TH1D*)fFile2->Get("hCuBoxSxpb210M1_001");
+  hCuBoxSxpb210M1_01  = (TH1D*)fFile2->Get("hCuBoxSxpb210M1_01");
+  hCuBoxSxpb210M1_1   = (TH1D*)fFile2->Get("hCuBoxSxpb210M1_1");
+  hCuBoxSxpb210M1_10  = (TH1D*)fFile2->Get("hCuBoxSxpb210M1_10");
+  hCuBoxSxth232M1_001 = (TH1D*)fFile2->Get("hCuBoxSxth232M1_001");
+  hCuBoxSxth232M1_01  = (TH1D*)fFile2->Get("hCuBoxSxth232M1_01");
+  hCuBoxSxth232M1_1   = (TH1D*)fFile2->Get("hCuBoxSxth232M1_1");
+  hCuBoxSxth232M1_10  = (TH1D*)fFile2->Get("hCuBoxSxth232M1_10");
+  hCuBoxSxu238M1_001  = (TH1D*)fFile2->Get("hCuBoxSxu238M1_001");
+  hCuBoxSxu238M1_01   = (TH1D*)fFile2->Get("hCuBoxSxu238M1_01");
+  hCuBoxSxu238M1_1    = (TH1D*)fFile2->Get("hCuBoxSxu238M1_1");
+  hCuBoxSxu238M1_10   = (TH1D*)fFile2->Get("hCuBoxSxu238M1_10");
+
+  hCuBoxSth232M2_1    = (TH1D*)fFile2->Get("hCuBoxSth232M2_1");
+  hCuBoxSu238M2_1     = (TH1D*)fFile2->Get("hCuBoxSu238M2_1");
+  hCuBoxSxpb210M2_001 = (TH1D*)fFile2->Get("hCuBoxSxpb210M2_001");
+  hCuBoxSxpb210M2_01  = (TH1D*)fFile2->Get("hCuBoxSxpb210M2_01");
+  hCuBoxSxpb210M2_1   = (TH1D*)fFile2->Get("hCuBoxSxpb210M2_1");
+  hCuBoxSxpb210M2_10  = (TH1D*)fFile2->Get("hCuBoxSxpb210M2_10");
+  hCuBoxSxth232M2_001 = (TH1D*)fFile2->Get("hCuBoxSxth232M2_001");
+  hCuBoxSxth232M2_01  = (TH1D*)fFile2->Get("hCuBoxSxth232M2_01");
+  hCuBoxSxth232M2_1   = (TH1D*)fFile2->Get("hCuBoxSxth232M2_1");
+  hCuBoxSxth232M2_10  = (TH1D*)fFile2->Get("hCuBoxSxth232M2_10");
+  hCuBoxSxu238M2_001  = (TH1D*)fFile2->Get("hCuBoxSxu238M2_001");
+  hCuBoxSxu238M2_01   = (TH1D*)fFile2->Get("hCuBoxSxu238M2_01");
+  hCuBoxSxu238M2_1    = (TH1D*)fFile2->Get("hCuBoxSxu238M2_1");
+  hCuBoxSxu238M2_10   = (TH1D*)fFile2->Get("hCuBoxSxu238M2_10");
+
 
 //////// Get adaptive binned histograms
   // Crystal M1 and M2
@@ -2960,15 +3172,15 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(18); // Frame mn54
    minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   minuit.FixParameter(21); // Frame u238
+   // minuit.FixParameter(21); // Frame u238
    minuit.FixParameter(22); // CuBox co58
    minuit.FixParameter(23); // CuBox co60
    minuit.FixParameter(24); // CuBox cs137
    minuit.FixParameter(25); // CuBox k40
    minuit.FixParameter(26); // CuBox mn54
    minuit.FixParameter(27); // CuBox pb210
-   minuit.FixParameter(28); // CuBox th232
-   minuit.FixParameter(29); // CuBox u238
+   // minuit.FixParameter(28); // CuBox th232
+   // minuit.FixParameter(29); // CuBox u238
    minuit.FixParameter(30); // 50mK co58
    minuit.FixParameter(31); // 50mK co60
    minuit.FixParameter(32); // 50mK cs137
@@ -2976,7 +3188,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(34); // 50mK mn54
    minuit.FixParameter(35); // 50mK pb210
    // minuit.FixParameter(36); // 50mK th232
-   minuit.FixParameter(37); // 50mK u238
+   // minuit.FixParameter(37); // 50mK u238
    minuit.FixParameter(38); // 600mK co60
    minuit.FixParameter(39); // 600mK k40
    minuit.FixParameter(40); // 600mK th232
@@ -2986,22 +3198,22 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(44); // RLead cs137
    minuit.FixParameter(45); // RLead k40
    minuit.FixParameter(46); // RLead pb210
-   minuit.FixParameter(47); // RLead th232
-   minuit.FixParameter(48); // RLead u238
+   // minuit.FixParameter(47); // RLead th232
+   // minuit.FixParameter(48); // RLead u238
    minuit.FixParameter(49); // MB co60
    minuit.FixParameter(50); // MB k40
-   minuit.FixParameter(51); // MB th232
-   minuit.FixParameter(52); // MB u238
+   // minuit.FixParameter(51); // MB th232
+   // minuit.FixParameter(52); // MB u238
    minuit.FixParameter(53); // IVC co60
    minuit.FixParameter(54); // IVC k40
-   minuit.FixParameter(55); // IVC th232
-   minuit.FixParameter(56); // IVC u238
+   // minuit.FixParameter(55); // IVC th232
+   // minuit.FixParameter(56); // IVC u238
    minuit.FixParameter(57); // OVC co60
    minuit.FixParameter(58); // OVC k40
-   minuit.FixParameter(59); // OVC th232
-   minuit.FixParameter(60); // OVC u238
+   // minuit.FixParameter(59); // OVC th232
+   // minuit.FixParameter(60); // OVC u238
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 4;
+   int dNumParameters = 16;
 
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCNAdap);

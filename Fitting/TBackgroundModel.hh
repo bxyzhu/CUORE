@@ -194,6 +194,27 @@ private:
 	TH1D			*hTeO2th230M1;
 	TH1D			*hTeO2u234M1;
 
+	TH1D			*hTeO2Spb210M1_01;
+	TH1D			*hTeO2Spo210M1_001;
+	TH1D			*hTeO2Spo210M1_01;
+	TH1D			*hTeO2Sth232M1_01;
+	TH1D			*hTeO2Su238M1_01;
+	TH1D			*hTeO2Sxpb210M1_001;
+	TH1D			*hTeO2Sxpb210M1_01;
+	TH1D			*hTeO2Sxpb210M1_1;
+	TH1D			*hTeO2Sxpb210M1_10;
+	TH1D			*hTeO2Sxpo210M1_001;
+	TH1D			*hTeO2Sxpo210M1_01;
+	TH1D			*hTeO2Sxpo210M1_1;
+	TH1D			*hTeO2Sxth232M1_001;
+	TH1D			*hTeO2Sxth232M1_01;
+	TH1D			*hTeO2Sxth232M1_1;
+	TH1D			*hTeO2Sxth232M1_10;
+	TH1D			*hTeO2Sxu238M1_001;
+	TH1D			*hTeO2Sxu238M1_01;
+	TH1D			*hTeO2Sxu238M1_1;
+	TH1D			*hTeO2Sxu238M1_10;
+
 	TH1D			*hTeO20nuM2;
 	TH1D			*hTeO22nuM2;
 	TH1D			*hTeO2co60M2;
@@ -209,6 +230,27 @@ private:
 	TH1D			*hTeO2th230M2;
 	TH1D			*hTeO2u234M2;
 
+	TH1D			*hTeO2Spb210M2_01;
+	TH1D			*hTeO2Spo210M2_001;
+	TH1D			*hTeO2Spo210M2_01;
+	TH1D			*hTeO2Sth232M2_01;
+	TH1D			*hTeO2Su238M2_01;
+	TH1D			*hTeO2Sxpb210M2_001;
+	TH1D			*hTeO2Sxpb210M2_01;
+	TH1D			*hTeO2Sxpb210M2_1;
+	TH1D			*hTeO2Sxpb210M2_10;
+	TH1D			*hTeO2Sxpo210M2_001;
+	TH1D			*hTeO2Sxpo210M2_01;
+	TH1D			*hTeO2Sxpo210M2_1;
+	TH1D			*hTeO2Sxth232M2_001;
+	TH1D			*hTeO2Sxth232M2_01;
+	TH1D			*hTeO2Sxth232M2_1;
+	TH1D			*hTeO2Sxth232M2_10;
+	TH1D			*hTeO2Sxu238M2_001;
+	TH1D			*hTeO2Sxu238M2_01;
+	TH1D			*hTeO2Sxu238M2_1;
+	TH1D			*hTeO2Sxu238M2_10;
+
 	// Frame M1 and M2
 	TH1D			*hCuFrameco58M1;
 	TH1D			*hCuFrameco60M1;
@@ -219,6 +261,21 @@ private:
 	TH1D			*hCuFrameth232M1;
 	TH1D			*hCuFrameu238M1;
 
+	TH1D			*hCuFrameSth232M1_1;
+	TH1D			*hCuFrameSu238M1_1;
+	TH1D			*hCuFrameSxpb210M1_001;
+	TH1D			*hCuFrameSxpb210M1_01;
+	TH1D			*hCuFrameSxpb210M1_1;
+	TH1D			*hCuFrameSxpb210M1_10;
+	TH1D			*hCuFrameSxth232M1_001;
+	TH1D			*hCuFrameSxth232M1_01;
+	TH1D			*hCuFrameSxth232M1_1;
+	TH1D			*hCuFrameSxth232M1_10;
+	TH1D			*hCuFrameSxu238M1_001;
+	TH1D			*hCuFrameSxu238M1_01;
+	TH1D			*hCuFrameSxu238M1_1;
+	TH1D			*hCuFrameSxu238M1_10;
+
 	TH1D			*hCuFrameco58M2;
 	TH1D			*hCuFrameco60M2;
 	TH1D			*hCuFramecs137M2;
@@ -227,6 +284,21 @@ private:
 	TH1D			*hCuFramepb210M2;
 	TH1D			*hCuFrameth232M2;
 	TH1D			*hCuFrameu238M2;
+
+	TH1D			*hCuFrameSth232M2_1;
+	TH1D			*hCuFrameSu238M2_1;
+	TH1D			*hCuFrameSxpb210M2_001;
+	TH1D			*hCuFrameSxpb210M2_01;
+	TH1D			*hCuFrameSxpb210M2_1;
+	TH1D			*hCuFrameSxpb210M2_10;
+	TH1D			*hCuFrameSxth232M2_001;
+	TH1D			*hCuFrameSxth232M2_01;
+	TH1D			*hCuFrameSxth232M2_1;
+	TH1D			*hCuFrameSxth232M2_10;
+	TH1D			*hCuFrameSxu238M2_001;
+	TH1D			*hCuFrameSxu238M2_01;
+	TH1D			*hCuFrameSxu238M2_1;
+	TH1D			*hCuFrameSxu238M2_10;
 
 	// CuBox (TShield) M1 and M2
 	TH1D			*hCuBoxco58M1;
@@ -238,6 +310,21 @@ private:
 	TH1D			*hCuBoxth232M1;
 	TH1D			*hCuBoxu238M1;	
 
+	TH1D			*hCuBoxSth232M1_1;
+	TH1D			*hCuBoxSu238M1_1;
+	TH1D			*hCuBoxSxpb210M1_001;
+	TH1D			*hCuBoxSxpb210M1_01;
+	TH1D			*hCuBoxSxpb210M1_1;
+	TH1D			*hCuBoxSxpb210M1_10;
+	TH1D			*hCuBoxSxth232M1_001;
+	TH1D			*hCuBoxSxth232M1_01;
+	TH1D			*hCuBoxSxth232M1_1;
+	TH1D			*hCuBoxSxth232M1_10;
+	TH1D			*hCuBoxSxu238M1_001;
+	TH1D			*hCuBoxSxu238M1_01;
+	TH1D			*hCuBoxSxu238M1_1;
+	TH1D			*hCuBoxSxu238M1_10;
+
 	TH1D			*hCuBoxco58M2;
 	TH1D			*hCuBoxco60M2;
 	TH1D			*hCuBoxcs137M2;
@@ -246,6 +333,21 @@ private:
 	TH1D			*hCuBoxpb210M2;
 	TH1D			*hCuBoxth232M2;
 	TH1D			*hCuBoxu238M2;	
+
+	TH1D			*hCuBoxSth232M2_1;
+	TH1D			*hCuBoxSu238M2_1;
+	TH1D			*hCuBoxSxpb210M2_001;
+	TH1D			*hCuBoxSxpb210M2_01;
+	TH1D			*hCuBoxSxpb210M2_1;
+	TH1D			*hCuBoxSxpb210M2_10;
+	TH1D			*hCuBoxSxth232M2_001;
+	TH1D			*hCuBoxSxth232M2_01;
+	TH1D			*hCuBoxSxth232M2_1;
+	TH1D			*hCuBoxSxth232M2_10;
+	TH1D			*hCuBoxSxu238M2_001;
+	TH1D			*hCuBoxSxu238M2_01;
+	TH1D			*hCuBoxSxu238M2_1;
+	TH1D			*hCuBoxSxu238M2_10;
 
 	// 50mK M1 and M2
 	TH1D			*h50mKco58M1;
@@ -327,6 +429,7 @@ private:
 	TH1D			*hOVCk40M2;
 	TH1D			*hOVCth232M2;
 	TH1D			*hOVCu238M2;	
+
 
 
 //////// Adaptive binned histograms
@@ -481,6 +584,8 @@ private:
 	TH1D			*hAdapOVCu238M2;	
 
 
+	TFile *fFile;
+	TFile *fFile2;
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
