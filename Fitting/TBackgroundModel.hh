@@ -113,6 +113,10 @@ private:
 	TH1D			*fModelTotco2M1;
 	TH1D			*fModelTotteo2M1;
 
+	TH1D			*fModelTotSthM1;
+	TH1D			*fModelTotSuM1;
+	TH1D 			*fModelTotSpbM1;
+	TH1D			*fModelTotSpbM1;
 
 	TH1D			*fModelTotAdapM1;
 	TH1D			*fModelTotAdapthM1;
@@ -128,6 +132,11 @@ private:
 	TH1D			*fModelTotAdapcsM1;
 	TH1D			*fModelTotAdapco2M1;
 	TH1D			*fModelTotAdapteo2M1;
+
+	TH1D			*fModelTotAdapSthM1;
+	TH1D			*fModelTotAdapSuM1;
+	TH1D 			*fModelTotAdapSpbM1;
+	TH1D			*fModelTotAdapSpbM1;
 
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
@@ -145,6 +154,10 @@ private:
 	TH1D			*fModelTotco2M2;
 	TH1D			*fModelTotteo2M2;
 
+	TH1D			*fModelTotSthM2;
+	TH1D			*fModelTotSuM2;
+	TH1D 			*fModelTotSpbM2;
+	TH1D			*fModelTotSpbM2;
 
 	TH1D			*fModelTotAdapM2;
 	TH1D			*fModelTotAdapthM2;
@@ -161,6 +174,10 @@ private:
 	TH1D			*fModelTotAdapco2M2;
 	TH1D			*fModelTotAdapteo2M2;
 
+	TH1D			*fModelTotAdapSthM2;
+	TH1D			*fModelTotAdapSuM2;
+	TH1D 			*fModelTotAdapSpbM2;
+	TH1D			*fModelTotAdapSpbM2;
 
 	// Residuals
 	TGraph			*gResidualM1;
@@ -706,8 +723,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[62];
-	double				fParError[62];
+	double				fParameters[110];
+	double				fParError[110];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[62];
