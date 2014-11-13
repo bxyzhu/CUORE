@@ -449,6 +449,27 @@ private:
 	TH1D			*hAdapTeO2th230M1;
 	TH1D			*hAdapTeO2u234M1;
 
+	TH1D			*hAdapTeO2Spb210M1_01;
+	TH1D			*hAdapTeO2Spo210M1_001;
+	TH1D			*hAdapTeO2Spo210M1_01;
+	TH1D			*hAdapTeO2Sth232M1_01;
+	TH1D			*hAdapTeO2Su238M1_01;
+	TH1D			*hAdapTeO2Sxpb210M1_001;
+	TH1D			*hAdapTeO2Sxpb210M1_01;
+	TH1D			*hAdapTeO2Sxpb210M1_1;
+	TH1D			*hAdapTeO2Sxpb210M1_10;
+	TH1D			*hAdapTeO2Sxpo210M1_001;
+	TH1D			*hAdapTeO2Sxpo210M1_01;
+	TH1D			*hAdapTeO2Sxpo210M1_1;
+	TH1D			*hAdapTeO2Sxth232M1_001;
+	TH1D			*hAdapTeO2Sxth232M1_01;
+	TH1D			*hAdapTeO2Sxth232M1_1;
+	TH1D			*hAdapTeO2Sxth232M1_10;
+	TH1D			*hAdapTeO2Sxu238M1_001;
+	TH1D			*hAdapTeO2Sxu238M1_01;
+	TH1D			*hAdapTeO2Sxu238M1_1;
+	TH1D			*hAdapTeO2Sxu238M1_10;
+
 	TH1D			*hAdapTeO20nuM2;
 	TH1D			*hAdapTeO22nuM2;
 	TH1D			*hAdapTeO2co60M2;
@@ -464,6 +485,27 @@ private:
 	TH1D			*hAdapTeO2th230M2;
 	TH1D			*hAdapTeO2u234M2;
 
+	TH1D			*hAdapTeO2Spb210M2_01;
+	TH1D			*hAdapTeO2Spo210M2_001;
+	TH1D			*hAdapTeO2Spo210M2_01;
+	TH1D			*hAdapTeO2Sth232M2_01;
+	TH1D			*hAdapTeO2Su238M2_01;
+	TH1D			*hAdapTeO2Sxpb210M2_001;
+	TH1D			*hAdapTeO2Sxpb210M2_01;
+	TH1D			*hAdapTeO2Sxpb210M2_1;
+	TH1D			*hAdapTeO2Sxpb210M2_10;
+	TH1D			*hAdapTeO2Sxpo210M2_001;
+	TH1D			*hAdapTeO2Sxpo210M2_01;
+	TH1D			*hAdapTeO2Sxpo210M2_1;
+	TH1D			*hAdapTeO2Sxth232M2_001;
+	TH1D			*hAdapTeO2Sxth232M2_01;
+	TH1D			*hAdapTeO2Sxth232M2_1;
+	TH1D			*hAdapTeO2Sxth232M2_10;
+	TH1D			*hAdapTeO2Sxu238M2_001;
+	TH1D			*hAdapTeO2Sxu238M2_01;
+	TH1D			*hAdapTeO2Sxu238M2_1;
+	TH1D			*hAdapTeO2Sxu238M2_10;
+
 	// Frame M1 and M2
 	TH1D			*hAdapCuFrameco58M1;
 	TH1D			*hAdapCuFrameco60M1;
@@ -474,6 +516,21 @@ private:
 	TH1D			*hAdapCuFrameth232M1;
 	TH1D			*hAdapCuFrameu238M1;
 
+	TH1D			*hAdapCuFrameSth232M1_1;
+	TH1D			*hAdapCuFrameSu238M1_1;
+	TH1D			*hAdapCuFrameSxpb210M1_001;
+	TH1D			*hAdapCuFrameSxpb210M1_01;
+	TH1D			*hAdapCuFrameSxpb210M1_1;
+	TH1D			*hAdapCuFrameSxpb210M1_10;
+	TH1D			*hAdapCuFrameSxth232M1_001;
+	TH1D			*hAdapCuFrameSxth232M1_01;
+	TH1D			*hAdapCuFrameSxth232M1_1;
+	TH1D			*hAdapCuFrameSxth232M1_10;
+	TH1D			*hAdapCuFrameSxu238M1_001;
+	TH1D			*hAdapCuFrameSxu238M1_01;
+	TH1D			*hAdapCuFrameSxu238M1_1;
+	TH1D			*hAdapCuFrameSxu238M1_10;
+
 	TH1D			*hAdapCuFrameco58M2;
 	TH1D			*hAdapCuFrameco60M2;
 	TH1D			*hAdapCuFramecs137M2;
@@ -482,6 +539,22 @@ private:
 	TH1D			*hAdapCuFramepb210M2;
 	TH1D			*hAdapCuFrameth232M2;
 	TH1D			*hAdapCuFrameu238M2;
+
+	TH1D			*hAdapCuFrameSth232M2_1;
+	TH1D			*hAdapCuFrameSu238M2_1;
+	TH1D			*hAdapCuFrameSxpb210M2_001;
+	TH1D			*hAdapCuFrameSxpb210M2_01;
+	TH1D			*hAdapCuFrameSxpb210M2_1;
+	TH1D			*hAdapCuFrameSxpb210M2_10;
+	TH1D			*hAdapCuFrameSxth232M2_001;
+	TH1D			*hAdapCuFrameSxth232M2_01;
+	TH1D			*hAdapCuFrameSxth232M2_1;
+	TH1D			*hAdapCuFrameSxth232M2_10;
+	TH1D			*hAdapCuFrameSxu238M2_001;
+	TH1D			*hAdapCuFrameSxu238M2_01;
+	TH1D			*hAdapCuFrameSxu238M2_1;
+	TH1D			*hAdapCuFrameSxu238M2_10;
+
 
 	// CuBox (TShield) M1 and M2
 	TH1D			*hAdapCuBoxco58M1;
@@ -493,6 +566,21 @@ private:
 	TH1D			*hAdapCuBoxth232M1;
 	TH1D			*hAdapCuBoxu238M1;	
 
+	TH1D			*hAdapCuBoxSth232M1_1;
+	TH1D			*hAdapCuBoxSu238M1_1;
+	TH1D			*hAdapCuBoxSxpb210M1_001;
+	TH1D			*hAdapCuBoxSxpb210M1_01;
+	TH1D			*hAdapCuBoxSxpb210M1_1;
+	TH1D			*hAdapCuBoxSxpb210M1_10;
+	TH1D			*hAdapCuBoxSxth232M1_001;
+	TH1D			*hAdapCuBoxSxth232M1_01;
+	TH1D			*hAdapCuBoxSxth232M1_1;
+	TH1D			*hAdapCuBoxSxth232M1_10;
+	TH1D			*hAdapCuBoxSxu238M1_001;
+	TH1D			*hAdapCuBoxSxu238M1_01;
+	TH1D			*hAdapCuBoxSxu238M1_1;
+	TH1D			*hAdapCuBoxSxu238M1_10;
+
 	TH1D			*hAdapCuBoxco58M2;
 	TH1D			*hAdapCuBoxco60M2;
 	TH1D			*hAdapCuBoxcs137M2;
@@ -501,6 +589,21 @@ private:
 	TH1D			*hAdapCuBoxpb210M2;
 	TH1D			*hAdapCuBoxth232M2;
 	TH1D			*hAdapCuBoxu238M2;	
+
+	TH1D			*hAdapCuBoxSth232M2_1;
+	TH1D			*hAdapCuBoxSu238M2_1;
+	TH1D			*hAdapCuBoxSxpb210M2_001;
+	TH1D			*hAdapCuBoxSxpb210M2_01;
+	TH1D			*hAdapCuBoxSxpb210M2_1;
+	TH1D			*hAdapCuBoxSxpb210M2_10;
+	TH1D			*hAdapCuBoxSxth232M2_001;
+	TH1D			*hAdapCuBoxSxth232M2_01;
+	TH1D			*hAdapCuBoxSxth232M2_1;
+	TH1D			*hAdapCuBoxSxth232M2_10;
+	TH1D			*hAdapCuBoxSxu238M2_001;
+	TH1D			*hAdapCuBoxSxu238M2_01;
+	TH1D			*hAdapCuBoxSxu238M2_1;
+	TH1D			*hAdapCuBoxSxu238M2_10;
 
 	// 50mK M1 and M2
 	TH1D			*hAdap50mKco58M1;
