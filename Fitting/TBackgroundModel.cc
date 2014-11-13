@@ -1466,7 +1466,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(1); // TeO2 2nu
    minuit.FixParameter(2); // TeO2 co60
    minuit.FixParameter(3); // TeO2 k40
-   minuit.FixParameter(4); // TeO2 pb210
+   // minuit.FixParameter(4); // TeO2 pb210
    minuit.FixParameter(5); // TeO2 po210
    minuit.FixParameter(6); // TeO2 te125m
    // minuit.FixParameter(7); // TeO2 th232
@@ -1509,71 +1509,70 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(44); // RLead cs137
    minuit.FixParameter(45); // RLead k40
    minuit.FixParameter(46); // RLead pb210
-   // minuit.FixParameter(47); // RLead th232
-   // minuit.FixParameter(48); // RLead u238
+   minuit.FixParameter(47); // RLead th232
+   minuit.FixParameter(48); // RLead u238
    minuit.FixParameter(49); // MB co60
    minuit.FixParameter(50); // MB k40
-   // minuit.FixParameter(51); // MB th232
-   // minuit.FixParameter(52); // MB u238
+   minuit.FixParameter(51); // MB th232
+   minuit.FixParameter(52); // MB u238
    minuit.FixParameter(53); // IVC co60
    minuit.FixParameter(54); // IVC k40
-   // minuit.FixParameter(55); // IVC th232
-   // minuit.FixParameter(56); // IVC u238
+   minuit.FixParameter(55); // IVC th232
+   minuit.FixParameter(56); // IVC u238
    minuit.FixParameter(57); // OVC co60
    minuit.FixParameter(58); // OVC k40
-   // minuit.FixParameter(59); // OVC th232
-   // minuit.FixParameter(60); // OVC u238
-   // minuit.FixParameter(61); // 
-   // minuit.FixParameter(62); // 
-   // minuit.FixParameter(63); // 
-   // minuit.FixParameter(64); // 
-   // minuit.FixParameter(65); // 
-   // minuit.FixParameter(66); // 
-   // minuit.FixParameter(67); // 
-   // minuit.FixParameter(68); // 
-   // minuit.FixParameter(69); // 
-   // minuit.FixParameter(70); // 
-   // minuit.FixParameter(71); // 
-   // minuit.FixParameter(72); // 
-   // minuit.FixParameter(73); // 
-   // minuit.FixParameter(74); // 
-   // minuit.FixParameter(75); // 
-   // minuit.FixParameter(76); // 
-   // minuit.FixParameter(77); // 
-   // minuit.FixParameter(78); // 
-   // minuit.FixParameter(79); // 
-   // minuit.FixParameter(80); // 
-   // minuit.FixParameter(81); // 
-   // minuit.FixParameter(82); // 
-   // minuit.FixParameter(83); // 
-   // minuit.FixParameter(84); // 
-   // minuit.FixParameter(85); // 
-   // minuit.FixParameter(86); // 
-   // minuit.FixParameter(87); // 
-   // minuit.FixParameter(88); // 
-   // minuit.FixParameter(89); // 
-   // minuit.FixParameter(90); // 
-   // minuit.FixParameter(91); // 
-   // minuit.FixParameter(92); // 
-   // minuit.FixParameter(93); // 
-   // minuit.FixParameter(94); // 
-   // minuit.FixParameter(95); // 
-   // minuit.FixParameter(96); // 
-   // minuit.FixParameter(97); // 
-   // minuit.FixParameter(98); // 
-   // minuit.FixParameter(99); // 
-   // minuit.FixParameter(100); // 
-   // minuit.FixParameter(101); // 
-   // minuit.FixParameter(102); // 
-   // minuit.FixParameter(103); // 
-   // minuit.FixParameter(104); // 
-   // minuit.FixParameter(105); // 
-   // minuit.FixParameter(106); // 
-   // minuit.FixParameter(107); // 
-   // minuit.FixParameter(108); // 
-
+   minuit.FixParameter(59); // OVC th232
+   minuit.FixParameter(60); // OVC u238
+   minuit.FixParameter(61); // TeO2 S pb210 01
+   minuit.FixParameter(62); // TeO2 S po210 001
+   minuit.FixParameter(63); // TeO2 S po210 01
+   minuit.FixParameter(64); // TeO2 S th232 01
+   minuit.FixParameter(65); // TeO2 S u238 01
+   minuit.FixParameter(66); // TeO2 Sx pb210 001
+   minuit.FixParameter(67); // TeO2 Sx pb210 01
+   // minuit.FixParameter(68); // TeO2 Sx pb210 1
+   minuit.FixParameter(69); // TeO2 S pb210 10
+   minuit.FixParameter(70); // TeO2 Sx po210 001
+   minuit.FixParameter(71); // TeO2 Sx po210 01
+   minuit.FixParameter(72); // TeO2 Sx po210 1
+   minuit.FixParameter(73); // TeO2 Sx th232 001
+   minuit.FixParameter(74); // TeO2 Sx th232 01
+   minuit.FixParameter(75); // TeO2 Sx th232 1
+   minuit.FixParameter(76); // TeO2 Sx th232 10
+   minuit.FixParameter(77); // TeO2 Sx u238 001
+   minuit.FixParameter(78); // TeO2 Sx u238 01
+   minuit.FixParameter(79); // TeO2 Sx u238 1
+   minuit.FixParameter(80); // TeO2 Sx u238 10
+   minuit.FixParameter(81); // Frame S th232 1
+   minuit.FixParameter(82); // Frame S u238 1
+   minuit.FixParameter(83); // Frame Sx pb210 001
+   minuit.FixParameter(84); // Frame Sx pb210 01
+   minuit.FixParameter(85); // Frame Sx pb210 1
+   minuit.FixParameter(86); // Frame Sx pb210 10
+   minuit.FixParameter(87); // Frame Sx th232 001
+   minuit.FixParameter(88); // Frame Sx th232 01
+   minuit.FixParameter(89); // Frame Sx th232 1
+   minuit.FixParameter(90); // Frame Sx th232 10
+   minuit.FixParameter(91); // Frame Sx u238 001
+   minuit.FixParameter(92); // Frame Sx u238 01
+   minuit.FixParameter(93); // Frame Sx u238 1
+   minuit.FixParameter(94); // Frame Sx u238 10
+   minuit.FixParameter(95); // CuBox S th232 1
+   minuit.FixParameter(96); // CuBox S u238 1
+   minuit.FixParameter(97); // CuBox Sx pb210 001
+   minuit.FixParameter(98); // CuBox Sx pb210 01
+   minuit.FixParameter(99); // CuBox Sx pb210 1
+   minuit.FixParameter(100); // CuBox Sx pb210 10 
+   minuit.FixParameter(101); // CuBox Sx th232 001
+   minuit.FixParameter(102); // CuBox Sx th232 01
+   minuit.FixParameter(103); // CuBox Sx th232 1
+   minuit.FixParameter(104); // CuBox Sx th232 10
+   minuit.FixParameter(105); // CuBox Sx u238 001
+   minuit.FixParameter(106); // CuBox Sx u238 01
+   minuit.FixParameter(107); // CuBox Sx u238 1
+   minuit.FixParameter(108); // CuBox Sx u238 10
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 16;
+   int dNumParameters = 10;
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
    
@@ -2324,10 +2323,7 @@ void TBackgroundModel::Initialize()
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
   fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk_nonnormalized.root"); 
-  // fFile = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Bulk.root"); 
-
-  fFile2 = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Surface.root");
-
+  fFile2 = new TFile("/Users/brian/macros/Simulations/Production/MCProduction_Surface_nonnormalized.root");
 
 ///////////// Bulk Histograms
   // Crystal M1 and M2
@@ -2587,7 +2583,6 @@ void TBackgroundModel::Initialize()
   hCuBoxSxu238M2_01   = (TH1D*)fFile2->Get("hCuBoxSxu238M2_01");
   hCuBoxSxu238M2_1    = (TH1D*)fFile2->Get("hCuBoxSxu238M2_1");
   hCuBoxSxu238M2_10   = (TH1D*)fFile2->Get("hCuBoxSxu238M2_10");
-
 
 //////// Get adaptive binned histograms
   // Crystal M1 and M2
@@ -3094,7 +3089,6 @@ void TBackgroundModel::Initialize()
     hAdapOVCu238M2->SetBinContent(i, dBinSize * hnewOVCu238M2->GetBinContent(i)/hnewOVCu238M2->GetBinWidth(i));
 
   }
-
 }
 
 
@@ -3112,7 +3106,7 @@ void TBackgroundModel::LoadData()
 	}
 
   // Currently using Jon's reduced file -- change for other input files
-  qtree->Add("/Users/brian/macros/Simulations/Toy/combi1/combi1.root"); 
+  qtree->Add("/Users/brian/macros/Simulations/Toy/combi2/combi2.root"); 
   qtree->Project("fDataHistoTot", "Ener2");
   qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
   qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
@@ -3215,7 +3209,7 @@ void TBackgroundModel::PrintParameters()
 void TBackgroundModel::SetParameters(int index, double value)
 {
 	// Change the index max depending on model
-	if(index > 90) cout << "Index too large" << endl;
+	if(index > 110) cout << "Index too large" << endl;
 	else fParameters[index] = value;
 }
 
@@ -3299,7 +3293,7 @@ void TBackgroundModel::UpdateModel()
 
 	// Create model
   dNumCalls++;
-  if(dNumCalls%50==0)
+  if(dNumCalls%100==0)
   {
     cout << "Call #: "<< dNumCalls << endl;
   }
@@ -3566,13 +3560,12 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Reset();
 
   dNumCalls++;
-
-  // Create model
-  if(dNumCalls%50==0)
+  if(dNumCalls%100==0)
   {
     cout << "Call #: "<< dNumCalls << endl;
   }
 
+  // Create model
   /////////////////////////////////////
   //// Adaptive Binning parameters
   ////////////////////////////////////
@@ -4032,7 +4025,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(1); // TeO2 2nu
    minuit.FixParameter(2); // TeO2 co60
    minuit.FixParameter(3); // TeO2 k40
-   minuit.FixParameter(4); // TeO2 pb210
+   // minuit.FixParameter(4); // TeO2 pb210
    minuit.FixParameter(5); // TeO2 po210
    minuit.FixParameter(6); // TeO2 te125m
    // minuit.FixParameter(7); // TeO2 th232
@@ -4075,71 +4068,70 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(44); // RLead cs137
    minuit.FixParameter(45); // RLead k40
    minuit.FixParameter(46); // RLead pb210
-   // minuit.FixParameter(47); // RLead th232
-   // minuit.FixParameter(48); // RLead u238
+   minuit.FixParameter(47); // RLead th232
+   minuit.FixParameter(48); // RLead u238
    minuit.FixParameter(49); // MB co60
    minuit.FixParameter(50); // MB k40
-   // minuit.FixParameter(51); // MB th232
-   // minuit.FixParameter(52); // MB u238
+   minuit.FixParameter(51); // MB th232
+   minuit.FixParameter(52); // MB u238
    minuit.FixParameter(53); // IVC co60
    minuit.FixParameter(54); // IVC k40
-   // minuit.FixParameter(55); // IVC th232
-   // minuit.FixParameter(56); // IVC u238
+   minuit.FixParameter(55); // IVC th232
+   minuit.FixParameter(56); // IVC u238
    minuit.FixParameter(57); // OVC co60
    minuit.FixParameter(58); // OVC k40
-   // minuit.FixParameter(59); // OVC th232
-   // minuit.FixParameter(60); // OVC u238
-   // minuit.FixParameter(61); // 
-   // minuit.FixParameter(62); // 
-   // minuit.FixParameter(63); // 
-   // minuit.FixParameter(64); // 
-   // minuit.FixParameter(65); // 
-   // minuit.FixParameter(66); // 
-   // minuit.FixParameter(67); // 
-   // minuit.FixParameter(68); // 
-   // minuit.FixParameter(69); // 
-   // minuit.FixParameter(70); // 
-   // minuit.FixParameter(71); // 
-   // minuit.FixParameter(72); // 
-   // minuit.FixParameter(73); // 
-   // minuit.FixParameter(74); // 
-   // minuit.FixParameter(75); // 
-   // minuit.FixParameter(76); // 
-   // minuit.FixParameter(77); // 
-   // minuit.FixParameter(78); // 
-   // minuit.FixParameter(79); // 
-   // minuit.FixParameter(80); // 
-   // minuit.FixParameter(81); // 
-   // minuit.FixParameter(82); // 
-   // minuit.FixParameter(83); // 
-   // minuit.FixParameter(84); // 
-   // minuit.FixParameter(85); // 
-   // minuit.FixParameter(86); // 
-   // minuit.FixParameter(87); // 
-   // minuit.FixParameter(88); // 
-   // minuit.FixParameter(89); // 
-   // minuit.FixParameter(90); // 
-   // minuit.FixParameter(91); // 
-   // minuit.FixParameter(92); // 
-   // minuit.FixParameter(93); // 
-   // minuit.FixParameter(94); // 
-   // minuit.FixParameter(95); // 
-   // minuit.FixParameter(96); // 
-   // minuit.FixParameter(97); // 
-   // minuit.FixParameter(98); // 
-   // minuit.FixParameter(99); // 
-   // minuit.FixParameter(100); // 
-   // minuit.FixParameter(101); // 
-   // minuit.FixParameter(102); // 
-   // minuit.FixParameter(103); // 
-   // minuit.FixParameter(104); // 
-   // minuit.FixParameter(105); // 
-   // minuit.FixParameter(106); // 
-   // minuit.FixParameter(107); // 
-   // minuit.FixParameter(108); // 
+   minuit.FixParameter(59); // OVC th232
+   minuit.FixParameter(60); // OVC u238
+   minuit.FixParameter(61); // TeO2 S pb210 01
+   minuit.FixParameter(62); // TeO2 S po210 001
+   minuit.FixParameter(63); // TeO2 S po210 01
+   minuit.FixParameter(64); // TeO2 S th232 01
+   minuit.FixParameter(65); // TeO2 S u238 01
+   minuit.FixParameter(66); // TeO2 Sx pb210 001
+   minuit.FixParameter(67); // TeO2 Sx pb210 01
+   // minuit.FixParameter(68); // TeO2 Sx pb210 1
+   minuit.FixParameter(69); // TeO2 S pb210 10
+   minuit.FixParameter(70); // TeO2 Sx po210 001
+   minuit.FixParameter(71); // TeO2 Sx po210 01
+   minuit.FixParameter(72); // TeO2 Sx po210 1
+   minuit.FixParameter(73); // TeO2 Sx th232 001
+   minuit.FixParameter(74); // TeO2 Sx th232 01
+   minuit.FixParameter(75); // TeO2 Sx th232 1
+   minuit.FixParameter(76); // TeO2 Sx th232 10
+   minuit.FixParameter(77); // TeO2 Sx u238 001
+   minuit.FixParameter(78); // TeO2 Sx u238 01
+   minuit.FixParameter(79); // TeO2 Sx u238 1
+   minuit.FixParameter(80); // TeO2 Sx u238 10
+   minuit.FixParameter(81); // Frame S th232 1
+   minuit.FixParameter(82); // Frame S u238 1
+   minuit.FixParameter(83); // Frame Sx pb210 001
+   minuit.FixParameter(84); // Frame Sx pb210 01
+   minuit.FixParameter(85); // Frame Sx pb210 1
+   minuit.FixParameter(86); // Frame Sx pb210 10
+   minuit.FixParameter(87); // Frame Sx th232 001
+   minuit.FixParameter(88); // Frame Sx th232 01
+   minuit.FixParameter(89); // Frame Sx th232 1
+   minuit.FixParameter(90); // Frame Sx th232 10
+   minuit.FixParameter(91); // Frame Sx u238 001
+   minuit.FixParameter(92); // Frame Sx u238 01
+   minuit.FixParameter(93); // Frame Sx u238 1
+   minuit.FixParameter(94); // Frame Sx u238 10
+   minuit.FixParameter(95); // CuBox S th232 1
+   minuit.FixParameter(96); // CuBox S u238 1
+   minuit.FixParameter(97); // CuBox Sx pb210 001
+   minuit.FixParameter(98); // CuBox Sx pb210 01
+   minuit.FixParameter(99); // CuBox Sx pb210 1
+   minuit.FixParameter(100); // CuBox Sx pb210 10 
+   minuit.FixParameter(101); // CuBox Sx th232 001
+   minuit.FixParameter(102); // CuBox Sx th232 01
+   minuit.FixParameter(103); // CuBox Sx th232 1
+   minuit.FixParameter(104); // CuBox Sx th232 10
+   minuit.FixParameter(105); // CuBox Sx u238 001
+   minuit.FixParameter(106); // CuBox Sx u238 01
+   minuit.FixParameter(107); // CuBox Sx u238 1
+   minuit.FixParameter(108); // CuBox Sx u238 10
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 16;
-
+   int dNumParameters = 10;
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCNAdap);
    

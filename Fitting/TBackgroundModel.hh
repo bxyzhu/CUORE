@@ -115,7 +115,7 @@ private:
 
 	TH1D			*fModelTotSthM1;
 	TH1D			*fModelTotSuM1;
-	TH1D 			*fModelTotSpbM1;
+	TH1D 			*fModelTotSpoM1;
 	TH1D			*fModelTotSpbM1;
 
 	TH1D			*fModelTotAdapM1;
@@ -135,7 +135,7 @@ private:
 
 	TH1D			*fModelTotAdapSthM1;
 	TH1D			*fModelTotAdapSuM1;
-	TH1D 			*fModelTotAdapSpbM1;
+	TH1D 			*fModelTotAdapSpoM1;
 	TH1D			*fModelTotAdapSpbM1;
 
 	// Total PDFs M2
@@ -156,7 +156,7 @@ private:
 
 	TH1D			*fModelTotSthM2;
 	TH1D			*fModelTotSuM2;
-	TH1D 			*fModelTotSpbM2;
+	TH1D 			*fModelTotSpoM2;
 	TH1D			*fModelTotSpbM2;
 
 	TH1D			*fModelTotAdapM2;
@@ -176,7 +176,7 @@ private:
 
 	TH1D			*fModelTotAdapSthM2;
 	TH1D			*fModelTotAdapSuM2;
-	TH1D 			*fModelTotAdapSpbM2;
+	TH1D 			*fModelTotAdapSpoM2;
 	TH1D			*fModelTotAdapSpbM2;
 
 	// Residuals
