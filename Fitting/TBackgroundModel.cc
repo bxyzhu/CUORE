@@ -834,13 +834,13 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hAdapMBu238M2      = new TH1D("hAdapMBu238M2",   "hAdapMBu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
 
   // Super Insulation M1 and M2
-  hAdapk40M1       = new TH1D("hAdapk40M1",    "hAdapk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1); 
-  hAdapth232M1     = new TH1D("hAdapth232M1",  "hAdapth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapu238M1      = new TH1D("hAdapu238M1",   "hAdapu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapSIk40M1       = new TH1D("hAdapSIk40M1",    "hAdapSIk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1); 
+  hAdapSIth232M1     = new TH1D("hAdapSIth232M1",  "hAdapSIth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapSIu238M1      = new TH1D("hAdapSIu238M1",   "hAdapSIu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapk40M2       = new TH1D("hAdapk40M2",    "hAdapk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapth232M2     = new TH1D("hAdapth232M2",  "hAdapth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapu238M2      = new TH1D("hAdapu238M2",   "hAdapu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapSIk40M2       = new TH1D("hAdapSIk40M2",    "hAdapSIk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapSIth232M2     = new TH1D("hAdapSIth232M2",  "hAdapSIth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapSIu238M2      = new TH1D("hAdapSIu238M2",   "hAdapSIu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
 
   // IVC M1 and M2
@@ -3188,64 +3188,6 @@ void TBackgroundModel::LoadData()
 }
 
 
-// Normalize single histogram
-void TBackgroundModel::NormalizePDF(TH1D *h1, int minE, int maxE)
-{
-	double dIntegral = 0;
-	double Time = 0;
-
-	// hChain->SetBranchAddress("Time", &Time);
-
-	// int dEvents = hChain->GetEntries();
-	// hChain->GetEntry(dEvents - 1);
-
-	// bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-	dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
-	// cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
-
-
-	// Make sure integral isn't 0
-  // If it is 0, clear model... 
-  if(dIntegral == 0)
-  {
-    cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
-    h1->Reset();
-  }
-
-	if(dIntegral != 0)
-	{
-		h1->Scale(1/dIntegral);
-	}
-}
-
-
-// Normalizes pair of histograms (for normalizing M2 with the same value as M1)
-void TBackgroundModel::NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
-{
-  double dIntegral = 0;
-
-  // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-  dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
-  // cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
-
-
-  // Make sure integral isn't 0
-  // If it is 0, clear model... 
-  if(dIntegral == 0)
-  {
-    cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
-    h1->Reset();
-    h2->Reset();
-  }
-
-  if(dIntegral != 0)
-  {
-    h1->Scale(1.0/dIntegral);
-    h2->Scale(1.0/dIntegral);
-  }
-}
-
-
 // Prints parameters, needs update 11-06-2014
 void TBackgroundModel::PrintParameters()
 {
@@ -3367,70 +3309,6 @@ void TBackgroundModel::SetParameters(int index, double value)
 	// Change the index max depending on model
 	if(index > 110) cout << "Index too large" << endl;
 	else fParameters[index] = value;
-}
-
-
-// For custom Smearing with resolution, currently constant resolution 
-TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, double resolution2)
-{
-	// Reset previously Modeled histogram
-	hSMC->Reset();
-
-	double dNorm;
-  double dNorm2;
-	double dSmearedValue;
-
-	for(int i = 0; i<dNBins; i++)
-	{
-		for(int j = 0; j<dNBins; j++)
-		{
-			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-			dNorm = (853.3/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
-      dNorm2 = (362.5/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution2);
-
-			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
-			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
-      gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, resolution2);
-
-			// Smeared contribution from gaussian centered at bin j for bin i 
-			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
-
-			// Fill bin i with contribution from gaussian centered at bin j
-			hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
-		}
-	}
-	
-	return hSMC;
-}
-
-// Smearing with single gaussian
-TH1D *TBackgroundModel::SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1)
-{
-  // Reset previously Modeled histogram
-  hSMC->Reset();
-
-  double dNorm;
-  double dSmearedValue;
-
-  for(int i = 0; i<dNBins; i++)
-  {
-    for(int j = 0; j<dNBins; j++)
-    {
-      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
-      dNorm = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
-
-      // Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
-      gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
-
-      // Smeared contribution from gaussian centered at bin j for bin i 
-      dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
-
-      // Fill bin i with contribution from gaussian centered at bin j
-      hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
-    }
-  }
-  
-  return hSMC;
 }
 
 

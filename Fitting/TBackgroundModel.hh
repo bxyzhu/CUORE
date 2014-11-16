@@ -40,19 +40,11 @@ public:
 
 	void LoadPDFs();
 
-	void NormalizePDF(TH1D *h1, int minE, int maxE);
-
-	void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE);
-
 	void PrintParameters();
 
 	void ReadMC();
 
 	void SetParameters(int index, double value);
-
-	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, double resolution2);
-
-	TH1D *SmearMCOld(TH1D *hMC, TH1D *hSMC, double resolution1);
 	
 	void Test();
 
