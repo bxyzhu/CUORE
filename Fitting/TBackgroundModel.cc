@@ -489,6 +489,16 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hMBth232M2     = new TH1D("hMBth232M2",  "hMBth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hMBu238M2      = new TH1D("hMBu238M2",   "hMBu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
 
+  // Super Insulation M1 and M2
+  hSIk40M1       = new TH1D("hSIk40M1",    "hSIk40M1",    dNBins, dMinEnergy, dMaxEnergy);
+  hSIth232M1     = new TH1D("hSIth232M1",  "hSIth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
+  hSIu238M1      = new TH1D("hSIu238M1",   "hSIu238M1",   dNBins, dMinEnergy, dMaxEnergy);
+
+  hSIk40M2       = new TH1D("hSIk40M2",    "hSIk40M2",    dNBins, dMinEnergy, dMaxEnergy);
+  hSIth232M2     = new TH1D("hSIth232M2",  "hSIth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
+  hSIu238M2      = new TH1D("hSIu238M2",   "hSIu238M2",   dNBins, dMinEnergy, dMaxEnergy);
+
+
   // IVC M1 and M2
   hIVCco60M1      = new TH1D("hIVCco60M1",   "hIVCco60M1",   dNBins, dMinEnergy, dMaxEnergy);
   hIVCk40M1       = new TH1D("hIVCk40M1",    "hIVCk40M1",    dNBins, dMinEnergy, dMaxEnergy);
@@ -818,6 +828,16 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   hAdapMBk40M2       = new TH1D("hAdapMBk40M2",    "hAdapMBk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapMBth232M2     = new TH1D("hAdapMBth232M2",  "hAdapMBth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
   hAdapMBu238M2      = new TH1D("hAdapMBu238M2",   "hAdapMBu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
+  // Super Insulation M1 and M2
+  hAdapk40M1       = new TH1D("hAdapk40M1",    "hAdapk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1); 
+  hAdapth232M1     = new TH1D("hAdapth232M1",  "hAdapth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapu238M1      = new TH1D("hAdapu238M1",   "hAdapu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapk40M2       = new TH1D("hAdapk40M2",    "hAdapk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapth232M2     = new TH1D("hAdapth232M2",  "hAdapth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapu238M2      = new TH1D("hAdapu238M2",   "hAdapu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
 
   // IVC M1 and M2
   hAdapIVCco60M1      = new TH1D("hAdapIVCco60M1",   "hAdapIVCco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -3216,6 +3236,89 @@ void TBackgroundModel::PrintParameters()
   cout<< "Par23 = "  << fParameters[23] << " +/- " << fParError[23] << endl;
   cout<< "Par24 = "  << fParameters[24] << " +/- " << fParError[24] << endl;
   cout<< "Par25 = "  << fParameters[25] << " +/- " << fParError[25] << endl;
+  cout<< "Par26 = "  << fParameters[26] << " +/- " << fParError[26] << endl;
+  cout<< "Par27 = "  << fParameters[27] << " +/- " << fParError[27] << endl;
+  cout<< "Par28 = "  << fParameters[28] << " +/- " << fParError[28] << endl;
+  cout<< "Par29 = "  << fParameters[29] << " +/- " << fParError[29] << endl;  
+  cout<< "Par30 = "  << fParameters[30] << " +/- " << fParError[30] << endl;
+  cout<< "Par31 = "  << fParameters[31] << " +/- " << fParError[31] << endl;
+  cout<< "Par32 = "  << fParameters[32] << " +/- " << fParError[32] << endl;
+  cout<< "Par33 = "  << fParameters[33] << " +/- " << fParError[33] << endl;
+  cout<< "Par34 = "  << fParameters[34] << " +/- " << fParError[34] << endl;
+  cout<< "Par35 = "  << fParameters[35] << " +/- " << fParError[35] << endl;
+  cout<< "Par36 = "  << fParameters[36] << " +/- " << fParError[36] << endl;
+  cout<< "Par37 = "  << fParameters[37] << " +/- " << fParError[37] << endl;
+  cout<< "Par38 = "  << fParameters[38] << " +/- " << fParError[38] << endl;
+  cout<< "Par39 = "  << fParameters[39] << " +/- " << fParError[39] << endl;  
+  cout<< "Par40 = "  << fParameters[40] << " +/- " << fParError[40] << endl;
+  cout<< "Par41 = "  << fParameters[41] << " +/- " << fParError[41] << endl;
+  cout<< "Par42 = "  << fParameters[42] << " +/- " << fParError[42] << endl;
+  cout<< "Par43 = "  << fParameters[43] << " +/- " << fParError[43] << endl;
+  cout<< "Par44 = "  << fParameters[44] << " +/- " << fParError[44] << endl;
+  cout<< "Par45 = "  << fParameters[45] << " +/- " << fParError[45] << endl;
+  cout<< "Par46 = "  << fParameters[46] << " +/- " << fParError[46] << endl;
+  cout<< "Par47 = "  << fParameters[47] << " +/- " << fParError[47] << endl;
+  cout<< "Par48 = "  << fParameters[48] << " +/- " << fParError[48] << endl;
+  cout<< "Par49 = "  << fParameters[49] << " +/- " << fParError[49] << endl;
+  cout<< "Par50 = "  << fParameters[50] << " +/- " << fParError[50] << endl;
+  cout<< "Par51 = "  << fParameters[51] << " +/- " << fParError[51] << endl;
+  cout<< "Par52 = "  << fParameters[52] << " +/- " << fParError[52] << endl;
+  cout<< "Par53 = "  << fParameters[53] << " +/- " << fParError[53] << endl;
+  cout<< "Par54 = "  << fParameters[54] << " +/- " << fParError[54] << endl;
+  cout<< "Par55 = "  << fParameters[55] << " +/- " << fParError[55] << endl;
+  cout<< "Par56 = "  << fParameters[56] << " +/- " << fParError[56] << endl;
+  cout<< "Par57 = "  << fParameters[57] << " +/- " << fParError[57] << endl;
+  cout<< "Par58 = "  << fParameters[58] << " +/- " << fParError[58] << endl;
+  cout<< "Par59 = "  << fParameters[59] << " +/- " << fParError[59] << endl;
+  cout<< "Par60 = "  << fParameters[60] << " +/- " << fParError[60] << endl;
+  cout<< "Par61 = "  << fParameters[61] << " +/- " << fParError[61] << endl;
+  cout<< "Par62 = "  << fParameters[62] << " +/- " << fParError[62] << endl;
+  cout<< "Par63 = "  << fParameters[63] << " +/- " << fParError[63] << endl;
+  cout<< "Par64 = "  << fParameters[64] << " +/- " << fParError[64] << endl;
+  cout<< "Par65 = "  << fParameters[65] << " +/- " << fParError[65] << endl;
+  cout<< "Par66 = "  << fParameters[66] << " +/- " << fParError[66] << endl;
+  cout<< "Par67 = "  << fParameters[67] << " +/- " << fParError[67] << endl;
+  cout<< "Par68 = "  << fParameters[68] << " +/- " << fParError[68] << endl;
+  cout<< "Par69 = "  << fParameters[69] << " +/- " << fParError[69] << endl;
+  cout<< "Par70 = "  << fParameters[70] << " +/- " << fParError[70] << endl;
+  cout<< "Par71 = "  << fParameters[71] << " +/- " << fParError[71] << endl;
+  cout<< "Par72 = "  << fParameters[72] << " +/- " << fParError[72] << endl;
+  cout<< "Par73 = "  << fParameters[73] << " +/- " << fParError[73] << endl;
+  cout<< "Par74 = "  << fParameters[74] << " +/- " << fParError[74] << endl;
+  cout<< "Par75 = "  << fParameters[75] << " +/- " << fParError[75] << endl;
+  cout<< "Par76 = "  << fParameters[76] << " +/- " << fParError[76] << endl;
+  cout<< "Par77 = "  << fParameters[77] << " +/- " << fParError[77] << endl;
+  cout<< "Par78 = "  << fParameters[78] << " +/- " << fParError[78] << endl;
+  cout<< "Par79 = "  << fParameters[79] << " +/- " << fParError[79] << endl;
+  cout<< "Par80 = "  << fParameters[80] << " +/- " << fParError[80] << endl;
+  cout<< "Par81 = "  << fParameters[81] << " +/- " << fParError[81] << endl;
+  cout<< "Par82 = "  << fParameters[82] << " +/- " << fParError[82] << endl;
+  cout<< "Par83 = "  << fParameters[83] << " +/- " << fParError[83] << endl;
+  cout<< "Par84 = "  << fParameters[84] << " +/- " << fParError[84] << endl;
+  cout<< "Par85 = "  << fParameters[85] << " +/- " << fParError[85] << endl;
+  cout<< "Par86 = "  << fParameters[86] << " +/- " << fParError[86] << endl;
+  cout<< "Par87 = "  << fParameters[87] << " +/- " << fParError[87] << endl;
+  cout<< "Par88 = "  << fParameters[88] << " +/- " << fParError[88] << endl;
+  cout<< "Par89 = "  << fParameters[89] << " +/- " << fParError[89] << endl;
+  cout<< "Par90 = "  << fParameters[90] << " +/- " << fParError[90] << endl;
+  cout<< "Par91 = "  << fParameters[91] << " +/- " << fParError[91] << endl;
+  cout<< "Par92 = "  << fParameters[92] << " +/- " << fParError[92] << endl;
+  cout<< "Par93 = "  << fParameters[93] << " +/- " << fParError[93] << endl;
+  cout<< "Par94 = "  << fParameters[94] << " +/- " << fParError[94] << endl;
+  cout<< "Par95 = "  << fParameters[95] << " +/- " << fParError[95] << endl;
+  cout<< "Par96 = "  << fParameters[96] << " +/- " << fParError[96] << endl;
+  cout<< "Par97 = "  << fParameters[97] << " +/- " << fParError[97] << endl;
+  cout<< "Par98 = "  << fParameters[98] << " +/- " << fParError[98] << endl;
+  cout<< "Par99 = "  << fParameters[99] << " +/- " << fParError[99] << endl;
+  cout<< "Par100 = "  << fParameters[100] << " +/- " << fParError[100] << endl;
+  cout<< "Par101 = "  << fParameters[101] << " +/- " << fParError[101] << endl;
+  cout<< "Par102 = "  << fParameters[102] << " +/- " << fParError[102] << endl;
+  cout<< "Par103 = "  << fParameters[103] << " +/- " << fParError[103] << endl;
+  cout<< "Par104 = "  << fParameters[104] << " +/- " << fParError[104] << endl;
+  cout<< "Par105 = "  << fParameters[105] << " +/- " << fParError[105] << endl;
+  cout<< "Par106 = "  << fParameters[106] << " +/- " << fParError[106] << endl;
+  cout<< "Par107 = "  << fParameters[107] << " +/- " << fParError[107] << endl;
+  cout<< "Par108 = "  << fParameters[108] << " +/- " << fParError[108] << endl;
 }
 
 

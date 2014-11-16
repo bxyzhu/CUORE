@@ -425,6 +425,16 @@ private:
 	TH1D			*hMBth232M2;
 	TH1D			*hMBu238M2;	
 
+	// Super Insulation M1 and M2
+	TH1D			*hSIk40M1;
+	TH1D			*hSIth232M1;
+	TH1D			*hSIu238M1;
+
+	TH1D			*hSIk40M2;
+	TH1D			*hSIth232M2;
+	TH1D			*hSIu238M2;
+
+
 	// IVC M1 and M2
 	TH1D			*hIVCco60M1;
 	TH1D			*hIVCk40M1;
@@ -435,6 +445,7 @@ private:
 	TH1D			*hIVCk40M2;
 	TH1D			*hIVCth232M2;
 	TH1D			*hIVCu238M2;	
+
 
 	// OVC M1 and M2
 	TH1D			*hOVCco60M1;
@@ -680,6 +691,16 @@ private:
 	TH1D			*hAdapMBk40M2;
 	TH1D			*hAdapMBth232M2;
 	TH1D			*hAdapMBu238M2;	
+
+	// Super Insulation M1 and M2
+	TH1D			*hAdapSIk40M1;
+	TH1D			*hAdapSIth232M1;
+	TH1D			*hAdapSIu238M1;
+
+	TH1D			*hAdapSIk40M2;
+	TH1D			*hAdapSIth232M2;
+	TH1D			*hAdapSIu238M2;
+
 
 	// IVC M1 and M2
 	TH1D			*hAdapIVCco60M1;
