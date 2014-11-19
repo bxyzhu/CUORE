@@ -4,6 +4,7 @@
 #include "TPaveText.h"
 #include "TAxis.h"
 #include "TLine.h"
+#include "TMath.h"
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -143,8 +144,8 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
   Obj->SetParameters(109, x[109]);
   Obj->SetParameters(110, x[110]);
   Obj->SetParameters(111, x[111]);
+  */
 
-*/
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
     Obj->UpdateModel();
     fval = Obj->GetChiSquare();
@@ -185,8 +186,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   fDataHistoM2   = new TH1D("fDataHistoM2",   "", dNBins, dMinEnergy, dMaxEnergy);
 
   // Data variables change when switching between Toy/Real data
-  // qtree = new TChain("qredtree");
-  qtree = new TChain("CombiTree");
+  qtree = new TChain("qredtree");
+  // qtree = new TChain("CombiTree");
   // Data cuts 
   // qtree = new TChain("qtree");
   // base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
@@ -1349,10 +1350,11 @@ bool TBackgroundModel::DoTheFit()
 
    // Reduce Minuit Output
    minuit.SetPrintLevel(1);
-//   minuit.Command("SET MINImize 1000 0.001");
+   // minuit.Command("SET MINImize 10000 0.001");
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
-   minuit.SetMaxIterations(10000000);
+   minuit.SetMaxIterations(10000);
+   // minuit.Command("SET MIGrad 10000")
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
@@ -1361,26 +1363,26 @@ bool TBackgroundModel::DoTheFit()
    ////////////////////////////////////////////////
    minuit.DefineParameter(0, "TeO2 0nu",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(1, "TeO2 2nu",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(2, "TeO2 co60",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(3, "TeO2 k40",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(2, "TeO2 co60",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(3, "TeO2 k40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(4, "TeO2 pb210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(5, "TeO2 po210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(6, "TeO2 te125",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(7, "TeO2 th232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(7, "TeO2 th232",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(8, "TeO2 th228",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(9, "TeO2 ra226",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(10, "TeO2 rn222",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(11, "TeO2 u238",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(11, "TeO2 u238",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(12, "TeO2 th230",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(13, "TeO2 u234",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(14, "CuFrame co58",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(15, "CuFrame co60",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(15, "CuFrame co60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(16, "CuFrame cs137",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(17, "CuFrame k40",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(17, "CuFrame k40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(18, "CuFrame mn54",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(19, "CuFrame pb210",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(20, "CuFrame th232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(20, "CuFrame th232",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(21, "CuFrame u238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(22, "CuBoxco58",  0., 0.1, 0., 1000000);
@@ -1399,35 +1401,35 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(34, "50mKmn54",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(35, "50mKpb210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(36, "50mKth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(37, "50mKu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(37, "50mKu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(38, "600mKco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(39, "600mKk40",  0., 0.1, 0., 1000000); 
-   minuit.DefineParameter(40, "600mKth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(41, "600mKu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(40, "600mKth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(41, "600mKu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(42, "PbRombi207",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(43, "PbRomco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(44, "PbRomcs137",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(45, "PbRomk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(46, "PbRompb210",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(47, "PbRomth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(48, "PbRomu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(47, "PbRomth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(48, "PbRomu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(49, "MBco60",  0., 0.1, 0., 1000000); 
    minuit.DefineParameter(50, "MBk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(51, "MBth232",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(52, "MBu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(52, "MBu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(53, "IVCco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(54, "IVCk40",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(55, "IVCth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(56, "IVCu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(55, "IVCth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(56, "IVCu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(57, "OVCco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(58, "OVCk40",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(59, "OVCth232",  0.1, 0.1, 0., 1000000);    
-   minuit.DefineParameter(60, "OVCu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(59, "OVCth232",  0., 0.1, 0., 1000000);    
+   minuit.DefineParameter(60, "OVCu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(61, "SIk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(62, "SIth232",  0., 0.1, 0., 1000000);    
@@ -1441,7 +1443,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.DefineParameter(68, "TeO2Su238_01",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(69, "TeO2Sxpb210_001",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(70, "TeO2Sxpb210_01",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(71, "TeO2Sxpb210_1",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(71, "TeO2Sxpb210_1",  0.03, 0.1, 0., 1000000);
    minuit.DefineParameter(72, "TeO2Sxpb210_10",  0., 0.1, 0., 1000000);    
    minuit.DefineParameter(73, "TeO2Sxpo210_001",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(74, "TeO2Sxpo210_01",  0., 0.1, 0., 1000000);
@@ -1489,7 +1491,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(1); // TeO2 2nu
    minuit.FixParameter(2); // TeO2 co60
    minuit.FixParameter(3); // TeO2 k40
-   // minuit.FixParameter(4); // TeO2 pb210
+   minuit.FixParameter(4); // TeO2 pb210
    minuit.FixParameter(5); // TeO2 po210
    minuit.FixParameter(6); // TeO2 te125m
    // minuit.FixParameter(7); // TeO2 th232
@@ -1506,7 +1508,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(18); // Frame mn54
    minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   // minuit.FixParameter(21); // Frame u238
+   minuit.FixParameter(21); // Frame u238
    minuit.FixParameter(22); // CuBox co58
    minuit.FixParameter(23); // CuBox co60
    minuit.FixParameter(24); // CuBox cs137
@@ -1600,7 +1602,7 @@ bool TBackgroundModel::DoTheFit()
    minuit.FixParameter(111); // CuBox Sx u238 10
    */
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 7;
+   int dNumParameters = 4;
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCN);
    
@@ -3190,10 +3192,16 @@ void TBackgroundModel::LoadData()
 	}
 
   // Currently using Jon's reduced file -- change for other input files
-  qtree->Add("/Users/brian/macros/Simulations/Toy/scombi2/scombi2.root"); 
+/*
+  qtree->Add("/Users/brian/macros/Simulations/Toy/combi1/combi1.root"); 
   qtree->Project("fDataHistoTot", "Ener2");
   qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
   qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
+*/
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
+  qtree->Project("fDataHistoTot", "Energy");
+  qtree->Project("fDataHistoM1",  "Energy", "Multiplicity == 1");
+  qtree->Project("fDataHistoM2",  "Energy", "Multiplicity == 2");
 
   cout << "Loaded Data" << endl;
 }
@@ -3318,7 +3326,7 @@ void TBackgroundModel::PrintParameters()
 void TBackgroundModel::SetParameters(int index, double value)
 {
 	// Change the index max depending on model
-	if(index > 110) cout << "Index too large" << endl;
+	if(index > 112) cout << "Index too large" << endl;
 	else fParameters[index] = value;
 }
 
@@ -3954,7 +3962,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 //   minuit.Command("SET MINImize 1000 0.001");
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
-   minuit.SetMaxIterations(100000);
+   minuit.SetMaxIterations(10000);
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
@@ -3966,26 +3974,26 @@ bool TBackgroundModel::DoTheFitAdaptive()
    ////////////////////////////////////////////////
    minuit.DefineParameter(0, "TeO2 0nu",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(1, "TeO2 2nu",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(2, "TeO2 co60",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(3, "TeO2 k40",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(2, "TeO2 co60",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(3, "TeO2 k40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(4, "TeO2 pb210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(5, "TeO2 po210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(6, "TeO2 te125",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(7, "TeO2 th232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(7, "TeO2 th232",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(8, "TeO2 th228",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(9, "TeO2 ra226",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(10, "TeO2 rn222",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(11, "TeO2 u238",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(11, "TeO2 u238",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(12, "TeO2 th230",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(13, "TeO2 u234",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(14, "CuFrame co58",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(15, "CuFrame co60",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(15, "CuFrame co60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(16, "CuFrame cs137",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(17, "CuFrame k40",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(17, "CuFrame k40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(18, "CuFrame mn54",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(19, "CuFrame pb210",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(20, "CuFrame th232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(20, "CuFrame th232",  0.1, 0.1, 0., 1000000);
    minuit.DefineParameter(21, "CuFrame u238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(22, "CuBoxco58",  0., 0.1, 0., 1000000);
@@ -4004,35 +4012,35 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.DefineParameter(34, "50mKmn54",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(35, "50mKpb210",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(36, "50mKth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(37, "50mKu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(37, "50mKu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(38, "600mKco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(39, "600mKk40",  0., 0.1, 0., 1000000); 
-   minuit.DefineParameter(40, "600mKth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(41, "600mKu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(40, "600mKth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(41, "600mKu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(42, "PbRombi207",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(43, "PbRomco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(44, "PbRomcs137",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(45, "PbRomk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(46, "PbRompb210",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(47, "PbRomth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(48, "PbRomu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(47, "PbRomth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(48, "PbRomu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(49, "MBco60",  0., 0.1, 0., 1000000); 
    minuit.DefineParameter(50, "MBk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(51, "MBth232",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(52, "MBu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(52, "MBu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(53, "IVCco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(54, "IVCk40",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(55, "IVCth232",  0.1, 0.1, 0., 1000000);
-   minuit.DefineParameter(56, "IVCu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(55, "IVCth232",  0., 0.1, 0., 1000000);
+   minuit.DefineParameter(56, "IVCu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(57, "OVCco60",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(58, "OVCk40",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(59, "OVCth232",  0.1, 0.1, 0., 1000000);    
-   minuit.DefineParameter(60, "OVCu238",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(59, "OVCth232",  0., 0.1, 0., 1000000);    
+   minuit.DefineParameter(60, "OVCu238",  0., 0.1, 0., 1000000);
 
    minuit.DefineParameter(61, "SIk40",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(62, "SIth232",  0., 0.1, 0., 1000000);    
@@ -4046,7 +4054,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.DefineParameter(68, "TeO2Su238_01",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(69, "TeO2Sxpb210_001",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(70, "TeO2Sxpb210_01",  0., 0.1, 0., 1000000);
-   minuit.DefineParameter(71, "TeO2Sxpb210_1",  0.1, 0.1, 0., 1000000);
+   minuit.DefineParameter(71, "TeO2Sxpb210_1",  0.03, 0.1, 0., 1000000);
    minuit.DefineParameter(72, "TeO2Sxpb210_10",  0., 0.1, 0., 1000000);    
    minuit.DefineParameter(73, "TeO2Sxpo210_001",  0., 0.1, 0., 1000000);
    minuit.DefineParameter(74, "TeO2Sxpo210_01",  0., 0.1, 0., 1000000);
@@ -4094,7 +4102,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(1); // TeO2 2nu
    minuit.FixParameter(2); // TeO2 co60
    minuit.FixParameter(3); // TeO2 k40
-   // minuit.FixParameter(4); // TeO2 pb210
+   minuit.FixParameter(4); // TeO2 pb210
    minuit.FixParameter(5); // TeO2 po210
    minuit.FixParameter(6); // TeO2 te125m
    // minuit.FixParameter(7); // TeO2 th232
@@ -4111,7 +4119,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(18); // Frame mn54
    minuit.FixParameter(19); // Frame pb210
    // minuit.FixParameter(20); // Frame th232
-   // minuit.FixParameter(21); // Frame u238
+   minuit.FixParameter(21); // Frame u238
    minuit.FixParameter(22); // CuBox co58
    minuit.FixParameter(23); // CuBox co60
    minuit.FixParameter(24); // CuBox cs137
@@ -4205,7 +4213,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit.FixParameter(111); // CuBox Sx u238 10
    */
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 7;
+   int dNumParameters = 4;
    //Tell minuit what external function to use 
    minuit.SetFCN(myExternal_FCNAdap);
    
@@ -4325,7 +4333,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   minuit.GetParameter(109,  fParameters[109],   fParError[109]);
   minuit.GetParameter(110,  fParameters[110],   fParError[110]);
   minuit.GetParameter(111,  fParameters[111],   fParError[111]);
-    */
+  */
   UpdateModelAdaptive();
   
   cout << "At the end; ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumParameters) << endl; // for M1 and M2
@@ -4951,3 +4959,339 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
     fval = Obj->GetChiSquareAdaptive();
 }
 
+
+
+void TBackgroundModel::DrawMC()
+{
+// Draws all MC spectra, must Initialize first!
+
+  gStyle->SetOptStat(0);
+  gStyle->SetOptTitle(0);
+
+  TLegend *legth1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legu1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legk1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legco1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legndbd1 = new TLegend(0.7,0.890,0.925,0.925);
+  TLegend *legbi1 = new TLegend(0.7,0.890,0.925,0.925);
+  TLegend *legths1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legus1 = new TLegend(0.7,0.80,0.925,0.925);
+
+  TLegend *legth2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legu2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legk2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legco2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legndbd2 = new TLegend(0.7,0.890,0.925,0.925);
+  TLegend *legbi2 = new TLegend(0.7,0.890,0.925,0.925);
+  TLegend *legths2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legus2 = new TLegend(0.7,0.80,0.925,0.925);
+
+
+  TCanvas *cTh2321 = new TCanvas("cTh2321", "cTh2321", 1200, 800);
+  cTh2321->SetLogy();
+
+  hAdapTeO2th232M1->SetLineColor(1);
+  hAdapCuFrameth232M1->SetLineColor(2);
+  hAdapCuBoxth232M1->SetLineColor(3);
+  hAdap50mKth232M1->SetLineColor(4);
+  hAdap600mKth232M1->SetLineColor(5);
+  hAdapIVCth232M1->SetLineColor(6);
+  hAdapOVCth232M1->SetLineColor(7);
+  hAdapPbRomth232M1->SetLineColor(8);
+  hAdapMBth232M1->SetLineColor(9);
+  hAdapSIth232M1->SetLineColor(11);
+
+
+  hAdapTeO2th232M1->DrawNormalized();
+  hAdapCuFrameth232M1->DrawNormalized("SAME");
+  hAdapCuBoxth232M1->DrawNormalized("SAME");
+  hAdap50mKth232M1->DrawNormalized("SAME");
+  hAdap600mKth232M1->DrawNormalized("SAME");
+  hAdapIVCth232M1->DrawNormalized("SAME");
+  hAdapOVCth232M1->DrawNormalized("SAME");
+  hAdapPbRomth232M1->DrawNormalized("SAME");
+  hAdapMBth232M1->DrawNormalized("SAME");
+  hAdapSIth232M1->DrawNormalized("SAME");
+
+  legth1->AddEntry(hAdapTeO2th232M1, "TeO2", "l");  
+  legth1->AddEntry(hAdapCuFrameth232M1, "CuFrame", "l");
+  legth1->AddEntry(hAdapCuBoxth232M1, "CuBox", "l");
+  legth1->AddEntry(hAdap50mKth232M1, "50mK", "l");
+  legth1->AddEntry(hAdap600mKth232M1, "600mK", "l");
+  legth1->AddEntry(hAdapIVCth232M1, "IVC", "l");
+  legth1->AddEntry(hAdapOVCth232M1, "OVC", "l");
+  legth1->AddEntry(hAdapPbRomth232M1, "PbRom", "l");
+  legth1->AddEntry(hAdapMBth232M1, "MB", "l");
+  legth1->AddEntry(hAdapSIth232M1, "SI", "l");
+  legth1->Draw();
+
+
+  TCanvas *cTh2322 = new TCanvas("cTh2322", "cTh2322", 1200, 800);
+  cTh2322->SetLogy();
+
+  hAdapTeO2th232M2->SetLineColor(1);
+  hAdapCuFrameth232M2->SetLineColor(2);
+  hAdapCuBoxth232M2->SetLineColor(3);
+  hAdap50mKth232M2->SetLineColor(4);
+  hAdap600mKth232M2->SetLineColor(5);
+  hAdapIVCth232M2->SetLineColor(6);
+  hAdapOVCth232M2->SetLineColor(7);
+  hAdapPbRomth232M2->SetLineColor(8);
+  hAdapMBth232M2->SetLineColor(9);
+  hAdapSIth232M2->SetLineColor(11);
+
+
+  hAdapTeO2th232M2->DrawNormalized();
+  hAdapCuFrameth232M2->DrawNormalized("SAME");
+  hAdapCuBoxth232M2->DrawNormalized("SAME");
+  hAdap50mKth232M2->DrawNormalized("SAME");
+  hAdap600mKth232M2->DrawNormalized("SAME");
+  hAdapIVCth232M2->DrawNormalized("SAME");
+  hAdapOVCth232M2->DrawNormalized("SAME");
+  hAdapPbRomth232M2->DrawNormalized("SAME");
+  hAdapMBth232M2->DrawNormalized("SAME");
+  hAdapSIth232M2->DrawNormalized("SAME");
+
+  legth2->AddEntry(hAdapTeO2th232M2, "TeO2", "l");  
+  legth2->AddEntry(hAdapCuFrameth232M2, "CuFrame", "l");
+  legth2->AddEntry(hAdapCuBoxth232M2, "CuBox", "l");
+  legth2->AddEntry(hAdap50mKth232M2, "50mK", "l");
+  legth2->AddEntry(hAdap600mKth232M2, "600mK", "l");
+  legth2->AddEntry(hAdapIVCth232M2, "IVC", "l");
+  legth2->AddEntry(hAdapOVCth232M2, "OVC", "l");
+  legth2->AddEntry(hAdapPbRomth232M2, "PbRom", "l");
+  legth2->AddEntry(hAdapMBth232M2, "MB", "l");
+  legth2->AddEntry(hAdapSIth232M2, "SI", "l");
+  legth2->Draw();
+
+  TCanvas *cU2381 = new TCanvas("cU2381", "cU2381", 1200, 800);
+  cU2381->SetLogy();
+
+  hAdapTeO2u238M1->SetLineColor(1);
+  hAdapCuFrameu238M1->SetLineColor(2);
+  hAdapCuBoxu238M1->SetLineColor(3);
+  hAdap50mKu238M1->SetLineColor(4);
+  hAdap600mKu238M1->SetLineColor(5);
+  hAdapIVCu238M1->SetLineColor(6);
+  hAdapOVCu238M1->SetLineColor(7);
+  hAdapPbRomu238M1->SetLineColor(8);
+  hAdapMBu238M1->SetLineColor(9);
+  hAdapSIu238M1->SetLineColor(11);
+
+
+  hAdapTeO2u238M1->DrawNormalized();
+  hAdapCuFrameu238M1->DrawNormalized("SAME");
+  hAdapCuBoxu238M1->DrawNormalized("SAME");
+  hAdap50mKu238M1->DrawNormalized("SAME");
+  hAdap600mKu238M1->DrawNormalized("SAME");
+  hAdapIVCu238M1->DrawNormalized("SAME");
+  hAdapOVCu238M1->DrawNormalized("SAME");
+  hAdapPbRomu238M1->DrawNormalized("SAME");
+  hAdapMBu238M1->DrawNormalized("SAME");
+  hAdapSIu238M1->DrawNormalized("SAME");
+
+  legu1->AddEntry(hAdapTeO2u238M2, "TeO2", "l");  
+  legu1->AddEntry(hAdapCuFrameu238M2, "CuFrame", "l");
+  legu1->AddEntry(hAdapCuBoxu238M2, "CuBox", "l");
+  legu1->AddEntry(hAdap50mKu238M2, "50mK", "l");
+  legu1->AddEntry(hAdap600mKu238M2, "600mK", "l");
+  legu1->AddEntry(hAdapIVCu238M2, "IVC", "l");
+  legu1->AddEntry(hAdapOVCu238M2, "OVC", "l");
+  legu1->AddEntry(hAdapPbRomu238M2, "PbRom", "l");
+  legu1->AddEntry(hAdapMBu238M2, "MB", "l");
+  legu1->AddEntry(hAdapSIu238M2, "SI", "l");
+  legu1->Draw();
+
+
+  TCanvas *cU2382 = new TCanvas("cU2382", "cU2382", 1200, 800);
+  hAdapTeO2u238M2->SetLineColor(1);
+  hAdapCuFrameu238M2->SetLineColor(2);
+  hAdapCuBoxu238M2->SetLineColor(3);
+  hAdap50mKu238M2->SetLineColor(4);
+  hAdap600mKu238M2->SetLineColor(5);
+  hAdapIVCu238M2->SetLineColor(6);
+  hAdapOVCu238M2->SetLineColor(7);
+  hAdapPbRomu238M2->SetLineColor(8);
+  hAdapMBu238M2->SetLineColor(9);
+  hAdapSIu238M2->SetLineColor(11);
+
+
+  hAdapTeO2u238M2->DrawNormalized();
+  hAdapCuFrameu238M2->DrawNormalized("SAME");
+  hAdapCuBoxu238M2->DrawNormalized("SAME");
+  hAdap50mKu238M2->DrawNormalized("SAME");
+  hAdap600mKu238M2->DrawNormalized("SAME");
+  hAdapIVCu238M2->DrawNormalized("SAME");
+  hAdapOVCu238M2->DrawNormalized("SAME");
+  hAdapPbRomu238M2->DrawNormalized("SAME");
+  hAdapMBu238M2->DrawNormalized("SAME");
+  hAdapSIu238M2->DrawNormalized("SAME");
+
+  legu2->AddEntry(hAdapTeO2u238M2, "TeO2", "l");  
+  legu2->AddEntry(hAdapCuFrameu238M2, "CuFrame", "l");
+  legu2->AddEntry(hAdapCuBoxu238M2, "CuBox", "l");
+  legu2->AddEntry(hAdap50mKu238M2, "50mK", "l");
+  legu2->AddEntry(hAdap600mKu238M2, "600mK", "l");
+  legu2->AddEntry(hAdapIVCu238M2, "IVC", "l");
+  legu2->AddEntry(hAdapOVCu238M2, "OVC", "l");
+  legu2->AddEntry(hAdapPbRomu238M2, "PbRom", "l");
+  legu2->AddEntry(hAdapMBu238M2, "MB", "l");
+  legu2->AddEntry(hAdapSIu238M2, "SI", "l");
+  legu2->Draw();
+
+
+
+
+  TCanvas *cK401 = new TCanvas("cK401", "cK401", 1200, 800);
+  cK401->SetLogy();
+
+  hAdapTeO2k40M1->SetLineColor(1);
+  hAdapCuFramek40M1->SetLineColor(2);
+  hAdapCuBoxk40M1->SetLineColor(3);
+  hAdap50mKk40M1->SetLineColor(4);
+  hAdap600mKk40M1->SetLineColor(5);
+  hAdapIVCk40M1->SetLineColor(6);
+  hAdapOVCk40M1->SetLineColor(7);
+  hAdapPbRomk40M1->SetLineColor(8);
+  hAdapMBk40M1->SetLineColor(9);
+  hAdapSIk40M1->SetLineColor(11);
+
+
+  hAdapTeO2k40M1->DrawNormalized();
+  hAdapCuFramek40M1->DrawNormalized("SAME");
+  hAdapCuBoxk40M1->DrawNormalized("SAME");
+  hAdap50mKk40M1->DrawNormalized("SAME");
+  hAdap600mKk40M1->DrawNormalized("SAME");
+  hAdapIVCk40M1->DrawNormalized("SAME");
+  hAdapOVCk40M1->DrawNormalized("SAME");
+  hAdapPbRomk40M1->DrawNormalized("SAME");
+  hAdapMBk40M1->DrawNormalized("SAME");
+  hAdapSIk40M1->DrawNormalized("SAME");
+
+  legk1->AddEntry(hAdapTeO2k40M1, "TeO2", "l");  
+  legk1->AddEntry(hAdapCuFramek40M1, "CuFrame", "l");
+  legk1->AddEntry(hAdapCuBoxk40M1, "CuBox", "l");
+  legk1->AddEntry(hAdap50mKk40M1, "50mK", "l");
+  legk1->AddEntry(hAdap600mKk40M1, "600mK", "l");
+  legk1->AddEntry(hAdapIVCk40M1, "IVC", "l");
+  legk1->AddEntry(hAdapOVCk40M1, "OVC", "l");
+  legk1->AddEntry(hAdapPbRomk40M1, "PbRom", "l");
+  legk1->AddEntry(hAdapMBk40M1, "MB", "l");
+  legk1->AddEntry(hAdapSIk40M1, "SI", "l");
+  legk1->Draw();
+
+
+
+  TCanvas *cK402 = new TCanvas("cK402", "cK402", 1200, 800);
+  cK402->SetLogy();
+
+  hAdapTeO2k40M2->SetLineColor(1);
+  hAdapCuFramek40M2->SetLineColor(2);
+  hAdapCuBoxk40M2->SetLineColor(3);
+  hAdap50mKk40M2->SetLineColor(4);
+  hAdap600mKk40M2->SetLineColor(5);
+  hAdapIVCk40M2->SetLineColor(6);
+  hAdapOVCk40M2->SetLineColor(7);
+  hAdapPbRomk40M2->SetLineColor(8);
+  hAdapMBk40M2->SetLineColor(9);
+  hAdapSIk40M2->SetLineColor(11);
+
+
+  hAdapTeO2k40M2->DrawNormalized();
+  hAdapCuFramek40M2->DrawNormalized("SAME");
+  hAdapCuBoxk40M2->DrawNormalized("SAME");
+  hAdap50mKk40M2->DrawNormalized("SAME");
+  hAdap600mKk40M2->DrawNormalized("SAME");
+  hAdapIVCk40M2->DrawNormalized("SAME");
+  hAdapOVCk40M2->DrawNormalized("SAME");
+  hAdapPbRomk40M2->DrawNormalized("SAME");
+  hAdapMBk40M2->DrawNormalized("SAME");
+  hAdapSIk40M2->DrawNormalized("SAME");
+
+  legk2->AddEntry(hAdapTeO2k40M2, "TeO2", "l");  
+  legk2->AddEntry(hAdapCuFramek40M2, "CuFrame", "l");
+  legk2->AddEntry(hAdapCuBoxk40M2, "CuBox", "l");
+  legk2->AddEntry(hAdap50mKk40M2, "50mK", "l");
+  legk2->AddEntry(hAdap600mKk40M2, "600mK", "l");
+  legk2->AddEntry(hAdapIVCk40M2, "IVC", "l");
+  legk2->AddEntry(hAdapOVCk40M2, "OVC", "l");
+  legk2->AddEntry(hAdapPbRomk40M2, "PbRom", "l");
+  legk2->AddEntry(hAdapMBk40M2, "MB", "l");
+  legk2->AddEntry(hAdapSIk40M2, "SI", "l");
+  legk2->Draw();
+
+
+  TCanvas *cCo601 = new TCanvas("cCo601", "cCo601", 1200, 800);
+  cCo601->SetLogy();
+
+  hAdapTeO2co60M1->SetLineColor(1);
+  hAdapCuFrameco60M1->SetLineColor(2);
+  hAdapCuBoxco60M1->SetLineColor(3);
+  hAdap50mKco60M1->SetLineColor(4);
+  hAdap600mKco60M1->SetLineColor(5);
+  hAdapIVCco60M1->SetLineColor(6);
+  hAdapOVCco60M1->SetLineColor(7);
+  hAdapPbRomco60M1->SetLineColor(8);
+  hAdapMBco60M1->SetLineColor(9);
+
+
+  hAdapTeO2co60M1->DrawNormalized();
+  hAdapCuFrameco60M1->DrawNormalized("SAME");
+  hAdapCuBoxco60M1->DrawNormalized("SAME");
+  hAdap50mKco60M1->DrawNormalized("SAME");
+  hAdap600mKco60M1->DrawNormalized("SAME");
+  hAdapIVCco60M1->DrawNormalized("SAME");
+  hAdapOVCco60M1->DrawNormalized("SAME");
+  hAdapPbRomco60M1->DrawNormalized("SAME");
+  hAdapMBco60M1->DrawNormalized("SAME");
+
+  legco1->AddEntry(hAdapTeO2co60M1, "TeO2", "l");  
+  legco1->AddEntry(hAdapCuFrameco60M1, "CuFrame", "l");
+  legco1->AddEntry(hAdapCuBoxco60M1, "CuBox", "l");
+  legco1->AddEntry(hAdap50mKco60M1, "50mK", "l");
+  legco1->AddEntry(hAdap600mKco60M1, "600mK", "l");
+  legco1->AddEntry(hAdapIVCco60M1, "IVC", "l");
+  legco1->AddEntry(hAdapOVCco60M1, "OVC", "l");
+  legco1->AddEntry(hAdapPbRomco60M1, "PbRom", "l");
+  legco1->AddEntry(hAdapMBco60M1, "MB", "l");
+  legco1->Draw();
+
+
+
+  TCanvas *cCo602 = new TCanvas("cCo602", "cCo602", 1200, 800);
+  cCo602->SetLogy();
+
+  hAdapTeO2co60M2->SetLineColor(1);
+  hAdapCuFrameco60M2->SetLineColor(2);
+  hAdapCuBoxco60M2->SetLineColor(3);
+  hAdap50mKco60M2->SetLineColor(4);
+  hAdap600mKco60M2->SetLineColor(5);
+  hAdapIVCco60M2->SetLineColor(6);
+  hAdapOVCco60M2->SetLineColor(7);
+  hAdapPbRomco60M2->SetLineColor(8);
+  hAdapMBco60M2->SetLineColor(9);
+
+
+  hAdapTeO2co60M2->DrawNormalized();
+  hAdapCuFrameco60M2->DrawNormalized("SAME");
+  hAdapCuBoxco60M2->DrawNormalized("SAME");
+  hAdap50mKco60M2->DrawNormalized("SAME");
+  hAdap600mKco60M2->DrawNormalized("SAME");
+  hAdapIVCco60M2->DrawNormalized("SAME");
+  hAdapOVCco60M2->DrawNormalized("SAME");
+  hAdapPbRomco60M2->DrawNormalized("SAME");
+  hAdapMBco60M2->DrawNormalized("SAME");
+
+  legco2->AddEntry(hAdapTeO2co60M2, "TeO2", "l");  
+  legco2->AddEntry(hAdapCuFrameco60M2, "CuFrame", "l");
+  legco2->AddEntry(hAdapCuBoxco60M2, "CuBox", "l");
+  legco2->AddEntry(hAdap50mKco60M2, "50mK", "l");
+  legco2->AddEntry(hAdap600mKco60M2, "600mK", "l");
+  legco2->AddEntry(hAdapIVCco60M2, "IVC", "l");
+  legco2->AddEntry(hAdapOVCco60M2, "OVC", "l");
+  legco2->AddEntry(hAdapPbRomco60M2, "PbRom", "l");
+  legco2->AddEntry(hAdapMBco60M2, "MB", "l");
+  legco2->Draw();
+
+
+}
