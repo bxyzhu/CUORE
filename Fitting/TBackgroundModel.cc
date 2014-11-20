@@ -1318,7 +1318,7 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
   TH1D  *hCloneMC   = (TH1D*)h2->Clone("hCloneMC");
 
-  TH1D  *hOut       = new TH1D("hOut", "Fit Residuals", );
+  TH1D  *hOut       = new TH1D("hOut", "Fit Residuals", dAdap);
 
 
   // Variables used in Residual calculations
@@ -2345,9 +2345,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
   for(int i = dFitMinBinM1 ; i <= dFitMaxBinM1; i++)
   {
 
-    datam1_i = fAdapDataHistoM1->GetBinContent(i); // For real data
+    datam1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/2.0; // For real data
 
-    modelm1_i = fModelTotAdapM1->GetBinContent(i);
+    modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/2.0;
 
     if(modelm1_i != 0 && datam1_i != 0)
     {
@@ -2357,9 +2357,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
   for(int i = dFitMinBinM2; i <= dFitMaxBinM2; i++)
   {
-    datam2_i = fAdapDataHistoM2->GetBinContent(i); // For real data
+    datam2_i = fAdapDataHistoM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/2.0; // For real data
 
-    modelm2_i = fModelTotAdapM2->GetBinContent(i);
+    modelm2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/2.0;
 
     if(modelm2_i != 0 && datam2_i != 0)
     {
@@ -4968,23 +4968,23 @@ void TBackgroundModel::DrawMC()
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
 
-  TLegend *legth1 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legu1 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legk1 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legco1 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legndbd1 = new TLegend(0.7,0.890,0.925,0.925);
-  TLegend *legbi1 = new TLegend(0.7,0.890,0.925,0.925);
-  TLegend *legths1 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legus1 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legth1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legu1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legk1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legco1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legndbd1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legbi1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legths1 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legus1 = new TLegend(0.65,0.7,0.95,0.95);
 
-  TLegend *legth2 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legu2 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legk2 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legco2 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legndbd2 = new TLegend(0.7,0.890,0.925,0.925);
-  TLegend *legbi2 = new TLegend(0.7,0.890,0.925,0.925);
-  TLegend *legths2 = new TLegend(0.7,0.80,0.925,0.925);
-  TLegend *legus2 = new TLegend(0.7,0.80,0.925,0.925);
+  TLegend *legth2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legu2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legk2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legco2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legndbd2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legbi2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legths2 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend *legus2 = new TLegend(0.65,0.7,0.95,0.95);
 
 
   TCanvas *cTh2321 = new TCanvas("cTh2321", "cTh2321", 1200, 800);
@@ -5104,6 +5104,8 @@ void TBackgroundModel::DrawMC()
 
 
   TCanvas *cU2382 = new TCanvas("cU2382", "cU2382", 1200, 800);
+  cU2382->SetLogy();
+
   hAdapTeO2u238M2->SetLineColor(1);
   hAdapCuFrameu238M2->SetLineColor(2);
   hAdapCuBoxu238M2->SetLineColor(3);
