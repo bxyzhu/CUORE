@@ -104,6 +104,7 @@ private:
 	TH1D			*fModelTotNDBDM1;
 	TH1D			*fModelTot2NDBDM1;
 	TH1D			*fModelTotbiM1;
+	TH1D			*fModelTotbi2M1;	
 	TH1D			*fModelTotptM1;
 	TH1D			*fModelTotpbM1;
 	TH1D			*fModelTotcsM1;
@@ -124,6 +125,7 @@ private:
 	TH1D			*fModelTotAdapNDBDM1;
 	TH1D			*fModelTotAdap2NDBDM1;
 	TH1D			*fModelTotAdapbiM1;
+	TH1D			*fModelTotAdapbi2M1;
 	TH1D			*fModelTotAdapptM1;
 	TH1D			*fModelTotAdappbM1;
 	TH1D			*fModelTotAdapcsM1;
@@ -145,6 +147,7 @@ private:
 	TH1D			*fModelTotNDBDM2;
 	TH1D			*fModelTot2NDBDM2;
 	TH1D			*fModelTotbiM2;
+	TH1D			*fModelTotbi2M2;
 	TH1D			*fModelTotptM2;
 	TH1D			*fModelTotpbM2;
 	TH1D			*fModelTotcsM2;
@@ -165,6 +168,7 @@ private:
 	TH1D			*fModelTotAdapNDBDM2;
 	TH1D			*fModelTotAdap2NDBDM2;
 	TH1D			*fModelTotAdapbiM2;
+	TH1D			*fModelTotAdapbi2M2;
 	TH1D			*fModelTotAdapptM2;
 	TH1D			*fModelTotAdappbM2;
 	TH1D			*fModelTotAdapcsM2;
@@ -721,6 +725,10 @@ private:
 	TH1D			*hAdapOVCth232M2;
 	TH1D			*hAdapOVCu238M2;	
 
+
+
+	// TH1D			*hnewM1;
+	// TH1D			*hnewM2;
 
 	TFile *fFile;
 	TFile *fFile2;
