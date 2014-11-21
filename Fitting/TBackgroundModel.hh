@@ -7,6 +7,7 @@
 #include "TChain.h"
 #include "TCut.h"
 #include "TGraphErrors.h"
+#include "TMinuit.h"
 #include "TRandom3.h"
 #include <vector>
 
@@ -47,6 +48,8 @@ public:
 
 	void PrintParameters();
 
+	void PrintHesse();
+
 	void ReadMC();
 
 	void SetParameters(int index, double value);
@@ -58,6 +61,7 @@ public:
 	void UpdateModelAdaptive();
 
 
+	int 	dNParam;
 	int 	dBinSize;
 	int 	dNBins;
 	double	dMinEnergy;
@@ -85,12 +89,15 @@ private:
 
 	double			dDataIntegral;
 
+	TMinuit			*minuit;
+
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
 
 	TH1D			*fAdapDataHistoM1;
 	TH1D			*fAdapDataHistoM2;
+
 
 
 	// To be updated 11-05-2014

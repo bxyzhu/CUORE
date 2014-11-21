@@ -3,7 +3,6 @@
 #include "TStyle.h"
 #include "TLegend.h"
 #include "TBackgroundModel.hh"
-#include "TVirtualFitter.h"
 #include "TRandom3.h"
 #include "TPaveText.h"
 #include "TAxis.h"
@@ -33,123 +32,11 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 	TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
 	// implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-	Obj->SetParameters(0,	x[0]);   
-	Obj->SetParameters(1,	x[1]);  
-	Obj->SetParameters(2,	x[2]);
-	Obj->SetParameters(3,	x[3]);
-	Obj->SetParameters(4,	x[4]);
-	Obj->SetParameters(5,	x[5]);   
-	Obj->SetParameters(6,	x[6]);  
-	Obj->SetParameters(7,	x[7]);
-	Obj->SetParameters(8,	x[8]);
-	Obj->SetParameters(9,	x[9]);
-  Obj->SetParameters(10, x[10]);
-  Obj->SetParameters(11, x[11]);
-  Obj->SetParameters(12, x[12]);
-  Obj->SetParameters(13, x[13]);
-  Obj->SetParameters(14, x[14]);
-  Obj->SetParameters(15, x[15]);
-  Obj->SetParameters(16, x[16]);
-  Obj->SetParameters(17, x[17]);
-  Obj->SetParameters(18, x[18]);
-  Obj->SetParameters(19, x[19]);
-  Obj->SetParameters(20, x[20]);
-  Obj->SetParameters(21, x[21]);
-  Obj->SetParameters(22, x[22]);
-  Obj->SetParameters(23, x[23]);
-  Obj->SetParameters(24, x[24]);
-  Obj->SetParameters(25, x[25]);
-  Obj->SetParameters(26, x[26]);
-  Obj->SetParameters(27, x[27]);
-  Obj->SetParameters(28, x[28]);
-  Obj->SetParameters(29, x[29]);
-  Obj->SetParameters(30, x[30]);
-  Obj->SetParameters(31, x[31]);
-  Obj->SetParameters(32, x[32]);
-  Obj->SetParameters(33, x[33]);
-  Obj->SetParameters(34, x[34]);
-  Obj->SetParameters(35, x[35]);
-  Obj->SetParameters(36, x[36]);
-  Obj->SetParameters(37, x[37]);
-  Obj->SetParameters(38, x[38]);
-  Obj->SetParameters(39, x[39]);
-  Obj->SetParameters(40, x[40]);
-  Obj->SetParameters(41, x[41]);
-  Obj->SetParameters(42, x[42]);
-  Obj->SetParameters(43, x[43]);
-  Obj->SetParameters(44, x[44]);
-  Obj->SetParameters(45, x[45]);
-  Obj->SetParameters(46, x[46]);
-  Obj->SetParameters(47, x[47]);
-  Obj->SetParameters(48, x[48]);
-  Obj->SetParameters(49, x[49]);
-  Obj->SetParameters(50, x[50]);
-  Obj->SetParameters(51, x[51]);
-  Obj->SetParameters(52, x[52]);
-  Obj->SetParameters(53, x[53]);
-  Obj->SetParameters(54, x[54]);
-  Obj->SetParameters(55, x[55]);
-  Obj->SetParameters(56, x[56]);
-  Obj->SetParameters(57, x[57]);
-  Obj->SetParameters(58, x[58]);
-  Obj->SetParameters(59, x[59]);
-  Obj->SetParameters(60, x[60]); 
-  Obj->SetParameters(61, x[61]);
-  Obj->SetParameters(62, x[62]);
-  Obj->SetParameters(63, x[63]); 
-
-  // Surface
+  for(int i = 0; i < 112; i++ )
+  {
+    Obj->SetParameters(i, x[i]);
+  }
   
-  Obj->SetParameters(64, x[64]);
-  Obj->SetParameters(65, x[65]);
-  Obj->SetParameters(66, x[66]);
-  Obj->SetParameters(67, x[67]);
-  Obj->SetParameters(68, x[68]);
-  Obj->SetParameters(69, x[69]);  
-  Obj->SetParameters(70, x[70]);
-  Obj->SetParameters(71, x[71]);
-  Obj->SetParameters(72, x[72]);
-  Obj->SetParameters(73, x[73]);
-  Obj->SetParameters(74, x[74]);
-  Obj->SetParameters(75, x[75]);
-  Obj->SetParameters(76, x[76]);
-  Obj->SetParameters(77, x[77]);
-  Obj->SetParameters(78, x[78]);
-  Obj->SetParameters(79, x[79]);
-  Obj->SetParameters(80, x[80]);
-  Obj->SetParameters(81, x[81]);
-  Obj->SetParameters(82, x[82]);
-  Obj->SetParameters(83, x[83]);
-  Obj->SetParameters(84, x[84]);
-  Obj->SetParameters(85, x[85]);
-  Obj->SetParameters(86, x[86]);
-  Obj->SetParameters(87, x[87]);
-  Obj->SetParameters(88, x[88]);
-  Obj->SetParameters(89, x[89]);
-  Obj->SetParameters(90, x[90]);
-  Obj->SetParameters(91, x[91]);
-  Obj->SetParameters(92, x[92]);
-  Obj->SetParameters(93, x[93]);
-  Obj->SetParameters(94, x[94]);
-  Obj->SetParameters(95, x[95]);
-  Obj->SetParameters(96, x[96]);
-  Obj->SetParameters(97, x[97]);
-  Obj->SetParameters(98, x[98]);
-  Obj->SetParameters(99, x[99]);
-  Obj->SetParameters(100, x[100]);
-  Obj->SetParameters(101, x[101]);
-  Obj->SetParameters(102, x[102]);
-  Obj->SetParameters(103, x[103]);
-  Obj->SetParameters(104, x[104]);
-  Obj->SetParameters(105, x[105]);
-  Obj->SetParameters(106, x[106]);
-  Obj->SetParameters(107, x[107]);
-  Obj->SetParameters(108, x[108]);
-  Obj->SetParameters(109, x[109]);
-  Obj->SetParameters(110, x[110]);
-  Obj->SetParameters(111, x[111]);
-  
-
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
     Obj->UpdateModel();
     fval = Obj->GetChiSquare();
@@ -158,7 +45,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 {
-
+  dNParam = 112; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -177,6 +64,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
   {
     cout << "Fit Min >= Fit Max!" << endl;
   }
+
+  minuit = new TMinuit(dNParam);
 
   // Fitting range
   dFitMin = fFitMin;
@@ -879,7 +768,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax)
 // Needs updating  
 TBackgroundModel::~TBackgroundModel()
 {
-/* 
+ 
   delete fDataHistoTot;
   delete fDataHistoM1;
   delete fDataHistoM2;
@@ -1247,7 +1136,7 @@ TBackgroundModel::~TBackgroundModel()
   delete hAdapOVCk40M2;
   delete hAdapOVCth232M2;
   delete hAdapOVCu238M2;  
-*/
+
 }
 
 // Returns vector of bin low-edge for adaptive binning
@@ -1269,7 +1158,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1)
     dDummy = h1->GetBinContent(i);
     dDummyFill += dDummy;
 
-    if(dDummyFill >= 10)
+    if(dDummyFill >= 50)
     {
       dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
       dDummyFill = 0;
@@ -1616,120 +1505,11 @@ bool TBackgroundModel::DoTheFit()
    int status = minuit.Migrad(); // this actually does the minimisation
 
 
-	minuit.GetParameter(0,	fParameters[0],		fParError[0]);
-	minuit.GetParameter(1,	fParameters[1],		fParError[1]);
-	minuit.GetParameter(2,	fParameters[2],		fParError[2]);
-	minuit.GetParameter(3,	fParameters[3],		fParError[3]);
-	minuit.GetParameter(4,	fParameters[4],		fParError[4]);
-	minuit.GetParameter(5,	fParameters[5],		fParError[5]);
-	minuit.GetParameter(6,	fParameters[6],		fParError[6]);
-	minuit.GetParameter(7,	fParameters[7],		fParError[7]);
-	minuit.GetParameter(8,	fParameters[8],		fParError[8]);
-	minuit.GetParameter(9,	fParameters[9],		fParError[9]);
-  minuit.GetParameter(10,  fParameters[10],   fParError[10]);
-  minuit.GetParameter(11,  fParameters[11],   fParError[11]);
-  minuit.GetParameter(12,  fParameters[12],   fParError[12]);
-  minuit.GetParameter(13,  fParameters[13],   fParError[13]);
-  minuit.GetParameter(14,  fParameters[14],   fParError[14]);
-  minuit.GetParameter(15,  fParameters[15],   fParError[15]);
-  minuit.GetParameter(16,  fParameters[16],   fParError[16]);
-  minuit.GetParameter(17,  fParameters[17],   fParError[17]);
-  minuit.GetParameter(18,  fParameters[18],   fParError[18]);
-  minuit.GetParameter(19,  fParameters[19],   fParError[19]);
-  minuit.GetParameter(20,  fParameters[20],   fParError[20]);
-  minuit.GetParameter(21,  fParameters[21],   fParError[21]);
-  minuit.GetParameter(22,  fParameters[22],   fParError[22]);
-  minuit.GetParameter(23,  fParameters[23],   fParError[23]);
-  minuit.GetParameter(24,  fParameters[24],   fParError[24]);
-  minuit.GetParameter(25,  fParameters[25],   fParError[25]);
-  minuit.GetParameter(26,  fParameters[26],   fParError[26]);
-  minuit.GetParameter(27,  fParameters[27],   fParError[27]);
-  minuit.GetParameter(28,  fParameters[28],   fParError[28]);
-  minuit.GetParameter(29,  fParameters[29],   fParError[29]);
-  minuit.GetParameter(30,  fParameters[30],   fParError[30]);
-  minuit.GetParameter(31,  fParameters[31],   fParError[31]);
-  minuit.GetParameter(32,  fParameters[32],   fParError[32]);
-  minuit.GetParameter(33,  fParameters[33],   fParError[33]);
-  minuit.GetParameter(34,  fParameters[34],   fParError[34]);
-  minuit.GetParameter(35,  fParameters[35],   fParError[35]);
-  minuit.GetParameter(36,  fParameters[36],   fParError[36]);
-  minuit.GetParameter(37,  fParameters[37],   fParError[37]);
-  minuit.GetParameter(38,  fParameters[38],   fParError[38]);
-  minuit.GetParameter(39,  fParameters[39],   fParError[39]);
-  minuit.GetParameter(40,  fParameters[40],   fParError[40]);
-  minuit.GetParameter(41,  fParameters[41],   fParError[41]);
-  minuit.GetParameter(42,  fParameters[42],   fParError[42]);
-  minuit.GetParameter(43,  fParameters[43],   fParError[43]);
-  minuit.GetParameter(44,  fParameters[44],   fParError[44]);
-  minuit.GetParameter(45,  fParameters[45],   fParError[45]);
-  minuit.GetParameter(46,  fParameters[46],   fParError[46]);
-  minuit.GetParameter(47,  fParameters[47],   fParError[47]);
-  minuit.GetParameter(48,  fParameters[48],   fParError[48]);
-  minuit.GetParameter(49,  fParameters[49],   fParError[49]);
-  minuit.GetParameter(50,  fParameters[50],   fParError[50]);
-  minuit.GetParameter(51,  fParameters[51],   fParError[51]);
-  minuit.GetParameter(52,  fParameters[52],   fParError[52]);
-  minuit.GetParameter(53,  fParameters[53],   fParError[53]);
-  minuit.GetParameter(54,  fParameters[54],   fParError[54]);
-  minuit.GetParameter(55,  fParameters[55],   fParError[55]);
-  minuit.GetParameter(56,  fParameters[56],   fParError[56]);
-  minuit.GetParameter(57,  fParameters[57],   fParError[57]);
-  minuit.GetParameter(58,  fParameters[58],   fParError[58]);
-  minuit.GetParameter(59,  fParameters[59],   fParError[59]);
-  minuit.GetParameter(60,  fParameters[60],   fParError[60]);
-  minuit.GetParameter(61,  fParameters[61],   fParError[61]);
-  minuit.GetParameter(62,  fParameters[62],   fParError[62]);
-  minuit.GetParameter(63,  fParameters[63],   fParError[63]);
-
-  minuit.GetParameter(64,  fParameters[64],   fParError[64]);
-  minuit.GetParameter(65,  fParameters[65],   fParError[65]);
-  minuit.GetParameter(66,  fParameters[66],   fParError[66]);
-  minuit.GetParameter(67,  fParameters[67],   fParError[67]);
-  minuit.GetParameter(68,  fParameters[68],   fParError[68]);
-  minuit.GetParameter(69,  fParameters[69],   fParError[69]);
-  minuit.GetParameter(70,  fParameters[70],   fParError[70]);
-  minuit.GetParameter(71,  fParameters[71],   fParError[71]);
-  minuit.GetParameter(72,  fParameters[72],   fParError[72]);
-  minuit.GetParameter(73,  fParameters[73],   fParError[73]);
-  minuit.GetParameter(74,  fParameters[74],   fParError[74]);
-  minuit.GetParameter(75,  fParameters[75],   fParError[75]);
-  minuit.GetParameter(76,  fParameters[76],   fParError[76]);
-  minuit.GetParameter(77,  fParameters[77],   fParError[77]);
-  minuit.GetParameter(78,  fParameters[78],   fParError[78]);
-  minuit.GetParameter(79,  fParameters[79],   fParError[79]);
-  minuit.GetParameter(80,  fParameters[80],   fParError[80]);
-  minuit.GetParameter(81,  fParameters[81],   fParError[81]);
-  minuit.GetParameter(82,  fParameters[82],   fParError[82]);
-  minuit.GetParameter(83,  fParameters[83],   fParError[83]);
-  minuit.GetParameter(84,  fParameters[84],   fParError[84]);
-  minuit.GetParameter(85,  fParameters[85],   fParError[85]);
-  minuit.GetParameter(86,  fParameters[86],   fParError[86]);
-  minuit.GetParameter(87,  fParameters[87],   fParError[87]);
-  minuit.GetParameter(88,  fParameters[88],   fParError[88]);
-  minuit.GetParameter(89,  fParameters[89],   fParError[89]);
-  minuit.GetParameter(90,  fParameters[90],   fParError[90]);
-  minuit.GetParameter(91,  fParameters[91],   fParError[91]);
-  minuit.GetParameter(92,  fParameters[92],   fParError[92]);
-  minuit.GetParameter(93,  fParameters[93],   fParError[93]);
-  minuit.GetParameter(94,  fParameters[94],   fParError[94]);
-  minuit.GetParameter(95,  fParameters[95],   fParError[95]);
-  minuit.GetParameter(96,  fParameters[96],   fParError[96]);
-  minuit.GetParameter(97,  fParameters[97],   fParError[97]);
-  minuit.GetParameter(98,  fParameters[98],   fParError[98]);
-  minuit.GetParameter(99,  fParameters[99],   fParError[99]);
-  minuit.GetParameter(100,  fParameters[100],   fParError[100]);
-  minuit.GetParameter(101,  fParameters[101],   fParError[101]);
-  minuit.GetParameter(102,  fParameters[102],   fParError[102]);
-  minuit.GetParameter(103,  fParameters[103],   fParError[103]);
-  minuit.GetParameter(104,  fParameters[104],   fParError[104]);
-  minuit.GetParameter(105,  fParameters[105],   fParError[105]);
-  minuit.GetParameter(106,  fParameters[106],   fParError[106]);
-  minuit.GetParameter(107,  fParameters[107],   fParError[107]);
-  minuit.GetParameter(108,  fParameters[108],   fParError[108]);
-  minuit.GetParameter(109,  fParameters[109],   fParError[109]);
-  minuit.GetParameter(110,  fParameters[110],   fParError[110]);
-  minuit.GetParameter(111,  fParameters[111],   fParError[111]);
-  
+  // Get final parameters from fit
+  for(int i = 0; i < dNParam; i++)
+  {
+    minuit->GetParameter(i, fParameters[i], fParError[i]);
+  }
   UpdateModel();
 	
 	cout << "At the end; ChiSq/NDF = " << GetChiSquare()/(2*(dFitMax-dFitMin)/dBinSize - dNumParameters) << endl; // for M1 and M2
@@ -2023,7 +1803,6 @@ bool TBackgroundModel::DoTheFit()
   fModelTotM1->SetLineColor(2);
   fModelTotM1->SetLineWidth(1);
   fModelTotM1->Draw("SAME");
-
   
 //////////////////////////
     /*
@@ -2069,7 +1848,6 @@ bool TBackgroundModel::DoTheFit()
   fModelTotmnM1->Draw("SAME");
 
   fModelTotpbM1->Draw("SAME");
-
 
 /*
   TPaveText *pt1 = new TPaveText(0.35,0.77,0.70,0.99,"NB NDC");
@@ -2190,8 +1968,6 @@ bool TBackgroundModel::DoTheFit()
   // legfit2->AddEntry(fTotCorrection, "Accidental coincidence correction", "l");
   legfit2->Draw();
 
-
-
 /*
 	// Residuals
 	TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
@@ -2263,8 +2039,6 @@ bool TBackgroundModel::DoTheFit()
 	return true;
    
  }
-
-
 
 // Draws background spectrum
 void TBackgroundModel::DrawBkg()
@@ -3213,119 +2987,18 @@ void TBackgroundModel::LoadData()
   cout << "Loaded Data" << endl;
 }
 
+void TBackgroundModel::PrintHesse()
+{
+  minuit->Command("HESse");
+}
 
 // Prints parameters, needs update 11-06-2014
 void TBackgroundModel::PrintParameters()
 {
-	cout<< "Par0 = "	<< fParameters[0]	<< " +/- " << fParError[0] << endl;
-	cout<< "Par1 = "	<< fParameters[1]	<< " +/- " << fParError[1] << endl;
-	cout<< "Par2 = "	<< fParameters[2]	<< " +/- " << fParError[2] << endl;
-	cout<< "Par3 = "	<< fParameters[3]	<< " +/- " << fParError[3] << endl;
-	cout<< "Par4 = "	<< fParameters[4]	<< " +/- " << fParError[4] << endl;
-	cout<< "Par5 = "	<< fParameters[5]	<< " +/- " << fParError[5] << endl;
-	cout<< "Par6 = "	<< fParameters[6]	<< " +/- " << fParError[6] << endl;
-	cout<< "Par7 = "	<< fParameters[7]	<< " +/- " << fParError[7] << endl;
-	cout<< "Par8 = "	<< fParameters[8]	<< " +/- " << fParError[8] << endl;
-	cout<< "Par9 = "	<< fParameters[9]	<< " +/- " << fParError[9] << endl;
-  cout<< "Par10 = "  << fParameters[10] << " +/- " << fParError[10] << endl;
-  cout<< "Par11 = "  << fParameters[11] << " +/- " << fParError[11] << endl;
-  cout<< "Par12 = "  << fParameters[12] << " +/- " << fParError[12] << endl;
-  cout<< "Par13 = "  << fParameters[13] << " +/- " << fParError[13] << endl;
-  cout<< "Par14 = "  << fParameters[14] << " +/- " << fParError[14] << endl;
-  cout<< "Par15 = "  << fParameters[15] << " +/- " << fParError[15] << endl;
-  cout<< "Par16 = "  << fParameters[16] << " +/- " << fParError[16] << endl;
-  cout<< "Par17 = "  << fParameters[17] << " +/- " << fParError[17] << endl;
-  cout<< "Par18 = "  << fParameters[18] << " +/- " << fParError[18] << endl;
-  cout<< "Par19 = "  << fParameters[19] << " +/- " << fParError[19] << endl;
-  cout<< "Par20 = "  << fParameters[20] << " +/- " << fParError[20] << endl;
-  cout<< "Par21 = "  << fParameters[21] << " +/- " << fParError[21] << endl;
-  cout<< "Par22 = "  << fParameters[22] << " +/- " << fParError[22] << endl;
-  cout<< "Par23 = "  << fParameters[23] << " +/- " << fParError[23] << endl;
-  cout<< "Par24 = "  << fParameters[24] << " +/- " << fParError[24] << endl;
-  cout<< "Par25 = "  << fParameters[25] << " +/- " << fParError[25] << endl;
-  cout<< "Par26 = "  << fParameters[26] << " +/- " << fParError[26] << endl;
-  cout<< "Par27 = "  << fParameters[27] << " +/- " << fParError[27] << endl;
-  cout<< "Par28 = "  << fParameters[28] << " +/- " << fParError[28] << endl;
-  cout<< "Par29 = "  << fParameters[29] << " +/- " << fParError[29] << endl;  
-  cout<< "Par30 = "  << fParameters[30] << " +/- " << fParError[30] << endl;
-  cout<< "Par31 = "  << fParameters[31] << " +/- " << fParError[31] << endl;
-  cout<< "Par32 = "  << fParameters[32] << " +/- " << fParError[32] << endl;
-  cout<< "Par33 = "  << fParameters[33] << " +/- " << fParError[33] << endl;
-  cout<< "Par34 = "  << fParameters[34] << " +/- " << fParError[34] << endl;
-  cout<< "Par35 = "  << fParameters[35] << " +/- " << fParError[35] << endl;
-  cout<< "Par36 = "  << fParameters[36] << " +/- " << fParError[36] << endl;
-  cout<< "Par37 = "  << fParameters[37] << " +/- " << fParError[37] << endl;
-  cout<< "Par38 = "  << fParameters[38] << " +/- " << fParError[38] << endl;
-  cout<< "Par39 = "  << fParameters[39] << " +/- " << fParError[39] << endl;  
-  cout<< "Par40 = "  << fParameters[40] << " +/- " << fParError[40] << endl;
-  cout<< "Par41 = "  << fParameters[41] << " +/- " << fParError[41] << endl;
-  cout<< "Par42 = "  << fParameters[42] << " +/- " << fParError[42] << endl;
-  cout<< "Par43 = "  << fParameters[43] << " +/- " << fParError[43] << endl;
-  cout<< "Par44 = "  << fParameters[44] << " +/- " << fParError[44] << endl;
-  cout<< "Par45 = "  << fParameters[45] << " +/- " << fParError[45] << endl;
-  cout<< "Par46 = "  << fParameters[46] << " +/- " << fParError[46] << endl;
-  cout<< "Par47 = "  << fParameters[47] << " +/- " << fParError[47] << endl;
-  cout<< "Par48 = "  << fParameters[48] << " +/- " << fParError[48] << endl;
-  cout<< "Par49 = "  << fParameters[49] << " +/- " << fParError[49] << endl;
-  cout<< "Par50 = "  << fParameters[50] << " +/- " << fParError[50] << endl;
-  cout<< "Par51 = "  << fParameters[51] << " +/- " << fParError[51] << endl;
-  cout<< "Par52 = "  << fParameters[52] << " +/- " << fParError[52] << endl;
-  cout<< "Par53 = "  << fParameters[53] << " +/- " << fParError[53] << endl;
-  cout<< "Par54 = "  << fParameters[54] << " +/- " << fParError[54] << endl;
-  cout<< "Par55 = "  << fParameters[55] << " +/- " << fParError[55] << endl;
-  cout<< "Par56 = "  << fParameters[56] << " +/- " << fParError[56] << endl;
-  cout<< "Par57 = "  << fParameters[57] << " +/- " << fParError[57] << endl;
-  cout<< "Par58 = "  << fParameters[58] << " +/- " << fParError[58] << endl;
-  cout<< "Par59 = "  << fParameters[59] << " +/- " << fParError[59] << endl;
-  cout<< "Par60 = "  << fParameters[60] << " +/- " << fParError[60] << endl;
-  cout<< "Par61 = "  << fParameters[61] << " +/- " << fParError[61] << endl;
-  cout<< "Par62 = "  << fParameters[62] << " +/- " << fParError[62] << endl;
-  cout<< "Par63 = "  << fParameters[63] << " +/- " << fParError[63] << endl;
-  cout<< "Par64 = "  << fParameters[64] << " +/- " << fParError[64] << endl;
-  cout<< "Par65 = "  << fParameters[65] << " +/- " << fParError[65] << endl;
-  cout<< "Par66 = "  << fParameters[66] << " +/- " << fParError[66] << endl;
-  cout<< "Par67 = "  << fParameters[67] << " +/- " << fParError[67] << endl;
-  cout<< "Par68 = "  << fParameters[68] << " +/- " << fParError[68] << endl;
-  cout<< "Par69 = "  << fParameters[69] << " +/- " << fParError[69] << endl;
-  cout<< "Par70 = "  << fParameters[70] << " +/- " << fParError[70] << endl;
-  cout<< "Par71 = "  << fParameters[71] << " +/- " << fParError[71] << endl;
-  cout<< "Par72 = "  << fParameters[72] << " +/- " << fParError[72] << endl;
-  cout<< "Par73 = "  << fParameters[73] << " +/- " << fParError[73] << endl;
-  cout<< "Par74 = "  << fParameters[74] << " +/- " << fParError[74] << endl;
-  cout<< "Par75 = "  << fParameters[75] << " +/- " << fParError[75] << endl;
-  cout<< "Par76 = "  << fParameters[76] << " +/- " << fParError[76] << endl;
-  cout<< "Par77 = "  << fParameters[77] << " +/- " << fParError[77] << endl;
-  cout<< "Par78 = "  << fParameters[78] << " +/- " << fParError[78] << endl;
-  cout<< "Par79 = "  << fParameters[79] << " +/- " << fParError[79] << endl;
-  cout<< "Par80 = "  << fParameters[80] << " +/- " << fParError[80] << endl;
-  cout<< "Par81 = "  << fParameters[81] << " +/- " << fParError[81] << endl;
-  cout<< "Par82 = "  << fParameters[82] << " +/- " << fParError[82] << endl;
-  cout<< "Par83 = "  << fParameters[83] << " +/- " << fParError[83] << endl;
-  cout<< "Par84 = "  << fParameters[84] << " +/- " << fParError[84] << endl;
-  cout<< "Par85 = "  << fParameters[85] << " +/- " << fParError[85] << endl;
-  cout<< "Par86 = "  << fParameters[86] << " +/- " << fParError[86] << endl;
-  cout<< "Par87 = "  << fParameters[87] << " +/- " << fParError[87] << endl;
-  cout<< "Par88 = "  << fParameters[88] << " +/- " << fParError[88] << endl;
-  cout<< "Par89 = "  << fParameters[89] << " +/- " << fParError[89] << endl;
-  cout<< "Par90 = "  << fParameters[90] << " +/- " << fParError[90] << endl;
-  cout<< "Par91 = "  << fParameters[91] << " +/- " << fParError[91] << endl;
-  cout<< "Par92 = "  << fParameters[92] << " +/- " << fParError[92] << endl;
-  cout<< "Par93 = "  << fParameters[93] << " +/- " << fParError[93] << endl;
-  cout<< "Par94 = "  << fParameters[94] << " +/- " << fParError[94] << endl;
-  cout<< "Par95 = "  << fParameters[95] << " +/- " << fParError[95] << endl;
-  cout<< "Par96 = "  << fParameters[96] << " +/- " << fParError[96] << endl;
-  cout<< "Par97 = "  << fParameters[97] << " +/- " << fParError[97] << endl;
-  cout<< "Par98 = "  << fParameters[98] << " +/- " << fParError[98] << endl;
-  cout<< "Par99 = "  << fParameters[99] << " +/- " << fParError[99] << endl;
-  cout<< "Par100 = "  << fParameters[100] << " +/- " << fParError[100] << endl;
-  cout<< "Par101 = "  << fParameters[101] << " +/- " << fParError[101] << endl;
-  cout<< "Par102 = "  << fParameters[102] << " +/- " << fParError[102] << endl;
-  cout<< "Par103 = "  << fParameters[103] << " +/- " << fParError[103] << endl;
-  cout<< "Par104 = "  << fParameters[104] << " +/- " << fParError[104] << endl;
-  cout<< "Par105 = "  << fParameters[105] << " +/- " << fParError[105] << endl;
-  cout<< "Par106 = "  << fParameters[106] << " +/- " << fParError[106] << endl;
-  cout<< "Par107 = "  << fParameters[107] << " +/- " << fParError[107] << endl;
-  cout<< "Par108 = "  << fParameters[108] << " +/- " << fParError[108] << endl;
+  for(int i = 0; i < dNParam; i++)
+  {
+    cout << Form("Par%d = ", i) << fParameters[i] << " +/- " << fParError[i] << endl;
+  }
 }
 
 
@@ -3957,28 +3630,16 @@ void TBackgroundModel::Test()
   
 bool TBackgroundModel::DoTheFitAdaptive()
 { 
-
-  bAdaptiveBinning = true;
   gStyle->SetOptStat(0);
    // This method actually sets up minuit and does the fit
-
-
-  TMinuit *minuit = new TMinuit(112);
-
 
   // Reduce Minuit Output
   minuit->SetPrintLevel(1);
   minuit->Command("SET STRategy 2");
-  //minuit.Command("SET IMProve 1000 ");
-  // minuit->SetMaxIterations(5000);
-  // TVirtualFitter::SetMaxIterations(100000);    
+  minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
 
-
-  // TVirtualFitter *minuit = TVirtualFitter::Fitter(this,112);
-
-   
-   //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
+      //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
 
    // Close Th and Close Ra now split into its various sections, far Th and Ra still the same
    // This step after previous step full fit converges, just to see if any differences show up
@@ -4158,8 +3819,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(44); // RLead cs137
    minuit->FixParameter(45); // RLead k40
    minuit->FixParameter(46); // RLead pb210
-   minuit->FixParameter(47); // RLead th232
-   minuit->FixParameter(48); // RLead u238
+   // minuit->FixParameter(47); // RLead th232
+   // minuit->FixParameter(48); // RLead u238
    minuit->FixParameter(49); // MB co60
    minuit->FixParameter(50); // MB k40
    minuit->FixParameter(51); // MB th232
@@ -4230,136 +3891,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
    //Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
    // int status = minuit->Migrad(); // this actually does the minimisation
-   int status = minuit->Command("MINImize 8000 0.1");
-
-
-
-/*
-  double arglist[100];
-
-  arglist[0] = 0;
-  minuit->ExecuteCommand("SET PRINT", arglist, 2);
-  
-  arglist[0] = 5000; // function calls
-  arglist[1] = 0.01; // tolerance
-  minuit->ExecuteCommand("MIGRAD", arglist, 2);
-*/
+   int status = minuit->Command("MINImize 10000 0.1"); // better method
    
-
-  minuit->GetParameter(0,  fParameters[0],   fParError[0]);
-  minuit->GetParameter(1,  fParameters[1],   fParError[1]);
-  minuit->GetParameter(2,  fParameters[2],   fParError[2]);
-  minuit->GetParameter(3,  fParameters[3],   fParError[3]);
-  minuit->GetParameter(4,  fParameters[4],   fParError[4]);
-  minuit->GetParameter(5,  fParameters[5],   fParError[5]);
-  minuit->GetParameter(6,  fParameters[6],   fParError[6]);
-  minuit->GetParameter(7,  fParameters[7],   fParError[7]);
-  minuit->GetParameter(8,  fParameters[8],   fParError[8]);
-  minuit->GetParameter(9,  fParameters[9],   fParError[9]);
-  minuit->GetParameter(10,  fParameters[10],   fParError[10]);
-  minuit->GetParameter(11,  fParameters[11],   fParError[11]);
-  minuit->GetParameter(12,  fParameters[12],   fParError[12]);
-  minuit->GetParameter(13,  fParameters[13],   fParError[13]);
-  minuit->GetParameter(14,  fParameters[14],   fParError[14]);
-  minuit->GetParameter(15,  fParameters[15],   fParError[15]);
-  minuit->GetParameter(16,  fParameters[16],   fParError[16]);
-  minuit->GetParameter(17,  fParameters[17],   fParError[17]);
-  minuit->GetParameter(18,  fParameters[18],   fParError[18]);
-  minuit->GetParameter(19,  fParameters[19],   fParError[19]);
-  minuit->GetParameter(20,  fParameters[20],   fParError[20]);
-  minuit->GetParameter(21,  fParameters[21],   fParError[21]);
-  minuit->GetParameter(22,  fParameters[22],   fParError[22]);
-  minuit->GetParameter(23,  fParameters[23],   fParError[23]);
-  minuit->GetParameter(24,  fParameters[24],   fParError[24]);
-  minuit->GetParameter(25,  fParameters[25],   fParError[25]);
-  minuit->GetParameter(26,  fParameters[26],   fParError[26]);
-  minuit->GetParameter(27,  fParameters[27],   fParError[27]);
-  minuit->GetParameter(28,  fParameters[28],   fParError[28]);
-  minuit->GetParameter(29,  fParameters[29],   fParError[29]);
-  minuit->GetParameter(30,  fParameters[30],   fParError[30]);
-  minuit->GetParameter(31,  fParameters[31],   fParError[31]);
-  minuit->GetParameter(32,  fParameters[32],   fParError[32]);
-  minuit->GetParameter(33,  fParameters[33],   fParError[33]);
-  minuit->GetParameter(34,  fParameters[34],   fParError[34]);
-  minuit->GetParameter(35,  fParameters[35],   fParError[35]);
-  minuit->GetParameter(36,  fParameters[36],   fParError[36]);
-  minuit->GetParameter(37,  fParameters[37],   fParError[37]);
-  minuit->GetParameter(38,  fParameters[38],   fParError[38]);
-  minuit->GetParameter(39,  fParameters[39],   fParError[39]);
-  minuit->GetParameter(40,  fParameters[40],   fParError[40]);
-  minuit->GetParameter(41,  fParameters[41],   fParError[41]);
-  minuit->GetParameter(42,  fParameters[42],   fParError[42]);
-  minuit->GetParameter(43,  fParameters[43],   fParError[43]);
-  minuit->GetParameter(44,  fParameters[44],   fParError[44]);
-  minuit->GetParameter(45,  fParameters[45],   fParError[45]);
-  minuit->GetParameter(46,  fParameters[46],   fParError[46]);
-  minuit->GetParameter(47,  fParameters[47],   fParError[47]);
-  minuit->GetParameter(48,  fParameters[48],   fParError[48]);
-  minuit->GetParameter(49,  fParameters[49],   fParError[49]);
-  minuit->GetParameter(50,  fParameters[50],   fParError[50]);
-  minuit->GetParameter(51,  fParameters[51],   fParError[51]);
-  minuit->GetParameter(52,  fParameters[52],   fParError[52]);
-  minuit->GetParameter(53,  fParameters[53],   fParError[53]);
-  minuit->GetParameter(54,  fParameters[54],   fParError[54]);
-  minuit->GetParameter(55,  fParameters[55],   fParError[55]);
-  minuit->GetParameter(56,  fParameters[56],   fParError[56]);
-  minuit->GetParameter(57,  fParameters[57],   fParError[57]);
-  minuit->GetParameter(58,  fParameters[58],   fParError[58]);
-  minuit->GetParameter(59,  fParameters[59],   fParError[59]);
-  minuit->GetParameter(60,  fParameters[60],   fParError[60]);
-  minuit->GetParameter(61,  fParameters[61],   fParError[61]);
-  minuit->GetParameter(62,  fParameters[62],   fParError[62]);
-  minuit->GetParameter(63,  fParameters[63],   fParError[63]);  
-
-  minuit->GetParameter(64,  fParameters[64],   fParError[64]);
-  minuit->GetParameter(65,  fParameters[65],   fParError[65]);
-  minuit->GetParameter(66,  fParameters[66],   fParError[66]);
-  minuit->GetParameter(67,  fParameters[67],   fParError[67]);
-  minuit->GetParameter(68,  fParameters[68],   fParError[68]);
-  minuit->GetParameter(69,  fParameters[69],   fParError[69]);
-  minuit->GetParameter(70,  fParameters[70],   fParError[70]);
-  minuit->GetParameter(71,  fParameters[71],   fParError[71]);
-  minuit->GetParameter(72,  fParameters[72],   fParError[72]);
-  minuit->GetParameter(73,  fParameters[73],   fParError[73]);
-  minuit->GetParameter(74,  fParameters[74],   fParError[74]);
-  minuit->GetParameter(75,  fParameters[75],   fParError[75]);
-  minuit->GetParameter(76,  fParameters[76],   fParError[76]);
-  minuit->GetParameter(77,  fParameters[77],   fParError[77]);
-  minuit->GetParameter(78,  fParameters[78],   fParError[78]);
-  minuit->GetParameter(79,  fParameters[79],   fParError[79]);
-  minuit->GetParameter(80,  fParameters[80],   fParError[80]);
-  minuit->GetParameter(81,  fParameters[81],   fParError[81]);
-  minuit->GetParameter(82,  fParameters[82],   fParError[82]);
-  minuit->GetParameter(83,  fParameters[83],   fParError[83]);
-  minuit->GetParameter(84,  fParameters[84],   fParError[84]);
-  minuit->GetParameter(85,  fParameters[85],   fParError[85]);
-  minuit->GetParameter(86,  fParameters[86],   fParError[86]);
-  minuit->GetParameter(87,  fParameters[87],   fParError[87]);
-  minuit->GetParameter(88,  fParameters[88],   fParError[88]);
-  minuit->GetParameter(89,  fParameters[89],   fParError[89]);
-  minuit->GetParameter(90,  fParameters[90],   fParError[90]);
-  minuit->GetParameter(91,  fParameters[91],   fParError[91]);
-  minuit->GetParameter(92,  fParameters[92],   fParError[92]);
-  minuit->GetParameter(93,  fParameters[93],   fParError[93]);
-  minuit->GetParameter(94,  fParameters[94],   fParError[94]);
-  minuit->GetParameter(95,  fParameters[95],   fParError[95]);
-  minuit->GetParameter(96,  fParameters[96],   fParError[96]);
-  minuit->GetParameter(97,  fParameters[97],   fParError[97]);
-  minuit->GetParameter(98,  fParameters[98],   fParError[98]);
-  minuit->GetParameter(99,  fParameters[99],   fParError[99]);
-  minuit->GetParameter(100,  fParameters[100],   fParError[100]);
-  minuit->GetParameter(101,  fParameters[101],   fParError[101]);
-  minuit->GetParameter(102,  fParameters[102],   fParError[102]);
-  minuit->GetParameter(103,  fParameters[103],   fParError[103]);
-  minuit->GetParameter(104,  fParameters[104],   fParError[104]);
-  minuit->GetParameter(105,  fParameters[105],   fParError[105]);
-  minuit->GetParameter(106,  fParameters[106],   fParError[106]);
-  minuit->GetParameter(107,  fParameters[107],   fParError[107]);
-  minuit->GetParameter(108,  fParameters[108],   fParError[108]);
-  minuit->GetParameter(109,  fParameters[109],   fParError[109]);
-  minuit->GetParameter(110,  fParameters[110],   fParError[110]);
-  minuit->GetParameter(111,  fParameters[111],   fParError[111]);
-  
+  // Get final parameters from fit
+  for(int i = 0; i < dNParam; i++)
+  {
+    minuit->GetParameter(i, fParameters[i], fParError[i]);
+  }
+  // Update model with final parameters
   UpdateModelAdaptive();
   
   cout << "At the end; ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumParameters) << endl; // for M1 and M2
@@ -4642,7 +4181,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM1->SetLineColor(1);
   fAdapDataHistoM1->SetLineWidth(2);
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/yr");
+  fAdapDataHistoM1->GetYaxis()->SetTitle("Counts");
   fAdapDataHistoM1->SetMaximum(90000);
   // fAdapDataHistoM1->GetXaxis()->SetRange(1, 2650/dBinSize+5);
   fAdapDataHistoM1->Draw();
@@ -4723,7 +4262,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM2->SetLineColor(1);
   fAdapDataHistoM2->SetLineWidth(2);
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/yr");
+  fAdapDataHistoM2->GetYaxis()->SetTitle("Counts");
   fAdapDataHistoM2->SetMaximum(9000);
   // fAdapDataHistoM2->GetXaxis()->SetRange(1/dBinSize-5, 2650/dBinSize+5);
   fAdapDataHistoM2->Draw();
@@ -4865,121 +4404,10 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  Obj->SetParameters(0, x[0]);   
-  Obj->SetParameters(1, x[1]);  
-  Obj->SetParameters(2, x[2]);
-  Obj->SetParameters(3, x[3]);
-  Obj->SetParameters(4, x[4]);
-  Obj->SetParameters(5, x[5]);   
-  Obj->SetParameters(6, x[6]);  
-  Obj->SetParameters(7, x[7]);
-  Obj->SetParameters(8, x[8]);
-  Obj->SetParameters(9, x[9]);
-  Obj->SetParameters(10, x[10]);
-  Obj->SetParameters(11, x[11]);
-  Obj->SetParameters(12, x[12]);
-  Obj->SetParameters(13, x[13]);
-  Obj->SetParameters(14, x[14]);
-  Obj->SetParameters(15, x[15]);
-  Obj->SetParameters(16, x[16]);
-  Obj->SetParameters(17, x[17]);
-  Obj->SetParameters(18, x[18]);
-  Obj->SetParameters(19, x[19]);
-  Obj->SetParameters(20, x[20]);
-  Obj->SetParameters(21, x[21]);
-  Obj->SetParameters(22, x[22]);
-  Obj->SetParameters(23, x[23]);
-  Obj->SetParameters(24, x[24]);
-  Obj->SetParameters(25, x[25]);
-  Obj->SetParameters(26, x[26]);
-  Obj->SetParameters(27, x[27]);
-  Obj->SetParameters(28, x[28]);
-  Obj->SetParameters(29, x[29]);
-  Obj->SetParameters(30, x[30]);
-  Obj->SetParameters(31, x[31]);
-  Obj->SetParameters(32, x[32]);
-  Obj->SetParameters(33, x[33]);
-  Obj->SetParameters(34, x[34]);
-  Obj->SetParameters(35, x[35]);
-  Obj->SetParameters(36, x[36]);
-  Obj->SetParameters(37, x[37]);
-  Obj->SetParameters(38, x[38]);
-  Obj->SetParameters(39, x[39]);
-  Obj->SetParameters(40, x[40]);
-  Obj->SetParameters(41, x[41]);
-  Obj->SetParameters(42, x[42]);
-  Obj->SetParameters(43, x[43]);
-  Obj->SetParameters(44, x[44]);
-  Obj->SetParameters(45, x[45]);
-  Obj->SetParameters(46, x[46]);
-  Obj->SetParameters(47, x[47]);
-  Obj->SetParameters(48, x[48]);
-  Obj->SetParameters(49, x[49]);
-  Obj->SetParameters(50, x[50]);
-  Obj->SetParameters(51, x[51]);
-  Obj->SetParameters(52, x[52]);
-  Obj->SetParameters(53, x[53]);
-  Obj->SetParameters(54, x[54]);
-  Obj->SetParameters(55, x[55]);
-  Obj->SetParameters(56, x[56]);
-  Obj->SetParameters(57, x[57]);
-  Obj->SetParameters(58, x[58]);
-  Obj->SetParameters(59, x[59]);
-  Obj->SetParameters(60, x[60]); 
-  Obj->SetParameters(61, x[61]);
-  Obj->SetParameters(62, x[62]);
-  Obj->SetParameters(63, x[63]);
-  // Surface
-  
-  Obj->SetParameters(64, x[64]);
-  Obj->SetParameters(65, x[65]);
-  Obj->SetParameters(66, x[66]);
-  Obj->SetParameters(67, x[67]);
-  Obj->SetParameters(68, x[68]);
-  Obj->SetParameters(69, x[69]);  
-  Obj->SetParameters(70, x[70]);
-  Obj->SetParameters(71, x[71]);
-  Obj->SetParameters(72, x[72]);
-  Obj->SetParameters(73, x[73]);
-  Obj->SetParameters(74, x[74]);
-  Obj->SetParameters(75, x[75]);
-  Obj->SetParameters(76, x[76]);
-  Obj->SetParameters(77, x[77]);
-  Obj->SetParameters(78, x[78]);
-  Obj->SetParameters(79, x[79]);
-  Obj->SetParameters(80, x[80]);
-  Obj->SetParameters(81, x[81]);
-  Obj->SetParameters(82, x[82]);
-  Obj->SetParameters(83, x[83]);
-  Obj->SetParameters(84, x[84]);
-  Obj->SetParameters(85, x[85]);
-  Obj->SetParameters(86, x[86]);
-  Obj->SetParameters(87, x[87]);
-  Obj->SetParameters(88, x[88]);
-  Obj->SetParameters(89, x[89]);
-  Obj->SetParameters(90, x[90]);
-  Obj->SetParameters(91, x[91]);
-  Obj->SetParameters(92, x[92]);
-  Obj->SetParameters(93, x[93]);
-  Obj->SetParameters(94, x[94]);
-  Obj->SetParameters(95, x[95]);
-  Obj->SetParameters(96, x[96]);
-  Obj->SetParameters(97, x[97]);
-  Obj->SetParameters(98, x[98]);
-  Obj->SetParameters(99, x[99]);
-  Obj->SetParameters(100, x[100]);
-  Obj->SetParameters(101, x[101]);
-  Obj->SetParameters(102, x[102]);
-  Obj->SetParameters(103, x[103]);
-  Obj->SetParameters(104, x[104]);
-  Obj->SetParameters(105, x[105]);
-  Obj->SetParameters(106, x[106]);
-  Obj->SetParameters(107, x[107]);
-  Obj->SetParameters(108, x[108]);
-  Obj->SetParameters(109, x[109]);
-  Obj->SetParameters(110, x[110]);
-  Obj->SetParameters(111, x[111]);
-
+  for(int i = 0; i < 112; i++ )
+  {
+    Obj->SetParameters(i, x[i]);
+  }
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
     Obj->UpdateModelAdaptive();
     fval = Obj->GetChiSquareAdaptive();
@@ -5016,155 +4444,159 @@ void TBackgroundModel::DrawMC()
   TCanvas *cTh2321 = new TCanvas("cTh2321", "cTh2321", 1200, 800);
   cTh2321->SetLogy();
 
-  hAdapTeO2th232M1->SetLineColor(1);
-  hAdapCuFrameth232M1->SetLineColor(2);
-  hAdapCuBoxth232M1->SetLineColor(3);
-  hAdap50mKth232M1->SetLineColor(4);
-  hAdap600mKth232M1->SetLineColor(5);
-  hAdapIVCth232M1->SetLineColor(6);
-  hAdapOVCth232M1->SetLineColor(7);
-  hAdapPbRomth232M1->SetLineColor(8);
-  hAdapMBth232M1->SetLineColor(9);
-  hAdapSIth232M1->SetLineColor(11);
+  hTeO2th232M1->SetLineColor(1);
+  hCuFrameth232M1->SetLineColor(2);
+  hCuBoxth232M1->SetLineColor(3);
+  h50mKth232M1->SetLineColor(4);
+  h600mKth232M1->SetLineColor(5);
+  hIVCth232M1->SetLineColor(6);
+  hOVCth232M1->SetLineColor(7);
+  hPbRomth232M1->SetLineColor(8);
+  hMBth232M1->SetLineColor(9);
+  hSIth232M1->SetLineColor(11);
 
+  hTeO2th232M1->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2th232M1->GetYaxis()->SetTitle("Probability");  
+  hTeO2th232M1->DrawNormalized();
+  hCuFrameth232M1->DrawNormalized("SAME");
+  hCuBoxth232M1->DrawNormalized("SAME");
+  h50mKth232M1->DrawNormalized("SAME");
+  h600mKth232M1->DrawNormalized("SAME");
+  hIVCth232M1->DrawNormalized("SAME");
+  hOVCth232M1->DrawNormalized("SAME");
+  hPbRomth232M1->DrawNormalized("SAME");
+  hMBth232M1->DrawNormalized("SAME");
+  hSIth232M1->DrawNormalized("SAME");
 
-  hAdapTeO2th232M1->DrawNormalized();
-  hAdapCuFrameth232M1->DrawNormalized("SAME");
-  hAdapCuBoxth232M1->DrawNormalized("SAME");
-  hAdap50mKth232M1->DrawNormalized("SAME");
-  hAdap600mKth232M1->DrawNormalized("SAME");
-  hAdapIVCth232M1->DrawNormalized("SAME");
-  hAdapOVCth232M1->DrawNormalized("SAME");
-  hAdapPbRomth232M1->DrawNormalized("SAME");
-  hAdapMBth232M1->DrawNormalized("SAME");
-  hAdapSIth232M1->DrawNormalized("SAME");
-
-  legth1->AddEntry(hAdapTeO2th232M1, "TeO2", "l");  
-  legth1->AddEntry(hAdapCuFrameth232M1, "CuFrame", "l");
-  legth1->AddEntry(hAdapCuBoxth232M1, "CuBox", "l");
-  legth1->AddEntry(hAdap50mKth232M1, "50mK", "l");
-  legth1->AddEntry(hAdap600mKth232M1, "600mK", "l");
-  legth1->AddEntry(hAdapIVCth232M1, "IVC", "l");
-  legth1->AddEntry(hAdapOVCth232M1, "OVC", "l");
-  legth1->AddEntry(hAdapPbRomth232M1, "PbRom", "l");
-  legth1->AddEntry(hAdapMBth232M1, "MB", "l");
-  legth1->AddEntry(hAdapSIth232M1, "SI", "l");
+  legth1->AddEntry(hTeO2th232M1, "TeO2", "l");  
+  legth1->AddEntry(hCuFrameth232M1, "CuFrame", "l");
+  legth1->AddEntry(hCuBoxth232M1, "CuBox", "l");
+  legth1->AddEntry(h50mKth232M1, "50mK", "l");
+  legth1->AddEntry(h600mKth232M1, "600mK", "l");
+  legth1->AddEntry(hIVCth232M1, "IVC", "l");
+  legth1->AddEntry(hOVCth232M1, "OVC", "l");
+  legth1->AddEntry(hPbRomth232M1, "PbRom", "l");
+  legth1->AddEntry(hMBth232M1, "MB", "l");
+  legth1->AddEntry(hSIth232M1, "SI", "l");
   legth1->Draw();
 
 
   TCanvas *cTh2322 = new TCanvas("cTh2322", "cTh2322", 1200, 800);
   cTh2322->SetLogy();
 
-  hAdapTeO2th232M2->SetLineColor(1);
-  hAdapCuFrameth232M2->SetLineColor(2);
-  hAdapCuBoxth232M2->SetLineColor(3);
-  hAdap50mKth232M2->SetLineColor(4);
-  hAdap600mKth232M2->SetLineColor(5);
-  hAdapIVCth232M2->SetLineColor(6);
-  hAdapOVCth232M2->SetLineColor(7);
-  hAdapPbRomth232M2->SetLineColor(8);
-  hAdapMBth232M2->SetLineColor(9);
-  hAdapSIth232M2->SetLineColor(11);
+  hTeO2th232M2->SetLineColor(1);
+  hCuFrameth232M2->SetLineColor(2);
+  hCuBoxth232M2->SetLineColor(3);
+  h50mKth232M2->SetLineColor(4);
+  h600mKth232M2->SetLineColor(5);
+  hIVCth232M2->SetLineColor(6);
+  hOVCth232M2->SetLineColor(7);
+  hPbRomth232M2->SetLineColor(8);
+  hMBth232M2->SetLineColor(9);
+  hSIth232M2->SetLineColor(11);
 
+  hTeO2th232M2->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2th232M2->GetYaxis()->SetTitle("Probability"); 
+  hTeO2th232M2->DrawNormalized();   
+  hCuFrameth232M2->DrawNormalized("SAME");
+  hCuBoxth232M2->DrawNormalized("SAME");
+  h50mKth232M2->DrawNormalized("SAME");
+  h600mKth232M2->DrawNormalized("SAME");
+  hIVCth232M2->DrawNormalized("SAME");
+  hOVCth232M2->DrawNormalized("SAME");
+  hPbRomth232M2->DrawNormalized("SAME");
+  hMBth232M2->DrawNormalized("SAME");
+  hSIth232M2->DrawNormalized("SAME");
 
-  hAdapTeO2th232M2->DrawNormalized();
-  hAdapCuFrameth232M2->DrawNormalized("SAME");
-  hAdapCuBoxth232M2->DrawNormalized("SAME");
-  hAdap50mKth232M2->DrawNormalized("SAME");
-  hAdap600mKth232M2->DrawNormalized("SAME");
-  hAdapIVCth232M2->DrawNormalized("SAME");
-  hAdapOVCth232M2->DrawNormalized("SAME");
-  hAdapPbRomth232M2->DrawNormalized("SAME");
-  hAdapMBth232M2->DrawNormalized("SAME");
-  hAdapSIth232M2->DrawNormalized("SAME");
-
-  legth2->AddEntry(hAdapTeO2th232M2, "TeO2", "l");  
-  legth2->AddEntry(hAdapCuFrameth232M2, "CuFrame", "l");
-  legth2->AddEntry(hAdapCuBoxth232M2, "CuBox", "l");
-  legth2->AddEntry(hAdap50mKth232M2, "50mK", "l");
-  legth2->AddEntry(hAdap600mKth232M2, "600mK", "l");
-  legth2->AddEntry(hAdapIVCth232M2, "IVC", "l");
-  legth2->AddEntry(hAdapOVCth232M2, "OVC", "l");
-  legth2->AddEntry(hAdapPbRomth232M2, "PbRom", "l");
-  legth2->AddEntry(hAdapMBth232M2, "MB", "l");
-  legth2->AddEntry(hAdapSIth232M2, "SI", "l");
+  legth2->AddEntry(hTeO2th232M2, "TeO2", "l");  
+  legth2->AddEntry(hCuFrameth232M2, "CuFrame", "l");
+  legth2->AddEntry(hCuBoxth232M2, "CuBox", "l");
+  legth2->AddEntry(h50mKth232M2, "50mK", "l");
+  legth2->AddEntry(h600mKth232M2, "600mK", "l");
+  legth2->AddEntry(hIVCth232M2, "IVC", "l");
+  legth2->AddEntry(hOVCth232M2, "OVC", "l");
+  legth2->AddEntry(hPbRomth232M2, "PbRom", "l");
+  legth2->AddEntry(hMBth232M2, "MB", "l");
+  legth2->AddEntry(hSIth232M2, "SI", "l");
   legth2->Draw();
 
   TCanvas *cU2381 = new TCanvas("cU2381", "cU2381", 1200, 800);
   cU2381->SetLogy();
 
-  hAdapTeO2u238M1->SetLineColor(1);
-  hAdapCuFrameu238M1->SetLineColor(2);
-  hAdapCuBoxu238M1->SetLineColor(3);
-  hAdap50mKu238M1->SetLineColor(4);
-  hAdap600mKu238M1->SetLineColor(5);
-  hAdapIVCu238M1->SetLineColor(6);
-  hAdapOVCu238M1->SetLineColor(7);
-  hAdapPbRomu238M1->SetLineColor(8);
-  hAdapMBu238M1->SetLineColor(9);
-  hAdapSIu238M1->SetLineColor(11);
+  hTeO2u238M1->SetLineColor(1);
+  hCuFrameu238M1->SetLineColor(2);
+  hCuBoxu238M1->SetLineColor(3);
+  h50mKu238M1->SetLineColor(4);
+  h600mKu238M1->SetLineColor(5);
+  hIVCu238M1->SetLineColor(6);
+  hOVCu238M1->SetLineColor(7);
+  hPbRomu238M1->SetLineColor(8);
+  hMBu238M1->SetLineColor(9);
+  hSIu238M1->SetLineColor(11);
 
+  hTeO2u238M1->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2u238M1->GetYaxis()->SetTitle("Probability");  
+  hTeO2u238M1->DrawNormalized();
+  hCuFrameu238M1->DrawNormalized("SAME");
+  hCuBoxu238M1->DrawNormalized("SAME");
+  h50mKu238M1->DrawNormalized("SAME");
+  h600mKu238M1->DrawNormalized("SAME");
+  hIVCu238M1->DrawNormalized("SAME");
+  hOVCu238M1->DrawNormalized("SAME");
+  hPbRomu238M1->DrawNormalized("SAME");
+  hMBu238M1->DrawNormalized("SAME");
+  hSIu238M1->DrawNormalized("SAME");
 
-  hAdapTeO2u238M1->DrawNormalized();
-  hAdapCuFrameu238M1->DrawNormalized("SAME");
-  hAdapCuBoxu238M1->DrawNormalized("SAME");
-  hAdap50mKu238M1->DrawNormalized("SAME");
-  hAdap600mKu238M1->DrawNormalized("SAME");
-  hAdapIVCu238M1->DrawNormalized("SAME");
-  hAdapOVCu238M1->DrawNormalized("SAME");
-  hAdapPbRomu238M1->DrawNormalized("SAME");
-  hAdapMBu238M1->DrawNormalized("SAME");
-  hAdapSIu238M1->DrawNormalized("SAME");
-
-  legu1->AddEntry(hAdapTeO2u238M2, "TeO2", "l");  
-  legu1->AddEntry(hAdapCuFrameu238M2, "CuFrame", "l");
-  legu1->AddEntry(hAdapCuBoxu238M2, "CuBox", "l");
-  legu1->AddEntry(hAdap50mKu238M2, "50mK", "l");
-  legu1->AddEntry(hAdap600mKu238M2, "600mK", "l");
-  legu1->AddEntry(hAdapIVCu238M2, "IVC", "l");
-  legu1->AddEntry(hAdapOVCu238M2, "OVC", "l");
-  legu1->AddEntry(hAdapPbRomu238M2, "PbRom", "l");
-  legu1->AddEntry(hAdapMBu238M2, "MB", "l");
-  legu1->AddEntry(hAdapSIu238M2, "SI", "l");
+  legu1->AddEntry(hTeO2u238M2, "TeO2", "l");  
+  legu1->AddEntry(hCuFrameu238M2, "CuFrame", "l");
+  legu1->AddEntry(hCuBoxu238M2, "CuBox", "l");
+  legu1->AddEntry(h50mKu238M2, "50mK", "l");
+  legu1->AddEntry(h600mKu238M2, "600mK", "l");
+  legu1->AddEntry(hIVCu238M2, "IVC", "l");
+  legu1->AddEntry(hOVCu238M2, "OVC", "l");
+  legu1->AddEntry(hPbRomu238M2, "PbRom", "l");
+  legu1->AddEntry(hMBu238M2, "MB", "l");
+  legu1->AddEntry(hSIu238M2, "SI", "l");
   legu1->Draw();
 
 
   TCanvas *cU2382 = new TCanvas("cU2382", "cU2382", 1200, 800);
   cU2382->SetLogy();
 
-  hAdapTeO2u238M2->SetLineColor(1);
-  hAdapCuFrameu238M2->SetLineColor(2);
-  hAdapCuBoxu238M2->SetLineColor(3);
-  hAdap50mKu238M2->SetLineColor(4);
-  hAdap600mKu238M2->SetLineColor(5);
-  hAdapIVCu238M2->SetLineColor(6);
-  hAdapOVCu238M2->SetLineColor(7);
-  hAdapPbRomu238M2->SetLineColor(8);
-  hAdapMBu238M2->SetLineColor(9);
-  hAdapSIu238M2->SetLineColor(11);
+  hTeO2u238M2->SetLineColor(1);
+  hCuFrameu238M2->SetLineColor(2);
+  hCuBoxu238M2->SetLineColor(3);
+  h50mKu238M2->SetLineColor(4);
+  h600mKu238M2->SetLineColor(5);
+  hIVCu238M2->SetLineColor(6);
+  hOVCu238M2->SetLineColor(7);
+  hPbRomu238M2->SetLineColor(8);
+  hMBu238M2->SetLineColor(9);
+  hSIu238M2->SetLineColor(11);
 
+  hTeO2u238M2->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2u238M2->GetYaxis()->SetTitle("Probability"); 
+  hTeO2u238M2->DrawNormalized();   
+  hCuFrameu238M2->DrawNormalized("SAME");
+  hCuBoxu238M2->DrawNormalized("SAME");
+  h50mKu238M2->DrawNormalized("SAME");
+  h600mKu238M2->DrawNormalized("SAME");
+  hIVCu238M2->DrawNormalized("SAME");
+  hOVCu238M2->DrawNormalized("SAME");
+  hPbRomu238M2->DrawNormalized("SAME");
+  hMBu238M2->DrawNormalized("SAME");
+  hSIu238M2->DrawNormalized("SAME");
 
-  hAdapTeO2u238M2->DrawNormalized();
-  hAdapCuFrameu238M2->DrawNormalized("SAME");
-  hAdapCuBoxu238M2->DrawNormalized("SAME");
-  hAdap50mKu238M2->DrawNormalized("SAME");
-  hAdap600mKu238M2->DrawNormalized("SAME");
-  hAdapIVCu238M2->DrawNormalized("SAME");
-  hAdapOVCu238M2->DrawNormalized("SAME");
-  hAdapPbRomu238M2->DrawNormalized("SAME");
-  hAdapMBu238M2->DrawNormalized("SAME");
-  hAdapSIu238M2->DrawNormalized("SAME");
-
-  legu2->AddEntry(hAdapTeO2u238M2, "TeO2", "l");  
-  legu2->AddEntry(hAdapCuFrameu238M2, "CuFrame", "l");
-  legu2->AddEntry(hAdapCuBoxu238M2, "CuBox", "l");
-  legu2->AddEntry(hAdap50mKu238M2, "50mK", "l");
-  legu2->AddEntry(hAdap600mKu238M2, "600mK", "l");
-  legu2->AddEntry(hAdapIVCu238M2, "IVC", "l");
-  legu2->AddEntry(hAdapOVCu238M2, "OVC", "l");
-  legu2->AddEntry(hAdapPbRomu238M2, "PbRom", "l");
-  legu2->AddEntry(hAdapMBu238M2, "MB", "l");
-  legu2->AddEntry(hAdapSIu238M2, "SI", "l");
+  legu2->AddEntry(hTeO2u238M2, "TeO2", "l");  
+  legu2->AddEntry(hCuFrameu238M2, "CuFrame", "l");
+  legu2->AddEntry(hCuBoxu238M2, "CuBox", "l");
+  legu2->AddEntry(h50mKu238M2, "50mK", "l");
+  legu2->AddEntry(h600mKu238M2, "600mK", "l");
+  legu2->AddEntry(hIVCu238M2, "IVC", "l");
+  legu2->AddEntry(hOVCu238M2, "OVC", "l");
+  legu2->AddEntry(hPbRomu238M2, "PbRom", "l");
+  legu2->AddEntry(hMBu238M2, "MB", "l");
+  legu2->AddEntry(hSIu238M2, "SI", "l");
   legu2->Draw();
 
 
@@ -5173,39 +4605,40 @@ void TBackgroundModel::DrawMC()
   TCanvas *cK401 = new TCanvas("cK401", "cK401", 1200, 800);
   cK401->SetLogy();
 
-  hAdapTeO2k40M1->SetLineColor(1);
-  hAdapCuFramek40M1->SetLineColor(2);
-  hAdapCuBoxk40M1->SetLineColor(3);
-  hAdap50mKk40M1->SetLineColor(4);
-  hAdap600mKk40M1->SetLineColor(5);
-  hAdapIVCk40M1->SetLineColor(6);
-  hAdapOVCk40M1->SetLineColor(7);
-  hAdapPbRomk40M1->SetLineColor(8);
-  hAdapMBk40M1->SetLineColor(9);
-  hAdapSIk40M1->SetLineColor(11);
+  hTeO2k40M1->SetLineColor(1);
+  hCuFramek40M1->SetLineColor(2);
+  hCuBoxk40M1->SetLineColor(3);
+  h50mKk40M1->SetLineColor(4);
+  h600mKk40M1->SetLineColor(5);
+  hIVCk40M1->SetLineColor(6);
+  hOVCk40M1->SetLineColor(7);
+  hPbRomk40M1->SetLineColor(8);
+  hMBk40M1->SetLineColor(9);
+  hSIk40M1->SetLineColor(11);
 
+  hTeO2k40M1->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2k40M1->GetYaxis()->SetTitle("Probability");  
+  hTeO2k40M1->DrawNormalized();
+  hCuFramek40M1->DrawNormalized("SAME");
+  hCuBoxk40M1->DrawNormalized("SAME");
+  h50mKk40M1->DrawNormalized("SAME");
+  h600mKk40M1->DrawNormalized("SAME");
+  hIVCk40M1->DrawNormalized("SAME");
+  hOVCk40M1->DrawNormalized("SAME");
+  hPbRomk40M1->DrawNormalized("SAME");
+  hMBk40M1->DrawNormalized("SAME");
+  hSIk40M1->DrawNormalized("SAME");
 
-  hAdapTeO2k40M1->DrawNormalized();
-  hAdapCuFramek40M1->DrawNormalized("SAME");
-  hAdapCuBoxk40M1->DrawNormalized("SAME");
-  hAdap50mKk40M1->DrawNormalized("SAME");
-  hAdap600mKk40M1->DrawNormalized("SAME");
-  hAdapIVCk40M1->DrawNormalized("SAME");
-  hAdapOVCk40M1->DrawNormalized("SAME");
-  hAdapPbRomk40M1->DrawNormalized("SAME");
-  hAdapMBk40M1->DrawNormalized("SAME");
-  hAdapSIk40M1->DrawNormalized("SAME");
-
-  legk1->AddEntry(hAdapTeO2k40M1, "TeO2", "l");  
-  legk1->AddEntry(hAdapCuFramek40M1, "CuFrame", "l");
-  legk1->AddEntry(hAdapCuBoxk40M1, "CuBox", "l");
-  legk1->AddEntry(hAdap50mKk40M1, "50mK", "l");
-  legk1->AddEntry(hAdap600mKk40M1, "600mK", "l");
-  legk1->AddEntry(hAdapIVCk40M1, "IVC", "l");
-  legk1->AddEntry(hAdapOVCk40M1, "OVC", "l");
-  legk1->AddEntry(hAdapPbRomk40M1, "PbRom", "l");
-  legk1->AddEntry(hAdapMBk40M1, "MB", "l");
-  legk1->AddEntry(hAdapSIk40M1, "SI", "l");
+  legk1->AddEntry(hTeO2k40M1, "TeO2", "l");  
+  legk1->AddEntry(hCuFramek40M1, "CuFrame", "l");
+  legk1->AddEntry(hCuBoxk40M1, "CuBox", "l");
+  legk1->AddEntry(h50mKk40M1, "50mK", "l");
+  legk1->AddEntry(h600mKk40M1, "600mK", "l");
+  legk1->AddEntry(hIVCk40M1, "IVC", "l");
+  legk1->AddEntry(hOVCk40M1, "OVC", "l");
+  legk1->AddEntry(hPbRomk40M1, "PbRom", "l");
+  legk1->AddEntry(hMBk40M1, "MB", "l");
+  legk1->AddEntry(hSIk40M1, "SI", "l");
   legk1->Draw();
 
 
@@ -5213,75 +4646,78 @@ void TBackgroundModel::DrawMC()
   TCanvas *cK402 = new TCanvas("cK402", "cK402", 1200, 800);
   cK402->SetLogy();
 
-  hAdapTeO2k40M2->SetLineColor(1);
-  hAdapCuFramek40M2->SetLineColor(2);
-  hAdapCuBoxk40M2->SetLineColor(3);
-  hAdap50mKk40M2->SetLineColor(4);
-  hAdap600mKk40M2->SetLineColor(5);
-  hAdapIVCk40M2->SetLineColor(6);
-  hAdapOVCk40M2->SetLineColor(7);
-  hAdapPbRomk40M2->SetLineColor(8);
-  hAdapMBk40M2->SetLineColor(9);
-  hAdapSIk40M2->SetLineColor(11);
+  hTeO2k40M2->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2k40M2->GetYaxis()->SetTitle("Probability");  
+  hTeO2k40M2->SetLineColor(1);
+  hCuFramek40M2->SetLineColor(2);
+  hCuBoxk40M2->SetLineColor(3);
+  h50mKk40M2->SetLineColor(4);
+  h600mKk40M2->SetLineColor(5);
+  hIVCk40M2->SetLineColor(6);
+  hOVCk40M2->SetLineColor(7);
+  hPbRomk40M2->SetLineColor(8);
+  hMBk40M2->SetLineColor(9);
+  hSIk40M2->SetLineColor(11);
 
 
-  hAdapTeO2k40M2->DrawNormalized();
-  hAdapCuFramek40M2->DrawNormalized("SAME");
-  hAdapCuBoxk40M2->DrawNormalized("SAME");
-  hAdap50mKk40M2->DrawNormalized("SAME");
-  hAdap600mKk40M2->DrawNormalized("SAME");
-  hAdapIVCk40M2->DrawNormalized("SAME");
-  hAdapOVCk40M2->DrawNormalized("SAME");
-  hAdapPbRomk40M2->DrawNormalized("SAME");
-  hAdapMBk40M2->DrawNormalized("SAME");
-  hAdapSIk40M2->DrawNormalized("SAME");
+  hTeO2k40M2->DrawNormalized();
+  hCuFramek40M2->DrawNormalized("SAME");
+  hCuBoxk40M2->DrawNormalized("SAME");
+  h50mKk40M2->DrawNormalized("SAME");
+  h600mKk40M2->DrawNormalized("SAME");
+  hIVCk40M2->DrawNormalized("SAME");
+  hOVCk40M2->DrawNormalized("SAME");
+  hPbRomk40M2->DrawNormalized("SAME");
+  hMBk40M2->DrawNormalized("SAME");
+  hSIk40M2->DrawNormalized("SAME");
 
-  legk2->AddEntry(hAdapTeO2k40M2, "TeO2", "l");  
-  legk2->AddEntry(hAdapCuFramek40M2, "CuFrame", "l");
-  legk2->AddEntry(hAdapCuBoxk40M2, "CuBox", "l");
-  legk2->AddEntry(hAdap50mKk40M2, "50mK", "l");
-  legk2->AddEntry(hAdap600mKk40M2, "600mK", "l");
-  legk2->AddEntry(hAdapIVCk40M2, "IVC", "l");
-  legk2->AddEntry(hAdapOVCk40M2, "OVC", "l");
-  legk2->AddEntry(hAdapPbRomk40M2, "PbRom", "l");
-  legk2->AddEntry(hAdapMBk40M2, "MB", "l");
-  legk2->AddEntry(hAdapSIk40M2, "SI", "l");
+  legk2->AddEntry(hTeO2k40M2, "TeO2", "l");  
+  legk2->AddEntry(hCuFramek40M2, "CuFrame", "l");
+  legk2->AddEntry(hCuBoxk40M2, "CuBox", "l");
+  legk2->AddEntry(h50mKk40M2, "50mK", "l");
+  legk2->AddEntry(h600mKk40M2, "600mK", "l");
+  legk2->AddEntry(hIVCk40M2, "IVC", "l");
+  legk2->AddEntry(hOVCk40M2, "OVC", "l");
+  legk2->AddEntry(hPbRomk40M2, "PbRom", "l");
+  legk2->AddEntry(hMBk40M2, "MB", "l");
+  legk2->AddEntry(hSIk40M2, "SI", "l");
   legk2->Draw();
 
 
   TCanvas *cCo601 = new TCanvas("cCo601", "cCo601", 1200, 800);
   cCo601->SetLogy();
 
-  hAdapTeO2co60M1->SetLineColor(1);
-  hAdapCuFrameco60M1->SetLineColor(2);
-  hAdapCuBoxco60M1->SetLineColor(3);
-  hAdap50mKco60M1->SetLineColor(4);
-  hAdap600mKco60M1->SetLineColor(5);
-  hAdapIVCco60M1->SetLineColor(6);
-  hAdapOVCco60M1->SetLineColor(7);
-  hAdapPbRomco60M1->SetLineColor(8);
-  hAdapMBco60M1->SetLineColor(9);
+  hTeO2co60M1->SetLineColor(1);
+  hCuFrameco60M1->SetLineColor(2);
+  hCuBoxco60M1->SetLineColor(3);
+  h50mKco60M1->SetLineColor(4);
+  h600mKco60M1->SetLineColor(5);
+  hIVCco60M1->SetLineColor(6);
+  hOVCco60M1->SetLineColor(7);
+  hPbRomco60M1->SetLineColor(8);
+  hMBco60M1->SetLineColor(9);
 
+  hTeO2co60M1->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2co60M1->GetYaxis()->SetTitle("Probability");  
+  hTeO2co60M1->DrawNormalized();
+  hCuFrameco60M1->DrawNormalized("SAME");
+  hCuBoxco60M1->DrawNormalized("SAME");
+  h50mKco60M1->DrawNormalized("SAME");
+  h600mKco60M1->DrawNormalized("SAME");
+  hIVCco60M1->DrawNormalized("SAME");
+  hOVCco60M1->DrawNormalized("SAME");
+  hPbRomco60M1->DrawNormalized("SAME");
+  hMBco60M1->DrawNormalized("SAME");
 
-  hAdapTeO2co60M1->DrawNormalized();
-  hAdapCuFrameco60M1->DrawNormalized("SAME");
-  hAdapCuBoxco60M1->DrawNormalized("SAME");
-  hAdap50mKco60M1->DrawNormalized("SAME");
-  hAdap600mKco60M1->DrawNormalized("SAME");
-  hAdapIVCco60M1->DrawNormalized("SAME");
-  hAdapOVCco60M1->DrawNormalized("SAME");
-  hAdapPbRomco60M1->DrawNormalized("SAME");
-  hAdapMBco60M1->DrawNormalized("SAME");
-
-  legco1->AddEntry(hAdapTeO2co60M1, "TeO2", "l");  
-  legco1->AddEntry(hAdapCuFrameco60M1, "CuFrame", "l");
-  legco1->AddEntry(hAdapCuBoxco60M1, "CuBox", "l");
-  legco1->AddEntry(hAdap50mKco60M1, "50mK", "l");
-  legco1->AddEntry(hAdap600mKco60M1, "600mK", "l");
-  legco1->AddEntry(hAdapIVCco60M1, "IVC", "l");
-  legco1->AddEntry(hAdapOVCco60M1, "OVC", "l");
-  legco1->AddEntry(hAdapPbRomco60M1, "PbRom", "l");
-  legco1->AddEntry(hAdapMBco60M1, "MB", "l");
+  legco1->AddEntry(hTeO2co60M1, "TeO2", "l");  
+  legco1->AddEntry(hCuFrameco60M1, "CuFrame", "l");
+  legco1->AddEntry(hCuBoxco60M1, "CuBox", "l");
+  legco1->AddEntry(h50mKco60M1, "50mK", "l");
+  legco1->AddEntry(h600mKco60M1, "600mK", "l");
+  legco1->AddEntry(hIVCco60M1, "IVC", "l");
+  legco1->AddEntry(hOVCco60M1, "OVC", "l");
+  legco1->AddEntry(hPbRomco60M1, "PbRom", "l");
+  legco1->AddEntry(hMBco60M1, "MB", "l");
   legco1->Draw();
 
 
@@ -5289,36 +4725,37 @@ void TBackgroundModel::DrawMC()
   TCanvas *cCo602 = new TCanvas("cCo602", "cCo602", 1200, 800);
   cCo602->SetLogy();
 
-  hAdapTeO2co60M2->SetLineColor(1);
-  hAdapCuFrameco60M2->SetLineColor(2);
-  hAdapCuBoxco60M2->SetLineColor(3);
-  hAdap50mKco60M2->SetLineColor(4);
-  hAdap600mKco60M2->SetLineColor(5);
-  hAdapIVCco60M2->SetLineColor(6);
-  hAdapOVCco60M2->SetLineColor(7);
-  hAdapPbRomco60M2->SetLineColor(8);
-  hAdapMBco60M2->SetLineColor(9);
+  hTeO2co60M2->SetLineColor(1);
+  hCuFrameco60M2->SetLineColor(2);
+  hCuBoxco60M2->SetLineColor(3);
+  h50mKco60M2->SetLineColor(4);
+  h600mKco60M2->SetLineColor(5);
+  hIVCco60M2->SetLineColor(6);
+  hOVCco60M2->SetLineColor(7);
+  hPbRomco60M2->SetLineColor(8);
+  hMBco60M2->SetLineColor(9);
 
+  hTeO2co60M2->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2co60M2->GetYaxis()->SetTitle("Probability");  
+  hTeO2co60M2->DrawNormalized();
+  hCuFrameco60M2->DrawNormalized("SAME");
+  hCuBoxco60M2->DrawNormalized("SAME");
+  h50mKco60M2->DrawNormalized("SAME");
+  h600mKco60M2->DrawNormalized("SAME");
+  hIVCco60M2->DrawNormalized("SAME");
+  hOVCco60M2->DrawNormalized("SAME");
+  hPbRomco60M2->DrawNormalized("SAME");
+  hMBco60M2->DrawNormalized("SAME");
 
-  hAdapTeO2co60M2->DrawNormalized();
-  hAdapCuFrameco60M2->DrawNormalized("SAME");
-  hAdapCuBoxco60M2->DrawNormalized("SAME");
-  hAdap50mKco60M2->DrawNormalized("SAME");
-  hAdap600mKco60M2->DrawNormalized("SAME");
-  hAdapIVCco60M2->DrawNormalized("SAME");
-  hAdapOVCco60M2->DrawNormalized("SAME");
-  hAdapPbRomco60M2->DrawNormalized("SAME");
-  hAdapMBco60M2->DrawNormalized("SAME");
-
-  legco2->AddEntry(hAdapTeO2co60M2, "TeO2", "l");  
-  legco2->AddEntry(hAdapCuFrameco60M2, "CuFrame", "l");
-  legco2->AddEntry(hAdapCuBoxco60M2, "CuBox", "l");
-  legco2->AddEntry(hAdap50mKco60M2, "50mK", "l");
-  legco2->AddEntry(hAdap600mKco60M2, "600mK", "l");
-  legco2->AddEntry(hAdapIVCco60M2, "IVC", "l");
-  legco2->AddEntry(hAdapOVCco60M2, "OVC", "l");
-  legco2->AddEntry(hAdapPbRomco60M2, "PbRom", "l");
-  legco2->AddEntry(hAdapMBco60M2, "MB", "l");
+  legco2->AddEntry(hTeO2co60M2, "TeO2", "l");  
+  legco2->AddEntry(hCuFrameco60M2, "CuFrame", "l");
+  legco2->AddEntry(hCuBoxco60M2, "CuBox", "l");
+  legco2->AddEntry(h50mKco60M2, "50mK", "l");
+  legco2->AddEntry(h600mKco60M2, "600mK", "l");
+  legco2->AddEntry(hIVCco60M2, "IVC", "l");
+  legco2->AddEntry(hOVCco60M2, "OVC", "l");
+  legco2->AddEntry(hPbRomco60M2, "PbRom", "l");
+  legco2->AddEntry(hMBco60M2, "MB", "l");
   legco2->Draw();
 
 
