@@ -22,9 +22,9 @@ public:
 
 	TGraphErrors *CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid);
 
-	TGraphErrors *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
+	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	// TGraphErrors *CalculateResidualsAdaptiveM2(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
+	// TH1D *CalculateResidualsAdaptiveM2(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
 
   
 	double GetChiSquare();

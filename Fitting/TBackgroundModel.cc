@@ -1209,7 +1209,7 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid)
 	return hOut;
 }
 
-TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax)
+TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult)
 {
 
   if(binMin >= binMax)
@@ -1218,15 +1218,22 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
     break;
   }
 
+  if(dMult == 1)
+  {
+  TH1D  *hOut       = new TH1D("hOutM1", "Fit Residuals M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  }
+
+  if(dMult == 2)
+  {
+  TH1D  *hOut       = new TH1D("hOutM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  }
+
   // Clone histograms for rebinning
   TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
   TH1D  *hCloneMC   = (TH1D*)h2->Clone("hCloneMC");
 
-  TH1D  *hOut       = new TH1D("hOut", "Fit Residuals", dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-
   // Variables used in Residual calculations
-  double dResidualX, dResidualY, dResidualXErr = 0, dResidualYErr;
+  double dResidualX = 0, dResidualY = 0, dResidualXErr = 0, dResidualYErr = 0;
 
   // binMin = 50;
 
@@ -1236,23 +1243,19 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
 
 
     dResidualX    = hCloneBkg->GetBinCenter(j);
-    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize /
-              (TMath::Sqrt((hCloneBkg->GetBinContent(j)+hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize) ); // Sqrt(MC + data) = sigma for poisson distribution
-
-
-    // dResidualY  = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize; // not normalized
+    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize /
+              (TMath::Sqrt((hCloneBkg->GetBinContent(j)+hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize) ); // Sqrt(MC + data) = sigma for poisson distribution
+    // dResidualY  = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize; // not normalized
     // g1->SetPoint(j, dResidualX, dResidualY);
     hOut->SetBinContent(j, dResidualY);
-    hOut->SetBinError(j, 0.1);
-
-    // cout << "bin: " << j << " Energy: " << hCloneBkg->GetBinCenter(j) << "  Residual: " << dResidualY << endl;
-
+    hOut->SetBinError(j, 0.01);
+    // cout << "bin: " << j << " Energy: " << hCloneBkg->GetBinCenter(j) << " Bkg: " <<  hCloneBkg->GetBinContent(j) << " MC: " << hCloneMC->GetBinContent(j) << endl;
+    // cout << "   Residual: " << dResidualY << endl;
     hResid->Fill(dResidualY);
   }
-
-
   return hOut;
 }
+
 
 bool TBackgroundModel::DoTheFit()
 {
@@ -1666,7 +1669,6 @@ bool TBackgroundModel::DoTheFit()
   fModelTotSuM1->Add( hCuBoxSxu238M1_01,      fParameters[109] );
   fModelTotSuM1->Add( hCuBoxSxu238M1_1,       fParameters[110] );
   fModelTotSuM1->Add( hCuBoxSxu238M1_10,      fParameters[111] );
-
 
 // M2
   fModelTotthM2->Add( hTeO2th232M2,     fParameters[7]  );
@@ -4350,11 +4352,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
   hResidualGausM1 = new TH1D("hResidualGausM1", "Residual Distribution (M1)", 100, -50, 50);
-  hResidualDistM1 = CalculateResidualsAdaptive(fModelTotAdapM1, fAdapDataHistoM1, hResidualGausM1, dFitMinBinM1, dFitMaxBinM1);
+  hResidualDistM1 = CalculateResidualsAdaptive(fModelTotAdapM1, fAdapDataHistoM1, hResidualGausM1, dFitMinBinM1, dFitMaxBinM1, 1);
   hResidualDistM1->SetLineColor(kBlack);
   hResidualDistM1->SetName("Residuals");
   hResidualDistM1->SetTitle("Fit Residuals (M1)");
-  hResidualDistM1->SetMarkerStyle(25);
+  // hResidualDistM1->SetMarkerStyle(25);
   hResidualDistM1->GetXaxis()->SetTitle("Energy (keV)");
   // hResidualDistM1->GetXaxis()->SetTitleSize(0.04);
   // hResidualDistM1->GetXaxis()->SetLabelSize(0.05);
@@ -4369,15 +4371,15 @@ bool TBackgroundModel::DoTheFitAdaptive()
   TCanvas *cres1 = new TCanvas("cres1");
   hResidualGausM1->Draw();
 
-/*
+
 
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
   hResidualGausM2 = new TH1D("hResidualGausM2", "Residual Distribution (M2)", 100, -50, 50);  
-  hResidualDistM2 = CalculateResidualsAdaptive(fModelTotAdapM2, fDataHistoM2, hResidualGausM2, dFitMinBinM2, dFitMaxBinM2);
+  hResidualDistM2 = CalculateResidualsAdaptive(fModelTotAdapM2, fAdapDataHistoM2, hResidualGausM2, dFitMinBinM2, dFitMaxBinM2, 2);
   hResidualDistM2->SetLineColor(kBlack);
-  hResidualDistM2->SetMarkerStyle(25);
   hResidualDistM2->SetName("Residuals");
   hResidualDistM2->SetTitle("Fit Residuals (M2)");
+  // hResidualDistM2->SetMarkerStyle(25);
   hResidualDistM2->GetXaxis()->SetTitle("Energy (keV)");
   // hResidualDistM2->GetXaxis()->SetTitleSize(0.04);
   // hResidualDistM2->GetXaxis()->SetLabelSize(0.05);
@@ -4385,13 +4387,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM2->GetYaxis()->SetTitleSize(0.04); 
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
 
-  hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
+  // hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM2->Draw("E");
 
-  TCanvas *cres2 = new TCanvas();
+  TCanvas *cres2 = new TCanvas("cres2");
   hResidualGausM2->Draw();
 
-*/
+
 
 /*
   // Output integrals of stuff for limits
