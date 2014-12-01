@@ -762,6 +762,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 
   // Loads all of the PDFs from file
   Initialize();
+
+  // Do the fit now 
+  DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -1209,6 +1212,12 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid)
 TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax)
 {
 
+  if(binMin >= binMax)
+  {
+    cout << " min bin >= max bin" << endl;
+    break;
+  }
+
   // Clone histograms for rebinning
   TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
   TH1D  *hCloneMC   = (TH1D*)h2->Clone("hCloneMC");
@@ -1219,16 +1228,25 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   // Variables used in Residual calculations
   double dResidualX, dResidualY, dResidualXErr = 0, dResidualYErr;
 
-  // Residual plot and distribution
-  for (int j = binMin ; j <= binMax ; j++)
-  {
-    dResidualX    = hCloneBkg->GetBinCenter(j);
-    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j)) /
-              (TMath::Sqrt(hCloneBkg->GetBinContent(j))/hCloneBkg->GetBinWidth(i)); // Sqrt(MC + data) = sigma for poisson distribution
+  // binMin = 50;
 
+  // Residual plot and distribution
+  for(int j = binMin ; j < binMax ; j++)
+  {
+
+
+    dResidualX    = hCloneBkg->GetBinCenter(j);
+    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize /
+              (TMath::Sqrt((hCloneBkg->GetBinContent(j)+hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize) ); // Sqrt(MC + data) = sigma for poisson distribution
+
+
+    // dResidualY  = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*fAdapDataHistoM1->GetBinWidth(j)/dBinSize; // not normalized
     // g1->SetPoint(j, dResidualX, dResidualY);
     hOut->SetBinContent(j, dResidualY);
     hOut->SetBinError(j, 0.1);
+
+    // cout << "bin: " << j << " Energy: " << hCloneBkg->GetBinCenter(j) << "  Residual: " << dResidualY << endl;
+
     hResid->Fill(dResidualY);
   }
 
@@ -1249,7 +1267,6 @@ bool TBackgroundModel::DoTheFit()
    minuit.Command("SET STRategy 2");
   //minuit.Command("SET IMProve 1000 ");
    minuit.SetMaxIterations(10000);
-   // minuit.Command("SET MIGrad 10000")
    minuit.SetObjectFit(this); //see the external FCN  above
    
    //define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
@@ -2073,7 +2090,6 @@ void TBackgroundModel::DrawBkg()
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
   fAdapDataHistoM2->Draw();
-
 }
 
 // Calculates ChiSquare... model parameters not set here!
@@ -2956,7 +2972,6 @@ void TBackgroundModel::Initialize()
   }
 }
 
-
 // Loads the background data
 void TBackgroundModel::LoadData()
 {
@@ -3663,7 +3678,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(14, "CuFrame co58",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(15, "CuFrame co60",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(16, "CuFrame cs137",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(17, "CuFrame k40",  0., 0.1, 0., 1000000);
+   minuit->DefineParameter(17, "CuFrame k40",  0.0, 0.1, 0., 1000000);
    minuit->DefineParameter(18, "CuFrame mn54",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(19, "CuFrame pb210",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(20, "CuFrame th232",  0.1, 0.1, 0., 1000000);
@@ -3719,7 +3734,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(62, "SIth232",  0., 0.1, 0., 1000000);    
    minuit->DefineParameter(63, "SIu238",  0., 0.1, 0., 1000000);
 
-
+//////////////////////////////////////
    minuit->DefineParameter(64, "TeO2Spb210_01",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(65, "TeO2Spo210_001",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(66, "TeO2Spo210_01",  0., 0.1, 0., 1000000);
@@ -3768,7 +3783,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(109, "CuBoxSxu238_01",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
-
+//////////////////////////////////////
 
    // Fix parameters here
    minuit->FixParameter(0); // TeO2 0nu
@@ -3811,7 +3826,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(37); // 50mK u238
    minuit->FixParameter(38); // 600mK co60
    minuit->FixParameter(39); // 600mK k40
-   minuit->FixParameter(40); // 600mK th232
+   minuit->FixParameter(40); // 600mK th232   
    minuit->FixParameter(41); // 600mK u238
    minuit->FixParameter(42); // RLead bi207
    minuit->FixParameter(43); // RLead co60
@@ -3886,11 +3901,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(111); // CuBox Sx u238 10
    
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 17;
+   int dNumParameters = 4;
    //Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
    // int status = minuit->Migrad(); // this actually does the minimisation
-   int status = minuit->Command("MINImize 10000 0.1"); // better method
+   int status = minuit->Command("MINImize 50000 0.1"); // better method
    
   // Get final parameters from fit
   for(int i = 0; i < dNParam; i++)
@@ -4331,11 +4346,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   legfit2->Draw();
 
-/*
+
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
   hResidualGausM1 = new TH1D("hResidualGausM1", "Residual Distribution (M1)", 100, -50, 50);
-  hResidualDistM1 = CalculateResidualsAdaptive(fModelTotAdapM1, fDataHistoM1, hResidualGausM1, dFitMinBinM1, dFitMinBinM2);
+  hResidualDistM1 = CalculateResidualsAdaptive(fModelTotAdapM1, fAdapDataHistoM1, hResidualGausM1, dFitMinBinM1, dFitMaxBinM1);
   hResidualDistM1->SetLineColor(kBlack);
   hResidualDistM1->SetName("Residuals");
   hResidualDistM1->SetTitle("Fit Residuals (M1)");
@@ -4347,12 +4362,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM1->GetYaxis()->SetTitleSize(0.04); 
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
 
-  hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
+  // hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM1->Draw("E");
 
 
-  TCanvas *cres1 = new TCanvas();
+  TCanvas *cres1 = new TCanvas("cres1");
   hResidualGausM1->Draw();
+
+/*
 
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
   hResidualGausM2 = new TH1D("hResidualGausM2", "Residual Distribution (M2)", 100, -50, 50);  
@@ -4373,7 +4390,9 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   TCanvas *cres2 = new TCanvas();
   hResidualGausM2->Draw();
+
 */
+
 /*
   // Output integrals of stuff for limits
   cout << "ROI bin: " << fAdapDataHistoM1->FindBin(2470) << " " << fAdapDataHistoM1->FindBin(2570) << endl;
@@ -4756,6 +4775,5 @@ void TBackgroundModel::DrawMC()
   legco2->AddEntry(hPbRomco60M2, "PbRom", "l");
   legco2->AddEntry(hMBco60M2, "MB", "l");
   legco2->Draw();
-
 
 }
