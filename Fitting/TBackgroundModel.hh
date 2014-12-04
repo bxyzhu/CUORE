@@ -48,8 +48,6 @@ public:
 
 	void PrintParameters();
 
-	void PrintHesse();
-
 	void ReadMC();
 
 	void SetParameters(int index, double value);

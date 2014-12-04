@@ -3003,11 +3003,6 @@ void TBackgroundModel::LoadData()
   cout << "Loaded Data" << endl;
 }
 
-void TBackgroundModel::PrintHesse()
-{
-  minuit->Command("HESse");
-}
-
 // Prints parameters, needs update 11-06-2014
 void TBackgroundModel::PrintParameters()
 {
