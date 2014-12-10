@@ -45,7 +45,7 @@ void myExternal_FCN(int &n, double *grad, double &fval, double x[], int code)
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 {
-  dNParam = 112; // number of fitting parameters
+  dNParam = 114; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -1256,7 +1256,6 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   return hOut;
 }
 
-
 bool TBackgroundModel::DoTheFit()
 {
 	gStyle->SetOptStat(0);
@@ -2170,7 +2169,6 @@ double TBackgroundModel::GetChiSquareAdaptive()
   return chiSquare;
 }
 
-
 void TBackgroundModel::Initialize()
 {	
 
@@ -3017,7 +3015,7 @@ void TBackgroundModel::PrintParameters()
 void TBackgroundModel::SetParameters(int index, double value)
 {
 	// Change the index max depending on model
-	if(index > 112) cout << "Index too large" << endl;
+	if(index > dNParam) cout << "Index too large" << endl;
 	else fParameters[index] = value;
 }
 
@@ -3780,6 +3778,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(109, "CuBoxSxu238_01",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
+
+   minuit->DefineParameter(112, "Energy Scale Alphas",  1., 0.1, 0., 10);
+   minuit->DefineParameter(113, "Energy Scale Pt190",  1., 0.1, 0., 10);
+
 //////////////////////////////////////
 
    // Fix parameters here
@@ -3896,7 +3898,9 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(109); // CuBox Sx u238 01
    minuit->FixParameter(110); // CuBox Sx u238 1
    minuit->FixParameter(111); // CuBox Sx u238 10
-   
+   minuit->FixParameter(112); // Energy scale factor Alphas
+   minuit->FixParameter(113); // Energy scale factor Pt190
+
    // Number of Parameters (for Chi-squared/NDF calculation)
    int dNumParameters = 4;
    //Tell minuit what external function to use 
@@ -4419,7 +4423,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 112; i++ )
+  for(int i = 0; i < 114; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }

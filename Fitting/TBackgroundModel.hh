@@ -26,6 +26,7 @@ public:
 
 	// TH1D *CalculateResidualsAdaptiveM2(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
 
+	TH1D *CalculateRatioAdaptive();
   
 	double GetChiSquare();
 
@@ -754,8 +755,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[113];
-	double				fParError[113];
+	double				fParameters[115];
+	double				fParError[115];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[62];
