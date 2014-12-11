@@ -2987,7 +2987,7 @@ void TBackgroundModel::LoadData()
 
   // Currently using Jon's reduced file -- change for other input files
 
-  qtree->Add("/Users/brian/macros/Simulations/Toy/combi1/combi1.root"); 
+  qtree->Add("/Users/brian/macros/Simulations/Toy/combi2/combi2.root"); 
   qtree->Project("fDataHistoTot", "Ener2");
   qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
   qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
@@ -3659,14 +3659,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(1, "TeO2 2nu",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(2, "TeO2 co60",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(3, "TeO2 k40",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(4, "TeO2 pb210",  0., 0.1, 0., 1000000);
+   minuit->DefineParameter(4, "TeO2 pb210",  0.01, 0.1, 0., 1000000);
    minuit->DefineParameter(5, "TeO2 po210",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(6, "TeO2 te125",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(7, "TeO2 th232",  0.1, 0.1, 0., 1000000);
+   minuit->DefineParameter(7, "TeO2 th232",  0.01, 0.1, 0., 1000000);
    minuit->DefineParameter(8, "TeO2 th228",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(9, "TeO2 ra226",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(10, "TeO2 rn222",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(11, "TeO2 u238",  0.1, 0.1, 0., 1000000);
+   minuit->DefineParameter(11, "TeO2 u238",  0.01, 0.1, 0., 1000000);
    minuit->DefineParameter(12, "TeO2 th230",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(13, "TeO2 u234",  0., 0.1, 0., 1000000);
 
@@ -3676,8 +3676,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(17, "CuFrame k40",  0.0, 0.1, 0., 1000000);
    minuit->DefineParameter(18, "CuFrame mn54",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(19, "CuFrame pb210",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(20, "CuFrame th232",  0.1, 0.1, 0., 1000000);
-   minuit->DefineParameter(21, "CuFrame u238",  0., 0.1, 0., 1000000);
+   minuit->DefineParameter(20, "CuFrame th232",  0.01, 0.1, 0., 1000000);
+   minuit->DefineParameter(21, "CuFrame u238",  0.01, 0.1, 0., 1000000);
 
    minuit->DefineParameter(22, "CuBoxco58",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(23, "CuBoxco60",  0., 0.1, 0., 1000000);
@@ -3694,7 +3694,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(33, "50mKk40",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(34, "50mKmn54",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(35, "50mKpb210",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(36, "50mKth232",  0.1, 0.1, 0., 1000000);
+   minuit->DefineParameter(36, "50mKth232",  0.01, 0.1, 0., 1000000);
    minuit->DefineParameter(37, "50mKu238",  0., 0.1, 0., 1000000);
 
    minuit->DefineParameter(38, "600mKco60",  0., 0.1, 0., 1000000);
@@ -3737,7 +3737,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(68, "TeO2Su238_01",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(69, "TeO2Sxpb210_001",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(70, "TeO2Sxpb210_01",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(71, "TeO2Sxpb210_1",  0., 0.1, 0., 1000000);
+   minuit->DefineParameter(71, "TeO2Sxpb210_1",  0.01, 0.1, 0., 1000000);
    minuit->DefineParameter(72, "TeO2Sxpb210_10",  0., 0.1, 0., 1000000);    
    minuit->DefineParameter(73, "TeO2Sxpo210_001",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(74, "TeO2Sxpo210_01",  0., 0.1, 0., 1000000);
@@ -3779,8 +3779,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
 
-   minuit->DefineParameter(112, "Energy Scale Alphas",  1., 0.1, 0., 10);
-   minuit->DefineParameter(113, "Energy Scale Pt190",  1., 0.1, 0., 10);
+   minuit->DefineParameter(112, "Energy Scale Gammas and Alphas",  0., 0.01, 0., 10);
+   minuit->DefineParameter(113, "Energy Scale Pt190",  0., 0.1, 0., 10);
 
 //////////////////////////////////////
 
@@ -3789,7 +3789,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(1); // TeO2 2nu
    minuit->FixParameter(2); // TeO2 co60
    minuit->FixParameter(3); // TeO2 k40
-   minuit->FixParameter(4); // TeO2 pb210
+   // minuit->FixParameter(4); // TeO2 pb210
    minuit->FixParameter(5); // TeO2 po210
    minuit->FixParameter(6); // TeO2 te125m
    // minuit->FixParameter(7); // TeO2 th232
@@ -3806,7 +3806,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(18); // Frame mn54
    minuit->FixParameter(19); // Frame pb210
    // minuit->FixParameter(20); // Frame th232
-   minuit->FixParameter(21); // Frame u238
+   // minuit->FixParameter(21); // Frame u238
    minuit->FixParameter(22); // CuBox co58
    minuit->FixParameter(23); // CuBox co60
    minuit->FixParameter(24); // CuBox cs137
@@ -3857,7 +3857,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(68); // TeO2 S u238 01
    minuit->FixParameter(69); // TeO2 Sx pb210 001
    minuit->FixParameter(70); // TeO2 Sx pb210 01
-   minuit->FixParameter(71); // TeO2 Sx pb210 1
+   // minuit->FixParameter(71); // TeO2 Sx pb210 1
    minuit->FixParameter(72); // TeO2 S pb210 10
    minuit->FixParameter(73); // TeO2 Sx po210 001
    minuit->FixParameter(74); // TeO2 Sx po210 01
@@ -3898,11 +3898,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(109); // CuBox Sx u238 01
    minuit->FixParameter(110); // CuBox Sx u238 1
    minuit->FixParameter(111); // CuBox Sx u238 10
-   minuit->FixParameter(112); // Energy scale factor Alphas
+   minuit->FixParameter(112); // Energy scale factor Alphas and Gammas
    minuit->FixParameter(113); // Energy scale factor Pt190
 
    // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 4;
+   int dNumParameters = 7;
    //Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
    // int status = minuit->Migrad(); // this actually does the minimisation
@@ -4362,8 +4362,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM1->GetYaxis()->SetLabelSize(0.05);
   // hResidualDistM1->GetYaxis()->SetTitleSize(0.04); 
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
-
-  // hResidualDistM1->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM1->Draw("E");
 
 
@@ -4385,8 +4383,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM2->GetYaxis()->SetLabelSize(0.05);
   // hResidualDistM2->GetYaxis()->SetTitleSize(0.04); 
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
-
-  // hResidualDistM2->GetXaxis()->SetRange(dFitMin/dBinSize-5, dFitMax/dBinSize+5);
   hResidualDistM2->Draw("E");
 
   TCanvas *cres2 = new TCanvas("cres2");
@@ -4441,6 +4437,87 @@ void TBackgroundModel::DrawMC()
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
 
+  TLegend *legthsurf1 = new TLegend(0.65,0.7,0.95,0.95);
+
+  TCanvas *cTh2321 = new TCanvas("cTh2321", "cTh2321", 1200, 800);
+  cTh2321->SetLogy();
+
+  hTeO2th232M1->SetLineColor(1);
+  hCuFrameth232M1->SetLineColor(2);
+  hCuBoxth232M1->SetLineColor(3);
+  h50mKth232M1->SetLineColor(4);
+  h600mKth232M1->SetLineColor(5);
+  hIVCth232M1->SetLineColor(6);
+  hOVCth232M1->SetLineColor(7);
+  hPbRomth232M1->SetLineColor(8);
+  hMBth232M1->SetLineColor(9);
+  hSIth232M1->SetLineColor(11);
+
+  hTeO2th232M1->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2th232M1->GetYaxis()->SetTitle("Probability");  
+  hTeO2th232M1->DrawNormalized();
+  hCuFrameth232M1->DrawNormalized("SAME");
+  hCuBoxth232M1->DrawNormalized("SAME");
+  h50mKth232M1->DrawNormalized("SAME");
+  h600mKth232M1->DrawNormalized("SAME");
+  hIVCth232M1->DrawNormalized("SAME");
+  hOVCth232M1->DrawNormalized("SAME");
+  hPbRomth232M1->DrawNormalized("SAME");
+  hMBth232M1->DrawNormalized("SAME");
+  hSIth232M1->DrawNormalized("SAME");
+
+  legth1->AddEntry(hTeO2th232M1, "TeO2", "l");  
+  legth1->AddEntry(hCuFrameth232M1, "CuFrame", "l");
+  legth1->AddEntry(hCuBoxth232M1, "CuBox", "l");
+  legth1->AddEntry(h50mKth232M1, "50mK", "l");
+  legth1->AddEntry(h600mKth232M1, "600mK", "l");
+  legth1->AddEntry(hIVCth232M1, "IVC", "l");
+  legth1->AddEntry(hOVCth232M1, "OVC", "l");
+  legth1->AddEntry(hPbRomth232M1, "PbRom", "l");
+  legth1->AddEntry(hMBth232M1, "MB", "l");
+  legth1->AddEntry(hSIth232M1, "SI", "l");
+  legth1->Draw();
+
+  TCanvas *cTh2322 = new TCanvas("cTh2322", "cTh2322", 1200, 800);
+  cTh2322->SetLogy();
+
+  hTeO2th232M2->SetLineColor(1);
+  hCuFrameth232M2->SetLineColor(2);
+  hCuBoxth232M2->SetLineColor(3);
+  h50mKth232M2->SetLineColor(4);
+  h600mKth232M2->SetLineColor(5);
+  hIVCth232M2->SetLineColor(6);
+  hOVCth232M2->SetLineColor(7);
+  hPbRomth232M2->SetLineColor(8);
+  hMBth232M2->SetLineColor(9);
+  hSIth232M2->SetLineColor(11);
+
+  hTeO2th232M2->GetXaxis()->SetTitle("Energy (keV)");
+  hTeO2th232M2->GetYaxis()->SetTitle("Probability"); 
+  hTeO2th232M2->DrawNormalized();   
+  hCuFrameth232M2->DrawNormalized("SAME");
+  hCuBoxth232M2->DrawNormalized("SAME");
+  h50mKth232M2->DrawNormalized("SAME");
+  h600mKth232M2->DrawNormalized("SAME");
+  hIVCth232M2->DrawNormalized("SAME");
+  hOVCth232M2->DrawNormalized("SAME");
+  hPbRomth232M2->DrawNormalized("SAME");
+  hMBth232M2->DrawNormalized("SAME");
+  hSIth232M2->DrawNormalized("SAME");
+
+  legth2->AddEntry(hTeO2th232M2, "TeO2", "l");  
+  legth2->AddEntry(hCuFrameth232M2, "CuFrame", "l");
+  legth2->AddEntry(hCuBoxth232M2, "CuBox", "l");
+  legth2->AddEntry(h50mKth232M2, "50mK", "l");
+  legth2->AddEntry(h600mKth232M2, "600mK", "l");
+  legth2->AddEntry(hIVCth232M2, "IVC", "l");
+  legth2->AddEntry(hOVCth232M2, "OVC", "l");
+  legth2->AddEntry(hPbRomth232M2, "PbRom", "l");
+  legth2->AddEntry(hMBth232M2, "MB", "l");
+  legth2->AddEntry(hSIth232M2, "SI", "l");
+  legth2->Draw();
+
+/*
   TLegend *legth1 = new TLegend(0.65,0.7,0.95,0.95);
   TLegend *legu1 = new TLegend(0.65,0.7,0.95,0.95);
   TLegend *legk1 = new TLegend(0.65,0.7,0.95,0.95);
@@ -4776,5 +4853,7 @@ void TBackgroundModel::DrawMC()
   legco2->AddEntry(hPbRomco60M2, "PbRom", "l");
   legco2->AddEntry(hMBco60M2, "MB", "l");
   legco2->Draw();
+*/
+
 
 }

@@ -59,6 +59,8 @@ public:
 
 	void UpdateModelAdaptive();
 
+	void WriteParameters();	
+
 
 	int 	dNParam;
 	int 	dBinSize;
