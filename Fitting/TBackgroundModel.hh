@@ -47,8 +47,6 @@ public:
 	
 	void Test();
 
-	void UpdateModel();
-
 	void UpdateModelAdaptive();
 
 	void WriteParameters();	
@@ -137,6 +135,8 @@ private:
 	TH1D 			*fModelTotAdapSpoM1;
 	TH1D			*fModelTotAdapSpbM1;
 
+	TH1D			*fModelTotAdapAlphaM1;
+
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
 	TH1D			*fModelTotthM2;
@@ -179,6 +179,9 @@ private:
 	TH1D			*fModelTotAdapSuM2;
 	TH1D 			*fModelTotAdapSpoM2;
 	TH1D			*fModelTotAdapSpbM2;
+
+	TH1D			*fModelTotAdapAlphaM2;
+
 
 	// Residuals
 	TGraph			*gResidualM1;
