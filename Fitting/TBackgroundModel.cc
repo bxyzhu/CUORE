@@ -2241,7 +2241,12 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
   fModelTotAdapAlphaM1->Reset();
-  fModleTotAdapAlphaM2->Reset();
+  fModelTotAdapAlphaHighM1->Reset();
+  fModelTotAdapAlphaLowM1->Reset();
+  fModelTotAdapAlphaM2->Reset();
+  fModelTotAdapAlphaHighM2->Reset();
+  fModelTotAdapAlphaLowM2->Reset();
+
 
   dNumCalls++;
   if(dNumCalls%500==0)
@@ -2644,11 +2649,11 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
-  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 0.8 );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 1 );
   fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, 0.1 );
   fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, 0.1 );
 
-  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 0.8 );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 1 );
   fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, 0.1 );
   fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, 0.1 );
 
@@ -2656,6 +2661,7 @@ void TBackgroundModel::UpdateModelAdaptive()
 }
 
 // For whatever tests...
+// Currently testing energy scaling function
 void TBackgroundModel::Test()
 { 
   gStyle->SetOptStat(0);
@@ -2703,7 +2709,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(1);
+  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2");
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -2960,15 +2966,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(109); // CuBox Sx u238 01
    minuit->FixParameter(110); // CuBox Sx u238 1
    minuit->FixParameter(111); // CuBox Sx u238 10
-   minuit->FixParameter(112); // Energy scale factor High
-   minuit->FixParameter(113); // Energy scale factor Low
+   // minuit->FixParameter(112); // Energy scale factor High
+   // minuit->FixParameter(113); // Energy scale factor Low
 
-   // Number of Parameters (for Chi-squared/NDF calculation)
-   int dNumParameters = 28;
+   // Number of Parameters (for Chi-squared/NDF calculation only)
+   int dNumFreeParameters = 28;
    //Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
-   // int status = minuit->Migrad(); // this actually does the minimisation
-   int status = minuit->Command("MINImize 100000 0.1"); // better method
+   int status = minuit->Command("MINImize 100000 0.1"); // Command that actually does the minimization
    
   // Get final parameters from fit
   for(int i = 0; i < dNParam; i++)
@@ -2978,9 +2983,9 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // Update model with final parameters
   UpdateModelAdaptive();
   
-  cout << "At the end; ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumParameters) << endl; // for M1 and M2
-  // cout << "At the end; ChiSq/NDF = " << GetChiSquare()/((dFitMax-dFitMin)/dBinSize - dNumParameters) << endl;  // for M1
-  cout << "Total number of calls = " << dNumCalls << endl;
+  cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
+  cout << "ChiSq = " << GetChiSquareAdaptive() << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
+  cout << "Probability = " << TMath::Prob(GetChiSquareAdaptive(), (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
 
   ///////////////////////////////////////////
   //// Many Parameters
