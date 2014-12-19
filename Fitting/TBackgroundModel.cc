@@ -477,7 +477,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   fModelTotAdapSpbM1   = new TH1D("fModelTotAdapSpbM1",   "Total S pb210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelTotAdapSpoM1   = new TH1D("fModelTotAdapSpoM1",   "Total S po210",  dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  fModelTotAdapAlphaM1   = new TH1D("fModelTotAdapAlphaM1",   "Total Alphas",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapAlphaM1      = new TH1D("fModelTotAdapAlphaM1",   "Total Alphas",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapAlphaHighM1  = new TH1D("fModelTotAdapAlphaHighM1",   "Total Alphas High",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelTotAdapAlphaLowM1  = new TH1D("fModelTotAdapAlphaLowM1",   "Total Alphas Low",  dAdaptiveBinsM1, dAdaptiveArrayM1);
 
 
   // Total Adaptive binning histograms M2
@@ -503,8 +505,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   fModelTotAdapSpbM2   = new TH1D("fModelTotAdapSpbM2",   "Total S pb210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   fModelTotAdapSpoM2   = new TH1D("fModelTotAdapSpoM2",   "Total S po210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  fModelTotAdapAlphaM2   = new TH1D("fModelTotAdapAlphaM2",   "Total Alphas",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-
+  fModelTotAdapAlphaM2      = new TH1D("fModelTotAdapAlphaM2",   "Total Alphas",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapAlphaHighM2  = new TH1D("fModelTotAdapAlphaHighM2",   "Total Alphas High",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  fModelTotAdapAlphaLowM2  = new TH1D("fModelTotAdapAlphaLowM2",   "Total Alphas Low",  dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   // Crystal M1 and M2
   hAdapTeO20nuM1       = new TH1D("hAdapTeO20nuM1",    "hAdapTeO20nuM1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -766,6 +769,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   hAdapOVCk40M2       = new TH1D("hAdapOVCk40M2",    "hAdapOVCk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapOVCth232M2     = new TH1D("hAdapOVCth232M2",  "hAdapOVCth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
   hAdapOVCu238M2      = new TH1D("hAdapOVCu238M2",   "hAdapOVCu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+
+  hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+
 
 
   // Loads all of the PDFs from file
@@ -1316,31 +1323,17 @@ void TBackgroundModel::DrawBkg()
 }
 
 // This function applies an energy scaling of E' = dSlope*E + dConst
-TH1D *TBackgroundModel::EnergyScale(TH1D *hIn, double dConst, double dSlope, int dMult)
+TH1D *TBackgroundModel::EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope)
 {
+  hDummy->Reset();
+  int fBins = hDummy->GetNbinsX();
 
-  if(dMult == 1)
-  {
-    TH1D  *hOut       = new TH1D("hEnergyScaleM1", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-    for(int i = 1; i <= dAdaptiveBinsM1; i++)
+    for(int i = 1; i <= fBins; i++)
     {
-      hOut->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
+      hDummy->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
     }
-  }
 
-  if(dMult == 2)
-  {
-    TH1D  *hOut       = new TH1D("hEnergyScaleM2", "", dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-    for(int i = 1; i <= dAdaptiveBinsM2; i++)
-    {
-      hOut->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
-    }
-  }
-
-
-  return hOut;
+  return hDummy;
 }
 
 double TBackgroundModel::GetChiSquareAdaptive()
@@ -2644,11 +2637,11 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_10,     fParameters[111]);   
 
   // Create the 2 energyscale alphas...
-  fModelTotAdapAlphaHighM1 =  EnergyScale(fModelTotAdapAlphaM1, fParameters[112], fParameters[113], 1);
-  fModelTotAdapAlphaLowM1  =  EnergyScale(fModelTotAdapAlphaM1, fParameters[114], fParameters[115], 1);
+  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
+  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[113]) );
 
-  fModelTotAdapAlphaHighM2 =  EnergyScale(fModelTotAdapAlphaM2, fParameters[112], fParameters[113], 1);
-  fModelTotAdapAlphaLowM2  =  EnergyScale(fModelTotAdapAlphaM2, fParameters[114], fParameters[115], 1);
+  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[112]) );
+  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
   fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 0.8 );
@@ -2665,19 +2658,21 @@ void TBackgroundModel::UpdateModelAdaptive()
 // For whatever tests...
 void TBackgroundModel::Test()
 { 
+  gStyle->SetOptStat(0);
+
   TCanvas *c1 = new TCanvas("c1", "c1");
   c1->SetLogy();
   TH1D *hTest1 = new TH1D("hTest1", "hTest1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   TH1D *hTest2 = new TH1D("hTest2", "hTest2", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
 
-  hTest1 = EnergyScale(hAdapTeO2po210M1, 0, 0.999, 1);
-  hTest2 = EnergyScale(hAdapTeO2po210M1, 0, 1.001, 1);
+  hTest1->Add(EnergyScale(hAdapTeO2po210M1, hEnergyScaleDummyM1, 0, 0.999),1);
+  hTest2->Add(EnergyScale(hAdapTeO2po210M1, hEnergyScaleDummyM1, 0, 1.001),1);
   hAdapTeO2po210M1->SetLineColor(1);
   hTest1->SetLineColor(2);
-  hTest1->SetLineStyle(2);
+  // hTest1->SetLineStyle(2);
   hTest2->SetLineColor(3);
-  hTest2->SetLineStyle(2);
+  // hTest2->SetLineStyle(2);
 
 
   TH1D *hTest3 = new TH1D("hTest3", "hTest3", dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -2686,12 +2681,20 @@ void TBackgroundModel::Test()
   hTest3->Add(hTest2, 0.1);
 
   hTest3->SetLineColor(4);
-  hTest3->SetLineStyle(4);
+  // hTest3->SetLineStyle(4);
 
   hAdapTeO2po210M1->Draw();
   hTest1->Draw("SAME");
   hTest2->Draw("SAME");
   hTest3->Draw("SAME");
+
+  TLegend *leg = new TLegend(0.8,0.8,0.97,0.97);
+  leg->AddEntry(hAdapTeO2po210M1, "Original", "l");
+  leg->AddEntry(hTest1, "Scaled Low", "l");
+  leg->AddEntry(hTest2, "Scaled High", "l");
+  leg->AddEntry(hTest3, "Summed", "l");
+  leg->Draw();
+
 }
   
 bool TBackgroundModel::DoTheFitAdaptive()
@@ -4067,7 +4070,6 @@ void TBackgroundModel::DrawMC()
   legco2->AddEntry(hMBco60M2, "MB", "l");
   legco2->Draw();
 */
-
 }
 
 // For custom Smearing with resolution, currently constant resolution 
@@ -4123,4 +4125,20 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, int d
 
   return hSMC;
 }
+
+// Only use after fit
+// Need maybe an array with all of the names of the variables
+void TBackgroundModel::LatexResultTable()
+{
+  ofstream OutFile;
+  OutFile.open("OutputTable.txt");
+
+  for(int i = 0; i < dNParam; i++)
+  {
+    OutFile << "Name & " << fParameters[i] <<  " $\pm$" << fParError[i] << "\\" << endl;
+  }
+  OutFile.wcite();
+
+}
+
 

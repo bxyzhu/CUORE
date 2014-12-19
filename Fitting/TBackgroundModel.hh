@@ -20,7 +20,7 @@ public:
 
 	vector<double> AdaptiveBinning(TH1D *h1);
 
-	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
+	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
 
 	TGraphErrors *CalculateRatioAdaptive();
   
@@ -32,9 +32,11 @@ public:
 
 	void DrawMC();
 
-	TH1D* EnergyScale(TH1D *h1, double dConst, double dSlope, int dMult);
+	TH1D* EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope, int dMult);
 
 	void Initialize();
+
+	void LatexResultTable();
 
 	// Dumb to have all of these but w/e
 	void LoadData();
@@ -737,7 +739,8 @@ private:
 	TH1D			*hAdapOVCth232M2;
 	TH1D			*hAdapOVCu238M2;	
 
-
+	TH1D			*hEnergyScaleDummyM1;
+	TH1D			*hEnergyScaleDummyM2;
 
 	// TH1D			*hnewM1;
 	// TH1D			*hnewM2;
