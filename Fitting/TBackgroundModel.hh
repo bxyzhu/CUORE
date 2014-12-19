@@ -22,7 +22,7 @@ public:
 
 	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	TH1D *CalculateRatioAdaptive();
+	TGraphErrors *CalculateRatioAdaptive();
   
 	double GetChiSquareAdaptive();
 
@@ -31,6 +31,8 @@ public:
 	void DrawBkg();
 
 	void DrawMC();
+
+	TH1D* EnergyScale(TH1D *h1, double dConst, double dSlope, int dMult);
 
 	void Initialize();
 
@@ -45,6 +47,9 @@ public:
 
 	void SetParameters(int index, double value);
 	
+	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, int dMult);
+
+
 	void Test();
 
 	void UpdateModelAdaptive();
@@ -136,6 +141,8 @@ private:
 	TH1D			*fModelTotAdapSpbM1;
 
 	TH1D			*fModelTotAdapAlphaM1;
+	TH1D			*fModelTotAdapAlphaHighM1;
+	TH1D			*fModelTotAdapAlphaLowM1;
 
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
@@ -181,6 +188,8 @@ private:
 	TH1D			*fModelTotAdapSpbM2;
 
 	TH1D			*fModelTotAdapAlphaM2;
+	TH1D			*fModelTotAdapAlphaHighM2;
+	TH1D			*fModelTotAdapAlphaLowM2;
 
 
 	// Residuals
@@ -733,6 +742,10 @@ private:
 	// TH1D			*hnewM1;
 	// TH1D			*hnewM2;
 
+	// Smearing
+	TF1				*gaus;
+
+
 	TFile *fFile;
 	TFile *fFile2;
 
@@ -752,8 +765,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[115];
-	double				fParError[115];
+	double				fParameters[116];
+	double				fParError[116];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[62];

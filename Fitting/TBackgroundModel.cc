@@ -32,7 +32,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 114; i++ )
+  for(int i = 0; i < 116; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -44,7 +44,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 {
-  dNParam = 114; // number of fitting parameters
+  dNParam = 116; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -103,6 +103,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   // fDataHistoM2->Scale(1/((936398+14647393.0) * dSecToYears));  
 
   // cout << "Normalized Data using Livetime of: " << (936398+14647393.0) * dSecToYears << " years" << endl;
+
+
+  // Modeling
+  gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
 
 
   // Total model histograms M1
@@ -768,7 +772,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   Initialize();
 
   // Do the fit now 
-  DoTheFitAdaptive();
+  // DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -1142,7 +1146,6 @@ TBackgroundModel::~TBackgroundModel()
   delete hAdapOVCk40M2;
   delete hAdapOVCth232M2;
   delete hAdapOVCu238M2;  
-
 }
 
 // Returns vector of bin low-edge for adaptive binning
@@ -1193,12 +1196,12 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
 
   if(dMult == 1)
   {
-  TH1D  *hOut       = new TH1D("hOutM1", "Fit Residuals M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D  *hOut       = new TH1D("hOutResidualM1", "Fit Residuals M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   }
 
   if(dMult == 2)
   {
-  TH1D  *hOut       = new TH1D("hOutM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  TH1D  *hOut       = new TH1D("hOutResidualM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   }
 
   // Clone histograms for rebinning
@@ -1250,21 +1253,95 @@ void TBackgroundModel::DrawBkg()
   fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
   fDataHistoM2->Draw();
 
-  TCanvas *cBkgAdap1 = new TCanvas("cBkgAdap1", "cBkgAdap1", 1200, 800);
-  cBkgAdap1->SetLogy();
-  fAdapDataHistoM1->SetLineColor(1);
-  fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
-  fAdapDataHistoM1->Draw();
+  // TCanvas *cBkgAdap1 = new TCanvas("cBkgAdap1", "cBkgAdap1", 1200, 800);
+  // cBkgAdap1->SetLogy();
+  // fAdapDataHistoM1->SetLineColor(1);
+  // fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+  // fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
+  // fAdapDataHistoM1->Draw();
 
-  TCanvas *cBkgAdap2 = new TCanvas("cBkgAdap2", "cBkgAdap2", 1200, 800);
-  cBkgAdap2->SetLogy();
-  fAdapDataHistoM2->SetLineColor(1);
-  fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
-  fAdapDataHistoM2->Draw();
+  // TCanvas *cBkgAdap2 = new TCanvas("cBkgAdap2", "cBkgAdap2", 1200, 800);
+  // cBkgAdap2->SetLogy();
+  // fAdapDataHistoM2->SetLineColor(1);
+  // fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+  // fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
+  // fAdapDataHistoM2->Draw();
+  cout << "Old Number of bins: " << dNBins << " New number of bins (M1): " << dAdaptiveBinsM1 << " New number of bins (M2): " << dAdaptiveBinsM2 << endl;
+
+  double dFill = 0;
+
+  fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
+  fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
+
+
+
+  TH1D *hAdjustedM1 = new TH1D("hAdjustedM1", "M1 spectrum with adaptive binning", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *hAdjustedM2 = new TH1D("hAdjustedM2", "M2 spectrum with adaptive binning", dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+
+
+  for(int i = 1; i <= dAdaptiveBinsM1; i++)
+  {
+    dFill = 2*hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i);
+    hAdjustedM1->SetBinContent(i, dFill);
+    hAdjustedM1->SetBinError(i, TMath::Sqrt(2*hnewM1->GetBinContent(i))/hnewM1->GetBinWidth(i));
+  }
+
+  for(int i = 1; i <= dAdaptiveBinsM2; i++)
+  {
+    dFill = 2*hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i);
+    hAdjustedM2->SetBinContent(i, dFill);    
+    hAdjustedM2->SetBinError(i, TMath::Sqrt(2*hnewM2->GetBinContent(i))/hnewM2->GetBinWidth(i));
+  }
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 1200);
+  c1->Divide(1, 2);
+  c1->cd(1);
+  c1->SetLogy();
+  // fDataHistoM1->Draw("E");
+  // hAdjustedM1->SetLineColor(kRed);
+  // hAdjustedM1->SetLineStyle(2);
+  hAdjustedM1->Draw("E");
+  // hnew->SetLineColor(kRed);
+  // hnew->SetLineStyle(2);
+  // hnew->Draw("ESAME");
+
+  // TCanvas *c2 = new TCanvas("c2");
+  c1->cd(2); 
+  c1->SetLogy();
+  // fDataHistoM2->Draw("E");
+  // hAdjustedM2->SetLineColor(kRed);
+  // hAdjustedM2->SetLineStyle(2);
+  hAdjustedM2->Draw("E");
 }
 
+// This function applies an energy scaling of E' = dSlope*E + dConst
+TH1D *TBackgroundModel::EnergyScale(TH1D *hIn, double dConst, double dSlope, int dMult)
+{
+
+  if(dMult == 1)
+  {
+    TH1D  *hOut       = new TH1D("hEnergyScaleM1", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+    for(int i = 1; i <= dAdaptiveBinsM1; i++)
+    {
+      hOut->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
+    }
+  }
+
+  if(dMult == 2)
+  {
+    TH1D  *hOut       = new TH1D("hEnergyScaleM2", "", dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+    for(int i = 1; i <= dAdaptiveBinsM2; i++)
+    {
+      hOut->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
+    }
+  }
+
+
+  return hOut;
+}
 
 double TBackgroundModel::GetChiSquareAdaptive()
 {
@@ -2170,6 +2247,8 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Reset all bins in model histogram(s)
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
+  fModelTotAdapAlphaM1->Reset();
+  fModleTotAdapAlphaM2->Reset();
 
   dNumCalls++;
   if(dNumCalls%500==0)
@@ -2186,16 +2265,16 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapTeO22nuM1,      fParameters[1]);
   fModelTotAdapM1->Add( hAdapTeO2co60M1,     fParameters[2]);
   fModelTotAdapM1->Add( hAdapTeO2k40M1,      fParameters[3]);
-  fModelTotAdapM1->Add( hAdapTeO2pb210M1,    fParameters[4]);
-  fModelTotAdapM1->Add( hAdapTeO2po210M1,    fParameters[5]);
   fModelTotAdapM1->Add( hAdapTeO2te125M1,    fParameters[6]);
-  fModelTotAdapM1->Add( hAdapTeO2th232M1,    fParameters[7]);
-  fModelTotAdapM1->Add( hAdapTeO2th228M1,    fParameters[8]);
-  fModelTotAdapM1->Add( hAdapTeO2ra226M1,    fParameters[9]);
-  fModelTotAdapM1->Add( hAdapTeO2rn222M1,    fParameters[10]);
-  fModelTotAdapM1->Add( hAdapTeO2u238M1,     fParameters[11]);
-  fModelTotAdapM1->Add( hAdapTeO2th230M1,    fParameters[12]);
-  fModelTotAdapM1->Add( hAdapTeO2u234M1,     fParameters[13]);
+  // fModelTotAdapM1->Add( hAdapTeO2pb210M1,    fParameters[4]);
+  // fModelTotAdapM1->Add( hAdapTeO2po210M1,    fParameters[5]);
+  // fModelTotAdapM1->Add( hAdapTeO2th232M1,    fParameters[7]);
+  // fModelTotAdapM1->Add( hAdapTeO2th228M1,    fParameters[8]);
+  // fModelTotAdapM1->Add( hAdapTeO2ra226M1,    fParameters[9]);
+  // fModelTotAdapM1->Add( hAdapTeO2rn222M1,    fParameters[10]);
+  // fModelTotAdapM1->Add( hAdapTeO2u238M1,     fParameters[11]);
+  // fModelTotAdapM1->Add( hAdapTeO2th230M1,    fParameters[12]);
+  // fModelTotAdapM1->Add( hAdapTeO2u234M1,     fParameters[13]);
 
   fModelTotAdapM1->Add( hAdapCuFrameco58M1,  fParameters[14]);
   fModelTotAdapM1->Add( hAdapCuFrameco60M1,  fParameters[15]);
@@ -2256,6 +2335,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapSIth232M1,      fParameters[62]);
   fModelTotAdapM1->Add( hAdapSIu238M1,       fParameters[63]);
 
+/*
   fModelTotAdapM1->Add( hAdapTeO2Spb210M1_01,      fParameters[64]);
   fModelTotAdapM1->Add( hAdapTeO2Spo210M1_001,     fParameters[65]);
   fModelTotAdapM1->Add( hAdapTeO2Spo210M1_01,      fParameters[66]);
@@ -2306,22 +2386,23 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapCuBoxSxu238M1_01,     fParameters[109]);
   fModelTotAdapM1->Add( hAdapCuBoxSxu238M1_1,      fParameters[110]);
   fModelTotAdapM1->Add( hAdapCuBoxSxu238M1_10,     fParameters[111]);   
+*/
 
 // M2
   fModelTotAdapM2->Add( hAdapTeO20nuM2,      fParameters[0]);
   fModelTotAdapM2->Add( hAdapTeO22nuM2,      fParameters[1]);
   fModelTotAdapM2->Add( hAdapTeO2co60M2,     fParameters[2]);
   fModelTotAdapM2->Add( hAdapTeO2k40M2,      fParameters[3]);
-  fModelTotAdapM2->Add( hAdapTeO2pb210M2,    fParameters[4]);
-  fModelTotAdapM2->Add( hAdapTeO2po210M2,    fParameters[5]);
   fModelTotAdapM2->Add( hAdapTeO2te125M2,    fParameters[6]);
-  fModelTotAdapM2->Add( hAdapTeO2th232M2,    fParameters[7]);
-  fModelTotAdapM2->Add( hAdapTeO2th228M2,    fParameters[8]);
-  fModelTotAdapM2->Add( hAdapTeO2ra226M2,    fParameters[9]);
-  fModelTotAdapM2->Add( hAdapTeO2rn222M2,    fParameters[10]);
-  fModelTotAdapM2->Add( hAdapTeO2u238M2,     fParameters[11]);
-  fModelTotAdapM2->Add( hAdapTeO2th230M2,    fParameters[12]);
-  fModelTotAdapM2->Add( hAdapTeO2u234M2,     fParameters[13]);
+  // fModelTotAdapM2->Add( hAdapTeO2pb210M2,    fParameters[4]);
+  // fModelTotAdapM2->Add( hAdapTeO2po210M2,    fParameters[5]);
+  // fModelTotAdapM2->Add( hAdapTeO2th232M2,    fParameters[7]);
+  // fModelTotAdapM2->Add( hAdapTeO2th228M2,    fParameters[8]);
+  // fModelTotAdapM2->Add( hAdapTeO2ra226M2,    fParameters[9]);
+  // fModelTotAdapM2->Add( hAdapTeO2rn222M2,    fParameters[10]);
+  // fModelTotAdapM2->Add( hAdapTeO2u238M2,     fParameters[11]);
+  // fModelTotAdapM2->Add( hAdapTeO2th230M2,    fParameters[12]);
+  // fModelTotAdapM2->Add( hAdapTeO2u234M2,     fParameters[13]);
 
   fModelTotAdapM2->Add( hAdapCuFrameco58M2,  fParameters[14]);
   fModelTotAdapM2->Add( hAdapCuFrameco60M2,  fParameters[15]);
@@ -2382,6 +2463,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapSIth232M2,      fParameters[62]);
   fModelTotAdapM2->Add( hAdapSIu238M2,       fParameters[63]);  
 
+/*
   fModelTotAdapM2->Add( hAdapTeO2Spb210M2_01,      fParameters[64]);
   fModelTotAdapM2->Add( hAdapTeO2Spo210M2_001,     fParameters[65]);
   fModelTotAdapM2->Add( hAdapTeO2Spo210M2_01,      fParameters[66]);
@@ -2432,70 +2514,185 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapCuBoxSxu238M2_01,     fParameters[109]);
   fModelTotAdapM2->Add( hAdapCuBoxSxu238M2_1,      fParameters[110]);
   fModelTotAdapM2->Add( hAdapCuBoxSxu238M2_10,     fParameters[111]);  
+*/
+
+  //// Energy scale changes for alphas
+  // Need 1 histogram to add all the alphas before energy scale, 2 more histograms for the energy scale
+
+  // Add together all the alphas into 1 histogram
+  fModelTotAdapAlphaM1->Add( hAdapTeO2pb210M1,    fParameters[4]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2po210M1,    fParameters[5]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2th232M1,    fParameters[7]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2th228M1,    fParameters[8]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2ra226M1,    fParameters[9]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2rn222M1,    fParameters[10]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2u238M1,     fParameters[11]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2th230M1,    fParameters[12]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2u234M1,     fParameters[13]);
+
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Spb210M1_01,      fParameters[64]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Spo210M1_001,     fParameters[65]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Spo210M1_01,      fParameters[66]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sth232M1_01,      fParameters[67]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Su238M1_01,       fParameters[68]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpb210M1_001,    fParameters[69]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpb210M1_01,     fParameters[70]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpb210M1_1,      fParameters[71]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpb210M1_10,     fParameters[72]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpo210M1_001,    fParameters[73]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpo210M1_01,     fParameters[74]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxpo210M1_1,      fParameters[75]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxth232M1_001,    fParameters[76]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxth232M1_01,     fParameters[77]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxth232M1_1,      fParameters[78]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxth232M1_10,     fParameters[79]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxu238M1_001,     fParameters[80]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxu238M1_01,      fParameters[81]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxu238M1_1,       fParameters[82]);
+  fModelTotAdapAlphaM1->Add( hAdapTeO2Sxu238M1_10,      fParameters[83]);
+
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSth232M1_1,    fParameters[84]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSu238M1_1,     fParameters[85]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxpb210M1_001, fParameters[86]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxpb210M1_01,  fParameters[87]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxpb210M1_1,   fParameters[88]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxpb210M1_10,  fParameters[89]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxth232M1_001, fParameters[90]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxth232M1_01,  fParameters[91]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxth232M1_1,   fParameters[92]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxth232M1_10,  fParameters[93]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxu238M1_001,  fParameters[94]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxu238M1_01,   fParameters[95]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxu238M1_1,    fParameters[96]);
+  fModelTotAdapAlphaM1->Add( hAdapCuFrameSxu238M1_10,   fParameters[97]);
+
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSth232M1_1,      fParameters[98]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSu238M1_1,       fParameters[99]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxpb210M1_001,   fParameters[100]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxpb210M1_01,    fParameters[101]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxpb210M1_1,     fParameters[102]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxpb210M1_10,    fParameters[103]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxth232M1_001,   fParameters[104]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxth232M1_01,    fParameters[105]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxth232M1_1,     fParameters[106]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxth232M1_10,    fParameters[107]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxu238M1_001,    fParameters[108]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxu238M1_01,     fParameters[109]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxu238M1_1,      fParameters[110]);
+  fModelTotAdapAlphaM1->Add( hAdapCuBoxSxu238M1_10,     fParameters[111]);   
+
+
+  fModelTotAdapAlphaM2->Add( hAdapTeO2pb210M2,    fParameters[4]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2po210M2,    fParameters[5]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2th232M2,    fParameters[7]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2th228M2,    fParameters[8]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2ra226M2,    fParameters[9]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2rn222M2,    fParameters[10]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2u238M2,     fParameters[11]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2th230M2,    fParameters[12]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2u234M2,     fParameters[13]);
+
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Spb210M2_01,      fParameters[64]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Spo210M2_001,     fParameters[65]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Spo210M2_01,      fParameters[66]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sth232M2_01,      fParameters[67]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Su238M2_01,       fParameters[68]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpb210M2_001,    fParameters[69]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpb210M2_01,     fParameters[70]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpb210M2_1,      fParameters[71]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpb210M2_10,     fParameters[72]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpo210M2_001,    fParameters[73]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpo210M2_01,     fParameters[74]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpo210M2_1,      fParameters[75]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxth232M2_001,    fParameters[76]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxth232M2_01,     fParameters[77]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxth232M2_1,      fParameters[78]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxth232M2_10,     fParameters[79]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxu238M2_001,     fParameters[80]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxu238M2_01,      fParameters[81]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxu238M2_1,       fParameters[82]);
+  fModelTotAdapAlphaM2->Add( hAdapTeO2Sxu238M2_10,      fParameters[83]);
+
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSth232M2_1,    fParameters[84]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSu238M2_1,     fParameters[85]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxpb210M2_001, fParameters[86]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxpb210M2_01,  fParameters[87]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxpb210M2_1,   fParameters[88]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxpb210M2_10,  fParameters[89]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxth232M2_001, fParameters[90]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxth232M2_01,  fParameters[91]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxth232M2_1,   fParameters[92]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxth232M2_10,  fParameters[93]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxu238M2_001,  fParameters[94]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxu238M2_01,   fParameters[95]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxu238M2_1,    fParameters[96]);
+  fModelTotAdapAlphaM2->Add( hAdapCuFrameSxu238M2_10,   fParameters[97]);
+
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSth232M2_1,      fParameters[98]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSu238M2_1,       fParameters[99]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxpb210M2_001,   fParameters[100]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxpb210M2_01,    fParameters[101]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxpb210M2_1,     fParameters[102]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxpb210M2_10,    fParameters[103]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxth232M2_001,   fParameters[104]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxth232M2_01,    fParameters[105]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxth232M2_1,     fParameters[106]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxth232M2_10,    fParameters[107]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_001,    fParameters[108]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_01,     fParameters[109]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_1,      fParameters[110]);
+  fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_10,     fParameters[111]);   
+
+  // Create the 2 energyscale alphas...
+  fModelTotAdapAlphaHighM1 =  EnergyScale(fModelTotAdapAlphaM1, fParameters[112], fParameters[113], 1);
+  fModelTotAdapAlphaLowM1  =  EnergyScale(fModelTotAdapAlphaM1, fParameters[114], fParameters[115], 1);
+
+  fModelTotAdapAlphaHighM2 =  EnergyScale(fModelTotAdapAlphaM2, fParameters[112], fParameters[113], 1);
+  fModelTotAdapAlphaLowM2  =  EnergyScale(fModelTotAdapAlphaM2, fParameters[114], fParameters[115], 1);
+
+  // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
+  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 0.8 );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, 0.1 );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, 0.1 );
+
+  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 0.8 );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, 0.1 );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, 0.1 );
+
+
 }
 
 // For whatever tests...
-// Currently draws the background with adaptive binning
 void TBackgroundModel::Test()
 { 
-  // vector<double> Test;
-
-  // Test = AdaptiveBinning(fDataHistoM1);
-
-  // int bins = Test.size();
-  gStyle->SetOptStat(0);
-
-  cout << "Old Number of bins: " << dNBins << " New number of bins (M1): " << dAdaptiveBinsM1 << " New number of bins (M2): " << dAdaptiveBinsM2 << endl;
-
-  double dFill = 0;
-
-  fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
-  fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
-
-
-
-  TH1D *hAdjustedM1 = new TH1D("hAdjustedM1", "M1 spectrum with adaptive binning", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  TH1D *hAdjustedM2 = new TH1D("hAdjustedM2", "M2 spectrum with adaptive binning", dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-
-
-  for(int i = 1; i <= dAdaptiveBinsM1; i++)
-  {
-    dFill = 2*hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i);
-    hAdjustedM1->SetBinContent(i, dFill);
-    hAdjustedM1->SetBinError(i, TMath::Sqrt(2*hnewM1->GetBinContent(i))/hnewM1->GetBinWidth(i));
-  }
-
-  for(int i = 1; i <= dAdaptiveBinsM2; i++)
-  {
-    dFill = 2*hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i);
-    hAdjustedM2->SetBinContent(i, dFill);    
-    hAdjustedM2->SetBinError(i, TMath::Sqrt(2*hnewM2->GetBinContent(i))/hnewM2->GetBinWidth(i));
-  }
-
-  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 1200);
-  c1->Divide(1, 2);
-  c1->cd(1);
+  TCanvas *c1 = new TCanvas("c1", "c1");
   c1->SetLogy();
-  // fDataHistoM1->Draw("E");
-  // hAdjustedM1->SetLineColor(kRed);
-  // hAdjustedM1->SetLineStyle(2);
-  hAdjustedM1->Draw("E");
-  // hnew->SetLineColor(kRed);
-  // hnew->SetLineStyle(2);
-  // hnew->Draw("ESAME");
+  TH1D *hTest1 = new TH1D("hTest1", "hTest1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  TH1D *hTest2 = new TH1D("hTest2", "hTest2", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  // TCanvas *c2 = new TCanvas("c2");
-  c1->cd(2); 
-  c1->SetLogy();
-  // fDataHistoM2->Draw("E");
-  // hAdjustedM2->SetLineColor(kRed);
-  // hAdjustedM2->SetLineStyle(2);
-  hAdjustedM2->Draw("E");
+
+  hTest1 = EnergyScale(hAdapTeO2po210M1, 0, 0.999, 1);
+  hTest2 = EnergyScale(hAdapTeO2po210M1, 0, 1.001, 1);
+  hAdapTeO2po210M1->SetLineColor(1);
+  hTest1->SetLineColor(2);
+  hTest1->SetLineStyle(2);
+  hTest2->SetLineColor(3);
+  hTest2->SetLineStyle(2);
+
+
+  TH1D *hTest3 = new TH1D("hTest3", "hTest3", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hTest3->Add(hAdapTeO2po210M1, 0.8);
+  hTest3->Add(hTest1, 0.1);
+  hTest3->Add(hTest2, 0.1);
+
+  hTest3->SetLineColor(4);
+  hTest3->SetLineStyle(4);
+
+  hAdapTeO2po210M1->Draw();
+  hTest1->Draw("SAME");
+  hTest2->Draw("SAME");
+  hTest3->Draw("SAME");
 }
-
-
-
   
 bool TBackgroundModel::DoTheFitAdaptive()
 { 
@@ -2639,8 +2836,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
 
-   minuit->DefineParameter(112, "Energy Scale Gammas and Alphas",  0., 0.01, 0., 10);
-   minuit->DefineParameter(113, "Energy Scale Pt190",  0., 0.1, 0., 10);
+   minuit->DefineParameter(112, "Energy Scale High",  1.001., 0.00001, 1., 1.1);
+   minuit->DefineParameter(113, "Energy Scale Low",  0.999., 0.00001, 0.9, 1);
+   // minuit->DefineParameter(114, "Extra Smearing",         0., 0.001, 0., 5); // For alpha contamination...
+
 
 //////////////////////////////////////
 
@@ -2758,8 +2957,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(109); // CuBox Sx u238 01
    minuit->FixParameter(110); // CuBox Sx u238 1
    minuit->FixParameter(111); // CuBox Sx u238 10
-   minuit->FixParameter(112); // Energy scale factor Alphas and Gammas
-   minuit->FixParameter(113); // Energy scale factor Pt190
+   minuit->FixParameter(112); // Energy scale factor High
+   minuit->FixParameter(113); // Energy scale factor Low
 
    // Number of Parameters (for Chi-squared/NDF calculation)
    int dNumParameters = 28;
@@ -3098,9 +3297,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapSuM2->Add( hAdapCuBoxSxu238M2_01,      fParameters[109] );
   fModelTotAdapSuM2->Add( hAdapCuBoxSxu238M2_1,       fParameters[110] );
   fModelTotAdapSuM2->Add( hAdapCuBoxSxu238M2_10,      fParameters[111] );
-  ////////// Only for testing
-  // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(R*T)
-  // fTotCorrection->Add(fCorrectionM2, 180197*(1-TMath::Exp(-0.05*0.1)));
+
 
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
@@ -3432,8 +3629,6 @@ void TBackgroundModel::DrawMC()
   legpb2->AddEntry(hCuBoxSxpb210M2_10, "CuBox Sx Pb210 10", "l");
   legpb2->Draw();
 
-
-
 /*
   TCanvas *cPb2101 = new TCanvas("cPb2101", "cPb2101", 1200, 800);
   cPb2101->SetLogy();
@@ -3534,7 +3729,6 @@ void TBackgroundModel::DrawMC()
   legpo2->AddEntry(hTeO2Sxpo210M2_001, "TeO2 Sx po210 0.01", "l");
   legpo2->Draw();
 */
-
 
 /*
   TLegend *legth1 = new TLegend(0.65,0.7,0.95,0.95);
@@ -3874,5 +4068,59 @@ void TBackgroundModel::DrawMC()
   legco2->Draw();
 */
 
-
 }
+
+// For custom Smearing with resolution, currently constant resolution 
+TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, int dMult)
+{
+  // Reset previously Modeled histogram
+  hSMC->Reset();
+
+  double dNorm;
+  double dSmearedValue;
+
+  for(dMult == 1)
+  {
+  for(int i = 0; i < dAdaptiveBinsM1 ; i++)
+  {
+    for(int j = 0; j < dAdaptiveBinsM1; j++)
+    {
+      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+      dNorm = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+
+      // Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+      gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+
+      // Smeared contribution from gaussian centered at bin j for bin i 
+      dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
+
+      // Fill bin i with contribution from gaussian centered at bin j
+      hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
+    }
+  }
+  }
+
+  for(dMult == 2)
+  {
+  for(int i = 0; i < dAdaptiveBinsM2 ; i++)
+  {
+    for(int j = 0; j < dAdaptiveBinsM2; j++)
+    {
+      // Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+      dNorm = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*resolution1);
+
+      // Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+      gaus->SetParameters(dNorm, hMC->GetBinCenter(j), resolution1);
+
+      // Smeared contribution from gaussian centered at bin j for bin i 
+      dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
+
+      // Fill bin i with contribution from gaussian centered at bin j
+      hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
+    }
+  }
+  }
+
+  return hSMC;
+}
+
