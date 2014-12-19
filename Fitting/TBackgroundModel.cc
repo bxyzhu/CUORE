@@ -32,7 +32,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 116; i++ )
+  for(int i = 0; i < 117; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -44,7 +44,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 {
-  dNParam = 116; // number of fitting parameters
+  dNParam = 117; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -2249,7 +2249,7 @@ void TBackgroundModel::UpdateModelAdaptive()
 
 
   dNumCalls++;
-  if(dNumCalls%500==0)
+  if(dNumCalls%1000==0)
   {
     cout << "Call #: "<< dNumCalls << endl;
   }
@@ -2642,18 +2642,18 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_10,     fParameters[111]);   
 
   // Create the 2 energyscale alphas...
-  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
-  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[113]) );
+  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, fParameters[114], fParameters[112]) );
+  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, fParameters[114], fParameters[113]) );
 
-  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[112]) );
-  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
+  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, fParameters[115], fParameters[112]) );
+  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, fParameters[115], fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
-  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 1 );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 0.8 );
   fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, 0.1 );
   fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, 0.1 );
 
-  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 1 );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 0.8 );
   fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, 0.1 );
   fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, 0.1 );
 
@@ -2845,9 +2845,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
 
-   minuit->DefineParameter(112, "Energy Scale High",  1.001., 0.00001, 1., 1.1);
-   minuit->DefineParameter(113, "Energy Scale Low",  0.999., 0.00001, 0.9, 1);
-   // minuit->DefineParameter(114, "Extra Smearing",         0., 0.001, 0., 5); // For alpha contamination...
+   minuit->DefineParameter(112, "Energy Scale High Slope",  1.001., 0.00005, 1., 1.1);
+   minuit->DefineParameter(113, "Energy Scale Low Slope",  0.999., 0.00005, 0.9, 1);
+   minuit->DefineParameter(114, "Energy Scale High Const", 0., 0.01, -5., 5); // For alpha contamination...
+   minuit->DefineParameter(115, "Energy Scale Low Const", 0., 0.01, -5., 5); // For alpha contamination...
 
 
 //////////////////////////////////////
@@ -2855,7 +2856,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // Fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
    // minuit->FixParameter(1); // TeO2 2nu
-   // minuit->FixParameter(2); // TeO2 co60
+   minuit->FixParameter(2); // TeO2 co60
    minuit->FixParameter(3); // TeO2 k40
    minuit->FixParameter(4); // TeO2 pb210
    // minuit->FixParameter(5); // TeO2 po210
@@ -2930,28 +2931,28 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(73); // TeO2 Sx po210 001
    // minuit->FixParameter(74); // TeO2 Sx po210 01
    // minuit->FixParameter(75); // TeO2 Sx po210 1
-   minuit->FixParameter(76); // TeO2 Sx th232 001
-   minuit->FixParameter(77); // TeO2 Sx th232 01
-   minuit->FixParameter(78); // TeO2 Sx th232 1
-   minuit->FixParameter(79); // TeO2 Sx th232 10
-   minuit->FixParameter(80); // TeO2 Sx u238 001
-   minuit->FixParameter(81); // TeO2 Sx u238 01
-   minuit->FixParameter(82); // TeO2 Sx u238 1
-   minuit->FixParameter(83); // TeO2 Sx u238 10
+   // minuit->FixParameter(76); // TeO2 Sx th232 001
+   // minuit->FixParameter(77); // TeO2 Sx th232 01
+   // minuit->FixParameter(78); // TeO2 Sx th232 1
+   // minuit->FixParameter(79); // TeO2 Sx th232 10
+   // minuit->FixParameter(80); // TeO2 Sx u238 001
+   // minuit->FixParameter(81); // TeO2 Sx u238 01
+   // minuit->FixParameter(82); // TeO2 Sx u238 1
+   // minuit->FixParameter(83); // TeO2 Sx u238 10
    minuit->FixParameter(84); // Frame S th232 1
-   minuit->FixParameter(85); // Frame S u238 1
+   minuit->FixParameter(85); // Frame S u238 1 
    // minuit->FixParameter(86); // Frame Sx pb210 001
    // minuit->FixParameter(87); // Frame Sx pb210 01
-   minuit->FixParameter(88); // Frame Sx pb210 1
-   minuit->FixParameter(89); // Frame Sx pb210 10
-   minuit->FixParameter(90); // Frame Sx th232 001
-   minuit->FixParameter(91); // Frame Sx th232 01
-   minuit->FixParameter(92); // Frame Sx th232 1
-   minuit->FixParameter(93); // Frame Sx th232 10
-   minuit->FixParameter(94); // Frame Sx u238 001
-   minuit->FixParameter(95); // Frame Sx u238 01
-   minuit->FixParameter(96); // Frame Sx u238 1
-   minuit->FixParameter(97); // Frame Sx u238 10
+   // minuit->FixParameter(88); // Frame Sx pb210 1
+   // minuit->FixParameter(89); // Frame Sx pb210 10
+   // minuit->FixParameter(90); // Frame Sx th232 001
+   // minuit->FixParameter(91); // Frame Sx th232 01
+   // minuit->FixParameter(92); // Frame Sx th232 1
+   // minuit->FixParameter(93); // Frame Sx th232 10
+   // minuit->FixParameter(94); // Frame Sx u238 001
+   // minuit->FixParameter(95); // Frame Sx u238 01
+   // minuit->FixParameter(96); // Frame Sx u238 1
+   // minuit->FixParameter(97); // Frame Sx u238 10
    minuit->FixParameter(98); // CuBox S th232 1
    minuit->FixParameter(99); // CuBox S u238 1
    // minuit->FixParameter(100); // CuBox Sx pb210 001
@@ -2968,7 +2969,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(111); // CuBox Sx u238 10
    // minuit->FixParameter(112); // Energy scale factor High
    // minuit->FixParameter(113); // Energy scale factor Low
-
+   // minuit->FixParameter(114);
+   // minuit->FixParameter(115);
    // Number of Parameters (for Chi-squared/NDF calculation only)
    int dNumFreeParameters = 28;
    //Tell minuit what external function to use 
