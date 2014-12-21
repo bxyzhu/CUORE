@@ -32,7 +32,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 117; i++ )
+  for(int i = 0; i < 118; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -44,7 +44,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 {
-  dNParam = 117; // number of fitting parameters
+  dNParam = 118; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -779,7 +779,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   Initialize();
 
   // Do the fit now 
-  // DoTheFitAdaptive();
+  DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -1238,6 +1238,29 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   }
   return hOut;
 }
+
+TGraphErrors *TBackgroundModel::CalculateRatioAdaptive()
+{
+  double gGraphX, gGraphY;
+  double gGraphErrorX, gGraphErrorY;
+
+
+  if(dMult == 1)
+  {
+    for(i = 0; i < dAdaptiveBinsM1; i++)
+    {
+      gGraphY = fAdapDataHistoM1->GetBinContent(i)/fModelTotAdapM1->GetBinContent(i); 
+      gGraphX = fAdapDataHistoM1->GetBinCenter(i);
+
+      gGraphErrorX = fAdapDataHistoM1->GetBinWidth(i);
+      gGraphErrorY = TMath::Sqrt(gGraphY*gGraphY * (1/fAdapDataHistoM1->GetBinContent(i) + 1/fModelTotAdapM1->GetBinContent(i)) )) ;
+    }
+  }
+
+
+  return 0;
+}
+
 
 // Draws background spectrum
 void TBackgroundModel::DrawBkg()
@@ -2642,20 +2665,20 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2->Add( hAdapCuBoxSxu238M2_10,     fParameters[111]);   
 
   // Create the 2 energyscale alphas...
-  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, fParameters[114], fParameters[112]) );
-  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, fParameters[114], fParameters[113]) );
+  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
+  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[113]) );
 
-  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, fParameters[115], fParameters[112]) );
-  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, fParameters[115], fParameters[113]) );
+  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[112]) );
+  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
-  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 0.8 );
-  fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, 0.1 );
-  fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, 0.1 );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, fParameters[114] );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, fParameters[115] );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, fParameters[116] );
 
-  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 0.8 );
-  fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, 0.1 );
-  fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, 0.1 );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, fParameters[114] );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, fParameters[115] );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, fParameters[116] );
 
 
 }
@@ -2845,10 +2868,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(110, "CuBoxSxu238_1",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(111, "CuBoxSxu238_10",  0., 0.1, 0., 1000000);
 
-   minuit->DefineParameter(112, "Energy Scale High Slope",  1.001., 0.00005, 1., 1.1);
-   minuit->DefineParameter(113, "Energy Scale Low Slope",  0.999., 0.00005, 0.9, 1);
-   minuit->DefineParameter(114, "Energy Scale High Const", 0., 0.01, -5., 5); // For alpha contamination...
-   minuit->DefineParameter(115, "Energy Scale Low Const", 0., 0.01, -5., 5); // For alpha contamination...
+   minuit->DefineParameter(112, "Energy Scale High Slope",  1.00., 0.005, 1., 1.1);
+   minuit->DefineParameter(113, "Energy Scale Low Slope",  1., 0.005, 0.9, 1);
+   minuit->DefineParameter(114, "Energy Scale High Percent", 0.0, 0.001, 0., 1); // For alpha contamination...
+   minuit->DefineParameter(115, "Energy Scale Low Percent", 0.0, 0.001, 0., 1); // For alpha contamination...
+   minuit->DefineParameter(116, "Energy Scale Correct Percent", 1, 0.01, 0., 1); // For alpha contamination...
 
 
 //////////////////////////////////////
@@ -2931,10 +2955,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(73); // TeO2 Sx po210 001
    // minuit->FixParameter(74); // TeO2 Sx po210 01
    // minuit->FixParameter(75); // TeO2 Sx po210 1
-   // minuit->FixParameter(76); // TeO2 Sx th232 001
-   // minuit->FixParameter(77); // TeO2 Sx th232 01
-   // minuit->FixParameter(78); // TeO2 Sx th232 1
-   // minuit->FixParameter(79); // TeO2 Sx th232 10
+   minuit->FixParameter(76); // TeO2 Sx th232 001
+   minuit->FixParameter(77); // TeO2 Sx th232 01
+   minuit->FixParameter(78); // TeO2 Sx th232 1
+   minuit->FixParameter(79); // TeO2 Sx th232 10
    // minuit->FixParameter(80); // TeO2 Sx u238 001
    // minuit->FixParameter(81); // TeO2 Sx u238 01
    // minuit->FixParameter(82); // TeO2 Sx u238 1
@@ -2945,20 +2969,20 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(87); // Frame Sx pb210 01
    // minuit->FixParameter(88); // Frame Sx pb210 1
    // minuit->FixParameter(89); // Frame Sx pb210 10
-   // minuit->FixParameter(90); // Frame Sx th232 001
-   // minuit->FixParameter(91); // Frame Sx th232 01
-   // minuit->FixParameter(92); // Frame Sx th232 1
-   // minuit->FixParameter(93); // Frame Sx th232 10
-   // minuit->FixParameter(94); // Frame Sx u238 001
-   // minuit->FixParameter(95); // Frame Sx u238 01
-   // minuit->FixParameter(96); // Frame Sx u238 1
-   // minuit->FixParameter(97); // Frame Sx u238 10
+   minuit->FixParameter(90); // Frame Sx th232 001
+   minuit->FixParameter(91); // Frame Sx th232 01
+   minuit->FixParameter(92); // Frame Sx th232 1
+   minuit->FixParameter(93); // Frame Sx th232 10
+   minuit->FixParameter(94); // Frame Sx u238 001
+   minuit->FixParameter(95); // Frame Sx u238 01
+   minuit->FixParameter(96); // Frame Sx u238 1
+   minuit->FixParameter(97); // Frame Sx u238 10
    minuit->FixParameter(98); // CuBox S th232 1
    minuit->FixParameter(99); // CuBox S u238 1
    // minuit->FixParameter(100); // CuBox Sx pb210 001
    // minuit->FixParameter(101); // CuBox Sx pb210 01
-   minuit->FixParameter(102); // CuBox Sx pb210 1
-   minuit->FixParameter(103); // CuBox Sx pb210 10 
+   // minuit->FixParameter(102); // CuBox Sx pb210 1
+   // minuit->FixParameter(103); // CuBox Sx pb210 10 
    minuit->FixParameter(104); // CuBox Sx th232 001
    minuit->FixParameter(105); // CuBox Sx th232 01
    minuit->FixParameter(106); // CuBox Sx th232 1
@@ -2967,15 +2991,17 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(109); // CuBox Sx u238 01
    minuit->FixParameter(110); // CuBox Sx u238 1
    minuit->FixParameter(111); // CuBox Sx u238 10
-   // minuit->FixParameter(112); // Energy scale factor High
-   // minuit->FixParameter(113); // Energy scale factor Low
-   // minuit->FixParameter(114);
-   // minuit->FixParameter(115);
+   minuit->FixParameter(112); // Energy scale factor High
+   minuit->FixParameter(113); // Energy scale factor Low
+   minuit->FixParameter(114); // Energy scale proportion high
+   minuit->FixParameter(115); // Energy scale proprtion low
+   minuit->FixParameter(116); // Energy scale proprtion correct
+
    // Number of Parameters (for Chi-squared/NDF calculation only)
    int dNumFreeParameters = 28;
    //Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
-   int status = minuit->Command("MINImize 100000 0.1"); // Command that actually does the minimization
+   int status = minuit->Command("MINImize 500000 0.1"); // Command that actually does the minimization
    
   // Get final parameters from fit
   for(int i = 0; i < dNParam; i++)
@@ -3344,8 +3370,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // fModelTotAdapmnM1->SetLineColor(40);
   // fModelTotAdapmnM1->SetLineStyle(2);
 
-  fModelTotAdapSpoM1->SetLineStyle(2);
-  fModelTotAdapSpoM1->SetLineColor(8);
+  fModelTotAdapSpoM1->SetLineStyle(9);
+  fModelTotAdapSpoM1->SetLineColor(44);
 
   fModelTotAdapSpbM1->SetLineStyle(2);
   fModelTotAdapSpbM1->SetLineColor(40);
@@ -3439,8 +3465,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // fTotCorrection->SetLineColor(38);
 
 
-  fModelTotAdapSpoM2->SetLineStyle(2);
-  fModelTotAdapSpoM2->SetLineColor(8);
+  fModelTotAdapSpoM2->SetLineStyle(9);
+  fModelTotAdapSpoM2->SetLineColor(44);
 
   fModelTotAdapSpbM2->SetLineStyle(2);
   fModelTotAdapSpbM2->SetLineColor(40);
@@ -3552,6 +3578,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
 */
+  LatexResultTable();
 
   return true;
 
@@ -4138,13 +4165,13 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, int d
 void TBackgroundModel::LatexResultTable()
 {
   ofstream OutFile;
-  OutFile.open("OutputTable.txt");
+  OutFile.open("FitOutputTable.txt");
 
   for(int i = 0; i < dNParam; i++)
   {
-    OutFile << "Name & " << fParameters[i] <<  " $\pm$" << fParError[i] << "\\" << endl;
+    OutFile << minuit->fCpnam[i] << Form(" & %.2f$\\pm$%.1f \\\\ ", fParameters[i], fParError[i] ) << endl;
   }
-  OutFile.wcite();
+  OutFile.close();
 
 }
 
