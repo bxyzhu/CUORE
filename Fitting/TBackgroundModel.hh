@@ -49,8 +49,7 @@ public:
 
 	void SetParameters(int index, double value);
 	
-	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1, int dMult);
-
+	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1);
 
 	void Test();
 
@@ -207,6 +206,7 @@ private:
 
 
 	TH1D			*fModelDummyM1;
+	TH1D			*fModelDummyM2;
 
 
 //////////// Bulk Histograms
@@ -768,9 +768,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	char 				fParName[118];
-	double				fParameters[118];
-	double				fParError[118];
+	double				fParameters[119];
+	double				fParError[119];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[62];
