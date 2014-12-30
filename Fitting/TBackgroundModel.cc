@@ -791,7 +791,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   Initialize();
 
   // Do the fit now 
-  // DoTheFitAdaptive();
+  DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -2989,8 +2989,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(3); // TeO2 k40
    minuit->FixParameter(4); // TeO2 pb210
    // minuit->FixParameter(5); // TeO2 po210
-   // minuit->FixParameter(6); // TeO2 te125m
-   // minuit->FixParameter(7); // TeO2 th232
+   minuit->FixParameter(6); // TeO2 te125m
+   minuit->FixParameter(7); // TeO2 th232
    minuit->FixParameter(8); // TeO2 th232-th228
    minuit->FixParameter(9); // TeO2 u238-ra226
    minuit->FixParameter(10); // TeO2 u238-rn222
@@ -3006,7 +3006,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(20); // Frame th232
    // minuit->FixParameter(21); // Frame u238
    minuit->FixParameter(22); // CuBox co58
-   // minuit->FixParameter(23); // CuBox co60
+   minuit->FixParameter(23); // CuBox co60
    minuit->FixParameter(24); // CuBox cs137
    minuit->FixParameter(25); // CuBox k40
    minuit->FixParameter(26); // CuBox mn54
@@ -3215,7 +3215,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapcoM1->Add( hAdapCuBoxco58M1,     fParameters[22] );
   fModelTotAdapcoM1->Add( hAdap50mKco58M1,      fParameters[30] );
 
-  // fModelTotAdapteo2M1->Add( hAdapTeO2po210M1,   fParameters[5] );
   fModelTotAdapteo2M1->Add( hAdapTeO2te125M1,   fParameters[6] );
   fModelTotAdapteo2M1->Add( hAdapTeO2th228M1,   fParameters[8] );
   fModelTotAdapteo2M1->Add( hAdapTeO2ra226M1,   fParameters[9] );
@@ -3373,7 +3372,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapcoM2->Add( hAdapCuBoxco58M2,     fParameters[22] );
   fModelTotAdapcoM2->Add( hAdap50mKco58M2,      fParameters[30] );
 
-  // fModelTotAdapteo2M2->Add( hAdapTeO2po210M2,   fParameters[5] );
   fModelTotAdapteo2M2->Add( hAdapTeO2te125M2,   fParameters[6] );
   fModelTotAdapteo2M2->Add( hAdapTeO2th228M2,   fParameters[8] );
   fModelTotAdapteo2M2->Add( hAdapTeO2ra226M2,   fParameters[9] );
@@ -3454,7 +3452,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
   fAdapDataHistoM1->SetMaximum(90000);
   // fAdapDataHistoM1->GetXaxis()->SetRange(1, fAdapDataHistoM1->FindBin(3000));
-  fAdapDataHistoM1->Draw();
+  fAdapDataHistoM1->Draw("E");
 
 
   fModelTotAdapM1->SetLineColor(2);
@@ -3545,7 +3543,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
   fAdapDataHistoM2->SetMaximum(9000);
   // fAdapDataHistoM2->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
-  fAdapDataHistoM2->Draw();
+  fAdapDataHistoM2->Draw("E");
 
   
   fModelTotAdapM2->SetLineColor(2);
@@ -3646,7 +3644,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hResidualDistM1->Draw("E");
 
 
-  TCanvas *cres1 = new TCanvas("cres1");
+  TCanvas *cres1 = new TCanvas("cres1", "cres1", 800, 600);
   hResidualGausM1->Draw();
 
 
@@ -3668,7 +3666,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   hResidualDistM2->Draw("E");
 
-  TCanvas *cres2 = new TCanvas("cres2");
+  TCanvas *cres2 = new TCanvas("cres2", "cres2", 800, 600);
   hResidualGausM2->Draw();
 
 
@@ -3682,19 +3680,21 @@ bool TBackgroundModel::DoTheFitAdaptive()
   gTest->Draw("p");
 */
 
-/*
+
   // Output integrals of stuff for limits
-  cout << "ROI bin: " << fAdapDataHistoM1->FindBin(2470) << " " << fAdapDataHistoM1->FindBin(2570) << endl;
-  cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470)) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Th PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Ra PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total K PDF in ROI: " << fModelTotAdapkM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapkM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total Bi PDF in ROI: " << fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapbiM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;  
-  cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-  cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2470) )) << endl;
-*/
+  cout << "ROI range: " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)) << " " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) << " keV" << endl; // 2486 to 2572
+  cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570)) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total Th-232 PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total U-238 PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;  
+  cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+  cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
+
+
+
   LatexResultTable();
 
   return true;
