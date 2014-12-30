@@ -22,7 +22,7 @@ public:
 
 	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
 
-	TGraphErrors *CalculateRatioAdaptive();
+	TGraphErrors *CalculateRatioAdaptive(TH1D *hData, TH1D *hModel, TGraphErrors *gGraphOut);
   
 	double GetChiSquareAdaptive();
 
@@ -205,9 +205,19 @@ private:
 
 
 
-	TH1D			*fModelDummyM1;
-	TH1D			*fModelDummyM2;
+	TH1D			*fModelDummy1M1;
+	TH1D			*fModelDummy2M1;
+	TH1D			*fModelDummy3M1;
+	TH1D			*fModelDummy4M1;
+	TH1D			*fModelDummy5M1;
+	TH1D			*fModelDummy6M1;
 
+	TH1D			*fModelDummy1M2;
+	TH1D			*fModelDummy2M2;
+	TH1D			*fModelDummy3M2;
+	TH1D			*fModelDummy4M2;
+	TH1D			*fModelDummy5M2;
+	TH1D			*fModelDummy6M2;
 
 //////////// Bulk Histograms
 	// Crystal M1 and M2
