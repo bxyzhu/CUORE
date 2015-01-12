@@ -1186,110 +1186,110 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   {
     // Added per each peak
     // Pt peak 3200 - 3400
-    if(i >= 1601 && i < 1701)
+    if(i >= 1600 && i < 1702)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(1601));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(1600));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+100;
+     i = i+102;
     }
     // 4050 - 4150
-    if(i >= 2026 && i < 2076)
+    if(i >= 2025 && i < 2077)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2026));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2025));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+52;
     }
     // 4200 - 4350
-    if(i >= 2101 && i < 2176)
+    if(i >= 2100 && i < 2177)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2101));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2100));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+75;
+     i = i+77;
     }    
 
     // 4750 - 4850
-    if(i >= 2376 && i < 2426)
+    if(i >= 2375 && i < 2427)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2376));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2375));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+52;
     }
 
     // 4850 - 4950
-    if(i >= 2426 && i < 2476)
+    if(i >= 2425 && i < 2477)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2426));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2425));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+52;
     }
 
     // 5250 - 5400
-    if(i >= 2626 && i < 2701)
+    if(i >= 2625 && i < 2702)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2626));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2625));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+75;
+     i = i+77;
     }
     // 5400 - 5650
-    if(i >= 2701 && i < 2826)
+    if(i >= 2700 && i < 2827)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2701));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2700));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+125;
+     i = i+127;
     }
 
     // 5800 - 5900
-    if(i >= 2901 && i < 2951)
+    if(i >= 2900 && i < 2952)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2901));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2900));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+52;
     }    
 
     // 6050 - 6350
-    if(i >= 3026 && i < 3176)
+    if(i >= 3025 && i < 3177)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3026));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3025));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+150;
+     i = i+152;
     }    
 
     // 6700 - 6900
-    if(i >= 3351 && i < 3451)
+    if(i >= 3350 && i < 3452)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3351));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3350));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+100;
+     i = i+102;
     }    
 
     dDummy = h1->GetBinContent(i);
@@ -1365,20 +1365,35 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
 
 TGraphErrors *TBackgroundModel::CalculateRatioAdaptive(TH1D *hData, TH1D *hModel, TGraphErrors *gGraphOut)
 {
-  double gGraphX, gGraphY;
-  double gGraphErrorX, gGraphErrorY;
-
   int binMax = hData->GetNbinsX();
 
+  vector<double> gGraphX;
+  vector<double> gGraphY;
+  vector<double> gGraphErrorX;
+  vector<double> gGraphErrorY;
 
-  for(i = 0; i < binMax; i++)
+  double dDummyError;
+
+  for(int i = 250; i < binMax; i++)
   {
-    gGraphY = hData->GetBinContent(i)/hModel->GetBinContent(i); 
-    gGraphX = hData->GetBinCenter(i);
+    // cout << "X: " << hData->GetBinCenter(i) << "\t" << "Y: " << hData->GetBinContent(i)/hModel->GetBinContent(i) << endl;
+    gGraphY.push_back(hData->GetBinContent(i)/hModel->GetBinContent(i)); 
+    gGraphX.push_back(hData->GetBinCenter(i));
 
-    gGraphErrorX = hData->GetBinWidth(i);
-    gGraphErrorY = TMath::Sqrt(gGraphY*gGraphY * (1/hData->GetBinContent(i) + 1/hModel->GetBinContent(i)) )) ;
+    gGraphErrorX.push_back(hData->GetBinWidth(i));
+
+    dDummyError = TMath::Sqrt( hData->GetBinContent(i)/hModel->GetBinContent(i)*hData->GetBinContent(i)/hModel->GetBinContent(i) * (1/hData->GetBinContent(i) + 1/hModel->GetBinContent(i)) );
+    // cout << "Error: " << dDummyError << endl;
+    gGraphErrorY.push_back(dDummyError);
+    // gGraphErrorY.push_back(1);
   }
+
+  double *gGraphX1 = &gGraphX[0];
+  double *gGraphY1 = &gGraphY[0];
+  double *gGraphErrorX1 = &gGraphErrorX[0];
+  double *gGraphErrorY1 = &gGraphErrorY[0];
+
+  gGraphOut = new TGraphErrors(binMax, gGraphX1, gGraphY1, gGraphErrorX1, gGraphErrorY1);
 
   return gGraphOut;
 }
@@ -2304,12 +2319,6 @@ void TBackgroundModel::LoadData()
 	}
 
   // Currently using Jon's reduced file -- change for other input files
-/*
-  qtree->Add("/Users/brian/macros/Simulations/Toy/combi2/combi2.root"); 
-  qtree->Project("fDataHistoTot", "Ener2");
-  qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
-  qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
-*/
   
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
   qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root");   
@@ -2791,7 +2800,6 @@ void TBackgroundModel::Test()
   // gStyle->SetOptStat(0);
   // gStyle->SetOptTitle(0);
 
-
 /*
   TCanvas *c1 = new TCanvas("c1", "c1");
   c1->SetLogy();
@@ -2836,7 +2844,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2");
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -3000,7 +3008,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(14); // Frame co58
    // minuit->FixParameter(15); // Frame co60
    minuit->FixParameter(16); // Frame cs137
-   minuit->FixParameter(17); // Frame k40
+   // minuit->FixParameter(17); // Frame k40
    minuit->FixParameter(18); // Frame mn54
    minuit->FixParameter(19); // Frame pb210
    // minuit->FixParameter(20); // Frame th232
@@ -3011,16 +3019,16 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(25); // CuBox k40
    minuit->FixParameter(26); // CuBox mn54
    minuit->FixParameter(27); // CuBox pb210
-   // minuit->FixParameter(28); // CuBox th232
-   // minuit->FixParameter(29); // CuBox u238
+   minuit->FixParameter(28); // CuBox th232
+   minuit->FixParameter(29); // CuBox u238
    minuit->FixParameter(30); // 50mK co58
-   // minuit->FixParameter(31); // 50mK co60
+   minuit->FixParameter(31); // 50mK co60
    minuit->FixParameter(32); // 50mK cs137
-   // minuit->FixParameter(33); // 50mK k40
+   minuit->FixParameter(33); // 50mK k40
    minuit->FixParameter(34); // 50mK mn54
    minuit->FixParameter(35); // 50mK pb210
-   // minuit->FixParameter(36); // 50mK th232
-   // minuit->FixParameter(37); // 50mK u238
+   minuit->FixParameter(36); // 50mK th232
+   minuit->FixParameter(37); // 50mK u238
    minuit->FixParameter(38); // 600mK co60
    minuit->FixParameter(39); // 600mK k40
    minuit->FixParameter(40); // 600mK th232   
@@ -3040,10 +3048,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(54); // IVC k40
    // minuit->FixParameter(55); // IVC th232
    // minuit->FixParameter(56); // IVC u238
-   minuit->FixParameter(57); // OVC co60
-   minuit->FixParameter(58); // OVC k40
-   minuit->FixParameter(59); // OVC th232
-   minuit->FixParameter(60); // OVC u238
+   // minuit->FixParameter(57); // OVC co60
+   // minuit->FixParameter(58); // OVC k40
+   // minuit->FixParameter(59); // OVC th232
+   // minuit->FixParameter(60); // OVC u238
    minuit->FixParameter(61); // SI k40
    minuit->FixParameter(62); // SI th232
    minuit->FixParameter(63); // SI u238   
@@ -3053,10 +3061,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->FixParameter(66); // TeO2 S po210 01
    minuit->FixParameter(67); // TeO2 S th232 01
    minuit->FixParameter(68); // TeO2 S u238 01
-   // minuit->FixParameter(69); // TeO2 Sx pb210 001
-   // minuit->FixParameter(70); // TeO2 Sx pb210 01
-   // minuit->FixParameter(71); // TeO2 Sx pb210 1
-   // minuit->FixParameter(72); // TeO2 Sx pb210 10
+   minuit->FixParameter(69); // TeO2 Sx pb210 001
+   minuit->FixParameter(70); // TeO2 Sx pb210 01
+   minuit->FixParameter(71); // TeO2 Sx pb210 1
+   minuit->FixParameter(72); // TeO2 Sx pb210 10
    // minuit->FixParameter(73); // TeO2 Sx po210 001
    // minuit->FixParameter(74); // TeO2 Sx po210 01
    // minuit->FixParameter(75); // TeO2 Sx po210 1
@@ -3081,7 +3089,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // minuit->FixParameter(94); // Frame Sx u238 001
    // minuit->FixParameter(95); // Frame Sx u238 01
    // minuit->FixParameter(96); // Frame Sx u238 1
-   // minuit->FixParameter(97); // Frame Sx u238 10
+   // minuit->FixParameter(97); // Frame Sx u238 100
    minuit->FixParameter(98); // CuBox S th232 1
    minuit->FixParameter(99); // CuBox S u238 1
    // minuit->FixParameter(100); // CuBox Sx pb210 001
@@ -3670,30 +3678,60 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hResidualGausM2->Draw();
 
 
-/*
-  TGraphErrors *gTest;
-  gTest = CalculateRatioAdaptive(fAdapDataHistoM1, fModelTotAdapM1, gTest);
-  TCanvas *cGraph = new TCanvas("cGraph", "cGraph", 1200, 800);
-  gTest->SetFillColor(2);
-  gTest->SetFillStyle(3001);
-  gTest->Draw("a2");
-  gTest->Draw("p");
-*/
 
+  TGraphErrors *gTestM1;
+  gTestM1 = CalculateRatioAdaptive(fAdapDataHistoM1, fModelTotAdapM1, gTestM1);
+  TCanvas *cGraphM1 = new TCanvas("cGraphM1", "cGraphM1", 1200, 800);
+
+  TAxis *axisM1 = gTestM1->GetXaxis();
+  axisM1->SetLimits(0, 10000);
+  gTestM1->SetTitle("");
+  gTestM1->GetHistogram()->SetMaximum(15);
+  gTestM1->GetHistogram()->SetMinimum(-10);
+  gTestM1->SetFillColor(2);
+  gTestM1->SetFillStyle(3001);
+  gTestM1->Draw("a2");
+  // gTestM1->Draw("p");
+
+
+  TGraphErrors *gTestM2;
+  gTestM2 = CalculateRatioAdaptive(fAdapDataHistoM2, fModelTotAdapM2, gTestM2);
+  TCanvas *cGraphM2 = new TCanvas("cGraphM2", "cGraphM2", 1200, 800);
+
+  TAxis *axisM2 = gTestM2->GetXaxis();
+  axisM2->SetLimits(0, 10000);
+  gTestM2->SetTitle("");
+  gTestM2->GetHistogram()->SetMaximum(15);
+  gTestM2->GetHistogram()->SetMinimum(-10);
+  gTestM2->SetFillColor(2);
+  gTestM2->SetFillStyle(3001);
+  gTestM2->Draw("a2");
+  // gTestM2->Draw("p");
+
+
+  double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)); 
 
   // Output integrals of stuff for limits
   cout << "ROI range: " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)) << " " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) << " keV" << endl; // 2486 to 2572
-  cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570)) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total Th-232 PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total U-238 PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;  
-  cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-  cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570) )) << endl;
-
-
+  cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width") << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total Th-232 PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total U-238 PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;  
+  // cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  cout << endl;
+  cout << "Integral Data in ROI (counts/keV): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total PDF in ROI (counts/keV): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total Th-232 PDF in ROI (counts/keV): " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total U-238 PDF in ROI (counts/keV): " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total Co PDF in ROI (counts/keV): " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total Pb-210 PDF in ROI (counts/keV): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
+  // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
 
   LatexResultTable();
 
@@ -4270,4 +4308,17 @@ void TBackgroundModel::LatexResultTable()
 
 }
 
+double TBackgroundModel::GetCorrelation(TH1D *h1, TH1D *h2)
+{
+  int binMax = hMC->GetNbinsX();
 
+  double dDummyIntegral = 0;
+
+  for (int i = 0; i < binMax; i++)
+  {
+    dDummyIntegral += h1->GetBinContent(i)*h2->GetBinContent(i);
+  }
+
+
+  return dDummyIntegral;
+}

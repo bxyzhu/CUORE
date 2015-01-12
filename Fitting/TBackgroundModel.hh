@@ -26,6 +26,9 @@ public:
   
 	double GetChiSquareAdaptive();
 
+	double GetCorrelation(TH1D *h1, TH1D *h2);
+
+
 	bool DoTheFitAdaptive();
 
 	void DrawBkg();
