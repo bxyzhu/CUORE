@@ -1186,110 +1186,110 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   {
     // Added per each peak
     // Pt peak 3200 - 3400
-    if(i >= 1600 && i < 1702)
+    if(i >= 1601 && i < 1701)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(1600));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(1601));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+102;
+     i = i+100;
     }
     // 4050 - 4150
-    if(i >= 2025 && i < 2077)
+    if(i >= 2026 && i < 2076)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2025));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2026));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+52;
+     i = i+50;
     }
     // 4200 - 4350
-    if(i >= 2100 && i < 2177)
+    if(i >= 2101 && i < 2176)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2100));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2101));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+77;
+     i = i+75;
     }    
 
     // 4750 - 4850
-    if(i >= 2375 && i < 2427)
+    if(i >= 2376 && i < 2426)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2375));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2376));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+52;
+     i = i+50;
     }
 
     // 4850 - 4950
-    if(i >= 2425 && i < 2477)
+    if(i >= 2426 && i < 2476)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2425));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2426));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+52;
+     i = i+50;
     }
 
     // 5250 - 5400
-    if(i >= 2625 && i < 2702)
+    if(i >= 2626 && i < 2701)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2625));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2626));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+77;
+     i = i+75;
     }
     // 5400 - 5650
-    if(i >= 2700 && i < 2827)
+    if(i >= 2701 && i < 2826)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2700));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2701));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+127;
+     i = i+125;
     }
 
     // 5800 - 5900
-    if(i >= 2900 && i < 2952)
+    if(i >= 2901 && i < 2951)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2900));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2901));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+52;
+     i = i+50;
     }    
 
     // 6050 - 6350
-    if(i >= 3025 && i < 3177)
+    if(i >= 3026 && i < 3176)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3025));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3026));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+152;
+     i = i+150;
     }    
 
     // 6700 - 6900
-    if(i >= 3350 && i < 3452)
+    if(i >= 3351 && i < 3451)
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3350));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3351));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+102;
+     i = i+100;
     }    
 
     dDummy = h1->GetBinContent(i);
@@ -2844,7 +2844,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2");
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
