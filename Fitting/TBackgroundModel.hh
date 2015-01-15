@@ -73,6 +73,9 @@ public:
 	int 	dFitMinBinM2;
 	int 	dFitMaxBinM2;
 
+	double 	dLivetime;
+	double 	dLivetimeYr;
+
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;
 	vector<double> dAdaptiveVectorM1;

@@ -58,6 +58,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   dMinEnergy = 0.;
   dMaxEnergy = 10000.;
 
+  dLivetime = 23077930; // seconds
+  dLivetimeYr = dLivetime*dSecToYears;
+
   if(fFitMin >= fFitMax)
   {
     cout << "Fit Min >= Fit Max!" << endl;
@@ -3732,6 +3735,19 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  cout << "2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/fParameters[1] << endl;
+
+/*
+    2nbb calculation:
+     - TeO2 molar mass: 159.6 g/mol
+     - half life is 9.81 * 10^20 years
+     - how many in Q0 data so far? 1/rate = half life/ln(2) -> rate = ln(2)/half life = 7.066*10^-22 decays/year (Laura's thesis)
+     - Moles = 750g * 49 crystals * 0.3408 abundance/159.6 g/mol = 78.474 mol total
+     - N = 78.474 * N_A = 4.726*10^25 nuclei of Te130
+     - N_2nbb = N * rate * livetime = 1.551*10^4 events
+*/
+
+
 
   LatexResultTable();
 
