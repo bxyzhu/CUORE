@@ -1429,10 +1429,14 @@ void TBackgroundModel::DrawBkg()
   c1->Divide(1, 2);
   c1->cd(1);
   c1->SetLogy();
+  fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/bin");  
   fAdapDataHistoM1->Draw("E");
 
   c1->cd(2); 
   c1->SetLogy();
+  fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/bin");   
   fAdapDataHistoM2->Draw("E");
 }
 
@@ -2893,13 +2897,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(29, "CuBox u238",  0., 0.1, 0., 1000000);
 
    minuit->DefineParameter(30, "50mK co58",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(31, "50mK co60",  100, 0.1, 0., 1000000);
+   minuit->DefineParameter(31, "50mK co60",  0, 0.1, 0., 1000000);
    minuit->DefineParameter(32, "50mK cs137",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(33, "50mK k40",  100, 0.1, 0., 1000000);
+   minuit->DefineParameter(33, "50mK k40",  0, 0.1, 0., 1000000);
    minuit->DefineParameter(34, "50mK mn54",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(35, "50mK pb210",  0., 0.1, 0., 1000000);
-   minuit->DefineParameter(36, "50mK th232",  100, 0.1, 0., 1000000);
-   minuit->DefineParameter(37, "50mK u238",  100, 0.1, 0., 1000000);
+   minuit->DefineParameter(36, "50mK th232",  0, 0.1, 0., 1000000);
+   minuit->DefineParameter(37, "50mK u238",  0, 0.1, 0., 1000000);
 
    minuit->DefineParameter(38, "600mK co60",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(39, "600mK k40",  0., 0.1, 0., 1000000); 
@@ -2919,10 +2923,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
    minuit->DefineParameter(51, "MB th232",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(52, "MB u238",  0., 0.1, 0., 1000000);
 
-   minuit->DefineParameter(53, "IVC co60",  100, 0.1, 0., 1000000);
-   minuit->DefineParameter(54, "IVC k40",  100, 0.1, 0., 1000000);
-   minuit->DefineParameter(55, "IVC th232",  100, 0.1, 0., 1000000);
-   minuit->DefineParameter(56, "IVC u238",  100, 0.1, 0., 1000000);
+   minuit->DefineParameter(53, "IVC co60",  0, 0.1, 0., 1000000);
+   minuit->DefineParameter(54, "IVC k40",  0, 0.1, 0., 1000000);
+   minuit->DefineParameter(55, "IVC th232",  0, 0.1, 0., 1000000);
+   minuit->DefineParameter(56, "IVC u238",  0, 0.1, 0., 1000000);
 
    minuit->DefineParameter(57, "OVC co60",  0., 0.1, 0., 1000000);
    minuit->DefineParameter(58, "OVC k40",  0., 0.1, 0., 1000000);
@@ -3735,7 +3739,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  cout << "2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/fParameters[1] << endl;
+  cout << "2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/fParameters[1] << " +/- " << endl;
 
 /*
     2nbb calculation:
@@ -3745,6 +3749,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
      - Moles = 750g * 49 crystals * 0.3408 abundance/159.6 g/mol = 78.474 mol total
      - N = 78.474 * N_A = 4.726*10^25 nuclei of Te130
      - N_2nbb = N * rate * livetime = 1.551*10^4 events
+     - half life = rate * ln(2) = ln(2) * N * livetime / N_2nbb
+
 */
 
 
