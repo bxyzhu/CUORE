@@ -3,6 +3,7 @@
 #include "TObject.h"
 #include "TFile.h"
 #include "TH1D.h"
+#include "TH2D.h"
 #include "TF1.h"
 #include "TChain.h"
 #include "TCut.h"
@@ -21,13 +22,8 @@ public:
 	vector<double> AdaptiveBinning(TH1D *h1);
 
 	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
-
-	TGraphErrors *CalculateRatioAdaptive(TH1D *hData, TH1D *hModel, TGraphErrors *gGraphOut);
   
 	double GetChiSquareAdaptive();
-
-	double GetCorrelation(TH1D *h1, TH1D *h2);
-
 
 	bool DoTheFitAdaptive();
 
@@ -72,16 +68,21 @@ public:
 	int 	dFitMaxBinM1;
 	int 	dFitMinBinM2;
 	int 	dFitMaxBinM2;
+	int 	dFitMinBinM2Sum;
+	int 	dFitMaxBinM2Sum;	
 
 	double 	dLivetime;
 	double 	dLivetimeYr;
 
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;
+	int 	dAdaptiveBinsM2Sum;
 	vector<double> dAdaptiveVectorM1;
 	vector<double> dAdaptiveVectorM2;
+	vector<double> dAdaptiveVectorM2Sum;
 	double 	*dAdaptiveArrayM1;
 	double 	*dAdaptiveArrayM2;
+	double 	*dAdaptiveArrayM2Sum;
 
 private:
 
@@ -97,13 +98,14 @@ private:
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
+	TH1D			*fDataHistoM2Sum;
 
 	TH1D			*fAdapDataHistoM1;
 	TH1D			*fAdapDataHistoM2;
+	TH1D			*fAdapDataHistoM2Sum;
 
 
-
-	// To be updated 11-05-2014
+	// Updated 01-20-2015
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
 	TH1D			*fModelTotthM1;
@@ -125,6 +127,7 @@ private:
 	TH1D			*fModelTotSuM1;
 	TH1D 			*fModelTotSpoM1;
 	TH1D			*fModelTotSpbM1;
+	TH1D			*fModelTotExtM1;
 
 	TH1D			*fModelTotAdapM1;
 	TH1D			*fModelTotAdapthM1;
@@ -146,6 +149,8 @@ private:
 	TH1D			*fModelTotAdapSuM1;
 	TH1D 			*fModelTotAdapSpoM1;
 	TH1D			*fModelTotAdapSpbM1;
+	TH1D			*fModelTotAdapExtM1;
+
 
 	TH1D			*fModelTotAdapAlphaM1;
 	TH1D			*fModelTotAdapAlphaHighM1;
@@ -172,6 +177,7 @@ private:
 	TH1D			*fModelTotSuM2;
 	TH1D 			*fModelTotSpoM2;
 	TH1D			*fModelTotSpbM2;
+	TH1D			*fModelTotExtM2;
 
 	TH1D			*fModelTotAdapM2;
 	TH1D			*fModelTotAdapthM2;
@@ -193,40 +199,79 @@ private:
 	TH1D			*fModelTotAdapSuM2;
 	TH1D 			*fModelTotAdapSpoM2;
 	TH1D			*fModelTotAdapSpbM2;
+	TH1D			*fModelTotAdapExtM2;
+
 
 	TH1D			*fModelTotAdapAlphaM2;
 	TH1D			*fModelTotAdapAlphaHighM2;
 	TH1D			*fModelTotAdapAlphaLowM2;
 
+	// Total PDFs M2Sum
+	TH1D			*fModelTotM2Sum;
+	TH1D			*fModelTotthM2Sum;
+	TH1D			*fModelTotuM2Sum;
+	TH1D			*fModelTotkM2Sum;
+	TH1D			*fModelTotcoM2Sum;
+	TH1D			*fModelTotmnM2Sum;
+	TH1D			*fModelTotNDBDM2Sum;
+	TH1D			*fModelTot2NDBDM2Sum;
+	TH1D			*fModelTotbiM2Sum;
+	TH1D			*fModelTotbi2M2Sum;
+	TH1D			*fModelTotptM2Sum;
+	TH1D			*fModelTotpbM2Sum;
+	TH1D			*fModelTotcsM2Sum;
+	TH1D			*fModelTotco2M2Sum;
+	TH1D			*fModelTotteo2M2Sum;
 
-	// Residuals
+	TH1D			*fModelTotSthM2Sum;
+	TH1D			*fModelTotSuM2Sum;
+	TH1D 			*fModelTotSpoM2Sum;
+	TH1D			*fModelTotSpbM2Sum;
+	TH1D			*fModelTotExtM2Sum;
+
+	TH1D			*fModelTotAdapM2Sum;
+	TH1D			*fModelTotAdapthM2Sum;
+	TH1D			*fModelTotAdapuM2Sum;
+	TH1D			*fModelTotAdapkM2Sum;
+	TH1D			*fModelTotAdapcoM2Sum;
+	TH1D			*fModelTotAdapmnM2Sum;
+	TH1D			*fModelTotAdapNDBDM2Sum;
+	TH1D			*fModelTotAdap2NDBDM2Sum;
+	TH1D			*fModelTotAdapbiM2Sum;
+	TH1D			*fModelTotAdapbi2M2Sum;
+	TH1D			*fModelTotAdapptM2Sum;
+	TH1D			*fModelTotAdappbM2Sum;
+	TH1D			*fModelTotAdapcsM2Sum;
+	TH1D			*fModelTotAdapco2M2Sum;
+	TH1D			*fModelTotAdapteo2M2Sum;
+
+	TH1D			*fModelTotAdapSthM2Sum;
+	TH1D			*fModelTotAdapSuM2Sum;
+	TH1D 			*fModelTotAdapSpoM2Sum;
+	TH1D			*fModelTotAdapSpbM2Sum;
+	TH1D			*fModelTotAdapExtM2Sum;
+
+	TH1D			*fModelTotAdapAlphaM2Sum;
+	TH1D			*fModelTotAdapAlphaHighM2Sum;
+	TH1D			*fModelTotAdapAlphaLowM2Sum;
+
+
+//////////// Residual distributions
 	TGraph			*gResidualM1;
 	TGraph 			*gResidualM2;
+	TGraph 			*gResidualM2Sum;
 
 	TH1D			*hResidualDistM1;
 	TH1D			*hResidualDistM2;
+	TH1D			*hResidualDistM2Sum;
 
 	TH1D			*hResidualGausM1;
 	TH1D			*hResidualGausM2;
+	TH1D			*hResidualGausM2Sum;
 
 
-
-	TH1D			*fModelDummy1M1;
-	TH1D			*fModelDummy2M1;
-	TH1D			*fModelDummy3M1;
-	TH1D			*fModelDummy4M1;
-	TH1D			*fModelDummy5M1;
-	TH1D			*fModelDummy6M1;
-
-	TH1D			*fModelDummy1M2;
-	TH1D			*fModelDummy2M2;
-	TH1D			*fModelDummy3M2;
-	TH1D			*fModelDummy4M2;
-	TH1D			*fModelDummy5M2;
-	TH1D			*fModelDummy6M2;
-
-//////////// Bulk Histograms
-	// Crystal M1 and M2
+//////////////////// MC Histograms
+////////// Crystal M1 and M2
 	TH1D			*hTeO20nuM1;
 	TH1D			*hTeO22nuM1;
 	TH1D			*hTeO2co60M1;
@@ -241,6 +286,17 @@ private:
 	TH1D			*hTeO2u238M1;
 	TH1D			*hTeO2th230M1;
 	TH1D			*hTeO2u234M1;
+
+	TH1D			*hTeO2th232onlyM1;
+	TH1D			*hTeO2ra228pb208M1;
+	TH1D			*hTeO2th230onlyM1;
+
+	TH1D			*hTeO2Sxth232onlyM1_001;
+	TH1D			*hTeO2Sxra228pb208M1_001;
+	TH1D			*hTeO2Sxu238th230M1_001;
+	TH1D			*hTeO2Sxth230onlyM1_001;
+	TH1D			*hTeO2Sxra226pb210M1_001;
+	TH1D			*hTeO2Sxpb210M1_0001;
 
 	TH1D			*hTeO2Spb210M1_01;
 	TH1D			*hTeO2Spo210M1_001;
@@ -278,6 +334,18 @@ private:
 	TH1D			*hTeO2th230M2;
 	TH1D			*hTeO2u234M2;
 
+	TH1D			*hTeO2th232onlyM2;
+	TH1D			*hTeO2ra228pb208M2;
+	TH1D			*hTeO2th230onlyM2;
+
+	TH1D			*hTeO2Sxth232onlyM2_001;
+	TH1D			*hTeO2Sxra228pb208M2_001;
+	TH1D			*hTeO2Sxu238th230M2_001;
+	TH1D			*hTeO2Sxth230onlyM2_001;
+	TH1D			*hTeO2Sxra226pb210M2_001;
+	TH1D			*hTeO2Sxpb210M2_0001;
+
+
 	TH1D			*hTeO2Spb210M2_01;
 	TH1D			*hTeO2Spo210M2_001;
 	TH1D			*hTeO2Spo210M2_01;
@@ -299,7 +367,54 @@ private:
 	TH1D			*hTeO2Sxu238M2_1;
 	TH1D			*hTeO2Sxu238M2_10;
 
-	// Frame M1 and M2
+	TH1D			*hTeO20nuM2Sum;
+	TH1D			*hTeO22nuM2Sum;
+	TH1D			*hTeO2co60M2Sum;
+	TH1D			*hTeO2k40M2Sum;
+	TH1D			*hTeO2pb210M2Sum;
+	TH1D			*hTeO2po210M2Sum;
+	TH1D			*hTeO2te125M2Sum;
+	TH1D			*hTeO2th232M2Sum;
+	TH1D			*hTeO2th228M2Sum;
+	TH1D			*hTeO2ra226M2Sum;
+	TH1D			*hTeO2rn222M2Sum;
+	TH1D			*hTeO2u238M2Sum;
+	TH1D			*hTeO2th230M2Sum;
+	TH1D			*hTeO2u234M2Sum;
+
+	TH1D			*hTeO2th232onlyM2Sum;
+	TH1D			*hTeO2ra228pb208M2Sum;
+	TH1D			*hTeO2th230onlyM2Sum;
+
+	TH1D			*hTeO2Sxth232onlyM2Sum_001;
+	TH1D			*hTeO2Sxra228pb208M2Sum_001;
+	TH1D			*hTeO2Sxu238th230M2Sum_001;
+	TH1D			*hTeO2Sxth230onlyM2Sum_001;
+	TH1D			*hTeO2Sxra226pb210M2Sum_001;
+	TH1D			*hTeO2Sxpb210M2Sum_0001;
+
+	TH1D			*hTeO2Spb210M2Sum_01;
+	TH1D			*hTeO2Spo210M2Sum_001;
+	TH1D			*hTeO2Spo210M2Sum_01;
+	TH1D			*hTeO2Sth232M2Sum_01;
+	TH1D			*hTeO2Su238M2Sum_01;
+	TH1D			*hTeO2Sxpb210M2Sum_001;
+	TH1D			*hTeO2Sxpb210M2Sum_01;
+	TH1D			*hTeO2Sxpb210M2Sum_1;
+	TH1D			*hTeO2Sxpb210M2Sum_10;
+	TH1D			*hTeO2Sxpo210M2Sum_001;
+	TH1D			*hTeO2Sxpo210M2Sum_01;
+	TH1D			*hTeO2Sxpo210M2Sum_1;
+	TH1D			*hTeO2Sxth232M2Sum_001;
+	TH1D			*hTeO2Sxth232M2Sum_01;
+	TH1D			*hTeO2Sxth232M2Sum_1;
+	TH1D			*hTeO2Sxth232M2Sum_10;
+	TH1D			*hTeO2Sxu238M2Sum_001;
+	TH1D			*hTeO2Sxu238M2Sum_01;
+	TH1D			*hTeO2Sxu238M2Sum_1;
+	TH1D			*hTeO2Sxu238M2Sum_10;
+
+///////// Frame M1 and M2
 	TH1D			*hCuFrameco58M1;
 	TH1D			*hCuFrameco60M1;
 	TH1D			*hCuFramecs137M1;
@@ -348,7 +463,31 @@ private:
 	TH1D			*hCuFrameSxu238M2_1;
 	TH1D			*hCuFrameSxu238M2_10;
 
-	// CuBox (TShield) M1 and M2
+	TH1D			*hCuFrameco58M2Sum;
+	TH1D			*hCuFrameco60M2Sum;
+	TH1D			*hCuFramecs137M2Sum;
+	TH1D			*hCuFramek40M2Sum;
+	TH1D			*hCuFramemn54M2Sum;
+	TH1D			*hCuFramepb210M2Sum;
+	TH1D			*hCuFrameth232M2Sum;
+	TH1D			*hCuFrameu238M2Sum;
+
+	TH1D			*hCuFrameSth232M2Sum_1;
+	TH1D			*hCuFrameSu238M2Sum_1;
+	TH1D			*hCuFrameSxpb210M2Sum_001;
+	TH1D			*hCuFrameSxpb210M2Sum_01;
+	TH1D			*hCuFrameSxpb210M2Sum_1;
+	TH1D			*hCuFrameSxpb210M2Sum_10;
+	TH1D			*hCuFrameSxth232M2Sum_001;
+	TH1D			*hCuFrameSxth232M2Sum_01;
+	TH1D			*hCuFrameSxth232M2Sum_1;
+	TH1D			*hCuFrameSxth232M2Sum_10;
+	TH1D			*hCuFrameSxu238M2Sum_001;
+	TH1D			*hCuFrameSxu238M2Sum_01;
+	TH1D			*hCuFrameSxu238M2Sum_1;
+	TH1D			*hCuFrameSxu238M2Sum_10;
+
+/////////// CuBox (TShield) M1 and M2
 	TH1D			*hCuBoxco58M1;
 	TH1D			*hCuBoxco60M1;
 	TH1D			*hCuBoxcs137M1;
@@ -397,7 +536,62 @@ private:
 	TH1D			*hCuBoxSxu238M2_1;
 	TH1D			*hCuBoxSxu238M2_10;
 
-	// 50mK M1 and M2
+	TH1D			*hCuBoxco58M2Sum;
+	TH1D			*hCuBoxco60M2Sum;
+	TH1D			*hCuBoxcs137M2Sum;
+	TH1D			*hCuBoxk40M2Sum;
+	TH1D			*hCuBoxmn54M2Sum;
+	TH1D			*hCuBoxpb210M2Sum;
+	TH1D			*hCuBoxth232M2Sum;
+	TH1D			*hCuBoxu238M2Sum;	
+
+	TH1D			*hCuBoxSth232M2Sum_1;
+	TH1D			*hCuBoxSu238M2Sum_1;
+	TH1D			*hCuBoxSxpb210M2Sum_001;
+	TH1D			*hCuBoxSxpb210M2Sum_01;
+	TH1D			*hCuBoxSxpb210M2Sum_1;
+	TH1D			*hCuBoxSxpb210M2Sum_10;
+	TH1D			*hCuBoxSxth232M2Sum_001;
+	TH1D			*hCuBoxSxth232M2Sum_01;
+	TH1D			*hCuBoxSxth232M2Sum_1;
+	TH1D			*hCuBoxSxth232M2Sum_10;
+	TH1D			*hCuBoxSxu238M2Sum_001;
+	TH1D			*hCuBoxSxu238M2Sum_01;
+	TH1D			*hCuBoxSxu238M2Sum_1;
+	TH1D			*hCuBoxSxu238M2Sum_10;
+
+/////////// Frame + Box
+	TH1D			*hCuBox_CuFrameco60M1;
+	TH1D			*hCuBox_CuFramek40M1;
+	TH1D			*hCuBox_CuFrameth232M1;
+	TH1D			*hCuBox_CuFrameu238M1;
+
+	TH1D			*hCuBox_CuFrameth232M1_10;
+	TH1D			*hCuBox_CuFrameu238M1_10;
+	TH1D			*hCuBox_CuFramepb210M1_10;
+	TH1D			*hCuBox_CuFramepb210M1_01;
+
+	TH1D			*hCuBox_CuFrameco60M2;
+	TH1D			*hCuBox_CuFramek40M2;
+	TH1D			*hCuBox_CuFrameth232M2;
+	TH1D			*hCuBox_CuFrameu238M2;
+
+	TH1D			*hCuBox_CuFrameth232M2_10;
+	TH1D			*hCuBox_CuFrameu238M2_10;
+	TH1D			*hCuBox_CuFramepb210M2_10;
+	TH1D			*hCuBox_CuFramepb210M2_01;
+
+	TH1D			*hCuBox_CuFrameco60M2Sum;
+	TH1D			*hCuBox_CuFramek40M2Sum;
+	TH1D			*hCuBox_CuFrameth232M2Sum;
+	TH1D			*hCuBox_CuFrameu238M2Sum;
+
+	TH1D			*hCuBox_CuFrameth232M2Sum_10;
+	TH1D			*hCuBox_CuFrameu238M2Sum_10;
+	TH1D			*hCuBox_CuFramepb210M2Sum_10;
+	TH1D			*hCuBox_CuFramepb210M2Sum_01;
+
+///////////// 50mK M1 and M2
 	TH1D			*h50mKco58M1;
 	TH1D			*h50mKco60M1;
 	TH1D			*h50mKcs137M1;
@@ -416,7 +610,16 @@ private:
 	TH1D			*h50mKth232M2;
 	TH1D			*h50mKu238M2;	
 
-	// 600mK M1 and M2
+	TH1D			*h50mKco58M2Sum;
+	TH1D			*h50mKco60M2Sum;
+	TH1D			*h50mKcs137M2Sum;
+	TH1D			*h50mKk40M2Sum;
+	TH1D			*h50mKmn54M2Sum;
+	TH1D			*h50mKpb210M2Sum;
+	TH1D			*h50mKth232M2Sum;
+	TH1D			*h50mKu238M2Sum;
+
+//////////// 600mK M1 and M2
 	TH1D			*h600mKco60M1;
 	TH1D			*h600mKk40M1;
 	TH1D			*h600mKth232M1;
@@ -427,7 +630,29 @@ private:
 	TH1D			*h600mKth232M2;
 	TH1D			*h600mKu238M2;	
 
-	// Roman Lead M1 and M2
+	TH1D			*h600mKco60M2Sum;
+	TH1D			*h600mKk40M2Sum;
+	TH1D			*h600mKth232M2Sum;
+	TH1D			*h600mKu238M2Sum;	
+
+//////////// Internal Shields M1 and M2
+	TH1D			*hInternalco60M1;
+	TH1D			*hInternalk40M1;
+	TH1D			*hInternalth232M1;
+	TH1D			*hInternalu238M1;
+
+	TH1D			*hInternalco60M2;
+	TH1D			*hInternalk40M2;
+	TH1D			*hInternalth232M2;
+	TH1D			*hInternalu238M2;
+
+	TH1D			*hInternalco60M2Sum;
+	TH1D			*hInternalk40M2Sum;
+	TH1D			*hInternalth232M2Sum;
+	TH1D			*hInternalu238M2Sum;	
+
+
+//////////// (PbRom) Roman Lead M1 and M2
 	TH1D			*hPbRombi207M1;
 	TH1D			*hPbRomco60M1;
 	TH1D			*hPbRomcs137M1;
@@ -444,8 +669,15 @@ private:
 	TH1D			*hPbRomth232M2;
 	TH1D			*hPbRomu238M2;		
 
+	TH1D			*hPbRombi207M2Sum;
+	TH1D			*hPbRomco60M2Sum;
+	TH1D			*hPbRomcs137M2Sum;
+	TH1D			*hPbRomk40M2Sum;
+	TH1D			*hPbRompb210M2Sum;
+	TH1D			*hPbRomth232M2Sum;
+	TH1D			*hPbRomu238M2Sum;	
 
-	// Main Bath M1 and M2
+/////////// Main Bath M1 and M2
 	TH1D			*hMBco60M1;
 	TH1D			*hMBk40M1;
 	TH1D			*hMBth232M1;
@@ -456,7 +688,12 @@ private:
 	TH1D			*hMBth232M2;
 	TH1D			*hMBu238M2;	
 
-	// Super Insulation M1 and M2
+	TH1D			*hMBco60M2Sum;
+	TH1D			*hMBk40M2Sum;
+	TH1D			*hMBth232M2Sum;
+	TH1D			*hMBu238M2Sum;	
+
+///////// Super Insulation M1 and M2
 	TH1D			*hSIk40M1;
 	TH1D			*hSIth232M1;
 	TH1D			*hSIu238M1;
@@ -465,8 +702,18 @@ private:
 	TH1D			*hSIth232M2;
 	TH1D			*hSIu238M2;
 
+	TH1D			*hSIk40M2Sum;
+	TH1D			*hSIth232M2Sum;
+	TH1D			*hSIu238M2Sum;
 
-	// IVC M1 and M2
+//////////// External Shield M1 and M2
+	TH1D			*hExtPbbi210M1;
+
+	TH1D			*hExtPbbi210M2;
+	
+	TH1D			*hExtPbbi210M2Sum;
+
+/////////// IVC M1 and M2
 	TH1D			*hIVCco60M1;
 	TH1D			*hIVCk40M1;
 	TH1D			*hIVCth232M1;
@@ -477,8 +724,12 @@ private:
 	TH1D			*hIVCth232M2;
 	TH1D			*hIVCu238M2;	
 
+	TH1D			*hIVCco60M2Sum;
+	TH1D			*hIVCk40M2Sum;
+	TH1D			*hIVCth232M2Sum;
+	TH1D			*hIVCu238M2Sum;	
 
-	// OVC M1 and M2
+/////////// OVC M1 and M2
 	TH1D			*hOVCco60M1;
 	TH1D			*hOVCk40M1;
 	TH1D			*hOVCth232M1;
@@ -489,10 +740,13 @@ private:
 	TH1D			*hOVCth232M2;
 	TH1D			*hOVCu238M2;	
 
+	TH1D			*hOVCco60M2Sum;
+	TH1D			*hOVCk40M2Sum;
+	TH1D			*hOVCth232M2Sum;
+	TH1D			*hOVCu238M2Sum;	
 
-
-//////// Adaptive binned histograms
-	// Crystal M1 and M2
+///////////////// Adaptive binned histograms
+/////////// Crystal M1 and M2
 	TH1D			*hAdapTeO20nuM1;
 	TH1D			*hAdapTeO22nuM1;
 	TH1D			*hAdapTeO2co60M1;
@@ -507,6 +761,17 @@ private:
 	TH1D			*hAdapTeO2u238M1;
 	TH1D			*hAdapTeO2th230M1;
 	TH1D			*hAdapTeO2u234M1;
+
+	TH1D			*hAdapTeO2th232onlyM1;
+	TH1D			*hAdapTeO2ra228pb208M1;
+	TH1D			*hAdapTeO2th230onlyM1;
+
+	TH1D			*hAdapTeO2Sxth232onlyM1_001;
+	TH1D			*hAdapTeO2Sxra228pb208M1_001;
+	TH1D			*hAdapTeO2Sxu238th230M1_001;
+	TH1D			*hAdapTeO2Sxth230onlyM1_001;
+	TH1D			*hAdapTeO2Sxra226pb210M1_001;
+	TH1D			*hAdapTeO2Sxpb210M1_0001;
 
 	TH1D			*hAdapTeO2Spb210M1_01;
 	TH1D			*hAdapTeO2Spo210M1_001;
@@ -544,6 +809,17 @@ private:
 	TH1D			*hAdapTeO2th230M2;
 	TH1D			*hAdapTeO2u234M2;
 
+	TH1D			*hAdapTeO2th232onlyM2;
+	TH1D			*hAdapTeO2ra228pb208M2;
+	TH1D			*hAdapTeO2th230onlyM2;
+
+	TH1D			*hAdapTeO2Sxth232onlyM2_001;
+	TH1D			*hAdapTeO2Sxra228pb208M2_001;
+	TH1D			*hAdapTeO2Sxu238th230M2_001;
+	TH1D			*hAdapTeO2Sxth230onlyM2_001;
+	TH1D			*hAdapTeO2Sxra226pb210M2_001;
+	TH1D			*hAdapTeO2Sxpb210M2_0001;
+
 	TH1D			*hAdapTeO2Spb210M2_01;
 	TH1D			*hAdapTeO2Spo210M2_001;
 	TH1D			*hAdapTeO2Spo210M2_01;
@@ -565,7 +841,54 @@ private:
 	TH1D			*hAdapTeO2Sxu238M2_1;
 	TH1D			*hAdapTeO2Sxu238M2_10;
 
-	// Frame M1 and M2
+	TH1D			*hAdapTeO20nuM2Sum;
+	TH1D			*hAdapTeO22nuM2Sum;
+	TH1D			*hAdapTeO2co60M2Sum;
+	TH1D			*hAdapTeO2k40M2Sum;
+	TH1D			*hAdapTeO2pb210M2Sum;
+	TH1D			*hAdapTeO2po210M2Sum;
+	TH1D			*hAdapTeO2te125M2Sum;
+	TH1D			*hAdapTeO2th232M2Sum;
+	TH1D			*hAdapTeO2th228M2Sum;
+	TH1D			*hAdapTeO2ra226M2Sum;
+	TH1D			*hAdapTeO2rn222M2Sum;
+	TH1D			*hAdapTeO2u238M2Sum;
+	TH1D			*hAdapTeO2th230M2Sum;
+	TH1D			*hAdapTeO2u234M2Sum;
+
+	TH1D			*hAdapTeO2th232onlyM2Sum;
+	TH1D			*hAdapTeO2ra228pb208M2Sum;
+	TH1D			*hAdapTeO2th230onlyM2Sum;
+
+	TH1D			*hAdapTeO2Sxth232onlyM2Sum_001;
+	TH1D			*hAdapTeO2Sxra228pb208M2Sum_001;
+	TH1D			*hAdapTeO2Sxu238th230M2Sum_001;
+	TH1D			*hAdapTeO2Sxth230onlyM2Sum_001;
+	TH1D			*hAdapTeO2Sxra226pb210M2Sum_001;
+	TH1D			*hAdapTeO2Sxpb210M2Sum_0001;
+
+	TH1D			*hAdapTeO2Spb210M2Sum_01;
+	TH1D			*hAdapTeO2Spo210M2Sum_001;
+	TH1D			*hAdapTeO2Spo210M2Sum_01;
+	TH1D			*hAdapTeO2Sth232M2Sum_01;
+	TH1D			*hAdapTeO2Su238M2Sum_01;
+	TH1D			*hAdapTeO2Sxpb210M2Sum_001;
+	TH1D			*hAdapTeO2Sxpb210M2Sum_01;
+	TH1D			*hAdapTeO2Sxpb210M2Sum_1;
+	TH1D			*hAdapTeO2Sxpb210M2Sum_10;
+	TH1D			*hAdapTeO2Sxpo210M2Sum_001;
+	TH1D			*hAdapTeO2Sxpo210M2Sum_01;
+	TH1D			*hAdapTeO2Sxpo210M2Sum_1;
+	TH1D			*hAdapTeO2Sxth232M2Sum_001;
+	TH1D			*hAdapTeO2Sxth232M2Sum_01;
+	TH1D			*hAdapTeO2Sxth232M2Sum_1;
+	TH1D			*hAdapTeO2Sxth232M2Sum_10;
+	TH1D			*hAdapTeO2Sxu238M2Sum_001;
+	TH1D			*hAdapTeO2Sxu238M2Sum_01;
+	TH1D			*hAdapTeO2Sxu238M2Sum_1;
+	TH1D			*hAdapTeO2Sxu238M2Sum_10;
+
+//////////// Frame M1 and M2
 	TH1D			*hAdapCuFrameco58M1;
 	TH1D			*hAdapCuFrameco60M1;
 	TH1D			*hAdapCuFramecs137M1;
@@ -614,8 +937,31 @@ private:
 	TH1D			*hAdapCuFrameSxu238M2_1;
 	TH1D			*hAdapCuFrameSxu238M2_10;
 
+	TH1D			*hAdapCuFrameco58M2Sum;
+	TH1D			*hAdapCuFrameco60M2Sum;
+	TH1D			*hAdapCuFramecs137M2Sum;
+	TH1D			*hAdapCuFramek40M2Sum;
+	TH1D			*hAdapCuFramemn54M2Sum;
+	TH1D			*hAdapCuFramepb210M2Sum;
+	TH1D			*hAdapCuFrameth232M2Sum;
+	TH1D			*hAdapCuFrameu238M2Sum;
 
-	// CuBox (TShield) M1 and M2
+	TH1D			*hAdapCuFrameSth232M2Sum_1;
+	TH1D			*hAdapCuFrameSu238M2Sum_1;
+	TH1D			*hAdapCuFrameSxpb210M2Sum_001;
+	TH1D			*hAdapCuFrameSxpb210M2Sum_01;
+	TH1D			*hAdapCuFrameSxpb210M2Sum_1;
+	TH1D			*hAdapCuFrameSxpb210M2Sum_10;
+	TH1D			*hAdapCuFrameSxth232M2Sum_001;
+	TH1D			*hAdapCuFrameSxth232M2Sum_01;
+	TH1D			*hAdapCuFrameSxth232M2Sum_1;
+	TH1D			*hAdapCuFrameSxth232M2Sum_10;
+	TH1D			*hAdapCuFrameSxu238M2Sum_001;
+	TH1D			*hAdapCuFrameSxu238M2Sum_01;
+	TH1D			*hAdapCuFrameSxu238M2Sum_1;
+	TH1D			*hAdapCuFrameSxu238M2Sum_10;
+
+///////////// CuBox (TShield) M1 and M2
 	TH1D			*hAdapCuBoxco58M1;
 	TH1D			*hAdapCuBoxco60M1;
 	TH1D			*hAdapCuBoxcs137M1;
@@ -664,7 +1010,63 @@ private:
 	TH1D			*hAdapCuBoxSxu238M2_1;
 	TH1D			*hAdapCuBoxSxu238M2_10;
 
-	// 50mK M1 and M2
+	TH1D			*hAdapCuBoxco58M2Sum;
+	TH1D			*hAdapCuBoxco60M2Sum;
+	TH1D			*hAdapCuBoxcs137M2Sum;
+	TH1D			*hAdapCuBoxk40M2Sum;
+	TH1D			*hAdapCuBoxmn54M2Sum;
+	TH1D			*hAdapCuBoxpb210M2Sum;
+	TH1D			*hAdapCuBoxth232M2Sum;
+	TH1D			*hAdapCuBoxu238M2Sum;	
+
+	TH1D			*hAdapCuBoxSth232M2Sum_1;
+	TH1D			*hAdapCuBoxSu238M2Sum_1;
+	TH1D			*hAdapCuBoxSxpb210M2Sum_001;
+	TH1D			*hAdapCuBoxSxpb210M2Sum_01;
+	TH1D			*hAdapCuBoxSxpb210M2Sum_1;
+	TH1D			*hAdapCuBoxSxpb210M2Sum_10;
+	TH1D			*hAdapCuBoxSxth232M2Sum_001;
+	TH1D			*hAdapCuBoxSxth232M2Sum_01;
+	TH1D			*hAdapCuBoxSxth232M2Sum_1;
+	TH1D			*hAdapCuBoxSxth232M2Sum_10;
+	TH1D			*hAdapCuBoxSxu238M2Sum_001;
+	TH1D			*hAdapCuBoxSxu238M2Sum_01;
+	TH1D			*hAdapCuBoxSxu238M2Sum_1;
+	TH1D			*hAdapCuBoxSxu238M2Sum_10;
+
+////////////// Frame + Box
+	TH1D			*hAdapCuBox_CuFrameco60M1;
+	TH1D			*hAdapCuBox_CuFramek40M1;
+	TH1D			*hAdapCuBox_CuFrameth232M1;
+	TH1D			*hAdapCuBox_CuFrameu238M1;
+
+	TH1D			*hAdapCuBox_CuFrameth232M1_10;
+	TH1D			*hAdapCuBox_CuFrameu238M1_10;
+	TH1D			*hAdapCuBox_CuFramepb210M1_10;
+	TH1D			*hAdapCuBox_CuFramepb210M1_01;
+
+	TH1D			*hAdapCuBox_CuFrameco60M2;
+	TH1D			*hAdapCuBox_CuFramek40M2;
+	TH1D			*hAdapCuBox_CuFrameth232M2;
+	TH1D			*hAdapCuBox_CuFrameu238M2;
+
+	TH1D			*hAdapCuBox_CuFrameth232M2_10;
+	TH1D			*hAdapCuBox_CuFrameu238M2_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2_01;
+
+	TH1D			*hAdapCuBox_CuFrameco60M2Sum;
+	TH1D			*hAdapCuBox_CuFramek40M2Sum;
+	TH1D			*hAdapCuBox_CuFrameth232M2Sum;
+	TH1D			*hAdapCuBox_CuFrameu238M2Sum;
+
+	TH1D			*hAdapCuBox_CuFrameth232M2Sum_10;
+	TH1D			*hAdapCuBox_CuFrameu238M2Sum_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_01;
+
+
+/////////// 50mK M1 and M2
 	TH1D			*hAdap50mKco58M1;
 	TH1D			*hAdap50mKco60M1;
 	TH1D			*hAdap50mKcs137M1;
@@ -683,7 +1085,16 @@ private:
 	TH1D			*hAdap50mKth232M2;
 	TH1D			*hAdap50mKu238M2;	
 
-	// 600mK M1 and M2
+	TH1D			*hAdap50mKco58M2Sum;
+	TH1D			*hAdap50mKco60M2Sum;
+	TH1D			*hAdap50mKcs137M2Sum;
+	TH1D			*hAdap50mKk40M2Sum;
+	TH1D			*hAdap50mKmn54M2Sum;
+	TH1D			*hAdap50mKpb210M2Sum;
+	TH1D			*hAdap50mKth232M2Sum;
+	TH1D			*hAdap50mKu238M2Sum;	
+
+///////// 600mK M1 and M2
 	TH1D			*hAdap600mKco60M1;
 	TH1D			*hAdap600mKk40M1;
 	TH1D			*hAdap600mKth232M1;
@@ -694,7 +1105,12 @@ private:
 	TH1D			*hAdap600mKth232M2;
 	TH1D			*hAdap600mKu238M2;	
 
-	// Roman Lead M1 and M2
+	TH1D			*hAdap600mKco60M2Sum;
+	TH1D			*hAdap600mKk40M2Sum;
+	TH1D			*hAdap600mKth232M2Sum;
+	TH1D			*hAdap600mKu238M2Sum;	
+
+///////// Roman Lead M1 and M2
 	TH1D			*hAdapPbRombi207M1;
 	TH1D			*hAdapPbRomco60M1;
 	TH1D			*hAdapPbRomcs137M1;
@@ -711,8 +1127,15 @@ private:
 	TH1D			*hAdapPbRomth232M2;
 	TH1D			*hAdapPbRomu238M2;		
 
+	TH1D			*hAdapPbRombi207M2Sum;
+	TH1D			*hAdapPbRomco60M2Sum;
+	TH1D			*hAdapPbRomcs137M2Sum;
+	TH1D			*hAdapPbRomk40M2Sum;
+	TH1D			*hAdapPbRompb210M2Sum;
+	TH1D			*hAdapPbRomth232M2Sum;
+	TH1D			*hAdapPbRomu238M2Sum;	
 
-	// Main Bath M1 and M2
+///////// Main Bath M1 and M2
 	TH1D			*hAdapMBco60M1;
 	TH1D			*hAdapMBk40M1;
 	TH1D			*hAdapMBth232M1;
@@ -723,7 +1146,12 @@ private:
 	TH1D			*hAdapMBth232M2;
 	TH1D			*hAdapMBu238M2;	
 
-	// Super Insulation M1 and M2
+	TH1D			*hAdapMBco60M2Sum;
+	TH1D			*hAdapMBk40M2Sum;
+	TH1D			*hAdapMBth232M2Sum;
+	TH1D			*hAdapMBu238M2Sum;	
+
+///////// Super Insulation M1 and M2
 	TH1D			*hAdapSIk40M1;
 	TH1D			*hAdapSIth232M1;
 	TH1D			*hAdapSIu238M1;
@@ -732,8 +1160,27 @@ private:
 	TH1D			*hAdapSIth232M2;
 	TH1D			*hAdapSIu238M2;
 
+	TH1D			*hAdapSIk40M2Sum;
+	TH1D			*hAdapSIth232M2Sum;
+	TH1D			*hAdapSIu238M2Sum;
 
-	// IVC M1 and M2
+////////// Internal Shields M1 and M2
+	TH1D			*hAdapInternalco60M1;
+	TH1D			*hAdapInternalk40M1;
+	TH1D			*hAdapInternalth232M1;
+	TH1D			*hAdapInternalu238M1;
+
+	TH1D			*hAdapInternalco60M2;
+	TH1D			*hAdapInternalk40M2;
+	TH1D			*hAdapInternalth232M2;
+	TH1D			*hAdapInternalu238M2;
+
+	TH1D			*hAdapInternalco60M2Sum;
+	TH1D			*hAdapInternalk40M2Sum;
+	TH1D			*hAdapInternalth232M2Sum;
+	TH1D			*hAdapInternalu238M2Sum;	
+
+/////////// IVC M1 and M2
 	TH1D			*hAdapIVCco60M1;
 	TH1D			*hAdapIVCk40M1;
 	TH1D			*hAdapIVCth232M1;
@@ -744,7 +1191,12 @@ private:
 	TH1D			*hAdapIVCth232M2;
 	TH1D			*hAdapIVCu238M2;	
 
-	// OVC M1 and M2
+	TH1D			*hAdapIVCco60M2Sum;
+	TH1D			*hAdapIVCk40M2Sum;
+	TH1D			*hAdapIVCth232M2Sum;
+	TH1D			*hAdapIVCu238M2Sum;	
+
+///////// OVC M1 and M2
 	TH1D			*hAdapOVCco60M1;
 	TH1D			*hAdapOVCk40M1;
 	TH1D			*hAdapOVCth232M1;
@@ -755,8 +1207,25 @@ private:
 	TH1D			*hAdapOVCth232M2;
 	TH1D			*hAdapOVCu238M2;	
 
+	TH1D			*hAdapOVCco60M2Sum;
+	TH1D			*hAdapOVCk40M2Sum;
+	TH1D			*hAdapOVCth232M2Sum;
+	TH1D			*hAdapOVCu238M2Sum;
+
+///////// External Shield M1 and M2
+	TH1D			*hAdapExtPbbi210M1;
+
+	TH1D			*hAdapExtPbbi210M2;
+	
+	TH1D			*hAdapExtPbbi210M2Sum;
+
+	//
+
 	TH1D			*hEnergyScaleDummyM1;
 	TH1D			*hEnergyScaleDummyM2;
+	TH1D			*hEnergyScaleDummyM2Sum;
+
+
 
 	// TH1D			*hnewM1;
 	// TH1D			*hnewM2;
@@ -765,8 +1234,12 @@ private:
 	TF1				*gaus;
 
 
-	TFile *fFile;
-	TFile *fFile2;
+	TFile *fBulkInner;
+	TFile *fBulkInnerM2Sum;
+	TFile *fBulkOuter;
+	TFile *fBulkOuterM2Sum;
+	TFile *fSurfaceCrystal;
+	TFile *fSurfaceOther;
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
@@ -784,8 +1257,8 @@ private:
 	int 			dMult;
 
 	// Parameters
-	double				fParameters[119];
-	double				fParError[119];
+	double				fParameters[139];
+	double				fParError[139];
 	double				fResolution[52];
 	double				dSecToYears;
 	double				fMCEff[62];
