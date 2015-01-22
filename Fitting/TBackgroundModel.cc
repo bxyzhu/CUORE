@@ -1287,7 +1287,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   Initialize();
 
   // Do the fit now if no other tests are needed 
-  DoTheFitAdaptive();
+  // DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -1871,35 +1871,57 @@ void TBackgroundModel::DrawBkg()
   gStyle->SetOptFit();
  	// gStyle->SetOptTitle(0);	
 
-  TCanvas *cBkg1 = new TCanvas("cBkg1", "cBkg1", 1200, 800);
+
+  TCanvas *cBkg1 = new TCanvas("cBkg1", "cBkg1", 1200, 1200);
   cBkg1->SetLogy();
-  fDataHistoM1->SetLineColor(1);
-  fDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
-  fDataHistoM1->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-  fDataHistoM1->Draw();
 
-  TCanvas *cBkg2 = new TCanvas("cBkg2", "cBkg2", 1200, 800);
-  cBkg2->SetLogy();
-  fDataHistoM2->SetLineColor(1);
-  fDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
-  fDataHistoM2->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize));
-  fDataHistoM2->Draw();
+  int dRebin = 1;
 
+  fDataHistoTot->SetLineColor(kBlack);
+  fDataHistoM1->SetLineColor(kBlue);
+  fDataHistoM2->SetLineColor(kRed);
+  fDataHistoM2Sum->SetLineColor(kGreen+1);
 
-  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 1200);
-  c1->Divide(1, 2);
+  // fDataHistoTot->Rebin(dRebin);
+  // fDataHistoM1->Rebin(dRebin);
+  // fDataHistoM2->Rebin(dRebin);
+  // fDataHistoM2Sum->Rebin(dRebin);
+
+  fDataHistoTot->GetXaxis()->SetTitle("Energy (keV)");
+  fDataHistoTot->GetYaxis()->SetTitle(Form("Counts/(%d keV)/yr", dBinSize*dRebin));
+  fDataHistoTot->Draw("E0");
+  fDataHistoM1->Draw("E0SAME");
+  fDataHistoM2->Draw("E0SAME");
+  fDataHistoM2Sum->Draw("E0SAME");
+
+  TLegend *leg = new TLegend(0.75,0.75,0.97,0.97);
+  leg->AddEntry(fDataHistoTot, "Total", "l");
+  leg->AddEntry(fDataHistoM1, "M1", "l");
+  leg->AddEntry(fDataHistoM2, "M2", "l");
+  leg->AddEntry(fDataHistoM2Sum, "M2Sum", "l");
+  leg->Draw();
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 1800);
+  c1->Divide(1, 3);
   c1->cd(1);
-  c1->SetLogy();
+  gPad->SetLogy();
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/bin");  
   fAdapDataHistoM1->Draw("E");
 
 
   c1->cd(2); 
-  c1->SetLogy();
+  gPad->SetLogy();
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/bin");   
   fAdapDataHistoM2->Draw("E");
+
+
+  c1->cd(3); 
+  gPad->SetLogy();
+  fAdapDataHistoM2Sum->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM2Sum->GetYaxis()->SetTitle("Counts/bin");   
+  fAdapDataHistoM2Sum->Draw("E");
 
 }
 
@@ -1922,7 +1944,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   double chiSquare = 0.;
   double datam1_i, errm1_i;
   double datam2_i, errm2_i;
-  double datam2sum_i, errm2sum_i
+  double datam2sum_i, errm2sum_i;
   double modelm1_i, modelm2_i, modelm2sum_i;
 
   for(int i = dFitMinBinM1 ; i <= dFitMaxBinM1; i++)
@@ -1961,10 +1983,10 @@ double TBackgroundModel::GetChiSquareAdaptive()
   {
     // Pt peak can be ignored in M2Sum since doesn't exist?
     if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 3200 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 3400)continue;
-    datam2sumum_i = fAdapDataHistoM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
+    datam2sum_i = (double)fAdapDataHistoM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
     // dataM2Sum_i = fAdapDataHistoM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i);
     // modelM2Sum_i = fModelTotAdapM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i);
-    modelm2sum_i = fModelTotAdapM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
+    modelm2sum_i = (double)fModelTotAdapM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
 
     if(modelm2sum_i != 0 && datam2sum_i != 0)
     {
@@ -4013,27 +4035,27 @@ void TBackgroundModel::UpdateModelAdaptive()
 
 
   // Create the 2 energyscale alphas...
-  fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
-  fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[113]) );
+  // fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
+  // fModelTotAdapAlphaLowM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[113]) );
 
-  fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[112]) );
-  fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
+  // fModelTotAdapAlphaHighM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[112]) );
+  // fModelTotAdapAlphaLowM2->Add( EnergyScale(fModelTotAdapAlphaM2, hEnergyScaleDummyM2, 0, fParameters[113]) );
 
-  fModelTotAdapAlphaHighM2Sum->Add( EnergyScale(fModelTotAdapAlphaM2Sum, hEnergyScaleDummyM2Sum, 0, fParameters[112]) );
-  fModelTotAdapAlphaLowM2Sum->Add( EnergyScale(fModelTotAdapAlphaM2Sum, hEnergyScaleDummyM2Sum, 0, fParameters[113]) );
+  // fModelTotAdapAlphaHighM2Sum->Add( EnergyScale(fModelTotAdapAlphaM2Sum, hEnergyScaleDummyM2Sum, 0, fParameters[112]) );
+  // fModelTotAdapAlphaLowM2Sum->Add( EnergyScale(fModelTotAdapAlphaM2Sum, hEnergyScaleDummyM2Sum, 0, fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
   fModelTotAdapM1->Add( fModelTotAdapAlphaM1, fParameters[114] );
-  fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, fParameters[115] );
-  fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, fParameters[116] );
+  // fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, fParameters[115] );
+  // fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, fParameters[116] );
 
   fModelTotAdapM2->Add( fModelTotAdapAlphaM2, fParameters[114] );
-  fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, fParameters[115] );
-  fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, fParameters[116] );
+  // fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, fParameters[115] );
+  // fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, fParameters[116] );
 
   fModelTotAdapM2Sum->Add( fModelTotAdapAlphaM2Sum, fParameters[114] );
-  fModelTotAdapM2Sum->Add( fModelTotAdapAlphaHighM2Sum, fParameters[115] );
-  fModelTotAdapM2Sum->Add( fModelTotAdapAlphaLowM2Sum, fParameters[116] );
+  // fModelTotAdapM2Sum->Add( fModelTotAdapAlphaHighM2Sum, fParameters[115] );
+  // fModelTotAdapM2Sum->Add( fModelTotAdapAlphaLowM2Sum, fParameters[116] );
 
 }
 
@@ -5861,3 +5883,5 @@ void TBackgroundModel::LatexResultTable()
 
 }
 
+
+// int main()
