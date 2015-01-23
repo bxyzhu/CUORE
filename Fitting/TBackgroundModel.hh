@@ -65,6 +65,7 @@ public:
 	double 	dMaxEnergy;
 	double	dFitMin;
 	double	dFitMax;
+	double 	dNorm;
 	int 	dFitMinBinM1;
 	int 	dFitMaxBinM1;
 	int 	dFitMinBinM2;

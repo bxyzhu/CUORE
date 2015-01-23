@@ -12,9 +12,9 @@ TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource)
 
 }
 
-
-void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
+void NormalizePDF(TH1D *h1, int minE, int maxE)
 {
+
   double dIntegral = 0;
   int dBinSize = 2;
 
@@ -22,11 +22,43 @@ void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
   dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
   // cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
-  cout << "Normalizing " << h1->GetName() << " : " << h2->GetName() << " : " << h3->GetName() << endl;
+  cout << "Normalizing " << h1->GetName() << endl;
 
   // Make sure integral isn't 0
   // If it is 0, clear model... 
   if(dIntegral == 0)
+  {
+    cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
+    h1->Reset();
+  }
+
+  if(dIntegral != 0)
+  {
+    h1->Scale(1.0/dIntegral);
+  }
+
+
+}
+
+void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
+{
+  double dIntegral1 = 0;
+  double dIntegral2 = 0;
+  double dIntegral3 = 0;
+
+  int dBinSize = 2;
+
+  // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
+  dIntegral1 = h1->Integral(minE/dBinSize, maxE/dBinSize);
+  dIntegral2 = h2->Integral(minE/dBinSize, maxE/dBinSize);
+  dIntegral3 = h3->Integral(minE/dBinSize, maxE/dBinSize);
+  // cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
+
+  cout << "Normalizing " << h1->GetName() << " : " << h2->GetName() << " : " << h3->GetName() << endl;
+
+  // Make sure integral isn't 0
+  // If it is 0, clear model... 
+  if(dIntegral1 == 0)
   {
     cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
     h1->Reset();
@@ -34,21 +66,29 @@ void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
     h3->Reset();
   }
 
-  if(dIntegral != 0)
+  if(dIntegral1 != 0)
   {
-    h1->Scale(1.0/dIntegral);
-    h2->Scale(1.0/dIntegral);
-    h3->Scale(1.0/dIntegral);
+    h1->Scale(1.0/dIntegral1);
+  }
+  if(dIntegral2 != 0)
+  {
+    h2->Scale(1.0/dIntegral2);
+  }
+  if(dIntegral3 != 0)
+  {
+    h3->Scale(1.0/dIntegral3);
   }
 }
 
 void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
 {
-  double dIntegral = 0;
+  double dIntegral1 = 0;
+  double dIntegral2 = 0;
   int dBinSize = 2;
 
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
-  dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
+  dIntegral1 = h1->Integral(minE/dBinSize, maxE/dBinSize);
+  dIntegral2 = h2->Integral(minE/dBinSize, maxE/dBinSize);
   // cout << "Integral for " << h1->GetTitle() << " :" << dIntegral << endl;
 
   cout << "Normalizing " << h1->GetName() << " : " << h2->GetName() << endl;
@@ -56,18 +96,22 @@ void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
 
   // Make sure integral isn't 0
   // If it is 0, clear model... 
-  if(dIntegral == 0)
+  if(dIntegral1 == 0)
   {
     cout << Form("Integral of %s is 0, resetting histogram", h1->GetName()) << endl;
     h1->Reset();
     h2->Reset();
   }
 
-  if(dIntegral != 0)
+  if(dIntegral1 != 0)
   {
-    h1->Scale(1.0/dIntegral);
-    h2->Scale(1.0/dIntegral);
+    h1->Scale(1.0/dIntegral1);
   }
+  if(dIntegral2 != 0)
+  {
+    h2->Scale(1.0/dIntegral2);
+  }
+
 }
 
 void SaveHistogramsBulkInner()
