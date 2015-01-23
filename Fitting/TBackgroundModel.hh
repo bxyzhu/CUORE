@@ -72,6 +72,10 @@ public:
 	int 	dFitMinBinM2Sum;
 	int 	dFitMaxBinM2Sum;	
 
+	int 	dDataIntegralM1;
+	int 	dDataIntegralM2;
+	int 	dDataIntegralM2Sum;
+
 	double 	dLivetime;
 	double 	dLivetimeYr;
 
