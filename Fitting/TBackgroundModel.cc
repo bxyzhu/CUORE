@@ -1,8 +1,11 @@
+// Compile with eg: "g++ CUOREZMCRateList.cpp `root-config --libs --cflags` -o foo"
+
 #include "TMinuit.h"
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TLegend.h"
 #include "TBackgroundModel.hh"
+#include "TApplication.h"
 #include "TRandom3.h"
 #include "TPaveText.h"
 #include "TAxis.h"
@@ -44,6 +47,8 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 {
+
+  tTime = new TDatime();
   dNParam = 139; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
@@ -58,7 +63,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   dMinEnergy = 0.;
   dMaxEnergy = 10000.;
 
-  dLivetime = 23077930; // seconds
+  dLivetime = 23077930; // seconds of livetime
   dLivetimeYr = dLivetime*dSecToYears;
 
   if(fFitMin >= fFitMax)
@@ -592,13 +597,13 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
   hPbRomth232M2     = new TH1D("hPbRomth232M2",  "hPbRomth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomu238M2      = new TH1D("hPbRomu238M2",   "hPbRomu238M2",   dNBins, dMinEnergy, dMaxEnergy);
 
-  // hPbRombi207M2sum     = new TH1D("hPbRombi207M2sum",  "hPbRombi207M2sum",  dNBins, dMinEnergy, dMaxEnergy);  
-  hPbRomco60M2sum      = new TH1D("hPbRomco60M2sum",   "hPbRomco60M2sum",   dNBins, dMinEnergy, dMaxEnergy);
-  hPbRomcs137M2sum     = new TH1D("hPbRomcs137M2sum",  "hPbRomcs137M2sum",  dNBins, dMinEnergy, dMaxEnergy);  
-  hPbRomk40M2sum       = new TH1D("hPbRomk40M2sum",    "hPbRomk40M2sum",    dNBins, dMinEnergy, dMaxEnergy);
-  hPbRompb210M2sum     = new TH1D("hPbRompb210M2sum",  "hPbRompb210M2sum",  dNBins, dMinEnergy, dMaxEnergy);  
-  hPbRomth232M2sum     = new TH1D("hPbRomth232M2sum",  "hPbRomth232M2sum",  dNBins, dMinEnergy, dMaxEnergy);  
-  hPbRomu238M2sum      = new TH1D("hPbRomu238M2sum",   "hPbRomu238M2sum",   dNBins, dMinEnergy, dMaxEnergy);
+  // hPbRombi207M2Sum     = new TH1D("hPbRombi207M2Sum",  "hPbRombi207M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
+  hPbRomco60M2Sum      = new TH1D("hPbRomco60M2Sum",   "hPbRomco60M2Sum",   dNBins, dMinEnergy, dMaxEnergy);
+  hPbRomcs137M2Sum     = new TH1D("hPbRomcs137M2Sum",  "hPbRomcs137M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
+  hPbRomk40M2Sum       = new TH1D("hPbRomk40M2Sum",    "hPbRomk40M2Sum",    dNBins, dMinEnergy, dMaxEnergy);
+  hPbRompb210M2Sum     = new TH1D("hPbRompb210M2Sum",  "hPbRompb210M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
+  hPbRomth232M2Sum     = new TH1D("hPbRomth232M2Sum",  "hPbRomth232M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
+  hPbRomu238M2Sum      = new TH1D("hPbRomu238M2Sum",   "hPbRomu238M2Sum",   dNBins, dMinEnergy, dMaxEnergy);
 
 ///////////// Main bath M1 and M2
   hMBco60M1      = new TH1D("hMBco60M1",   "hMBco60M1",   dNBins, dMinEnergy, dMaxEnergy);
@@ -1281,13 +1286,14 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int dBinBase)
 
   hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hEnergyScaleDummyM2Sum = new TH1D("hEnergyScaleDummyM2Sum",   "Energy Scale M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 
   // Loads all of the PDFs from file
   Initialize();
 
   // Do the fit now if no other tests are needed 
-  // DoTheFitAdaptive();
+  DoTheFitAdaptive();
 }
   
 // Needs updating  
@@ -1979,6 +1985,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
   }
 
+/*
   for(int i = dFitMinBinM2Sum; i <= dFitMaxBinM2Sum; i++)
   {
     // Pt peak can be ignored in M2Sum since doesn't exist?
@@ -1994,7 +2001,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     }
 
   }
-
+*/
   return chiSquare;
 }
 
@@ -3516,9 +3523,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2->Reset();
   fModelTotAdapAlphaHighM2->Reset();
   fModelTotAdapAlphaLowM2->Reset();
-  fModelTotAdapAlphaM2Sum->Reset();
-  fModelTotAdapAlphaHighM2Sum->Reset();
-  fModelTotAdapAlphaLowM2Sum->Reset();
+  // fModelTotAdapAlphaM2Sum->Reset();
+  // fModelTotAdapAlphaHighM2Sum->Reset();
+  // fModelTotAdapAlphaLowM2Sum->Reset();
 
   dNumCalls++;
   if(dNumCalls%1000==0)
@@ -3731,7 +3738,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapInternalk40M2,        fParameters[137]);
   fModelTotAdapM2->Add( hAdapExtPbbi210M2,         fParameters[138]);
 
-
+/*
 // M2Sum
   fModelTotAdapM2Sum->Add( hAdapTeO20nuM2Sum,      fParameters[0]);
   fModelTotAdapM2Sum->Add( hAdapTeO22nuM2Sum,      fParameters[1]);
@@ -3831,6 +3838,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2Sum->Add( hAdapInternalco60M2Sum,       fParameters[136]);
   fModelTotAdapM2Sum->Add( hAdapInternalk40M2Sum,        fParameters[137]);
   fModelTotAdapM2Sum->Add( hAdapExtPbbi210M2Sum,         fParameters[138]);
+*/
 
   //// Energy scale changes for alphas
   // Need 1 histogram to add all the alphas before energy scale, 2 more histograms for the energy scale
@@ -3966,7 +3974,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2->Add( hAdapTeO2Sxpo210M2_1,     fParameters[75]);
 
 
-
+/*
   //// M2Sum
   fModelTotAdapAlphaM2Sum->Add( hAdapTeO2pb210M2Sum,    fParameters[4]);
   fModelTotAdapAlphaM2Sum->Add( hAdapTeO2th232M2Sum,    fParameters[7]);
@@ -4032,7 +4040,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapAlphaM2Sum->Add( hAdapTeO2Sxpo210M2Sum_001,   fParameters[73]);
   fModelTotAdapAlphaM2Sum->Add( hAdapTeO2Sxpo210M2Sum_01,    fParameters[74]);
   fModelTotAdapAlphaM2Sum->Add( hAdapTeO2Sxpo210M2Sum_1,     fParameters[75]);
-
+*/
 
   // Create the 2 energyscale alphas...
   // fModelTotAdapAlphaHighM1->Add( EnergyScale(fModelTotAdapAlphaM1, hEnergyScaleDummyM1, 0, fParameters[112]) );
@@ -4045,15 +4053,17 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapAlphaLowM2Sum->Add( EnergyScale(fModelTotAdapAlphaM2Sum, hEnergyScaleDummyM2Sum, 0, fParameters[113]) );
 
   // Add together the 3 energy scale histograms into total histogram.. parameter can become floating in the future..
-  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, fParameters[114] );
+  fModelTotAdapM1->Add( fModelTotAdapAlphaM1, 1.0 );
+  // fModelTotAdapM1->Add( fModelTotAdapAlphaM1, fParameters[114] );
   // fModelTotAdapM1->Add( fModelTotAdapAlphaHighM1, fParameters[115] );
   // fModelTotAdapM1->Add( fModelTotAdapAlphaLowM1, fParameters[116] );
 
-  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, fParameters[114] );
+  fModelTotAdapM2->Add( fModelTotAdapAlphaM2, 1.0 );
+  // fModelTotAdapM2->Add( fModelTotAdapAlphaM2, fParameters[114] );
   // fModelTotAdapM2->Add( fModelTotAdapAlphaHighM2, fParameters[115] );
   // fModelTotAdapM2->Add( fModelTotAdapAlphaLowM2, fParameters[116] );
 
-  fModelTotAdapM2Sum->Add( fModelTotAdapAlphaM2Sum, fParameters[114] );
+  // fModelTotAdapM2Sum->Add( fModelTotAdapAlphaM2Sum, fParameters[114] );
   // fModelTotAdapM2Sum->Add( fModelTotAdapAlphaHighM2Sum, fParameters[115] );
   // fModelTotAdapM2Sum->Add( fModelTotAdapAlphaLowM2Sum, fParameters[116] );
 
@@ -4712,6 +4722,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapmnM2->Add( hAdap50mKmn54M2,      fParameters[34] );
 
   fModelTotAdapbiM2->Add( hAdapPbRombi207M2,    fParameters[42] );
+  fModelTotAdapbiM2->Add( hAdapExtPbbi210M2,    fParameters[138] );
   fModelTotAdapNDBDM2->Add( hAdapTeO20nuM2,     fParameters[0] );
   fModelTotAdap2NDBDM2->Add( hAdapTeO22nuM2,    fParameters[1] );
 
@@ -4891,6 +4902,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapmnM2Sum->Add( hAdap50mKmn54M2Sum,      fParameters[34] );
 
   fModelTotAdapbiM2Sum->Add( hAdapPbRombi207M2Sum,    fParameters[42] );
+  fModelTotAdapbiM2Sum->Add( hAdapExtPbbi210M2Sum,    fParameters[138] );
   fModelTotAdapNDBDM2Sum->Add( hAdapTeO20nuM2Sum,     fParameters[0] );
   fModelTotAdap2NDBDM2Sum->Add( hAdapTeO22nuM2Sum,    fParameters[1] );
 
@@ -5018,7 +5030,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   legfit1->AddEntry(fModelTotAdap2NDBDM1, "2NDBD", "l");
   legfit1->AddEntry(fModelTotAdapSpoM1, "Total po-210", "l");
   legfit1->AddEntry(fModelTotAdapSpbM1, "Surface pb-210", "l");
-  legfit1->AddEntry(fModelTotAdapbiM1, "Total bi-210", "l");  
+  legfit1->AddEntry(fModelTotAdapbiM1, "Total External bi-210", "l");  
   // legfit1->AddEntry(fModelTotAdapteo2M1, "Other Crystal Bulk", "l");
   legfit1->Draw();
 
@@ -5096,14 +5108,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
   legfit2->AddEntry(fModelTotAdap2NDBDM2, "2NDBD", "l");
   legfit2->AddEntry(fModelTotAdapSpoM2, "Total po-210", "l");
   legfit2->AddEntry(fModelTotAdapSpbM2, "Surface pb-210", "l");
-  legfit2->AddEntry(fModelTotAdapbiM2, "Total bi-210", "l");  
+  legfit2->AddEntry(fModelTotAdapbiM2, "Total External bi-210", "l");  
   // legfit2->AddEntry(fModelTotAdapteo2M2, "Other Crystal Bulk", "l");
 
   legfit2->Draw();
 
 
 
-
+/*
   TCanvas *cadap2sum = new TCanvas("cadap2sum", "cadap2sum", 1200, 800);
   cadap2sum->SetLogy();
 
@@ -5174,11 +5186,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
   legfit2sum->AddEntry(fModelTotAdap2NDBDM2Sum, "2NDBD", "l");
   legfit2sum->AddEntry(fModelTotAdapSpoM2Sum, "Total po-210", "l");
   legfit2sum->AddEntry(fModelTotAdapSpbM2Sum, "Surface pb-210", "l");
-  legfit2sum->AddEntry(fModelTotAdapbiM2Sum, "Total bi-210", "l");  
+  legfit2sum->AddEntry(fModelTotAdapbiM2Sum, "Total External bi-210", "l");  
   // legfit2->AddEntry(fModelTotAdapteo2M2, "Other Crystal Bulk", "l");
 
   legfit2sum->Draw();
-
+*/
 
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
@@ -5223,7 +5235,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   TCanvas *cres2 = new TCanvas("cres2", "cres2", 800, 600);
   hResidualGausM2->Draw();
 
-
+/*
   TCanvas *cResidual2sum = new TCanvas("cResidual2sum", "cResidual2sum", 1200, 800);
   hResidualGausM2Sum = new TH1D("hResidualGausM2Sum", "Residual Distribution (M2Sum)", 100, -50, 50);  
   hResidualDistM2Sum = CalculateResidualsAdaptive(fAdapDataHistoM2Sum, fModelTotAdapM2Sum, hResidualGausM2Sum, dFitMinBinM2Sum, dFitMaxBinM2Sum, 2);
@@ -5241,9 +5253,9 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   hResidualDistM2Sum->Draw();
 
-  TCanvas *cres2 = new TCanvas("cres2", "cres2", 800, 600);
+  TCanvas *cres2sum = new TCanvas("cres2sum", "cres2sum", 800, 600);
   hResidualGausM2Sum->Draw();
-
+*/
 
   TCanvas *cGraphM1 = new TCanvas("cGraphM1", "cGraphM1", 1200, 800);
 
@@ -5872,8 +5884,9 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
 // Need maybe an array with all of the names of the variables
 void TBackgroundModel::LatexResultTable()
 {
+
   ofstream OutFile;
-  OutFile.open("FitOutputTable.txt");
+  OutFile.open(Form("FitOutputTable_%d%d.txt", tTime->GetDate(), tTime->GetTime()));
 
   for(int i = 0; i < dNParam; i++)
   {
@@ -5883,5 +5896,22 @@ void TBackgroundModel::LatexResultTable()
 
 }
 
+/*
+int main(int argc, char **argv)
+{
+  if(argc==1)
+   {
+    std::cout << "Option 1: ./foo EMin EMax BinSize" << std::endl; 
+    return 0;
+   }
 
-// int main()
+  TApplication *rootApp = new TApplication("Test",&argc,argv);
+
+  TBackgroundModel *f1 = new TBackgroundModel(argv[1], argv[2], argv[3]);
+
+  rootApp->Run();
+
+
+  return 0;
+}
+*/

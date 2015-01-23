@@ -10,6 +10,7 @@
 #include "TGraphErrors.h"
 #include "TMinuit.h"
 #include "TRandom3.h"
+#include "TDatime.h"
 #include <vector>
 
 class TBackgroundModel : public TObject {
@@ -19,7 +20,7 @@ public:
 	TBackgroundModel(double fFitMin, double fFitMax);
 	virtual ~TBackgroundModel();
 
-	vector<double> AdaptiveBinning(TH1D *h1);
+	std::vector<double> AdaptiveBinning(TH1D *h1);
 
 	TH1D *CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax);
   
@@ -77,9 +78,9 @@ public:
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;
 	int 	dAdaptiveBinsM2Sum;
-	vector<double> dAdaptiveVectorM1;
-	vector<double> dAdaptiveVectorM2;
-	vector<double> dAdaptiveVectorM2Sum;
+	std::vector<double> dAdaptiveVectorM1;
+	std::vector<double> dAdaptiveVectorM2;
+	std::vector<double> dAdaptiveVectorM2Sum;
 	double 	*dAdaptiveArrayM1;
 	double 	*dAdaptiveArrayM2;
 	double 	*dAdaptiveArrayM2Sum;
@@ -1225,6 +1226,8 @@ private:
 	TH1D			*hEnergyScaleDummyM2;
 	TH1D			*hEnergyScaleDummyM2Sum;
 
+
+	TDatime 		*tTime;
 
 
 	// TH1D			*hnewM1;
