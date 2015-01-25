@@ -107,11 +107,12 @@ void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
   {
     h1->Scale(1.0/dIntegral1);
   }
+  /*
   if(dIntegral2 != 0)
   {
     h2->Scale(1.0/dIntegral2);
   }
-
+	*/
 }
 
 void SaveHistogramsBulkInner()
