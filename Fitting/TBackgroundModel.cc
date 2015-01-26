@@ -1287,7 +1287,40 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   Initialize();
 
   // Do the fit now if no other tests are needed 
-  DoTheFitAdaptive();
+  nLoop = 0;
+  dInitValues[0] = 0.13025;  
+  dInitValues[1] = 0.13075;  
+  dInitValues[2] = 0.13125;  
+  dInitValues[3] = 0.13175;  
+  dInitValues[4] = 0.13225;  
+  dInitValues[5] = 0.13275;  
+  dInitValues[6] = 0.13325;  
+  dInitValues[7] = 0.13375;
+  dInitValues[8] = 0.13425;
+  dInitValues[9] = 0.13479; // Minimum
+  dInitValues[10] = 0.13525;
+  dInitValues[11] = 0.13575;
+  dInitValues[12] = 0.13625;
+  dInitValues[13] = 0.13675;
+  dInitValues[14] = 0.13725;
+  dInitValues[15] = 0.13775;
+  dInitValues[16] = 0.13825;
+  dInitValues[17] = 0.13875;
+  dInitValues[18] = 0.13925;
+  dInitValues[19] = 0.13975;
+  dInitValues[20] = 0.14025;
+  dInitValues[21] = 0.14075;
+  // dInitValues[1] = 0.14125;
+
+
+
+  for(int i = 0; i < 22; i++)
+  {
+    cout << "Loop: " << nLoop << endl;
+    DoTheFitAdaptive(dInitValues[i]);
+    dNumCalls = 0;
+    nLoop++;
+  }
 }
   
 // Needs updating  
@@ -4212,6 +4245,15 @@ void TBackgroundModel::PrintParameters()
   }
 }
 
+// Resets all parameters to 0
+void TBackgroundModel::ResetParameters()
+{
+  for(int i = 0; i < dNParam; i++)
+  {
+    fParameters[i] = 0;
+    fParError[i] = 0;
+  }
+}
 
 // Set Parameters in Model
 void TBackgroundModel::SetParameters(int index, double value)
@@ -4234,7 +4276,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Reset all bins in model histograms in every loop
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
-  // fModelTotAdapM2Sum->Reset();
+  fModelTotAdapM2Sum->Reset();
 
 
   dNumCalls++;
@@ -4330,18 +4372,60 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapOVCth232M2,    dDataIntegralM1*fParameters[29]);
   fModelTotAdapM2->Add( hAdapOVCu238M2,     dDataIntegralM1*fParameters[30]);
 
+/////// M2Sum
+  fModelTotAdapM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM1*fParameters[0]);
+  fModelTotAdapM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM1*fParameters[1]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2co60M2Sum,             dDataIntegralM1*fParameters[2]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2k40M2Sum,              dDataIntegralM1*fParameters[3]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2po210M2Sum,            dDataIntegralM1*fParameters[4]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2th232onlyM2Sum,        dDataIntegralM1*fParameters[5]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2ra228pb208M2Sum,       dDataIntegralM1*fParameters[6]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2th230onlyM2Sum,        dDataIntegralM1*fParameters[7]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth232M2Sum_001,      dDataIntegralM1*fParameters[8]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxra228pb208M2Sum_001, dDataIntegralM1*fParameters[9]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxu238th230M2Sum_001,  dDataIntegralM1*fParameters[10]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth230onlyM2Sum_001,  dDataIntegralM1*fParameters[11]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxra226pb210M2Sum_001, dDataIntegralM1*fParameters[12]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxpb210M2Sum_0001,     dDataIntegralM1*fParameters[13]);
 
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum,     dDataIntegralM1*fParameters[14]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum,      dDataIntegralM1*fParameters[15]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameco60M2Sum,      dDataIntegralM1*fParameters[16]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramek40M2Sum,       dDataIntegralM1*fParameters[17]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum_10,  dDataIntegralM1*fParameters[18]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_10,   dDataIntegralM1*fParameters[19]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_10,  dDataIntegralM1*fParameters[20]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_01,  dDataIntegralM1*fParameters[21]);
+
+  fModelTotAdapM2Sum->Add( hAdapInternalth232M2Sum,     dDataIntegralM1*fParameters[22]);
+  fModelTotAdapM2Sum->Add( hAdapInternalu238M2Sum,      dDataIntegralM1*fParameters[23]);
+  fModelTotAdapM2Sum->Add( hAdapInternalco60M2Sum,      dDataIntegralM1*fParameters[24]);
+  fModelTotAdapM2Sum->Add( hAdapInternalk40M2Sum,       dDataIntegralM1*fParameters[25]);
+  fModelTotAdapM2Sum->Add( hAdapExtPbbi210M2Sum,        dDataIntegralM1*fParameters[26]);
+
+  fModelTotAdapM2Sum->Add( hAdapPbRomco60M2Sum,     dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM2Sum->Add( hAdapPbRomk40M2Sum,      dDataIntegralM1*fParameters[28]);
+  fModelTotAdapM2Sum->Add( hAdapPbRomth232M2Sum,    dDataIntegralM1*fParameters[29]);
+  fModelTotAdapM2Sum->Add( hAdapPbRomu238M2Sum,     dDataIntegralM1*fParameters[30]);
+
+  fModelTotAdapM2Sum->Add( hAdapOVCco60M2Sum,     dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM1*fParameters[28]);
+  fModelTotAdapM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM1*fParameters[29]);
+  fModelTotAdapM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM1*fParameters[30]);
 
 }
   
-bool TBackgroundModel::DoTheFitAdaptive()
+bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 { 
+  // Reset initial parameter/error values
+  ResetParameters();
+
   gStyle->SetOptStat(0);
   gStyle->SetOptFit();
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4354,7 +4438,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // Using more parameters
    ////////////////////////////////////////////////
    minuit->DefineParameter(0, "TeO2 0nu",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(1, "TeO2 2nu",  0., 0.0001, 0., 1.0);
+   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 0.0001, 0., 1.0);
    minuit->DefineParameter(2, "TeO2 co60",  0., 0.0001, 0., 1.0);
    minuit->DefineParameter(3, "TeO2 k40",  0., 0.0001, 0., 1.0);
    minuit->DefineParameter(4, "TeO2 po210",  0., 0.0001, 0., 1.0);
@@ -4399,7 +4483,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
    // Fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   // minuit->FixParameter(1); // TeO2 2nu
+   minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
@@ -4546,6 +4630,46 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[30]);
 
 
+  // M2Sum Parameters
+  fModelTotAdapNDBDM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM2Sum*fParameters[0]);
+  fModelTotAdap2NDBDM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM2Sum*fParameters[1]);
+  fModelTotAdapcoM2Sum->Add( hAdapTeO2co60M2Sum,             dDataIntegralM2Sum*fParameters[2]);
+  fModelTotAdapkM2Sum->Add( hAdapTeO2k40M2Sum,              dDataIntegralM2Sum*fParameters[3]);
+  fModelTotAdapSpoM2Sum->Add( hAdapTeO2po210M2Sum,            dDataIntegralM2Sum*fParameters[4]);
+  fModelTotAdapthM2Sum->Add( hAdapTeO2th232onlyM2Sum,        dDataIntegralM2Sum*fParameters[5]);
+  fModelTotAdapthM2Sum->Add( hAdapTeO2ra228pb208M2Sum,       dDataIntegralM2Sum*fParameters[6]);
+  fModelTotAdapuM2Sum->Add( hAdapTeO2th230onlyM2Sum,        dDataIntegralM2Sum*fParameters[7]);
+  fModelTotAdapthM2Sum->Add( hAdapTeO2Sxth232M2Sum_001,      dDataIntegralM2Sum*fParameters[8]);
+  fModelTotAdapthM2Sum->Add( hAdapTeO2Sxra228pb208M2Sum_001, dDataIntegralM2Sum*fParameters[9]);
+  fModelTotAdapuM2Sum->Add( hAdapTeO2Sxu238th230M2Sum_001,  dDataIntegralM2Sum*fParameters[10]);
+  fModelTotAdapuM2Sum->Add( hAdapTeO2Sxth230onlyM2Sum_001,  dDataIntegralM2Sum*fParameters[11]);
+  fModelTotAdapuM2Sum->Add( hAdapTeO2Sxra226pb210M2Sum_001, dDataIntegralM2Sum*fParameters[12]);
+  fModelTotAdapSpbM2Sum->Add( hAdapTeO2Sxpb210M2Sum_0001,     dDataIntegralM2Sum*fParameters[13]);
+
+  fModelTotAdapthM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum,     dDataIntegralM2Sum*fParameters[14]);
+  fModelTotAdapuM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum,      dDataIntegralM2Sum*fParameters[15]);
+  fModelTotAdapcoM2Sum->Add( hAdapCuBox_CuFrameco60M2Sum,      dDataIntegralM2Sum*fParameters[16]);
+  fModelTotAdapkM2Sum->Add( hAdapCuBox_CuFramek40M2Sum,       dDataIntegralM2Sum*fParameters[17]);
+  fModelTotAdapthM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum_10,  dDataIntegralM2Sum*fParameters[18]);
+  fModelTotAdapuM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_10,   dDataIntegralM2Sum*fParameters[19]);
+  fModelTotAdapSpbM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_10,  dDataIntegralM2Sum*fParameters[20]);
+  fModelTotAdapSpbM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_01,  dDataIntegralM2Sum*fParameters[21]);
+
+  fModelTotAdapthM2Sum->Add( hAdapInternalth232M2Sum,     dDataIntegralM2Sum*fParameters[22]);
+  fModelTotAdapuM2Sum->Add( hAdapInternalu238M2Sum,      dDataIntegralM2Sum*fParameters[23]);
+  fModelTotAdapcoM2Sum->Add( hAdapInternalco60M2Sum,      dDataIntegralM2Sum*fParameters[24]);
+  fModelTotAdapkM2Sum->Add( hAdapInternalk40M2Sum,       dDataIntegralM2Sum*fParameters[25]);
+  fModelTotAdapbiM2Sum->Add( hAdapExtPbbi210M2Sum,        dDataIntegralM2Sum*fParameters[26]);
+
+  fModelTotAdapcoM2Sum->Add( hAdapPbRomco60M2Sum,     dDataIntegralM2Sum*fParameters[27]);
+  fModelTotAdapkM2Sum->Add( hAdapPbRomk40M2Sum,      dDataIntegralM2Sum*fParameters[28]);
+  fModelTotAdapthM2Sum->Add( hAdapPbRomth232M2Sum,    dDataIntegralM2Sum*fParameters[29]);
+  fModelTotAdapuM2Sum->Add( hAdapPbRomu238M2Sum,     dDataIntegralM2Sum*fParameters[30]);
+
+  fModelTotAdapcoM2Sum->Add( hAdapOVCco60M2Sum,     dDataIntegralM2Sum*fParameters[27]);
+  fModelTotAdapkM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM2Sum*fParameters[28]);
+  fModelTotAdapthM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM2Sum*fParameters[29]);
+  fModelTotAdapuM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM2Sum*fParameters[30]);
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
   cadap1->SetLogy();
@@ -4907,6 +5031,12 @@ bool TBackgroundModel::DoTheFitAdaptive()
 */
 
 
+  // Saving stuff
+  cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
   LatexResultTable();
 
   return true;
@@ -5472,8 +5602,8 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
 void TBackgroundModel::LatexResultTable()
 {
 
-  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/FitOutputTable_%d_%d.txt", tTime->GetDate(), tTime->GetTime()));
-
+  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
+  OutFile << "Initial Value of 2nbb: " << dInitValues[nLoop] << endl;
   OutFile << "Fit Range: " << dFitMin << " to " << dFitMax << endl;
   OutFile << "Base binning: " << dBinBase << endl;
   OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
@@ -5512,31 +5642,8 @@ void TBackgroundModel::LatexResultTable()
 
   for(int i = 0; i < dNParam; i++)
   {
-    OutFile << minuit->fCpnam[i] << Form(" & %.2f$\\pm$%.1f \\\\ ", fParameters[i], fParError[i] ) << endl;
+    OutFile << minuit->fCpnam[i] << Form(" & %.5f$\\pm$%.4f \\\\ ", fParameters[i], fParError[i] ) << endl;
   }
   OutFile.close();
 
-}
-
-
-int main(int argc, char **argv)
-{
-  if(argc==1)
-   {
-    std::cout << "Option 1: ./foo EMin EMax BinSize" << std::endl; 
-    return 0;
-   }
-
-  // int fMinE = argv[1];
-  // int fMaxE = argv[2];
-  // int fBinBase = argv[3];
-
-  TApplication *rootApp = new TApplication("Test",&argc,argv);
-
-  TBackgroundModel *f1 = new TBackgroundModel(500, 10000, 50);
-
-  rootApp->Run();
-
-
-  return 0;
 }

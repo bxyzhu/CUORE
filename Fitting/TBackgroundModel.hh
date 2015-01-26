@@ -12,7 +12,8 @@
 #include "TRandom3.h"
 #include "TDatime.h"
 #include <vector>
-#include <iostream>
+// #include <iostream>
+#include <fstream>
 
 class TBackgroundModel : public TObject {
 
@@ -27,7 +28,7 @@ public:
   
 	double GetChiSquareAdaptive();
 
-	bool DoTheFitAdaptive();
+	bool DoTheFitAdaptive(double f2nuValue);
 
 	void DrawBkg();
 
@@ -47,6 +48,8 @@ public:
 	void PrintParameters();
 
 	void ReadMC();
+
+	void ResetParameters();
 
 	void SetParameters(int index, double value);
 	
@@ -1724,7 +1727,8 @@ private:
 	TF1				*gaus;
 
 	ofstream OutFile;
-
+	int 	nLoop;
+	double dInitValues[22];
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerM2Sum;
