@@ -1288,38 +1288,70 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
 
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  dInitValues[0] = 0.13025;  
-  dInitValues[1] = 0.13075;  
-  dInitValues[2] = 0.13125;  
-  dInitValues[3] = 0.13175;  
-  dInitValues[4] = 0.13225;  
-  dInitValues[5] = 0.13275;  
-  dInitValues[6] = 0.13325;  
-  dInitValues[7] = 0.13375;
-  dInitValues[8] = 0.13425;
-  dInitValues[9] = 0.13479; // Minimum
-  dInitValues[10] = 0.13525;
-  dInitValues[11] = 0.13575;
-  dInitValues[12] = 0.13625;
-  dInitValues[13] = 0.13675;
-  dInitValues[14] = 0.13725;
-  dInitValues[15] = 0.13775;
-  dInitValues[16] = 0.13825;
-  dInitValues[17] = 0.13875;
-  dInitValues[18] = 0.13925;
-  dInitValues[19] = 0.13975;
-  dInitValues[20] = 0.14025;
-  dInitValues[21] = 0.14075;
-  // dInitValues[1] = 0.14125;
+  fInitValues.push_back(0);
+  // fInitValues.push_back(0.12825);
+  // fInitValues.push_back(0.12875);
+  // fInitValues.push_back(0.12925);
+  // fInitValues.push_back(0.12975);
+  // fInitValues.push_back(0.13075);  
+  // fInitValues.push_back(0.13125);  
+  // fInitValues.push_back(0.13175);  
+  // fInitValues.push_back(0.13225);  
+  // fInitValues.push_back(0.13275);  
+  // fInitValues.push_back(0.13325);
+  // fInitValues.push_back(0.13375);
+  // fInitValues.push_back(0.13420);
+  // fInitValues.push_back(0.13430);
+  // fInitValues.push_back(0.1347926); // Minimum Chi2
+  // fInitValues.push_back(0.13525);
+  // fInitValues.push_back(0.13575);
+  // fInitValues.push_back(0.13620);
+  // fInitValues.push_back(0.13720);
+  // fInitValues.push_back(0.13730);
+  // fInitValues.push_back(0.13775);
+  // fInitValues.push_back(0.13830);
+  // fInitValues.push_back(0.13875);
+  // fInitValues.push_back(0.13925);
+  // fInitValues.push_back(0.13970);
+  // fInitValues.push_back(0.13980);
+  // fInitValues.push_back(0.14020);
+  // fInitValues.push_back(0.14030);
+  // fInitValues.push_back(0.14070);
+  // fInitValues.push_back(0.14080);
+  // fInitValues.push_back(0.14125);
 
-
-
-  for(int i = 0; i < 22; i++)
+  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
-    cout << "Loop: " << nLoop << endl;
-    DoTheFitAdaptive(dInitValues[i]);
-    dNumCalls = 0;
-    nLoop++;
+    // cout << "Loop: " << nLoop << endl;
+    DoTheFitAdaptive(*iter);
+    LatexResultTable(*iter);
+
+    // fModelTotAdapthM1->Reset();
+    // fModelTotAdapuM1->Reset();
+    // fModelTotAdapkM1->Reset();
+    // fModelTotAdapcoM1->Reset();
+    // fModelTotAdapNDBDM1->Reset();
+    // fModelTotAdap2NDBDM1->Reset();
+    // fModelTotAdapbiM1->Reset();
+    // fModelTotAdapmnM1->Reset();
+    // fModelTotAdapSpbM1->Reset();
+    // fModelTotAdapSpoM1->Reset();
+    // fModelTotAdappbM1->Reset(); 
+
+    // fModelTotAdapthM2->Reset();
+    // fModelTotAdapuM2->Reset();
+    // fModelTotAdapkM2->Reset();
+    // fModelTotAdapcoM2->Reset();
+    // fModelTotAdapNDBDM2->Reset();
+    // fModelTotAdap2NDBDM2->Reset();
+    // fModelTotAdapbiM2->Reset();
+    // fModelTotAdapmnM2->Reset();
+    // fModelTotAdapSpbM2->Reset();
+    // fModelTotAdapSpoM2->Reset();
+    // fModelTotAdappbM2->Reset(); 
+
+    dNumCalls = 0; // Resets number of calls (for saving purposes)
+    nLoop++; // This is purely for file names
   }
 }
   
@@ -4276,7 +4308,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Reset all bins in model histograms in every loop
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
-  fModelTotAdapM2Sum->Reset();
+  // fModelTotAdapM2Sum->Reset();
 
 
   dNumCalls++;
@@ -4372,6 +4404,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapOVCth232M2,    dDataIntegralM1*fParameters[29]);
   fModelTotAdapM2->Add( hAdapOVCu238M2,     dDataIntegralM1*fParameters[30]);
 
+/*
 /////// M2Sum
   fModelTotAdapM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM1*fParameters[1]);
@@ -4412,6 +4445,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM1*fParameters[28]);
   fModelTotAdapM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM1*fParameters[29]);
   fModelTotAdapM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM1*fParameters[30]);
+*/
 
 }
   
@@ -4425,7 +4459,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4437,45 +4471,45 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    ////////////////////////////////////////////////
    // Using more parameters
    ////////////////////////////////////////////////
-   minuit->DefineParameter(0, "TeO2 0nu",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 0.0001, 0., 1.0);
-   minuit->DefineParameter(2, "TeO2 co60",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(3, "TeO2 k40",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(4, "TeO2 po210",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(5, "TeO2 th232 only", 0., 0.0001, 0, 1.0 );
-   minuit->DefineParameter(6, "TeO2 ra228 to pb208", 0., 0.0001, 0, 1.0 );
-   minuit->DefineParameter(7, "TeO2 th230 only", 0., 0.0001, 0, 1.0 );
-   minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(13, "TeO2 Sx pb210 0.001", 0., 0.0001, 0, 1.0);
+   minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0., 1.0);
+   minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(5, "TeO2 th232 only", 0., 1E-7, 0, 1.0 );
+   minuit->DefineParameter(6, "TeO2 ra228 to pb208", 0., 1E-7, 0, 1.0 );
+   minuit->DefineParameter(7, "TeO2 th230 only", 0., 1E-7, 0, 1.0 );
+   minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(13, "TeO2 Sx pb210 0.001", 0., 1E-7, 0, 1.0);
 
-   minuit->DefineParameter(14, "CuBox + CuFrame th232", 0., 0.0001, 0, 1.0);
-   minuit->DefineParameter(15, "CuBox + CuFrame u238", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(16, "CuBox + CuFrame co60", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(17, "CuBox + CuFrame k40", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(18, "CuBox + CuFrame Sx th232 10", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(19, "CuBox + CuFrame Sx u238 10 ", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(20, "CuBox + CuFrame Sx pb210 10", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(21, "CuBox + CuFrame Sx pb210 0.0001", 0., 0.0001, 0, 1.);
+   minuit->DefineParameter(14, "CuBox + CuFrame th232", 0., 1E-7, 0, 1.0);
+   minuit->DefineParameter(15, "CuBox + CuFrame u238", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(16, "CuBox + CuFrame co60", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(17, "CuBox + CuFrame k40", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(18, "CuBox + CuFrame Sx th232 10", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(19, "CuBox + CuFrame Sx u238 10 ", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(20, "CuBox + CuFrame Sx pb210 10", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(21, "CuBox + CuFrame Sx pb210 0.001", 0., 1E-7, 0, 1.);
 
-   minuit->DefineParameter(22, "Internal Shields th232", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(23, "Internal Shields u238", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(24, "Internal Shields co60", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(25, "Internal Shields k40", 0., 0.0001, 0, 1.);
-   minuit->DefineParameter(26, "External Lead bi210", 0., 0.0001, 0, 1.0);
+   minuit->DefineParameter(22, "Internal Shields th232", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(23, "Internal Shields u238", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(24, "Internal Shields co60", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(25, "Internal Shields k40", 0., 1E-7, 0, 1.);
+   minuit->DefineParameter(26, "External Lead bi210", 0., 1E-7, 0, 1.0);
 
-   minuit->DefineParameter(27, "PbRom co60",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(28, "PbRom k40",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(29, "PbRom th232",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(30, "PbRom u238",  0., 0.0001, 0., 1.0);
+   minuit->DefineParameter(27, "PbRom co60",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(28, "PbRom k40",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(29, "PbRom th232",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(30, "PbRom u238",  0., 1E-7, 0., 1.0);
 
-   minuit->DefineParameter(31, "OVC co60",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(32, "OVC k40",  0., 0.0001, 0., 1.0);
-   minuit->DefineParameter(33, "OVC th232",  0., 0.0001, 0., 1.0);    
-   minuit->DefineParameter(34, "OVC u238",  0., 0.0001, 0., 1.0);
+   minuit->DefineParameter(31, "OVC co60",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(32, "OVC k40",  0., 1E-7, 0., 1.0);
+   minuit->DefineParameter(33, "OVC th232",  0., 1E-7, 0., 1.0);    
+   minuit->DefineParameter(34, "OVC u238",  0., 1E-7, 0., 1.0);
 
 
 
@@ -5015,7 +5049,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << endl;
+  cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << fParError[1]/fParameters[1] * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
 
 /*
     2nbb calculation:
@@ -5032,12 +5066,11 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
 
   // Saving stuff
-  cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  LatexResultTable();
+  // cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
 
   return true;
 
@@ -5599,11 +5632,12 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
 
 // Only use after fit
 // Need maybe an array with all of the names of the variables
-void TBackgroundModel::LatexResultTable()
+void TBackgroundModel::LatexResultTable(double fValue)
 {
 
-  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileLL/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
-  OutFile << "Initial Value of 2nbb: " << dInitValues[nLoop] << endl;
+  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
+  // OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitOutputTable_%f.txt", fValue));
+  OutFile << "Initial Value of 2nbb: " << fValue << endl;
   OutFile << "Fit Range: " << dFitMin << " to " << dFitMax << endl;
   OutFile << "Base binning: " << dBinBase << endl;
   OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
@@ -5635,15 +5669,25 @@ void TBackgroundModel::LatexResultTable()
   OutFile << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // OutFile << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   OutFile << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  OutFile << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << endl;
+  OutFile << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << fParError[1]/fParameters[1] * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
 
   OutFile << endl;
   OutFile << endl;
 
   for(int i = 0; i < dNParam; i++)
   {
-    OutFile << minuit->fCpnam[i] << Form(" & %.5f$\\pm$%.4f \\\\ ", fParameters[i], fParError[i] ) << endl;
+    OutFile << minuit->fCpnam[i] << Form(" & %.7f$\\pm$%.7f \\\\ ", fParameters[i], fParError[i] ) << endl;
   }
   OutFile.close();
 
 }
+
+void TBackgroundModel::SanityCheck()
+{
+  // Sanity check, adding to background a set amount of 2nbb events, see if code can reconstruct it properly
+  fDataHistoM1->Add(hTeO22nuM1, 0.5*dDataIntegralM1);
+  fDataHistoM2->Add(hTeO22nuM2, 0.5*dDataIntegralM2);
+  fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
+
+}
+

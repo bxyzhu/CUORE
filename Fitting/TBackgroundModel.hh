@@ -38,7 +38,7 @@ public:
 
 	void Initialize();
 
-	void LatexResultTable();
+	void LatexResultTable(double fValue);
 
 	// Dumb to have all of these but w/e
 	void LoadData();
@@ -1726,9 +1726,9 @@ private:
 	// Smearing
 	TF1				*gaus;
 
-	ofstream OutFile;
-	int 	nLoop;
-	double dInitValues[22];
+	ofstream 		OutFile;
+	int 			nLoop;
+	std::vector<double> 	fInitValues;
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerM2Sum;
