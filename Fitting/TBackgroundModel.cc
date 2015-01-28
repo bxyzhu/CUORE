@@ -59,8 +59,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   dMaxEnergy = 10000.;
   dBinBase = fBinBase;
 
-  dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
-  // dLivetime = 6042498; // DR 1 
+  // dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
+  dLivetime = 6042498; // DR 1 
   // dLivetime = 9387524; // DR 2
   // dLivetime = 7647908; // DR 3
   dLivetimeYr = dLivetime*dSecToYears;
@@ -1314,9 +1314,15 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0);
-  // LatexResultTable(0);
-  ProfileNLL(0.126893, 4091.53);
+  DoTheFitAdaptive(0);
+  LatexResultTable(0);
+
+  // For Profile NLL calculation
+  // ProfileNLL(0.126893, 4091.53);
+
+
+
+  
   // gaus = new TF1("gaus");
 }
   
@@ -4210,15 +4216,15 @@ void TBackgroundModel::LoadData()
 	}
   
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
-  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root"); 
 
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2049.root");   
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2061.root"); 
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2064.root");   
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2067.root"); 
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2070.root"); 
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2073.root"); 
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2076.root"); 
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2049.root");   
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2061.root"); 
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2064.root");   
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2067.root"); 
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2070.root"); 
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2073.root"); 
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2076.root"); 
 
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2079.root"); 
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2085.root"); 
@@ -4432,7 +4438,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -5692,18 +5698,20 @@ void TBackgroundModel::KernalConvolution()
 
 }
 
+// Make sure to run in batch mode and make sure to have the 2nbb normalization FIXED
+// Probably best to run Minuit in quiet mode as well
 void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
 {
   dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
   // 100 loops enough?  
-  for(int i = -2; i < 2; i++)
+  for(int i = -25; i < 25; i++)
   {
-    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+    fInitValues.push_back(fBestFitInit + fBestFitInit/500*i);
   }
 
-  OutProfileNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/ProfileNLL_%d.C", tTime->GetDate() ));
+  OutProfileNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/ProfileNLL_%d.C", tTime->GetDate() ));
   OutProfileNLL << "{" << endl;
   OutProfileNLL << "vector<double> dX;" << endl;
   OutProfileNLL << "vector<double> dT;" << endl;
@@ -5713,9 +5721,8 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     // cout << "Loop: " << nLoop << endl;
     DoTheFitAdaptive(*iter);
     LatexResultTable(*iter);
-
     cout << "delta ChiSq = " << GetChiSquareAdaptive() - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutProfileNLL << Form("dX.push_back(%f); dY.push_back(%f)", GetChiSquareAdaptive()-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    OutProfileNLL << Form("dX.push_back(%f); dT.push_back(%f);", GetChiSquareAdaptive()-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
 
     // Reset histograms if drawing
     // fModelTotAdapthM1->Reset();
@@ -5755,7 +5762,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   OutProfileNLL << "g1->SetLineWidth(2);" << endl;
   OutProfileNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
   OutProfileNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutProfileNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} yr)\");" << endl;
+  OutProfileNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
   OutProfileNLL << "g1->Draw(\"AC\");" << endl;
   OutProfileNLL << "}" << endl;
 
