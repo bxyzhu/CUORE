@@ -59,7 +59,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   dMaxEnergy = 10000.;
   dBinBase = fBinBase;
 
-  dLivetime = 23077930; // seconds of livetime
+  dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
+  // dLivetime = 6042498; // DR 1 
+  // dLivetime = 9387524; // DR 2
+  // dLivetime = 7647908; // DR 3
   dLivetimeYr = dLivetime*dSecToYears;
 
   if(fFitMin >= fFitMax)
@@ -88,25 +91,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
   base_cut = base_cut && "abs(BaselineSlope)<0.1";
   base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+  base_cut = base_cut && "Channel != 1 && Channel != 10";
 
   // Load data here
   LoadData();
 
-
-  // Scaling by livetime, don't use with Toy data
-  dDataIntegral = fDataHistoM1->Integral(1, dNBins);
-  dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
-  dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
-  dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
-  int dDataIntegralTot = qtree->GetEntries();
-
-  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
-  cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
-  cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
-  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
-
-  // Normalization for model
-  dNorm = dDataIntegralM1 + dDataIntegralM2;
 
   // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
   // fDataHistoM1->Scale(1/((936398+14647393.0) * dSecToYears));
@@ -687,18 +676,21 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   {
     fAdapDataHistoM1->SetBinContent(i, dBinSize * hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i));
     fAdapDataHistoM1->SetBinError(i, dBinSize * TMath::Sqrt(hnewM1->GetBinContent(i))/hnewM1->GetBinWidth(i));
+    // fAdapDataHistoM1->SetBinError(i, 0);
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2; i++)
   {
     fAdapDataHistoM2->SetBinContent(i, dBinSize * hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i));
     fAdapDataHistoM2->SetBinError(i, dBinSize * TMath::Sqrt(hnewM2->GetBinContent(i))/hnewM2->GetBinWidth(i));
+    // fAdapDataHistoM2->SetBinError(i, 0);
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
   {
     fAdapDataHistoM2Sum->SetBinContent(i, dBinSize * hnewM2Sum->GetBinContent(i)/hnewM2Sum->GetBinWidth(i));
     fAdapDataHistoM2Sum->SetBinError(i, dBinSize * TMath::Sqrt(hnewM2Sum->GetBinContent(i))/hnewM2Sum->GetBinWidth(i));
+    // fAdapDataHistoM2Sum->SetBinError(i, 0);
   }
 
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
@@ -1286,73 +1278,46 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase)
   // Loads all of the PDFs from file
   Initialize();
 
+/*
+  // Add events to background
+  SanityCheck();
+  // Set Error Bars so I don't go crazy
+  for(int i = 1; i <= dAdaptiveBinsM1; i++)
+  {
+    fAdapDataHistoM1->SetBinError(i, 0);
+  }
+
+  for(int i = 1; i <= dAdaptiveBinsM2; i++)
+  {
+    fAdapDataHistoM2->SetBinError(i, 0);
+  }
+
+  for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
+  {
+    fAdapDataHistoM2Sum->SetBinError(i, 0);
+  }
+*/
+
+  // Scaling by livetime, don't use with Toy data
+  dDataIntegral = fDataHistoM1->Integral(1, dNBins);
+  dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
+  dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
+  dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
+  int dDataIntegralTot = qtree->GetEntries();
+
+  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
+  cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
+  cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
+  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
+  cout << "Livetime of background: " << dLivetimeYr << endl;
+
+  dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  fInitValues.push_back(0);
-  // fInitValues.push_back(0.12825);
-  // fInitValues.push_back(0.12875);
-  // fInitValues.push_back(0.12925);
-  // fInitValues.push_back(0.12975);
-  // fInitValues.push_back(0.13075);  
-  // fInitValues.push_back(0.13125);  
-  // fInitValues.push_back(0.13175);  
-  // fInitValues.push_back(0.13225);  
-  // fInitValues.push_back(0.13275);  
-  // fInitValues.push_back(0.13325);
-  // fInitValues.push_back(0.13375);
-  // fInitValues.push_back(0.13420);
-  // fInitValues.push_back(0.13430);
-  // fInitValues.push_back(0.1347926); // Minimum Chi2
-  // fInitValues.push_back(0.13525);
-  // fInitValues.push_back(0.13575);
-  // fInitValues.push_back(0.13620);
-  // fInitValues.push_back(0.13720);
-  // fInitValues.push_back(0.13730);
-  // fInitValues.push_back(0.13775);
-  // fInitValues.push_back(0.13830);
-  // fInitValues.push_back(0.13875);
-  // fInitValues.push_back(0.13925);
-  // fInitValues.push_back(0.13970);
-  // fInitValues.push_back(0.13980);
-  // fInitValues.push_back(0.14020);
-  // fInitValues.push_back(0.14030);
-  // fInitValues.push_back(0.14070);
-  // fInitValues.push_back(0.14080);
-  // fInitValues.push_back(0.14125);
-
-  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
-  {
-    // cout << "Loop: " << nLoop << endl;
-    DoTheFitAdaptive(*iter);
-    LatexResultTable(*iter);
-
-    // fModelTotAdapthM1->Reset();
-    // fModelTotAdapuM1->Reset();
-    // fModelTotAdapkM1->Reset();
-    // fModelTotAdapcoM1->Reset();
-    // fModelTotAdapNDBDM1->Reset();
-    // fModelTotAdap2NDBDM1->Reset();
-    // fModelTotAdapbiM1->Reset();
-    // fModelTotAdapmnM1->Reset();
-    // fModelTotAdapSpbM1->Reset();
-    // fModelTotAdapSpoM1->Reset();
-    // fModelTotAdappbM1->Reset(); 
-
-    // fModelTotAdapthM2->Reset();
-    // fModelTotAdapuM2->Reset();
-    // fModelTotAdapkM2->Reset();
-    // fModelTotAdapcoM2->Reset();
-    // fModelTotAdapNDBDM2->Reset();
-    // fModelTotAdap2NDBDM2->Reset();
-    // fModelTotAdapbiM2->Reset();
-    // fModelTotAdapmnM2->Reset();
-    // fModelTotAdapSpbM2->Reset();
-    // fModelTotAdapSpoM2->Reset();
-    // fModelTotAdappbM2->Reset(); 
-
-    dNumCalls = 0; // Resets number of calls (for saving purposes)
-    nLoop++; // This is purely for file names
-  }
+  // DoTheFitAdaptive(0);
+  // LatexResultTable(0);
+  ProfileNLL(0.126893, 4091.53);
+  // gaus = new TF1("gaus");
 }
   
 // Needs updating  
@@ -2575,7 +2540,6 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
       j++;
     }
   }
-
 return dBinArrayThing;
 }
 
@@ -2642,7 +2606,7 @@ void TBackgroundModel::DrawBkg()
   gStyle->SetOptFit();
  	// gStyle->SetOptTitle(0);	
 
-
+/*
   TCanvas *cBkg1 = new TCanvas("cBkg1", "cBkg1", 1200, 1200);
   cBkg1->SetLogy();
 
@@ -2664,6 +2628,7 @@ void TBackgroundModel::DrawBkg()
   fDataHistoM1->Draw("E0SAME");
   fDataHistoM2->Draw("E0SAME");
   fDataHistoM2Sum->Draw("E0SAME");
+*/
 
   TLegend *leg = new TLegend(0.75,0.75,0.97,0.97);
   leg->AddEntry(fDataHistoTot, "Total", "l");
@@ -2678,21 +2643,21 @@ void TBackgroundModel::DrawBkg()
   gPad->SetLogy();
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/bin");  
-  fAdapDataHistoM1->Draw("E");
+  fAdapDataHistoM1->Draw("");
 
 
   c1->cd(2); 
   gPad->SetLogy();
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/bin");   
-  fAdapDataHistoM2->Draw("E");
+  fAdapDataHistoM2->Draw("");
 
 
   c1->cd(3); 
   gPad->SetLogy();
   fAdapDataHistoM2Sum->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2Sum->GetYaxis()->SetTitle("Counts/bin");   
-  fAdapDataHistoM2Sum->Draw("E");
+  fAdapDataHistoM2Sum->Draw("");
 
 }
 
@@ -3065,8 +3030,6 @@ void TBackgroundModel::Initialize()
 
   hExtPbbi210M2Sum = (TH1D*)fBulkOuterM2Sum->Get("hExtPbbi210M2Sum");
 
-
-
 //////////// Surface PDFs
 ///// Crystal M1 and M2
   hTeO2Spb210M1_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M1_01");
@@ -3262,7 +3225,6 @@ void TBackgroundModel::Initialize()
   hCuBox_CuFrameu238M2Sum_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameu238M2Sum_10");
   hCuBox_CuFramepb210M2Sum_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFramepb210M2Sum_10");
   hCuBox_CuFramepb210M2Sum_01 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFramepb210M2Sum_01");  
-
 
 ///////////// Get adaptive binned histograms
 //////// Crystal M1 and M2
@@ -4232,9 +4194,6 @@ void TBackgroundModel::Initialize()
     hAdapExtPbbi210M2Sum->SetBinContent(i, dBinSize * hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
 
   }
-
-
-
 }
 
 // Loads the background data
@@ -4249,17 +4208,31 @@ void TBackgroundModel::LoadData()
 	{
 		cout << "Data Histograms Created" << endl;
 	}
-
-/*
-  // Toy data
-  qtree->Add("/Users/brian/macros/Simulations/Toy/combi1/combi1.root");
-  qtree->Project("fDataHistoTot", "Ener2" );
-  qtree->Project("fDataHistoM1",  "Ener2", "Multiplicity == 1");
-  qtree->Project("fDataHistoM2",  "Ener2", "Multiplicity == 2");
-*/
   
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
-  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root");   
+  qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root"); 
+
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2049.root");   
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2061.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2064.root");   
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2067.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2070.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2073.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2076.root"); 
+
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2079.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2085.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2088.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2091.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2097.root");
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2100.root"); 
+
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2103.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2109.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2118.root"); 
+  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2124.root"); 
+
+
   qtree->Project("fDataHistoTot", "Energy", base_cut);
   qtree->Project("fDataHistoM1",  "Energy", base_cut && "Multiplicity_Sync == 1");
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
@@ -4459,7 +4432,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4663,7 +4636,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapthM2->Add( hAdapOVCth232M2,    dDataIntegralM2*fParameters[29]);
   fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[30]);
 
-
+/*
   // M2Sum Parameters
   fModelTotAdapNDBDM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM2Sum*fParameters[0]);
   fModelTotAdap2NDBDM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM2Sum*fParameters[1]);
@@ -4704,12 +4677,13 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapkM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM2Sum*fParameters[28]);
   fModelTotAdapthM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM2Sum*fParameters[29]);
   fModelTotAdapuM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM2Sum*fParameters[30]);
+*/
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
   cadap1->SetLogy();
 
   ///// Draw Data M1
-  fAdapDataHistoM1->SetLineColor(1);
+  fAdapDataHistoM1->SetLineColor(kBlack);
   fAdapDataHistoM1->SetLineWidth(2);
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
@@ -4785,7 +4759,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cadap2->SetLogy();
 
   ///// Draw Data M2
-  fAdapDataHistoM2->SetLineColor(1);
+  fAdapDataHistoM2->SetLineColor(kBlack);
   fAdapDataHistoM2->SetLineWidth(2);
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
@@ -5049,7 +5023,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << fParError[1]/fParameters[1] * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
+  cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << (fParError[1]/fParameters[1]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
 
 /*
     2nbb calculation:
@@ -5066,11 +5040,11 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
 
   // Saving stuff
-  // cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
 
   return true;
 
@@ -5635,11 +5609,15 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
 void TBackgroundModel::LatexResultTable(double fValue)
 {
 
-  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
-  // OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitOutputTable_%f.txt", fValue));
+  // OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/SysErr/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
+  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitOutputTable_%f.txt", fValue));
   OutFile << "Initial Value of 2nbb: " << fValue << endl;
   OutFile << "Fit Range: " << dFitMin << " to " << dFitMax << endl;
   OutFile << "Base binning: " << dBinBase << endl;
+  OutFile << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
+  OutFile << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
+  OutFile << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
+  OutFile << "Livetime of background: " << dLivetimeYr << endl;
   OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << GetChiSquareAdaptive()/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
   OutFile << "ChiSq = " << GetChiSquareAdaptive() << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
   OutFile << "Probability = " << TMath::Prob(GetChiSquareAdaptive(), (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
@@ -5684,10 +5662,102 @@ void TBackgroundModel::LatexResultTable(double fValue)
 
 void TBackgroundModel::SanityCheck()
 {
+  double dM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
+  double dM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
   // Sanity check, adding to background a set amount of 2nbb events, see if code can reconstruct it properly
-  fDataHistoM1->Add(hTeO22nuM1, 0.5*dDataIntegralM1);
-  fDataHistoM2->Add(hTeO22nuM2, 0.5*dDataIntegralM2);
-  fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
+  fDataHistoM1->Add(hTeO22nuM1, 1.0*dM1);
+  fDataHistoM2->Add(hTeO22nuM2, 1.0*dM2);
+
+  fAdapDataHistoM1->Add(hAdapTeO22nuM1, 1.0*dM1);
+  fAdapDataHistoM2->Add(hAdapTeO22nuM2, 1.0*dM2);
+  // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
+}
+
+void TBackgroundModel::KernalConvolution()
+{
+  double dGausNorm;
+  double dSmearedValue;
+  int binMax = hMC->GetNbinsX();
+
+  for(int i = 0; i < dAdaptiveBinsM1; i++)
+  {
+    for(int j = 0; j < dAdaptiveBinsM1; j++)
+    {
+      gaus->SetParameters(dGausNorm, hMC->GetBinCenter(j), resolution1);
+
+
+
+    }
+  }
 
 }
 
+void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
+{
+  dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
+  // Do the fit now if no other tests are needed 
+  nLoop = 0;
+  // 100 loops enough?  
+  for(int i = -2; i < 2; i++)
+  {
+    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+  }
+
+  OutProfileNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/ProfileNLL_%d.C", tTime->GetDate() ));
+  OutProfileNLL << "{" << endl;
+  OutProfileNLL << "vector<double> dX;" << endl;
+  OutProfileNLL << "vector<double> dT;" << endl;
+
+  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
+  {
+    // cout << "Loop: " << nLoop << endl;
+    DoTheFitAdaptive(*iter);
+    LatexResultTable(*iter);
+
+    cout << "delta ChiSq = " << GetChiSquareAdaptive() - dBestChiSq << endl; // Needs to be entered, otherwise just 0
+    OutProfileNLL << Form("dX.push_back(%f); dY.push_back(%f)", GetChiSquareAdaptive()-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+
+    // Reset histograms if drawing
+    // fModelTotAdapthM1->Reset();
+    // fModelTotAdapuM1->Reset();
+    // fModelTotAdapkM1->Reset();
+    // fModelTotAdapcoM1->Reset();
+    // fModelTotAdapNDBDM1->Reset();
+    // fModelTotAdap2NDBDM1->Reset();
+    // fModelTotAdapbiM1->Reset();
+    // fModelTotAdapmnM1->Reset();
+    // fModelTotAdapSpbM1->Reset();
+    // fModelTotAdapSpoM1->Reset();
+    // fModelTotAdappbM1->Reset(); 
+
+    // fModelTotAdapthM2->Reset();
+    // fModelTotAdapuM2->Reset();
+    // fModelTotAdapkM2->Reset();
+    // fModelTotAdapcoM2->Reset();
+    // fModelTotAdapNDBDM2->Reset();
+    // fModelTotAdap2NDBDM2->Reset();
+    // fModelTotAdapbiM2->Reset();
+    // fModelTotAdapmnM2->Reset();
+    // fModelTotAdapSpbM2->Reset();
+    // fModelTotAdapSpoM2->Reset();
+    // fModelTotAdappbM2->Reset(); 
+
+    dNumCalls = 0; // Resets number of calls (for saving purposes)
+    nLoop++; // This is purely for file names and to keep track of number of loops
+  }
+
+  OutProfileNLL << "int n = dX.size();" << endl;
+  OutProfileNLL << "double *y = &dX[0];" << endl;
+  OutProfileNLL << "double *x = &dT[0];" << endl;
+  OutProfileNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
+  OutProfileNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
+  OutProfileNLL << "g1->SetLineColor(kBlue);" << endl;
+  OutProfileNLL << "g1->SetLineWidth(2);" << endl;
+  OutProfileNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
+  OutProfileNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
+  OutProfileNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} yr)\");" << endl;
+  OutProfileNLL << "g1->Draw(\"AC\");" << endl;
+  OutProfileNLL << "}" << endl;
+
+  OutProfileNLL.close();
+}

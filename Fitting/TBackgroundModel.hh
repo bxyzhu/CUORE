@@ -47,9 +47,13 @@ public:
 
 	void PrintParameters();
 
+	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
+
 	void ReadMC();
 
 	void ResetParameters();
+
+	void SanityCheck();
 
 	void SetParameters(int index, double value);
 	
@@ -1727,6 +1731,8 @@ private:
 	TF1				*gaus;
 
 	ofstream 		OutFile;
+	ofstream 	 	OutProfileNLL;
+
 	int 			nLoop;
 	std::vector<double> 	fInitValues;
 
@@ -1751,6 +1757,7 @@ private:
 	
 	int 			dNumCalls;
 	int 			dMult;
+	double			dBestChiSq;
 
 	// Parameters
 	double				fParameters[139];
