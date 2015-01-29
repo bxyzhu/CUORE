@@ -91,6 +91,8 @@ public:
 	double 	dLivetime;
 	double 	dLivetimeYr;
 
+	double 	dChiSquare;
+
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;
 	int 	dAdaptiveBinsM2Sum;
