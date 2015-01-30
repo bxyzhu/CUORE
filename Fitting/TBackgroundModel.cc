@@ -1327,7 +1327,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   // For Profile NLL calculation
   // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
-  ProfileNLL(0.1367351, 4223.69); // DR1 only
+  // ProfileNLL(0.1367351, 4223.69); // DR1 only
+  // ProfileNLL(0.1171442, 3618.92); // DR2 only
+  // ProfileNLL(0.1277587,2902.46); // DR3 only
 
   // ProfileNLL(0.1267539, 3970.36); // Total
   // ProfileNLL(0.1543494, 2163.72); // M1 Only
@@ -4257,7 +4259,7 @@ void TBackgroundModel::LoadData()
 	}
   
   // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
-  switch (dDataSet)
+  switch(dDataSet)
   { 
   case 1:
   qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2049.root");   
@@ -4280,7 +4282,7 @@ void TBackgroundModel::LoadData()
   qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2100.root"); 
   dLivetime = 9387524; // DR 2
   cout << "Using Dataset 2" << endl;
-  break
+  break;
 
   case 3:
   qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds2103.root"); 
@@ -4290,11 +4292,12 @@ void TBackgroundModel::LoadData()
   dLivetime = 7647908; // DR 3
   cout << "Using Dataset 3" << endl;
   break;
-  default   
+
+  default:   
   qtree->Add("/Users/brian/macros/CUOREZ/Bkg/ReducedBkgSync-ds*.root"); 
   dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
   cout << "Using Total Dataset" << endl;
-  
+
   }
 
   qtree->Project("fDataHistoTot", "Energy", base_cut);
@@ -5930,14 +5933,14 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   // 100 loops enough?  
   for(int i = -25; i < 25; i++)
   {
-    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+    fInitValues.push_back(fBestFitInit + fBestFitInit/300*i);
   }
 
 
-  OutProfileNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/ProfileNLL_%d_DR1.C", tTime->GetDate() ));
-  OutProfileNLL << "{" << endl;
-  OutProfileNLL << "vector<double> dX;" << endl;
-  OutProfileNLL << "vector<double> dT;" << endl;
+  OutPNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/ProfileNLL_%d_DR1.C", tTime->GetDate() ));
+  OutPNLL << "{" << endl;
+  OutPNLL << "vector<double> dX;" << endl;
+  OutPNLL << "vector<double> dT;" << endl;
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
@@ -5945,7 +5948,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     DoTheFitAdaptive(*iter);
     // LatexResultTable(*iter);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutProfileNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
 
     // Reset histograms if drawing
     // fModelTotAdapthM1->Reset();
@@ -5976,18 +5979,18 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
 
-  OutProfileNLL << "int n = dX.size();" << endl;
-  OutProfileNLL << "double *y = &dX[0];" << endl;
-  OutProfileNLL << "double *x = &dT[0];" << endl;
-  OutProfileNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
-  OutProfileNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
-  OutProfileNLL << "g1->SetLineColor(kBlue);" << endl;
-  OutProfileNLL << "g1->SetLineWidth(2);" << endl;
-  OutProfileNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
-  OutProfileNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutProfileNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
-  OutProfileNLL << "g1->Draw(\"AC\");" << endl;
-  OutProfileNLL << "}" << endl;
+  OutPNLL << "int n = dX.size();" << endl;
+  OutPNLL << "double *y = &dX[0];" << endl;
+  OutPNLL << "double *x = &dT[0];" << endl;
+  OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
+  OutPNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
+  OutPNLL << "g1->SetLineColor(kBlue);" << endl;
+  OutPNLL << "g1->SetLineWidth(2);" << endl;
+  OutPNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
+  OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
+  OutPNLL << "g1->Draw(\"AC\");" << endl;
+  OutPNLL << "}" << endl;
 
-  OutProfileNLL.close();
+  OutPNLL.close();
 }

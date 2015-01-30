@@ -1747,7 +1747,7 @@ private:
 	TF1				*gaus;
 
 	ofstream 		OutFile;
-	ofstream 	 	OutProfileNLL;
+	ofstream 	 	OutPNLL;
 
 	int 			nLoop;
 	std::vector<double> 	fInitValues;
