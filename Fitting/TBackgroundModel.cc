@@ -53,6 +53,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
   dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
   // dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
+  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
+  // dSaveDir = "/cuore/user/zhubrian/code/Fitting";
   dDataIntegral = 0;
 
   // Bin size (keV) -- base binning is 2 keV
@@ -1325,7 +1327,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0);
+  DoTheFitAdaptive(0.1171442);
   LatexResultTable(0); 
 
   // For Profile NLL calculation
@@ -4521,7 +4523,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -5195,13 +5197,13 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
 
   // Saving stuff
-  // cadap1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2sum->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2Sum_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM1Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2sum->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitM2Residual_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cres1->SaveAs(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitResidualDist_%d_%d_%d.C", tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2sum->SaveAs(Form("%s/FitResults/Test/FitM2Sum_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2sum->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   return true;
 
@@ -5833,7 +5835,7 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
 void TBackgroundModel::LatexResultTable(double fValue)
 {
 
-  OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/Test/FitOutputTable_%d_%d_%d.txt", tTime->GetDate(), tTime->GetTime(), nLoop ));
+  OutFile.open(Form("%s/FitResults/Test/FitOutputTable_%d_%d_%d.txt", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop ));
   // OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitOutputTable_%f.txt", fValue));
   OutFile << "Initial Value of 2nbb: " << fValue << endl;
   OutFile << "Fit Range: " << dFitMin << " to " << dFitMax << endl;
@@ -5941,7 +5943,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   }
 
 
-  OutPNLL.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/ProfileNLL_%d_DR%d.C", tTime->GetDate(), dDataSet ));
+  OutPNLL.open(Form("%s/FitResults/ProfileNLL/ProfileNLL_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
   OutPNLL << "{" << endl;
   OutPNLL << "vector<double> dX;" << endl;
   OutPNLL << "vector<double> dT;" << endl;
