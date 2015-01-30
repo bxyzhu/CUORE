@@ -49,7 +49,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dSecToYears = 1./(60*60*24*365);
 
   // dDataDir =  "/Users/brian/macros/Simulations/Production/";
-  dDataDir =  "/Uers/brian/macros/CUOREZ/Bkg";
+  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
   dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
   // dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
@@ -1325,8 +1325,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0);
-  // LatexResultTable(0); 
+  DoTheFitAdaptive(0);
+  LatexResultTable(0); 
 
   // For Profile NLL calculation
   // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
@@ -2769,14 +2769,14 @@ void TBackgroundModel::Initialize()
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
 
-  fBulkInner = new TFile(Form("%s/MCProduction_BulkInner.root", dMCDir.c_str());
-  fBulkInnerM2Sum = new TFile(Form("%s/MCProduction_BulkInnerM2Sum.root", dMCDir.c_str());
+  fBulkInner = new TFile(Form("%s/MCProduction_BulkInner.root", dMCDir.c_str()));
+  fBulkInnerM2Sum = new TFile(Form("%s/MCProduction_BulkInnerM2Sum.root", dMCDir.c_str()));
 
-  fBulkOuter = new TFile(Form("%s/MCProduction_BulkOuter.root", dMCDir.c_str());
-  fBulkOuterM2Sum = new TFile(Form("%s/MCProduction_BulkOuterM2Sum.root", dMCDir.c_str());
+  fBulkOuter = new TFile(Form("%s/MCProduction_BulkOuter.root", dMCDir.c_str()));
+  fBulkOuterM2Sum = new TFile(Form("%s/MCProduction_BulkOuterM2Sum.root", dMCDir.c_str()));
 
-  fSurfaceCrystal = new TFile(Form("%s/MCProduction_SurfaceCrystal.root", dMCDir.c_str());
-  fSurfaceOther = new TFile(Form("%s/MCProduction_SurfaceOther.root", dMCDir.c_str());
+  fSurfaceCrystal = new TFile(Form("%s/MCProduction_SurfaceCrystal.root", dMCDir.c_str()));
+  fSurfaceOther = new TFile(Form("%s/MCProduction_SurfaceOther.root", dMCDir.c_str()));
 
 ///////////// Bulk Histograms
 /////// Crystal M1 and M2
@@ -4265,40 +4265,41 @@ void TBackgroundModel::LoadData()
   switch(dDataSet)
   { 
   case 1:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2049.root", dDataDir.c_str());   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2061.root", sDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2064.root", sDataDir.c_str());   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2067.root", sDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2070.root", sDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2073.root", sDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2076.root", sDataDir.c_str()); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2049.root", dDataDir.c_str()));   
+  qtree->Add(Form("%s/ReducedBkgSync-ds2061.root", sDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2064.root", sDataDir.c_str()));   
+  qtree->Add(Form("%s/ReducedBkgSync-ds2067.root", sDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2070.root", sDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2073.root", sDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2076.root", sDataDir.c_str())); 
   dLivetime = 6042498; // DR 1 
   cout << "Using Dataset 1" << endl;
   break;
 
   case 2:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2079.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2085.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2088.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2091.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2097.root", dDataDir.c_str());
-  qtree->Add(Form("%s/ReducedBkgSync-ds2100.root", dDataDir.c_str()); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2079.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2085.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2088.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2091.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2097.root", dDataDir.c_str()));
+  qtree->Add(Form("%s/ReducedBkgSync-ds2100.root", dDataDir.c_str())); 
   dLivetime = 9387524; // DR 2
   cout << "Using Dataset 2" << endl;
   break;
 
   case 3:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2103.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2109.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2118.root", dDataDir.c_str()); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2124.root", dDataDir.c_str()); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2103.root", dDataDir.c_str()));
+  qtree->Add(Form("%s/ReducedBkgSync-ds2109.root", dDataDir.c_str()));
+  qtree->Add(Form("%s/ReducedBkgSync-ds2118.root", dDataDir.c_str()));
+  qtree->Add(Form("%s/ReducedBkgSync-ds2124.root", dDataDir.c_str()));
   dLivetime = 7647908; // DR 3
   cout << "Using Dataset 3" << endl;
   break;
 
   default:   
-  qtree->Add(Form("%s/ReducedBkgSync-ds*.root", dDataDir.c_str()); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds*.root", dDataDir.c_str())); 
   dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
+  cout << "Directory " << Form("%s/ReducedBkgSync-ds*.root", dDataDir.c_str()) << endl;
   cout << "Using Total Dataset" << endl;
 
   }
@@ -4620,7 +4621,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
    // Fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   minuit->FixParameter(1); // TeO2 2nu
+   // minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
