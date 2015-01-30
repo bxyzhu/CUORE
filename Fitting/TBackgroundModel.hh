@@ -1768,6 +1768,7 @@ private:
 
 
 	std::string		dDataDir;
+	std::string 	dMCDir;
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;
 	
