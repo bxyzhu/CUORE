@@ -1327,14 +1327,14 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0.1171442);
-  LatexResultTable(0); 
+  // DoTheFitAdaptive(0.1171442);
+  // LatexResultTable(0); 
 
   // For Profile NLL calculation
   // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
   // ProfileNLL(0.1367351, 4223.69); // DR1 only
-  // ProfileNLL(0.1171442, 3618.92); // DR2 only
-  // ProfileNLL(0.1277587,2902.46); // DR3 only
+  // ProfileNLL(0.1171083, 3614.55); // DR2 only
+  // ProfileNLL(0.1277500, 2902.32); // DR3 only
 
   // ProfileNLL(0.1267539, 3970.36); // Total
   // ProfileNLL(0.1543494, 2163.72); // M1 Only
@@ -4623,7 +4623,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
    // Fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   // minuit->FixParameter(1); // TeO2 2nu
+   minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
