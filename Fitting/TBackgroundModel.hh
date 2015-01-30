@@ -93,6 +93,10 @@ public:
 	double 	dLivetimeYr;
 
 	double 	dChiSquare;
+	double 	dResidualRMSM1;
+	double 	dResidualRMSM2;
+	double 	dResidualRMSM2Sum;
+
 
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;

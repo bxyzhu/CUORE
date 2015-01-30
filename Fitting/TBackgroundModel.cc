@@ -49,12 +49,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dSecToYears = 1./(60*60*24*365);
 
   // dDataDir =  "/Users/brian/macros/Simulations/Production/";
-//  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
-   dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
-//  dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
-   dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
-//  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
-   dSaveDir = "/cuore/user/zhubrian/code/Fitting";
+ dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
+   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
+ dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
+   // dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
+ dSaveDir = "/Users/brian/Dropbox/code/Fitting";
+   // dSaveDir = "/cuore/user/zhubrian/code/Fitting";
   dDataIntegral = 0;
 
   // Bin size (keV) -- base binning is 2 keV
@@ -708,6 +708,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dFitMaxBinM2 = fAdapDataHistoM2->FindBin(dFitMax);
   dFitMaxBinM2Sum = fAdapDataHistoM2Sum->FindBin(dFitMax);
 
+  cout << "Fit M1 from bin: " << dFitMinBinM1 << " to " << dFitMaxBinM1 << endl;
+  cout << "Fit M2 from bin: " << dFitMinBinM2 << " to " << dFitMaxBinM2 << endl;
+  cout << "Fit M2Sum from bin: " << dFitMinBinM2Sum << " to " << dFitMaxBinM2Sum << endl;
+
+
 //////////////// Adaptive binned histograms
 ////////// Total Adaptive binning histograms M1
   fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
@@ -1327,14 +1332,16 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0.1171442);
-  // LatexResultTable(0); 
+  DoTheFitAdaptive(0);
+  LatexResultTable(0); 
 
   // For Profile NLL calculation
   // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
   // ProfileNLL(0.1367351, 4223.69); // DR1 only
   // ProfileNLL(0.1171083, 3614.55); // DR2 only
   // ProfileNLL(0.1277500, 2902.32); // DR3 only
+
+  // ProfileNLL(0.1270216, 3500.13); // Total without M2Sum
 
   // ProfileNLL(0.1267539, 3970.36); // Total
   // ProfileNLL(0.1543494, 2163.72); // M1 Only
@@ -2602,6 +2609,9 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   {
 
     if( hCloneBkg->GetBinCenter(j) >= 3150 && hCloneBkg->GetBinCenter(j) <= 3400)continue;    
+    if( hCloneBkg->GetBinCenter(j) >= 658 && hCloneBkg->GetBinCenter(j) <= 664)continue;
+    if( hCloneBkg->GetBinCenter(j) >= 800 && hCloneBkg->GetBinCenter(j) <= 808)continue;
+    if( hCloneBkg->GetBinCenter(j) >= 1060 && hCloneBkg->GetBinCenter(j) <= 1068)continue;
 
     dResidualX    = hCloneBkg->GetBinCenter(j);
     
@@ -2621,6 +2631,7 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
     // cout << "   Residual: " << dResidualY << endl;
     hResid->Fill(dResidualY);
   }
+
   return hOut;
 }
 
@@ -2716,9 +2727,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // Dividing by base bin size in chi-squared because the weight is width/base bin size when filling
     if( fAdapDataHistoM1->GetBinCenter(i) >= 3150 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
     // Skipping unknown peaks
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 658 && fAdapDataHistoM1->GetBinCenter(i) <= 664)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 800 && fAdapDataHistoM1->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1060 && fAdapDataHistoM1->GetBinCenter(i) <= 1068)continue;    
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 658 && fAdapDataHistoM1->GetBinCenter(i) <= 664)continue;
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 800 && fAdapDataHistoM1->GetBinCenter(i) <= 808)continue;
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 1060 && fAdapDataHistoM1->GetBinCenter(i) <= 1068)continue;    
     datam1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/dBinSize;
     modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/dBinSize;
 
@@ -2733,9 +2744,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
   for(int i = dFitMinBinM2; i <= dFitMaxBinM2; i++)
   {
     if( fAdapDataHistoM2->GetBinCenter(i) >= 3150 && fAdapDataHistoM2->GetBinCenter(i) <= 3400)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 658 && fAdapDataHistoM2->GetBinCenter(i) <= 664)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 800 && fAdapDataHistoM2->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1060 && fAdapDataHistoM2->GetBinCenter(i) <= 1068)continue;     
+    if( fAdapDataHistoM2->GetBinCenter(i) >= 658 && fAdapDataHistoM2->GetBinCenter(i) <= 664)continue;
+    if( fAdapDataHistoM2->GetBinCenter(i) >= 800 && fAdapDataHistoM2->GetBinCenter(i) <= 808)continue;
+    if( fAdapDataHistoM2->GetBinCenter(i) >= 1060 && fAdapDataHistoM2->GetBinCenter(i) <= 1068)continue;     
     datam2_i = fAdapDataHistoM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/dBinSize;
     modelm2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/dBinSize;
 
@@ -2751,7 +2762,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
   for(int i = dFitMinBinM2Sum; i <= dFitMaxBinM2Sum; i++)
   {
     if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 3150 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 3400)continue;
-
+    if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 658 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 664)continue;
+    if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 800 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 808)continue;
+    if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 1060 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 1068)continue;
     datam2sum_i = fAdapDataHistoM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
     modelm2sum_i = fModelTotAdapM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i)/dBinSize;
 
@@ -2761,6 +2774,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     }
 
   }
+
 
   return chiSquare;
 }
@@ -4523,7 +4537,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4623,7 +4637,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
    // Fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   minuit->FixParameter(1); // TeO2 2nu
+   // minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
@@ -4682,13 +4696,13 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   
   dChiSquare = GetChiSquareAdaptive();
 
-  // cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
-  // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
-  // cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
+  cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
+  cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
+  cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
 
-  cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl; // for M1 and M2
-  cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl;
-  cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) ) << endl;
+  // cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl; // for M1 and M2
+  // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl;
+  // cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) ) << endl;
 
 
   ///////////////////////////////////////////
@@ -5083,7 +5097,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM1->Draw();
 
-
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
   hResidualGausM2 = new TH1D("hResidualGausM2", "M2", 100, -50, 50);  
   hResidualDistM2 = CalculateResidualsAdaptive(fAdapDataHistoM2, fModelTotAdapM2, hResidualGausM2, dFitMinBinM2, dFitMaxBinM2, 2);
@@ -5157,6 +5170,29 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   hRatioM2Sum->Draw("e1p");
 */
 
+  for (int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
+  {
+    dResidualRMSM1 += hResidualDistM1->GetBinContent(i)*hResidualDistM1->GetBinContent(i);
+  }
+
+  for (int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
+  {
+    dResidualRMSM2 += hResidualDistM2->GetBinContent(i)*hResidualDistM2->GetBinContent(i);
+  }
+
+  for (int i = dFitMinBinM2Sum; i < dFitMaxBinM2Sum; i++)
+  {
+    dResidualRMSM2Sum += hResidualDistM2Sum->GetBinContent(i)*hResidualDistM2Sum->GetBinContent(i);
+  }
+
+  dResidualRMSTot = TMath::Sqrt( (dResidualRMSM1 + dResidualRMSM2 + dResidualRMSM2Sum)/ (hResidualDistM1->GetNbinsX()+hResidualDistM2->GetNbinsX()+hResidualDistM2Sum->GetNbinsX()) );
+  // dResidualRMSTot = TMath::Sqrt( (dResidualRMSM1 + dResidualRMSM2)/ (hResidualDistM1->GetNbinsX()+hResidualDistM2->GetNbinsX()) );
+
+
+  dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/hResidualDistM1->GetNbinsX());
+  dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/hResidualDistM2->GetNbinsX());
+  dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/hResidualDistM2Sum->GetNbinsX());
+
 
   double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)); 
   // Output integrals of stuff for limits
@@ -5182,6 +5218,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << (fParError[1]/fParameters[1]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
 
+  cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
+  cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 <<  "\t" << "Residual RMS (M2Sum): " << dResidualRMSM2Sum << endl;
 /*
     2nbb calculation:
      - TeO2 molar mass: 159.6 g/mol
@@ -5202,7 +5240,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   // cadap2sum->SaveAs(Form("%s/FitResults/Test/FitM2Sum_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2sum->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2sum->SaveAs(Form("%s/FitResults/Test/FitM2SumResidual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   return true;
@@ -5844,12 +5882,12 @@ void TBackgroundModel::LatexResultTable(double fValue)
   OutFile << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
   OutFile << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
   OutFile << "Livetime of background: " << dLivetimeYr << endl;
-  // OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
-  // OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
-  // OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
-  OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl; // for M1 and M2
-  OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl;
-  OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) ) << endl;
+  OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
+  OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
+  OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
+  // OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl; // for M1 and M2
+  // OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl;
+  // OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) ) << endl;
 
 
 
@@ -5939,7 +5977,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   // 100 loops enough?  
   for(int i = -25; i < 25; i++)
   {
-    fInitValues.push_back(fBestFitInit + fBestFitInit/300*i);
+    fInitValues.push_back(fBestFitInit + fBestFitInit/500*i);
   }
 
 
