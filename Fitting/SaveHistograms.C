@@ -72,11 +72,11 @@ void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
   }
   if(dIntegral2 != 0)
   {
-    h2->Scale(1.0/dIntegral2);
+    h2->Scale(1.0/dIntegral1);
   }
   if(dIntegral3 != 0)
   {
-    h3->Scale(1.0/dIntegral3);
+    h3->Scale(1.0/dIntegral1);
   }
 }
 
@@ -106,14 +106,13 @@ void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
   if(dIntegral1 != 0)
   {
     h1->Scale(1.0/dIntegral1);
-    h2->Divide(h1)
   }
-  /*
+  
   if(dIntegral2 != 0)
   {
-    h2->Scale(1.0/dIntegral2);
+    h2->Scale(1.0/dIntegral1);
   }
-*/
+
 }
 
 void SaveHistogramsBulkInner()

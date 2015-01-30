@@ -19,7 +19,7 @@ class TBackgroundModel : public TObject {
 
 public:
 
-	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase);
+	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset);
 	virtual ~TBackgroundModel();
 
 	std::vector<double> AdaptiveBinning(TH1D *h1, int dBinBase);
@@ -88,6 +88,7 @@ public:
 	int 	dDataIntegralM2;
 	int 	dDataIntegralM2Sum;
 
+	int 	dDataSet;
 	double 	dLivetime;
 	double 	dLivetimeYr;
 
@@ -588,7 +589,9 @@ private:
 	TH1D			*hCuBox_CuFrameth232M1_10;
 	TH1D			*hCuBox_CuFrameu238M1_10;
 	TH1D			*hCuBox_CuFramepb210M1_10;
+	TH1D			*hCuBox_CuFramepb210M1_1;
 	TH1D			*hCuBox_CuFramepb210M1_01;
+	TH1D			*hCuBox_CuFramepb210M1_001;
 
 	TH1D			*hCuBox_CuFrameco60M2;
 	TH1D			*hCuBox_CuFramek40M2;
@@ -598,7 +601,9 @@ private:
 	TH1D			*hCuBox_CuFrameth232M2_10;
 	TH1D			*hCuBox_CuFrameu238M2_10;
 	TH1D			*hCuBox_CuFramepb210M2_10;
+	TH1D			*hCuBox_CuFramepb210M2_1;
 	TH1D			*hCuBox_CuFramepb210M2_01;
+	TH1D			*hCuBox_CuFramepb210M2_001;
 
 	TH1D			*hCuBox_CuFrameco60M2Sum;
 	TH1D			*hCuBox_CuFramek40M2Sum;
@@ -608,7 +613,9 @@ private:
 	TH1D			*hCuBox_CuFrameth232M2Sum_10;
 	TH1D			*hCuBox_CuFrameu238M2Sum_10;
 	TH1D			*hCuBox_CuFramepb210M2Sum_10;
+	TH1D			*hCuBox_CuFramepb210M2Sum_1;
 	TH1D			*hCuBox_CuFramepb210M2Sum_01;
+	TH1D			*hCuBox_CuFramepb210M2Sum_001;
 
 ///////////// 50mK M1 and M2
 	TH1D			*h50mKco58M1;
@@ -1061,8 +1068,11 @@ private:
 
 	TH1D			*hAdapCuBox_CuFrameth232M1_10;
 	TH1D			*hAdapCuBox_CuFrameu238M1_10;
+
 	TH1D			*hAdapCuBox_CuFramepb210M1_10;
+	TH1D			*hAdapCuBox_CuFramepb210M1_1;
 	TH1D			*hAdapCuBox_CuFramepb210M1_01;
+	TH1D			*hAdapCuBox_CuFramepb210M1_001;
 
 	TH1D			*hAdapCuBox_CuFrameco60M2;
 	TH1D			*hAdapCuBox_CuFramek40M2;
@@ -1072,7 +1082,9 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M2_10;
 	TH1D			*hAdapCuBox_CuFrameu238M2_10;
 	TH1D			*hAdapCuBox_CuFramepb210M2_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2_1;
 	TH1D			*hAdapCuBox_CuFramepb210M2_01;
+	TH1D			*hAdapCuBox_CuFramepb210M2_001;
 
 	TH1D			*hAdapCuBox_CuFrameco60M2Sum;
 	TH1D			*hAdapCuBox_CuFramek40M2Sum;
@@ -1082,7 +1094,9 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M2Sum_10;
 	TH1D			*hAdapCuBox_CuFrameu238M2Sum_10;
 	TH1D			*hAdapCuBox_CuFramepb210M2Sum_10;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_1;
 	TH1D			*hAdapCuBox_CuFramepb210M2Sum_01;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_001;
 
 
 /////////// 50mK M1 and M2
