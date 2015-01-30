@@ -49,12 +49,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dSecToYears = 1./(60*60*24*365);
 
   // dDataDir =  "/Users/brian/macros/Simulations/Production/";
-  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
-  // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
-  dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
-  // dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
-  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
-  // dSaveDir = "/cuore/user/zhubrian/code/Fitting";
+//  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
+   dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
+//  dMCDir = "/Users/brian/macros/Simulations/Production/OldProd";
+   dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
+//  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
+   dSaveDir = "/cuore/user/zhubrian/code/Fitting";
   dDataIntegral = 0;
 
   // Bin size (keV) -- base binning is 2 keV
@@ -4268,12 +4268,12 @@ void TBackgroundModel::LoadData()
   { 
   case 1:
   qtree->Add(Form("%s/ReducedBkgSync-ds2049.root", dDataDir.c_str()));   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2061.root", sDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2064.root", sDataDir.c_str()));   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2067.root", sDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2070.root", sDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2073.root", sDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2076.root", sDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2061.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2064.root", dDataDir.c_str()));   
+  qtree->Add(Form("%s/ReducedBkgSync-ds2067.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2070.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2073.root", dDataDir.c_str())); 
+  qtree->Add(Form("%s/ReducedBkgSync-ds2076.root", dDataDir.c_str())); 
   dLivetime = 6042498; // DR 1 
   cout << "Using Dataset 1" << endl;
   break;
