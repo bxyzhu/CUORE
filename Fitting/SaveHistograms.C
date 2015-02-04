@@ -12,6 +12,53 @@ TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource)
 
 }
 
+TH1D *SmearMC(TH1D *hMC, TH1D *hSMC)
+{
+	// Reset previously Modeled histogram
+	hSMC->Reset();
+	cout << "Smearing: " << hMC->GetName() << endl;
+
+	double dRes1 = 1.998;
+	double dRes2 = 5.59;
+
+	double dNorm;
+  	double dNorm2;
+	double dSmearedValue;
+
+	double dBinSize = 2;
+
+	TF1 *gaus = new TF1("gaus","gaus(0)", 0, 10000);
+  	TF1 *gaus2 = new TF1("gaus2","gaus(0)", 0, 10000);
+
+
+	for(int i = 0; i < hMC->GetNbinsX(); i++)
+	{
+		for(int j = 0; j < hMC->GetNbinsX(); j++)
+		{
+			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
+			// dNorm = (853.3/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes1);
+      		// dNorm2 = (362.5/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes2);
+
+			dNorm = (304.5/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes1);
+      		dNorm2 = (34.24/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes2);
+
+			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
+			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), dRes1);
+      		gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, dRes2);
+
+			// Smeared contribution from gaussian centered at bin j for bin i 
+			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
+
+			// Fill bin i with contribution from gaussian centered at bin j
+			// cout << "Filling Bin: " << i << " with " << dSmearedValue << endl;
+			hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
+		}
+	}
+	
+	return hSMC;
+}
+
+
 void NormalizePDF(TH1D *h1, int minE, int maxE)
 {
 
@@ -36,8 +83,6 @@ void NormalizePDF(TH1D *h1, int minE, int maxE)
   {
     h1->Scale(1.0/dIntegral);
   }
-
-
 }
 
 void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
@@ -69,13 +114,7 @@ void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
   if(dIntegral1 != 0)
   {
     h1->Scale(1.0/dIntegral1);
-  }
-  if(dIntegral2 != 0)
-  {
     h2->Scale(1.0/dIntegral1);
-  }
-  if(dIntegral3 != 0)
-  {
     h3->Scale(1.0/dIntegral1);
   }
 }
@@ -106,14 +145,579 @@ void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
   if(dIntegral1 != 0)
   {
     h1->Scale(1.0/dIntegral1);
-  }
-  
-  if(dIntegral2 != 0)
-  {
     h2->Scale(1.0/dIntegral1);
   }
+}
+
+
+void SaveHistogramsReducedBulk()
+{
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Unsmeared/";
+
+	double dMinEnergy = 0;
+	double dMaxEnergy = 10000;
+	int dBinSize = 2;
+	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
+
+	// Unsmeared
+
+	TH1D *uTeO20nuM1 = new TH1D("uTeO20nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO22nuM1 = new TH1D("uTeO22nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2co60M1 = new TH1D("uTeO2co60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2k40M1 = new TH1D("uTeO2k40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2po210M1 = new TH1D("uTeO2po210M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2ra228pb208M1 = new TH1D("uTeO2ra228pb208M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2th230onlyM1 = new TH1D("uTeO2th230onlyM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2th232onlyM1 = new TH1D("uTeO2th232onlyM1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uCuFrameco60M1 = new TH1D("uCuFrameco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFramek40M1 = new TH1D("uCuFramek40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFrameth232M1 = new TH1D("uCuFrameth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFrameu238M1 = new TH1D("uCuFrameu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *u600mKco60M1 = new TH1D("u600mKco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKk40M1 = new TH1D("u600mKk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKth232M1 = new TH1D("u600mKth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKu238M1 = new TH1D("u600mKu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uPbRomco60M1 = new TH1D("uPbRomco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomk40M1 = new TH1D("uPbRomk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomth232M1 = new TH1D("uPbRomth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomu238M1 = new TH1D("uPbRomu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uOVCco60M1 = new TH1D("uOVCco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCk40M1 = new TH1D("uOVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCth232M1 = new TH1D("uOVCth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCu238M1 = new TH1D("uOVCu238M1", "", dNBins, dMinEnergy, dMaxEnergy);	
+
+	TH1D *uExtPbbi210M1 = new TH1D("uExtPbbi210M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+	TH1D *uTeO20nuM2 = new TH1D("uTeO20nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO22nuM2 = new TH1D("uTeO22nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2co60M2 = new TH1D("uTeO2co60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2k40M2 = new TH1D("uTeO2k40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2po210M2 = new TH1D("uTeO2po210M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2ra228pb208M2 = new TH1D("uTeO2ra228pb208M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2th230onlyM2 = new TH1D("uTeO2th230onlyM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2th232onlyM2 = new TH1D("uTeO2th232onlyM2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uCuFrameco60M2 = new TH1D("uCuFrameco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFramek40M2 = new TH1D("uCuFramek40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFrameth232M2 = new TH1D("uCuFrameth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuFrameu238M2 = new TH1D("uCuFrameu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *u600mKco60M2 = new TH1D("u600mKco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKk40M2 = new TH1D("u600mKk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKth232M2 = new TH1D("u600mKth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *u600mKu238M2 = new TH1D("u600mKu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uPbRomco60M2 = new TH1D("uPbRomco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomk40M2 = new TH1D("uPbRomk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomth232M2 = new TH1D("uPbRomth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uPbRomu238M2 = new TH1D("uPbRomu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uOVCco60M2 = new TH1D("uOVCco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCk40M2 = new TH1D("uOVCk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCth232M2 = new TH1D("uOVCth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uOVCu238M2 = new TH1D("uOVCu238M2", "", dNBins, dMinEnergy, dMaxEnergy);	
+
+	TH1D *uExtPbbi210M2 = new TH1D("uExtPbbi210M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+
+	// Fill these
+
+	TH1D *hTeO20nuM1 = new TH1D("hTeO20nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO22nuM1 = new TH1D("hTeO22nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2co60M1 = new TH1D("hTeO2co60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2k40M1 = new TH1D("hTeO2k40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2po210M1 = new TH1D("hTeO2po210M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2ra228pb208M1 = new TH1D("hTeO2ra228pb208M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2th230onlyM1 = new TH1D("hTeO2th230onlyM1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2th232onlyM1 = new TH1D("hTeO2th232onlyM1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hCuFrameco60M1 = new TH1D("hCuFrameco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFramek40M1 = new TH1D("hCuFramek40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFrameth232M1 = new TH1D("hCuFrameth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFrameu238M1 = new TH1D("hCuFrameu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *h600mKco60M1 = new TH1D("h600mKco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKk40M1 = new TH1D("h600mKk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKth232M1 = new TH1D("h600mKth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKu238M1 = new TH1D("h600mKu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hPbRomco60M1 = new TH1D("hPbRomco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomk40M1 = new TH1D("hPbRomk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomth232M1 = new TH1D("hPbRomth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomu238M1 = new TH1D("hPbRomu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hOVCco60M1 = new TH1D("hOVCco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCk40M1 = new TH1D("hOVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCth232M1 = new TH1D("hOVCth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCu238M1 = new TH1D("hOVCu238M1", "", dNBins, dMinEnergy, dMaxEnergy);	
+
+	TH1D *hExtPbbi210M1 = new TH1D("hExtPbbi210M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+	TH1D *hTeO20nuM2 = new TH1D("hTeO20nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO22nuM2 = new TH1D("hTeO22nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2co60M2 = new TH1D("hTeO2co60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2k40M2 = new TH1D("hTeO2k40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2po210M2 = new TH1D("hTeO2po210M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2ra228pb208M2 = new TH1D("hTeO2ra228pb208M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2th230onlyM2 = new TH1D("hTeO2th230onlyM2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2th232onlyM2 = new TH1D("hTeO2th232onlyM2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hCuFrameco60M2 = new TH1D("hCuFrameco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFramek40M2 = new TH1D("hCuFramek40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFrameth232M2 = new TH1D("hCuFrameth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuFrameu238M2 = new TH1D("hCuFrameu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *h600mKco60M2 = new TH1D("h600mKco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKk40M2 = new TH1D("h600mKk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKth232M2 = new TH1D("h600mKth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKu238M2 = new TH1D("h600mKu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hPbRomco60M2 = new TH1D("hPbRomco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomk40M2 = new TH1D("hPbRomk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomth232M2 = new TH1D("hPbRomth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomu238M2 = new TH1D("hPbRomu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hOVCco60M2 = new TH1D("hOVCco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCk40M2 = new TH1D("hOVCk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCth232M2 = new TH1D("hOVCth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCu238M2 = new TH1D("hOVCu238M2", "", dNBins, dMinEnergy, dMaxEnergy);	
+
+	TH1D *hExtPbbi210M2 = new TH1D("hExtPbbi210M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+	TChain *tTeO20nu = LoadMC(sDataDir.c_str(), "TeO2", "0nu_1um");
+	TChain *tTeO22nu = LoadMC(sDataDir.c_str(), "TeO2", "2nu");
+	TChain *tTeO2co60 = LoadMC(sDataDir.c_str(), "TeO2", "co60");
+	TChain *tTeO2k40 = LoadMC(sDataDir.c_str(), "TeO2", "k40");
+	TChain *tTeO2po210 = LoadMC(sDataDir.c_str(), "TeO2", "po210");
+	TChain *tTeO2ra228pb208 = LoadMC(sDataDir.c_str(), "TeO2", "ra228-pb208");
+	TChain *tTeO2th230only = LoadMC(sDataDir.c_str(), "TeO2", "th230_only");
+	TChain *tTeO2th232only = LoadMC(sDataDir.c_str(), "TeO2", "th232_only");
+
+	TChain *tCuFrameco60 = LoadMC(sDataDir.c_str(), "CuFrame", "co60");
+	TChain *tCuFramek40 = LoadMC(sDataDir.c_str(), "CuFrame", "k40");
+	TChain *tCuFrameth232 = LoadMC(sDataDir.c_str(), "CuFrame", "th232");
+	TChain *tCuFrameu238 = LoadMC(sDataDir.c_str(), "CuFrame", "u238");
+
+	TChain *t600mKco60 = LoadMC(sDataDir.c_str(), "600mK", "co60");
+	TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
+	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "600mK", "th232");
+	TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
+
+	TChain *tOVCco60 = LoadMC(sDataDir.c_str(), "OVC", "co60");
+	TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
+	TChain *tOVCth232 = LoadMC(sDataDir.c_str(), "OVC", "th232");
+	TChain *tOVCu238 = LoadMC(sDataDir.c_str(), "OVC", "u238");
+
+	TChain *tPbRomco60 = LoadMC(sDataDir.c_str(), "PbRom", "co60");
+	TChain *tPbRomk40 = LoadMC(sDataDir.c_str(), "PbRom", "k40");
+	TChain *tPbRomth232 = LoadMC(sDataDir.c_str(), "PbRom", "th232");
+	TChain *tPbRomu238 = LoadMC(sDataDir.c_str(), "PbRom", "u238");	
+
+	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
+
+
+	tTeO20nu->Project("uTeO20nuM1", "Ener2", "Multiplicity==1");
+	tTeO22nu->Project("uTeO22nuM1", "Ener2", "Multiplicity==1");
+	tTeO2co60->Project("uTeO2co60M1", "Ener2", "Multiplicity==1");
+	tTeO2k40->Project("uTeO2k40M1", "Ener2", "Multiplicity==1");
+	tTeO2po210->Project("uTeO2po210M1", "Ener2", "Multiplicity==1");
+	tTeO2ra228pb208->Project("uTeO2ra228pb208M1", "Ener2", "Multiplicity==1");
+	tTeO2th230only->Project("uTeO2th230onlyM1", "Ener2", "Multiplicity==1");
+	tTeO2th232only->Project("uTeO2th232onlyM1", "Ener2", "Multiplicity==1");
+
+	tCuFrameco60->Project("uCuFrameco60M1", "Ener2", "Multiplicity==1");
+	tCuFramek40->Project("uCuFramek40M1", "Ener2", "Multiplicity==1");
+	tCuFrameth232->Project("uCuFrameth232M1", "Ener2", "Multiplicity==1");
+	tCuFrameu238->Project("uCuFrameu238M1", "Ener2", "Multiplicity==1");
+
+	t600mKco60->Project("u600mKco60M1", "Ener2", "Multiplicity==1");
+	t600mKk40->Project("u600mKk40M1", "Ener2", "Multiplicity==1");
+	t600mKth232->Project("u600mKth232M1", "Ener2", "Multiplicity==1");
+	t600mKu238->Project("u600mKu238M1", "Ener2", "Multiplicity==1");
+
+	tOVCco60->Project("uOVCco60M1", "Ener2", "Multiplicity==1");
+	tOVCk40->Project("uOVCk40M1", "Ener2", "Multiplicity==1");
+	tOVCth232->Project("uOVCth232M1", "Ener2", "Multiplicity==1");
+	tOVCu238->Project("uOVCu238M1", "Ener2", "Multiplicity==1");
+
+	tPbRomco60->Project("uPbRomco60M1", "Ener2", "Multiplicity==1");
+	tPbRomk40->Project("uPbRomk40M1", "Ener2", "Multiplicity==1");
+	tPbRomth232->Project("uPbRomth232M1", "Ener2", "Multiplicity==1");
+	tPbRomu238->Project("uPbRomu238M1", "Ener2", "Multiplicity==1");
+
+	tExtPbbi210->Project("uExtPbbi210M1", "Ener2", "Multiplicity==1");
+
+
+	tTeO20nu->Project("uTeO20nuM2", "Ener2", "Multiplicity==2");
+	tTeO22nu->Project("uTeO22nuM2", "Ener2", "Multiplicity==2");
+	tTeO2co60->Project("uTeO2co60M2", "Ener2", "Multiplicity==2");
+	tTeO2k40->Project("uTeO2k40M2", "Ener2", "Multiplicity==2");
+	tTeO2po210->Project("uTeO2po210M2", "Ener2", "Multiplicity==2");
+	tTeO2ra228pb208->Project("uTeO2ra228pb208M2", "Ener2", "Multiplicity==2");
+	tTeO2th230only->Project("uTeO2th230onlyM2", "Ener2", "Multiplicity==2");
+	tTeO2th232only->Project("uTeO2th232onlyM2", "Ener2", "Multiplicity==2");
+
+	tCuFrameco60->Project("uCuFrameco60M2", "Ener2", "Multiplicity==2");
+	tCuFramek40->Project("uCuFramek40M2", "Ener2", "Multiplicity==2");
+	tCuFrameth232->Project("uCuFrameth232M2", "Ener2", "Multiplicity==2");
+	tCuFrameu238->Project("uCuFrameu238M2", "Ener2", "Multiplicity==2");
+
+	t600mKco60->Project("u600mKco60M2", "Ener2", "Multiplicity==2");
+	t600mKk40->Project("u600mKk40M2", "Ener2", "Multiplicity==2");
+	t600mKth232->Project("u600mKth232M2", "Ener2", "Multiplicity==2");
+	t600mKu238->Project("u600mKu238M2", "Ener2", "Multiplicity==2");
+
+	tOVCco60->Project("uOVCco60M2", "Ener2", "Multiplicity==2");
+	tOVCk40->Project("uOVCk40M2", "Ener2", "Multiplicity==2");
+	tOVCth232->Project("uOVCth232M2", "Ener2", "Multiplicity==2");
+	tOVCu238->Project("uOVCu238M2", "Ener2", "Multiplicity==2");
+
+	tPbRomco60->Project("uPbRomco60M2", "Ener2", "Multiplicity==2");
+	tPbRomk40->Project("uPbRomk40M2", "Ener2", "Multiplicity==2");
+	tPbRomth232->Project("uPbRomth232M2", "Ener2", "Multiplicity==2");
+	tPbRomu238->Project("uPbRomu238M2", "Ener2", "Multiplicity==2");
+
+	tExtPbbi210->Project("uExtPbbi210M2", "Ener2", "Multiplicity==2");
+
+	SmearMC(uTeO20nuM1, hTeO20nuM1);
+	SmearMC(uTeO22nuM1, hTeO22nuM1);
+	SmearMC(uTeO2co60M1, hTeO2co60M1);
+	SmearMC(uTeO2k40M1, hTeO2k40M1);
+	SmearMC(uTeO2po210M1, hTeO2po210M1);
+	SmearMC(uTeO2ra228pb208M1, hTeO2ra228pb208M1);
+	SmearMC(uTeO2th230onlyM1, hTeO2th230onlyM1);
+	SmearMC(uTeO2th232onlyM1, hTeO2th232onlyM1);
+	SmearMC(uCuFrameco60M1, hCuFrameco60M1);
+	SmearMC(uCuFrameth232M1, hCuFrameth232M1);
+	SmearMC(uCuFrameu238M1, hCuFrameu238M1);
+	SmearMC(uCuFramek40M1, hCuFramek40M1);
+	SmearMC(u600mKco60M1, h600mKco60M1);
+	SmearMC(u600mKth232M1, h600mKth232M1);
+	SmearMC(u600mKu238M1, h600mKu238M1);
+	SmearMC(u600mKk40M1, h600mKk40M1);
+	SmearMC(uOVCco60M1, hOVCco60M1);
+	SmearMC(uOVCth232M1, hOVCth232M1);
+	SmearMC(uOVCu238M1, hOVCu238M1);
+	SmearMC(uOVCk40M1, hOVCk40M1);
+	SmearMC(uPbRomco60M1, hPbRomco60M1);
+	SmearMC(uPbRomth232M1, hPbRomth232M1);
+	SmearMC(uPbRomu238M1, hPbRomu238M1);
+	SmearMC(uPbRomk40M1, hPbRomk40M1);
+	SmearMC(uExtPbbi210M1, hExtPbbi210M1);
+
+
+	SmearMC(uTeO20nuM2, hTeO20nuM2);
+	SmearMC(uTeO22nuM2, hTeO22nuM2);
+	SmearMC(uTeO2co60M2, hTeO2co60M2);
+	SmearMC(uTeO2k40M2, hTeO2k40M2);
+	SmearMC(uTeO2po210M2, hTeO2po210M2);
+	SmearMC(uTeO2ra228pb208M2, hTeO2ra228pb208M2);
+	SmearMC(uTeO2th230onlyM2, hTeO2th230onlyM2);
+	SmearMC(uTeO2th232onlyM2, hTeO2th232onlyM2);
+	SmearMC(uCuFrameco60M2, hCuFrameco60M2);
+	SmearMC(uCuFrameth232M2, hCuFrameth232M2);
+	SmearMC(uCuFrameu238M2, hCuFrameu238M2);
+	SmearMC(uCuFramek40M2, hCuFramek40M2);
+	SmearMC(u600mKco60M2, h600mKco60M2);
+	SmearMC(u600mKth232M2, h600mKth232M2);
+	SmearMC(u600mKu238M2, h600mKu238M2);
+	SmearMC(u600mKk40M2, h600mKk40M2);
+	SmearMC(uOVCco60M2, hOVCco60M2);
+	SmearMC(uOVCth232M2, hOVCth232M2);
+	SmearMC(uOVCu238M2, hOVCu238M2);
+	SmearMC(uOVCk40M2, hOVCk40M2);
+	SmearMC(uPbRomco60M2, hPbRomco60M2);
+	SmearMC(uPbRomth232M2, hPbRomth232M2);
+	SmearMC(uPbRomu238M2, hPbRomu238M2);
+	SmearMC(uPbRomk40M2, hPbRomk40M2);
+	SmearMC(uExtPbbi210M2, hExtPbbi210M2);
+
+
+	NormalizePDFPair( hTeO20nuM1, hTeO20nuM2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO22nuM1, hTeO22nuM2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2co60M1, hTeO2co60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2k40M1, hTeO2k40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2po210M1, hTeO2po210M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2ra228pb208M1, hTeO2ra228pb208M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2th230onlyM1, hTeO2th230onlyM2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hTeO2th232onlyM1, hTeO2th232onlyM2, dMinEnergy, dMaxEnergy);
+
+	NormalizePDFPair( hCuFrameco60M1, hCuFrameco60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hCuFramek40M1, hCuFramek40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hCuFrameth232M1, hCuFrameth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hCuFrameu238M1, hCuFrameu238M2, dMinEnergy, dMaxEnergy);
+
+	NormalizePDFPair( h600mKco60M1, h600mKco60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( h600mKk40M1, h600mKk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( h600mKth232M1, h600mKth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( h600mKu238M1, h600mKu238M2, dMinEnergy, dMaxEnergy);
+
+	NormalizePDFPair( hOVCco60M1, hOVCco60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hOVCk40M1, hOVCk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hOVCth232M1, hOVCth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hOVCu238M1, hOVCu238M2, dMinEnergy, dMaxEnergy);
+
+	NormalizePDFPair( hPbRomco60M1, hPbRomco60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hPbRomk40M1, hPbRomk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hPbRomth232M1, hPbRomth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hPbRomu238M1, hPbRomu238M2, dMinEnergy, dMaxEnergy);
+
+	TFile *file1 = new TFile("MCProduction_ReducedBulk.root", "RECREATE");
+	hTeO20nuM1->Write();
+	hTeO22nuM1->Write();
+	hTeO2co60M1->Write();
+	hTeO2k40M1->Write();
+	hTeO2po210M1->Write();
+	hTeO2ra228pb208M1->Write();
+	hTeO2th230onlyM1->Write();
+	hTeO2th232onlyM1->Write();
+
+	hCuFrameco60M1->Write();
+	hCuFramek40M1->Write();
+	hCuFrameth232M1->Write();
+	hCuFrameu238M1->Write();
+
+	h600mKco60M1->Write();
+	h600mKk40M1->Write();
+	h600mKth232M1->Write();
+	h600mKu238M1->Write();
+
+	hPbRomco60M1->Write();
+	hPbRomk40M1->Write();
+	hPbRomth232M1->Write();
+	hPbRomu238M1->Write();
+
+	hOVCco60M1->Write();
+	hOVCk40M1->Write();
+	hOVCth232M1->Write();
+	hOVCu238M1->Write();
+
+	hExtPbbi210M1->Write();
+
+
+	hTeO20nuM2->Write();
+	hTeO22nuM2->Write();
+	hTeO2co60M2->Write();
+	hTeO2k40M2->Write();
+	hTeO2po210M2->Write();
+	hTeO2ra228pb208M2->Write();
+	hTeO2th230onlyM2->Write();
+	hTeO2th232onlyM2->Write();
+
+	hCuFrameco60M2->Write();
+	hCuFramek40M2->Write();
+	hCuFrameth232M2->Write();
+	hCuFrameu238M2->Write();
+
+	h600mKco60M2->Write();
+	h600mKk40M2->Write();
+	h600mKth232M2->Write();
+	h600mKu238M2->Write();
+
+	hPbRomco60M2->Write();
+	hPbRomk40M2->Write();
+	hPbRomth232M2->Write();
+	hPbRomu238M2->Write();
+
+	hOVCco60M2->Write();
+	hOVCk40M2->Write();
+	hOVCth232M2->Write();
+	hOVCu238M2->Write();
+
+	hExtPbbi210M2->Write();
+
+	file1->Write();
 
 }
+
+void SaveHistogramsReducedSurface()
+{
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Unsmeared/";
+
+	double dMinEnergy = 0;
+	double dMaxEnergy = 10000;
+	int dBinSize = 2;
+	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
+
+	// Unsmeared
+	TH1D *uTeO2Sxpb210M1_001 = new TH1D("uTeO2Sxpb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxpb210M1_1 = new TH1D("uTeO2Sxpb210M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth230onlyM1_001 = new TH1D("uTeO2Sxth230onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth232onlyM1_001 = new TH1D("uTeO2Sxth232onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxra228pb208M1_001 = new TH1D("uTeO2Sxra228pb208M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxu238th230M1_001 = new TH1D("uTeO2Sxu238th230M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxra226pb210M1_001 = new TH1D("uTeO2Sxra226pb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uCuBoxSxpb210M1_01 = new TH1D("uCuBoxSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxpb210M1_10 = new TH1D("uCuBoxSxpb210M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxth232M1_10 = new TH1D("uCuBoxSxth232M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxu238M1_10 = new TH1D("uCuBoxSxu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uTeO2Sxpb210M2_001 = new TH1D("uTeO2Sxpb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxpb210M2_1 = new TH1D("uTeO2Sxpb210M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth230onlyM2_001 = new TH1D("uTeO2Sxth230onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth232onlyM2_001 = new TH1D("uTeO2Sxth232onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxra228pb208M2_001 = new TH1D("uTeO2Sxra228pb208M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxu238th230M2_001 = new TH1D("uTeO2Sxu238th230M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxra226pb210M2_001 = new TH1D("uTeO2Sxra226pb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *uCuBoxSxpb210M2_01 = new TH1D("uCuBoxSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxpb210M2_10 = new TH1D("uCuBoxSxpb210M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxth232M2_10 = new TH1D("uCuBoxSxth232M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uCuBoxSxu238M2_10 = new TH1D("uCuBoxSxu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+	// Fill these
+	TH1D *hTeO2Sxpb210M1_001 = new TH1D("hTeO2Sxpb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxpb210M1_1 = new TH1D("hTeO2Sxpb210M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM1_001 = new TH1D("hTeO2Sxth230onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232onlyM1_001 = new TH1D("hTeO2Sxth232onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M1_001 = new TH1D("hTeO2Sxra228pb208M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M1_001 = new TH1D("hTeO2Sxu238th230M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M1_001 = new TH1D("hTeO2Sxra226pb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hCuBoxSxpb210M1_01 = new TH1D("hCuBoxSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxpb210M1_10 = new TH1D("hCuBoxSxpb210M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxth232M1_10 = new TH1D("hCuBoxSxth232M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxu238M1_10 = new TH1D("hCuBoxSxu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxpb210M2_001 = new TH1D("hTeO2Sxpb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxpb210M2_1 = new TH1D("hTeO2Sxpb210M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM2_001 = new TH1D("hTeO2Sxth230onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232onlyM2_001 = new TH1D("hTeO2Sxth232onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M2_001 = new TH1D("hTeO2Sxra228pb208M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M2_001 = new TH1D("hTeO2Sxu238th230M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M2_001 = new TH1D("hTeO2Sxra226pb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hCuBoxSxpb210M2_01 = new TH1D("hCuBoxSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxpb210M2_10 = new TH1D("hCuBoxSxpb210M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxth232M2_10 = new TH1D("hCuBoxSxth232M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxSxu238M2_10 = new TH1D("hCuBoxSxu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
+	TChain *tTeO2Sxpb210_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "pb210-.01");
+	TChain *tTeO2Sxpb210_1 = LoadMC(sDataDir.c_str(), "TeO2Sx", "pb210-1");
+	TChain *tTeO2Sxth232only_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232_only-.01");
+	TChain *tTeO2Sxra228pb208_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra228-pb208-.01");
+	TChain *tTeO2Sxu238th230_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-th230-.01");
+	TChain *tTeO2Sxth230only_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th230_only-.01");
+	TChain *tTeO2Sxra226pb210_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra226-pb210-.01");
+
+	TChain *tCuBoxSxpb210_01 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-.1");
+	TChain *tCuBoxSxpb210_10 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-10");
+	TChain *tCuBoxSxth232_10 = LoadMC(sDataDir.c_str(), "CuBoxSx", "th232-10");
+	TChain *tCuBoxSxu238_10 = LoadMC(sDataDir.c_str(), "CuBoxSx", "u238-10");
+
+	tTeO2Sxpb210_001->Project("uTeO2Sxpb210M1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxpb210_1->Project("uTeO2Sxpb210M1_1", "Ener2", "Multiplicity==1");
+	tTeO2Sxth232only_001->Project("uTeO2Sxth232onlyM1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxra228pb208_001->Project("uTeO2Sxra228pb208M1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxu238th230_001->Project("uTeO2Sxu238th230M1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxth230only_001->Project("uTeO2Sxth230onlyM1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxra226pb210_001->Project("uTeO2Sxra226pb210M1_001", "Ener2", "Multiplicity==1");
+
+	tCuBoxSxpb210_01->Project("uCuBoxSxpb210M1_01", "Ener2", "Multiplicity==1");
+	tCuBoxSxpb210_10->Project("uCuBoxSxpb210M1_10", "Ener2", "Multiplicity==1");
+	tCuBoxSxth232_10->Project("uCuBoxSxth232M1_10", "Ener2", "Multiplicity==1");
+	tCuBoxSxu238_10->Project("uCuBoxSxu238M1_10", "Ener2", "Multiplicity==1");
+
+
+	tTeO2Sxpb210_001->Project("uTeO2Sxpb210M2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxpb210_1->Project("uTeO2Sxpb210M2_1", "Ener2", "Multiplicity==2");
+	tTeO2Sxth232only_001->Project("uTeO2Sxth232onlyM2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxra228pb208_001->Project("uTeO2Sxra228pb208M2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxu238th230_001->Project("uTeO2Sxu238th230M2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxth230only_001->Project("uTeO2Sxth230onlyM2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxra226pb210_001->Project("uTeO2Sxra226pb210M2_001", "Ener2", "Multiplicity==2");
+
+	tCuBoxSxpb210_01->Project("uCuBoxSxpb210M2_01", "Ener2", "Multiplicity==2");
+	tCuBoxSxpb210_10->Project("uCuBoxSxpb210M2_10", "Ener2", "Multiplicity==2");
+	tCuBoxSxth232_10->Project("uCuBoxSxth232M2_10", "Ener2", "Multiplicity==2");
+	tCuBoxSxu238_10->Project("uCuBoxSxu238M2_10", "Ener2", "Multiplicity==2");
+
+
+
+
+	SmearMC(uTeO2Sxpb210M1_001, hTeO2Sxpb210M1_001);
+	SmearMC(uTeO2Sxpb210M1_1, hTeO2Sxpb210M1_1);
+	SmearMC(uTeO2Sxth232onlyM1_001, hTeO2Sxth232onlyM1_001);
+	SmearMC(uTeO2Sxra228pb208M1_001, hTeO2Sxra228pb208M1_001);
+	SmearMC(uTeO2Sxu238th230M1_001, hTeO2Sxu238th230M1_001);
+	SmearMC(uTeO2Sxth230onlyM1_001, hTeO2Sxth230onlyM1_001);
+	SmearMC(uTeO2Sxra226pb210M1_001, hTeO2Sxra226pb210M1_001);
+
+	SmearMC(uCuBoxSxpb210M1_01, hCuBoxSxpb210M1_01);
+	SmearMC(uCuBoxSxpb210M1_10, hCuBoxSxpb210M1_10);
+	SmearMC(uCuBoxSxth232M1_10, hCuBoxSxth232M1_10);
+	SmearMC(uCuBoxSxu238M1_10, hCuBoxSxu238M1_10);
+
+	SmearMC(uTeO2Sxpb210M2_001, hTeO2Sxpb210M2_001);
+	SmearMC(uTeO2Sxpb210M2_1, hTeO2Sxpb210M2_1);
+	SmearMC(uTeO2Sxth232onlyM2_001, hTeO2Sxth232onlyM2_001);
+	SmearMC(uTeO2Sxra228pb208M2_001, hTeO2Sxra228pb208M2_001);
+	SmearMC(uTeO2Sxu238th230M2_001, hTeO2Sxu238th230M2_001);
+	SmearMC(uTeO2Sxth230onlyM2_001, hTeO2Sxth230onlyM2_001);
+	SmearMC(uTeO2Sxra226pb210M2_001, hTeO2Sxra226pb210M2_001);
+
+	SmearMC(uCuBoxSxpb210M2_01, hCuBoxSxpb210M2_01);
+	SmearMC(uCuBoxSxpb210M2_10, hCuBoxSxpb210M2_10);
+	SmearMC(uCuBoxSxth232M2_10, hCuBoxSxth232M2_10);
+	SmearMC(uCuBoxSxu238M2_10, hCuBoxSxu238M2_10);
+
+
+	NormalizePDFPair(hTeO2Sxpb210M1_001, hTeO2Sxpb210M2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxpb210M1_1, hTeO2Sxpb210M2_1, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxth232onlyM1_001, hTeO2Sxth232onlyM2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxra228pb208M1_001, hTeO2Sxra228pb208M2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxu238th230M1_001, hTeO2Sxu238th230M2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxth230onlyM1_001, hTeO2Sxth230onlyM2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxra226pb210M1_001, hTeO2Sxra226pb210M2_001, dMinEnergy, dMaxEnergy);
+
+	NormalizePDFPair(hCuBoxSxpb210M1_01, hCuBoxSxpb210M2_01, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxSxpb210M1_10, hCuBoxSxpb210M2_10, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxSxth232M1_10, hCuBoxSxth232M2_10, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hCuBoxSxu238M1_10, hCuBoxSxu238M2_10, dMinEnergy, dMaxEnergy);
+
+
+	TFile *file1 = new TFile("MCProduction_ReducedSurface.root", "RECREATE");
+
+	hTeO2Sxpb210M1_001->Write();
+	hTeO2Sxpb210M1_1->Write();
+	hTeO2Sxth232onlyM1_001->Write();
+	hTeO2Sxra228pb208M1_001->Write();
+	hTeO2Sxu238th230M1_001->Write();
+	hTeO2Sxth230onlyM1_001->Write();
+	hTeO2Sxra226pb210M1_001->Write();
+
+	hCuBoxSxpb210M1_01->Write();
+	hCuBoxSxpb210M1_10->Write();
+	hCuBoxSxth232M1_10->Write();
+	hCuBoxSxu238M1_10->Write();
+
+	hTeO2Sxpb210M2_001->Write();
+	hTeO2Sxpb210M2_1->Write();
+	hTeO2Sxth232onlyM2_001->Write();
+	hTeO2Sxra228pb208M2_001->Write();
+	hTeO2Sxu238th230M2_001->Write();
+	hTeO2Sxth230onlyM2_001->Write();
+	hTeO2Sxra226pb210M2_001->Write();
+
+	hCuBoxSxpb210M2_01->Write();
+	hCuBoxSxpb210M2_10->Write();
+	hCuBoxSxth232M2_10->Write();
+	hCuBoxSxu238M2_10->Write();
+
+}
+
+
 
 void SaveHistogramsBulkInner()
 {

@@ -18,6 +18,7 @@
 class TBackgroundModel : public TObject {
 
 public:
+	TBackgroundModel();
 
 	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset);
 	virtual ~TBackgroundModel();
@@ -26,8 +27,6 @@ public:
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
   
-	double GetChiSquareAdaptive();
-
 	bool DoTheFitAdaptive(double f2nuValue);
 
 	void DrawBkg();
@@ -35,6 +34,8 @@ public:
 	void DrawMC();
 
 	TH1D *EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope);
+
+	double GetChiSquareAdaptive();
 
 	void Initialize();
 
@@ -47,6 +48,8 @@ public:
 
 	void PrintParameters();
 
+	void PrintParActivity();
+
 	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
 
 	void ReadMC();
@@ -56,6 +59,8 @@ public:
 	void SanityCheck();
 
 	void SetParameters(int index, double value);
+
+	void SetParEfficiency();
 	
 	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1);
 
@@ -84,6 +89,7 @@ public:
 	int 	dFitMaxBinM2Sum;	
 	int 	dNumFreeParameters;
 
+	int  	dDataIntegralTot;
 	int 	dDataIntegralM1;
 	int 	dDataIntegralM2;
 	int 	dDataIntegralM2Sum;
@@ -96,6 +102,7 @@ public:
 	double 	dResidualRMSM1;
 	double 	dResidualRMSM2;
 	double 	dResidualRMSM2Sum;
+	double 	dResidualRMSTot;
 
 
 	int 	dAdaptiveBinsM1;
@@ -1262,6 +1269,7 @@ private:
 	TH1D			*hEnergyScaleDummyM2;
 	TH1D			*hEnergyScaleDummyM2Sum;
 
+
 /*
 ////////////// Dummy histograms
 	TH1D 			*hnewM1;
@@ -1566,7 +1574,9 @@ private:
 	TH1D			*hnewCuBox_CuFrameth232M1_10;
 	TH1D			*hnewCuBox_CuFrameu238M1_10;
 	TH1D			*hnewCuBox_CuFramepb210M1_10;
+	TH1D			*hnewCuBox_CuFramepb210M1_1;
 	TH1D			*hnewCuBox_CuFramepb210M1_01;
+	TH1D			*hnewCuBox_CuFramepb210M1_001;
 
 	TH1D			*hnewCuBox_CuFrameco60M2;
 	TH1D			*hnewCuBox_CuFramek40M2;
@@ -1576,7 +1586,9 @@ private:
 	TH1D			*hnewCuBox_CuFrameth232M2_10;
 	TH1D			*hnewCuBox_CuFrameu238M2_10;
 	TH1D			*hnewCuBox_CuFramepb210M2_10;
+	TH1D			*hnewCuBox_CuFramepb210M2_1;
 	TH1D			*hnewCuBox_CuFramepb210M2_01;
+	TH1D			*hnewCuBox_CuFramepb210M2_001;
 
 	TH1D			*hnewCuBox_CuFrameco60M2Sum;
 	TH1D			*hnewCuBox_CuFramek40M2Sum;
@@ -1586,7 +1598,9 @@ private:
 	TH1D			*hnewCuBox_CuFrameth232M2Sum_10;
 	TH1D			*hnewCuBox_CuFrameu238M2Sum_10;
 	TH1D			*hnewCuBox_CuFramepb210M2Sum_10;
+	TH1D			*hnewCuBox_CuFramepb210M2Sum_1;
 	TH1D			*hnewCuBox_CuFramepb210M2Sum_01;
+	TH1D			*hnewCuBox_CuFramepb210M2Sum_001;
 
 ///////////// 50mK M1 and M2
 	TH1D			*hnew50mKco58M1;
@@ -1785,7 +1799,9 @@ private:
 	// Parameters
 	double				fParameters[139];
 	double				fParError[139];
+	double 				fParActivity[139]; // Integral of all events
 	double				fResolution[52];
+	double 				fParEfficiencyM1[139]; // Efficiency of the parameters 
 	double				dSecToYears;
 	double				fMCEff[62];
 

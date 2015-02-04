@@ -1,3 +1,6 @@
+// Don't try to compile because it doesn't! 
+// Just run w/ CINT in ROOT
+
 #include "TMinuit.h"
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -16,7 +19,7 @@
 
 using namespace std;
 
-//ClassImp(TBackgroundModel)
+ClassImp(TBackgroundModel)
   
 //first set up a global function that calls your classes method that calculates the quantity to minimise
 void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code)
@@ -39,6 +42,10 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
     fval = Obj->GetChiSquareAdaptive();
 }
 
+TBackgroundModel::TBackgroundModel()
+{
+
+}
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet)
 {
@@ -679,6 +686,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
   fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
   fDataHistoM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewM2Sum", dAdaptiveArrayM2Sum);
+
+
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
@@ -1321,7 +1330,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
   dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
   dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
-  int dDataIntegralTot = qtree->GetEntries();
+  dDataIntegralTot = qtree->GetEntries();
 
   cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
   cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
@@ -1333,7 +1342,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // Do the fit now if no other tests are needed 
   nLoop = 0;
   DoTheFitAdaptive(0);
-  LatexResultTable(0); 
+  // LatexResultTable(0); 
 
   // For Profile NLL calculation
   // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
@@ -2759,6 +2768,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
 
 /*
+  // M2Sum term, not used since M2Sum isn't used
   for(int i = dFitMinBinM2Sum; i <= dFitMaxBinM2Sum; i++)
   {
     if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 3150 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 3400)continue;
@@ -2778,7 +2788,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
 /*
 // Penalty terms... add or subtract?
-  chiSquare -= (fParameter[] - )(fParameter[] - ) /(dConstraintErr*dConstraintErr)
+  chiSquare += (fParameter[] - )(fParameter[] - ) /(dConstraintErr*dConstraintErr)
 
 */
 
@@ -2859,7 +2869,7 @@ void TBackgroundModel::Initialize()
   hTeO2ra228pb208M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hTeO2ra228pb208M2Sum");
   hTeO2th230onlyM2Sum = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th230onlyM2Sum");
 
-/*
+
 ///////// Frame M1 and M2
   hCuFrameco58M1    = (TH1D*)fBulkInner->Get("hCuFrameco58M1");
   hCuFrameco60M1    = (TH1D*)fBulkInner->Get("hCuFrameco60M1");
@@ -2915,7 +2925,7 @@ void TBackgroundModel::Initialize()
   hCuBoxpb210M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hCuBoxpb210M2Sum");
   hCuBoxth232M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hCuBoxth232M2Sum");
   hCuBoxu238M2Sum    = (TH1D*)fBulkInnerM2Sum->Get("hCuBoxu238M2Sum");
-*/
+
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulkInner->Get("hCuBox_CuFrameco60M1");
   hCuBox_CuFramek40M1 = (TH1D*)fBulkInner->Get("hCuBox_CuFramek40M1");
@@ -3174,7 +3184,7 @@ void TBackgroundModel::Initialize()
   hTeO2Sxra226pb210M2Sum_001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2Sum_001");
   hTeO2Sxpb210M2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_0001");
 
-/*
+
 //////// Frame M1 and M2
   hCuFrameSth232M1_1    = (TH1D*)fSurfaceOther->Get("hCuFrameSth232M1_1");
   hCuFrameSu238M1_1     = (TH1D*)fSurfaceOther->Get("hCuFrameSu238M1_1");
@@ -3266,7 +3276,7 @@ void TBackgroundModel::Initialize()
   hCuBoxSxu238M2Sum_01   = (TH1D*)fSurfaceOther->Get("hCuBoxSxu238M2Sum_01");
   hCuBoxSxu238M2Sum_1    = (TH1D*)fSurfaceOther->Get("hCuBoxSxu238M2Sum_1");
   hCuBoxSxu238M2Sum_10   = (TH1D*)fSurfaceOther->Get("hCuBoxSxu238M2Sum_10");
-*/
+
 /////// CuBox + CuFrame
 
   hCuBox_CuFrameth232M1_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_10");
@@ -3435,7 +3445,7 @@ void TBackgroundModel::Initialize()
   hTeO2Sxra226pb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxra226pb210M2Sum_001", dAdaptiveArrayM2Sum);
   hTeO2Sxpb210M2Sum_0001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_0001", dAdaptiveArrayM2Sum);
 
-/*
+
 ////////// Frame M1 and M2
   hCuFrameco58M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco58M1", dAdaptiveArrayM1);
   hCuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco60M1", dAdaptiveArrayM1);
@@ -3582,7 +3592,7 @@ void TBackgroundModel::Initialize()
   hCuBoxSxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_01", dAdaptiveArrayM2Sum);
   hCuBoxSxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_1", dAdaptiveArrayM2Sum);
   hCuBoxSxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_10", dAdaptiveArrayM2Sum);
-*/
+
 
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameco60M1", dAdaptiveArrayM1);
@@ -3828,7 +3838,7 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxu238M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_1->GetBinContent(i)/hnewTeO2Sxu238M1_1->GetBinWidth(i));
     hAdapTeO2Sxu238M1_10->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_10->GetBinContent(i)/hnewTeO2Sxu238M1_10->GetBinWidth(i));
 
-/*
+
     hAdapCuFrameco58M1->SetBinContent(i, dBinSize * hnewCuFrameco58M1->GetBinContent(i)/hnewCuFrameco58M1->GetBinWidth(i));
     hAdapCuFrameco60M1->SetBinContent(i, dBinSize * hnewCuFrameco60M1->GetBinContent(i)/hnewCuFrameco60M1->GetBinWidth(i));
     hAdapCuFramecs137M1->SetBinContent(i, dBinSize * hnewCuFramecs137M1->GetBinContent(i)/hnewCuFramecs137M1->GetBinWidth(i));
@@ -3876,7 +3886,7 @@ void TBackgroundModel::Initialize()
     hAdapCuBoxSxu238M1_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_01->GetBinContent(i)/hnewCuBoxSxu238M1_01->GetBinWidth(i));
     hAdapCuBoxSxu238M1_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_1->GetBinContent(i)/hnewCuBoxSxu238M1_1->GetBinWidth(i));
     hAdapCuBoxSxu238M1_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_10->GetBinContent(i)/hnewCuBoxSxu238M1_10->GetBinWidth(i));
-*/
+
     hAdapCuBox_CuFrameco60M1->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M1->GetBinContent(i)/hnewCuBox_CuFrameco60M1->GetBinWidth(i));
     hAdapCuBox_CuFramek40M1->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M1->GetBinContent(i)/hnewCuBox_CuFramek40M1->GetBinWidth(i));
     hAdapCuBox_CuFrameth232M1->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M1->GetBinContent(i)/hnewCuBox_CuFrameth232M1->GetBinWidth(i));
@@ -3990,7 +4000,7 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxra226pb210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M2_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_0001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_0001->GetBinContent(i)/hnewTeO2Sxpb210M2_0001->GetBinWidth(i));
 
-/*
+
     hAdapCuFrameco58M2->SetBinContent(i, dBinSize * hnewCuFrameco58M2->GetBinContent(i)/hnewCuFrameco58M2->GetBinWidth(i));
     hAdapCuFrameco60M2->SetBinContent(i, dBinSize * hnewCuFrameco60M2->GetBinContent(i)/hnewCuFrameco60M2->GetBinWidth(i));
     hAdapCuFramecs137M2->SetBinContent(i, dBinSize * hnewCuFramecs137M2->GetBinContent(i)/hnewCuFramecs137M2->GetBinWidth(i));
@@ -4038,7 +4048,7 @@ void TBackgroundModel::Initialize()
     hAdapCuBoxSxu238M2_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_01->GetBinContent(i)/hnewCuBoxSxu238M2_01->GetBinWidth(i));
     hAdapCuBoxSxu238M2_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_1->GetBinContent(i)/hnewCuBoxSxu238M2_1->GetBinWidth(i));
     hAdapCuBoxSxu238M2_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_10->GetBinContent(i)/hnewCuBoxSxu238M2_10->GetBinWidth(i));
-*/
+
 
     hAdapCuBox_CuFrameco60M2->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M2->GetBinContent(i)/hnewCuBox_CuFrameco60M2->GetBinWidth(i));
     hAdapCuBox_CuFramek40M2->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M2->GetBinContent(i)/hnewCuBox_CuFramek40M2->GetBinWidth(i));
@@ -4105,6 +4115,7 @@ void TBackgroundModel::Initialize()
     hAdapExtPbbi210M2->SetBinContent(i, dBinSize * hnewExtPbbi210M2->GetBinContent(i)/hnewExtPbbi210M2->GetBinWidth(i));
   }
 
+/*
   for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
   {
     hAdapTeO20nuM2Sum->SetBinContent(i, dBinSize * hnewTeO20nuM2Sum->GetBinContent(i)/hnewTeO20nuM2Sum->GetBinWidth(i));
@@ -4154,7 +4165,7 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxra226pb210M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2Sum_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M2Sum_0001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_0001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_0001->GetBinWidth(i));
 
-/*
+
     hAdapCuFrameco58M2Sum->SetBinContent(i, dBinSize * hnewCuFrameco58M2Sum->GetBinContent(i)/hnewCuFrameco58M2Sum->GetBinWidth(i));
     hAdapCuFrameco60M2Sum->SetBinContent(i, dBinSize * hnewCuFrameco60M2Sum->GetBinContent(i)/hnewCuFrameco60M2Sum->GetBinWidth(i));
     hAdapCuFramecs137M2Sum->SetBinContent(i, dBinSize * hnewCuFramecs137M2Sum->GetBinContent(i)/hnewCuFramecs137M2Sum->GetBinWidth(i));
@@ -4202,7 +4213,7 @@ void TBackgroundModel::Initialize()
     hAdapCuBoxSxu238M2Sum_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_01->GetBinContent(i)/hnewCuBoxSxu238M2Sum_01->GetBinWidth(i));
     hAdapCuBoxSxu238M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_1->GetBinContent(i)/hnewCuBoxSxu238M2Sum_1->GetBinWidth(i));
     hAdapCuBoxSxu238M2Sum_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_10->GetBinContent(i)/hnewCuBoxSxu238M2Sum_10->GetBinWidth(i));
-*/
+
 
     hAdapCuBox_CuFrameco60M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M2Sum->GetBinContent(i)/hnewCuBox_CuFrameco60M2Sum->GetBinWidth(i));
     hAdapCuBox_CuFramek40M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M2Sum->GetBinContent(i)/hnewCuBox_CuFramek40M2Sum->GetBinWidth(i));
@@ -4215,7 +4226,7 @@ void TBackgroundModel::Initialize()
     hAdapCuBox_CuFramepb210M2Sum_1->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_1->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_1->GetBinWidth(i));
     hAdapCuBox_CuFramepb210M2Sum_01->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_01->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_01->GetBinWidth(i));
     hAdapCuBox_CuFramepb210M2Sum_001->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_001->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_001->GetBinWidth(i));
-/*
+
     hAdap50mKco58M2Sum->SetBinContent(i, dBinSize * hnew50mKco58M2Sum->GetBinContent(i)/hnew50mKco58M2Sum->GetBinWidth(i));
     hAdap50mKco60M2Sum->SetBinContent(i, dBinSize * hnew50mKco60M2Sum->GetBinContent(i)/hnew50mKco60M2Sum->GetBinWidth(i));
     hAdap50mKcs137M2Sum->SetBinContent(i, dBinSize * hnew50mKcs137M2Sum->GetBinContent(i)/hnew50mKcs137M2Sum->GetBinWidth(i));
@@ -4229,7 +4240,7 @@ void TBackgroundModel::Initialize()
     hAdap600mKk40M2Sum->SetBinContent(i, dBinSize * hnew600mKk40M2Sum->GetBinContent(i)/hnew600mKk40M2Sum->GetBinWidth(i));
     hAdap600mKth232M2Sum->SetBinContent(i, dBinSize * hnew600mKth232M2Sum->GetBinContent(i)/hnew600mKth232M2Sum->GetBinWidth(i));
     hAdap600mKu238M2Sum->SetBinContent(i, dBinSize * hnew600mKu238M2Sum->GetBinContent(i)/hnew600mKu238M2Sum->GetBinWidth(i));
-*/
+
 
     // hAdapPbRombi207M2Sum->SetBinContent(i, dBinSize * hnewPbRombi207M2Sum->GetBinContent(i)/hnewPbRombi207M2Sum->GetBinWidth(i));
     hAdapPbRomco60M2Sum->SetBinContent(i, dBinSize * hnewPbRomco60M2Sum->GetBinContent(i)/hnewPbRomco60M2Sum->GetBinWidth(i));
@@ -4244,7 +4255,7 @@ void TBackgroundModel::Initialize()
     hAdapInternalth232M2Sum->SetBinContent(i, dBinSize * hnewInternalth232M2Sum->GetBinContent(i)/hnewInternalth232M2Sum->GetBinWidth(i));
     hAdapInternalu238M2Sum->SetBinContent(i, dBinSize * hnewInternalu238M2Sum->GetBinContent(i)/hnewInternalu238M2Sum->GetBinWidth(i));
 
-/*
+
     hAdapMBco60M2Sum->SetBinContent(i, dBinSize * hnewMBco60M2Sum->GetBinContent(i)/hnewMBco60M2Sum->GetBinWidth(i));
     hAdapMBk40M2Sum->SetBinContent(i, dBinSize * hnewMBk40M2Sum->GetBinContent(i)/hnewMBk40M2Sum->GetBinWidth(i));
     hAdapMBth232M2Sum->SetBinContent(i, dBinSize * hnewMBth232M2Sum->GetBinContent(i)/hnewMBth232M2Sum->GetBinWidth(i));
@@ -4258,7 +4269,7 @@ void TBackgroundModel::Initialize()
     hAdapIVCk40M2Sum->SetBinContent(i, dBinSize * hnewIVCk40M2Sum->GetBinContent(i)/hnewIVCk40M2Sum->GetBinWidth(i));
     hAdapIVCth232M2Sum->SetBinContent(i, dBinSize * hnewIVCth232M2Sum->GetBinContent(i)/hnewIVCth232M2Sum->GetBinWidth(i));
     hAdapIVCu238M2Sum->SetBinContent(i, dBinSize * hnewIVCu238M2Sum->GetBinContent(i)/hnewIVCu238M2Sum->GetBinWidth(i));
-*/
+
 
     hAdapOVCco60M2Sum->SetBinContent(i, dBinSize * hnewOVCco60M2Sum->GetBinContent(i)/hnewOVCco60M2Sum->GetBinWidth(i));
     hAdapOVCk40M2Sum->SetBinContent(i, dBinSize * hnewOVCk40M2Sum->GetBinContent(i)/hnewOVCk40M2Sum->GetBinWidth(i));
@@ -4268,6 +4279,9 @@ void TBackgroundModel::Initialize()
     hAdapExtPbbi210M2Sum->SetBinContent(i, dBinSize * hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
 
   }
+*/
+
+  SetParEfficiency();
 }
 
 // Loads the background data
@@ -4342,16 +4356,26 @@ void TBackgroundModel::LoadData()
 // Prints parameters, needs update 11-06-2014
 void TBackgroundModel::PrintParameters()
 {
-  for(int i = 0; i < dNParam; i++)
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
-    cout << Form("Par%d = ", i) << fParameters[i] << " +/- " << fParError[i] << endl;
+    cout << minuit->fCpnam[i] << ": " << fParameters[i] << " +/- " << fParError[i] << endl;
   }
+}
+
+void TBackgroundModel::PrintParActivity()
+{ 
+  // This only gets the number of counts corrected for detector efficiency
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+  cout << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
+  }
+
 }
 
 // Resets all parameters to 0
 void TBackgroundModel::ResetParameters()
 {
-  for(int i = 0; i < dNParam; i++)
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
     fParameters[i] = 0;
     fParError[i] = 0;
@@ -4366,6 +4390,46 @@ void TBackgroundModel::SetParameters(int index, double value)
 	else fParameters[index] = value;
 }
 
+void TBackgroundModel::SetParEfficiency()
+{
+fParEfficiencyM1[0] = 0.8897514;
+fParEfficiencyM1[1] = 0.9292826;
+fParEfficiencyM1[2] = 0.4424162;
+fParEfficiencyM1[3] = 0.8584163;
+fParEfficiencyM1[4] = 0.9418009;
+fParEfficiencyM1[5] = 0.941975;
+fParEfficiencyM1[6] = 0.4975102;
+fParEfficiencyM1[7] = 0.9419295;
+fParEfficiencyM1[8] = 0.7376795;
+fParEfficiencyM1[9] = 0.3802244;
+fParEfficiencyM1[10] = 0.7457738;
+fParEfficiencyM1[11] = 0.7379278;
+fParEfficiencyM1[12] = 0.3802244;
+fParEfficiencyM1[13] = 0.4457218;
+fParEfficiencyM1[14] = 0.0510853;
+fParEfficiencyM1[15] = 0.0354736;
+fParEfficiencyM1[16] = 0.2807244;
+fParEfficiencyM1[17] = 0.0369882;
+fParEfficiencyM1[18] = 0.1013459;
+fParEfficiencyM1[19] = 0.0881936;
+fParEfficiencyM1[20] = 0.046961;
+fParEfficiencyM1[21] = 0.0725138;
+fParEfficiencyM1[22] = 0.006387241;
+fParEfficiencyM1[23] = 0.012149995;
+fParEfficiencyM1[24] = 0.05125624;
+fParEfficiencyM1[25] = 0.00937862;
+fParEfficiencyM1[26] = 0.000191901;
+fParEfficiencyM1[27] = 0.07314378;
+fParEfficiencyM1[28] = 0.00484976;
+fParEfficiencyM1[29] = 0.006349752;
+fParEfficiencyM1[30] = 0.004160072;
+fParEfficiencyM1[31] = 0.00715452;
+fParEfficiencyM1[32] = 0.00043995;
+fParEfficiencyM1[33] = 0.000465822;
+fParEfficiencyM1[34] = 0.000293556;
+fParEfficiencyM1[35] = 0.4958653;
+fParEfficiencyM1[36] = 0.0742276;
+}
 
 // Creates/updates the background model
 void TBackgroundModel::UpdateModelAdaptive()
@@ -4379,7 +4443,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Reset all bins in model histograms in every loop
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
-  // fModelTotAdapM2Sum->Reset();
 
 
   dNumCalls++;
@@ -4406,7 +4469,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[10]);
   fModelTotAdapM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[11]);
   fModelTotAdapM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[12]);
-  // fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_0001,     dDataIntegralM1*fParameters[13]);
   fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_001,     dDataIntegralM1*fParameters[13]);
   fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_1,     dDataIntegralM1*fParameters[35]);
 
@@ -4420,7 +4482,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_10,  dDataIntegralM1*fParameters[20]);
   fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_01,  dDataIntegralM1*fParameters[21]);
   fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_001,   dDataIntegralM1*fParameters[36]);
-  // fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_001,  dDataIntegralM1*fParameters[37]);
 
   fModelTotAdapM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[22]);
   fModelTotAdapM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[23]);
@@ -4453,7 +4514,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM1*fParameters[10]);
   fModelTotAdapM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM1*fParameters[11]);
   fModelTotAdapM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM1*fParameters[12]);
-  // fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_0001,     dDataIntegralM1*fParameters[13]);
   fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_001,     dDataIntegralM1*fParameters[13]);
   fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_1,     dDataIntegralM1*fParameters[35]);
 
@@ -4467,7 +4527,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_10,  dDataIntegralM1*fParameters[20]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_01,  dDataIntegralM1*fParameters[21]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_001,   dDataIntegralM1*fParameters[36]);
-  // fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_001,  dDataIntegralM1*fParameters[37]);
 
   fModelTotAdapM2->Add( hAdapInternalth232M2,     dDataIntegralM1*fParameters[22]);
   fModelTotAdapM2->Add( hAdapInternalu238M2,      dDataIntegralM1*fParameters[23]);
@@ -4485,52 +4544,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapOVCth232M2,    dDataIntegralM1*fParameters[29]);
   fModelTotAdapM2->Add( hAdapOVCu238M2,     dDataIntegralM1*fParameters[30]);
 
-/*
-/////// M2Sum
-  fModelTotAdapM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM1*fParameters[0]);
-  fModelTotAdapM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM1*fParameters[1]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2co60M2Sum,             dDataIntegralM1*fParameters[2]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2k40M2Sum,              dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2po210M2Sum,            dDataIntegralM1*fParameters[4]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2th232onlyM2Sum,        dDataIntegralM1*fParameters[5]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2ra228pb208M2Sum,       dDataIntegralM1*fParameters[6]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2th230onlyM2Sum,        dDataIntegralM1*fParameters[7]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth232M2Sum_001,      dDataIntegralM1*fParameters[8]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxra228pb208M2Sum_001, dDataIntegralM1*fParameters[9]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxu238th230M2Sum_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth230onlyM2Sum_001,  dDataIntegralM1*fParameters[11]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxra226pb210M2Sum_001, dDataIntegralM1*fParameters[12]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxpb210M2Sum_001,     dDataIntegralM1*fParameters[13]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxpb210M2Sum_1,     dDataIntegralM1*fParameters[35]);
-
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum,     dDataIntegralM1*fParameters[14]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum,      dDataIntegralM1*fParameters[15]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameco60M2Sum,      dDataIntegralM1*fParameters[16]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramek40M2Sum,       dDataIntegralM1*fParameters[17]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum_10,  dDataIntegralM1*fParameters[18]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_10,   dDataIntegralM1*fParameters[19]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_10,  dDataIntegralM1*fParameters[20]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_01,  dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_001,   dDataIntegralM1*fParameters[36]);
-  // fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_001,  dDataIntegralM1*fParameters[37]);
-
-  fModelTotAdapM2Sum->Add( hAdapInternalth232M2Sum,     dDataIntegralM1*fParameters[22]);
-  fModelTotAdapM2Sum->Add( hAdapInternalu238M2Sum,      dDataIntegralM1*fParameters[23]);
-  fModelTotAdapM2Sum->Add( hAdapInternalco60M2Sum,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapM2Sum->Add( hAdapInternalk40M2Sum,       dDataIntegralM1*fParameters[25]);
-  fModelTotAdapM2Sum->Add( hAdapExtPbbi210M2Sum,        dDataIntegralM1*fParameters[26]);
-
-  fModelTotAdapM2Sum->Add( hAdapPbRomco60M2Sum,     dDataIntegralM1*fParameters[27]);
-  fModelTotAdapM2Sum->Add( hAdapPbRomk40M2Sum,      dDataIntegralM1*fParameters[28]);
-  fModelTotAdapM2Sum->Add( hAdapPbRomth232M2Sum,    dDataIntegralM1*fParameters[29]);
-  fModelTotAdapM2Sum->Add( hAdapPbRomu238M2Sum,     dDataIntegralM1*fParameters[30]);
-
-  fModelTotAdapM2Sum->Add( hAdapOVCco60M2Sum,     dDataIntegralM1*fParameters[27]);
-  fModelTotAdapM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM1*fParameters[28]);
-  fModelTotAdapM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM1*fParameters[29]);
-  fModelTotAdapM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM1*fParameters[30]);
-*/
-
 }
   
 bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
@@ -4543,7 +4556,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4593,50 +4606,37 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   minuit->DefineParameter(35, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
   minuit->DefineParameter(36, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(37, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.);
 
   // Setting initial values
-  // minuit->DefineParameter(0, "TeO2 0nu",  1.49167e-04, 1E-7, 0., 1.0);
+  // minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0., 1.0);
   // minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(2, "TeO2 co60",  1.02515e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(3, "TeO2 k40",  4.16868e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(4, "TeO2 po210",  1.27409e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(5, "TeO2 th232 only", 2.48880e-04, 1E-7, 0, 1.0 );
-  // minuit->DefineParameter(6, "TeO2 ra228 to pb208", 0., 1E-7, 0, 1.0 );
-  // minuit->DefineParameter(7, "TeO2 th230 only", 4.61196e-04, 1E-7, 0, 1.0 );
-  // minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 4.15428e-03, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 2.89693e-03, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 3.44542e-03, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 1.21349e-03, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 5.27484e-03, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(13, "TeO2 Sx pb210 0.01", 7.73082e-04, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(4, "TeO2 th232 only", 0., 1E-7, 0, 1.0 );
+  // minuit->DefineParameter(5, "TeO2 th230 only", 0., 1E-7, 0, 1.0 );
+  // minuit->DefineParameter(6, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(7, "TeO2 Sx ra228 to pb208 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(8, "TeO2 Sx u238 to th230 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(9, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(10, "TeO2 Sx ra226 to pb210 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(11, "TeO2 Sx pb210 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(12, "CuBox + CuFrame Sx th232 10", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(13, "CuBox + CuFrame Sx u238 10 ", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(14, "CuBox + CuFrame Sx pb210 10", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(15, "CuBox + CuFrame Sx pb210 0.1", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(16, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.0);
 
-  // minuit->DefineParameter(14, "CuBox + CuFrame th232", 0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(15, "CuBox + CuFrame u238", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(16, "CuBox + CuFrame co60", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(17, "CuBox + CuFrame k40", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(18, "CuBox + CuFrame Sx th232 10", 2.37912e-02, 1E-7, 0, 1.);
-  // minuit->DefineParameter(19, "CuBox + CuFrame Sx u238 10 ", 1.89233e-02, 1E-7, 0, 1.);
-  // minuit->DefineParameter(20, "CuBox + CuFrame Sx pb210 10", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(21, "CuBox + CuFrame Sx pb210 0.1", 2.80507e-02, 1E-7, 0, 1.);
+  // minuit->DefineParameter(17, "PbRom co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(18, "PbRom k40",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(19, "PbRom th232",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(20, "PbRom u238",  0., 1E-7, 0., 1.0);
 
-  // minuit->DefineParameter(22, "Internal Shields th232", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(23, "Internal Shields u238", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(24, "Internal Shields co60", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(25, "Internal Shields k40", 0., 1E-7, 0, 1.);
-  // minuit->DefineParameter(26, "External Lead bi210", 0., 1E-7, 0, 1.0);
-
-  // minuit->DefineParameter(27, "PbRom co60",  2.07302e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(28, "PbRom k40",  8.02268e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(29, "PbRom th232",  8.12071e-02, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(30, "PbRom u238",  9.64613e-02, 1E-7, 0., 1.0);
-
-  // minuit->DefineParameter(31, "OVC co60",  9.37268e-01, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(32, "OVC k40",  5.61857e-01, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(33, "OVC th232",  5.49898e-01, 1E-7, 0., 1.0);    
-  // minuit->DefineParameter(34, "OVC u238",  1.29922e-01, 1E-7, 0., 1.0);
-  // minuit->DefineParameter(35, "TeO2 Sx pb210 1", 0.0063188., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(36, "CuBox + CuFrame Sx pb210 0.01", 0.0293089, 1E-7, 0, 1.);
+  // minuit->DefineParameter(21, "OVC co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(22, "OVC k40",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(23, "OVC th232",  0., 1E-7, 0., 1.0);    
+  // minuit->DefineParameter(24, "OVC u238",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(25, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(26, "External Lead bi210", 0., 1E-7, 0, 1.);
 
 
 //////////////////////////////////////
@@ -4646,9 +4646,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
-   // minuit->FixParameter(4); // TeO2 po210
+   minuit->FixParameter(4); // TeO2 po210
    // minuit->FixParameter(5); // TeO2 th232 only
-   // minuit->FixParameter(6); // TeO2 ra228 to pb208
+   minuit->FixParameter(6); // TeO2 ra228 to pb208
    // minuit->FixParameter(7); // TeO2 th230 only
    // minuit->FixParameter(8); // TeO2 Sx th232 only 0.01
    // minuit->FixParameter(9); // TeO2 Sx ra228 to pb208 0.01
@@ -4657,19 +4657,19 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // minuit->FixParameter(12); // TeO2 Sx ra226 to pb210 0.01
    // minuit->FixParameter(13); // TeO2 Sx pb210 0.001
 
-   // minuit->FixParameter(14); // CuBox + CuFrame th232
-   // minuit->FixParameter(15); // CuBox + CuFrame u238
-   // minuit->FixParameter(16); // CuBox + CuFrame co60
-   // minuit->FixParameter(17); // CuBox + CuFrame k40
+   minuit->FixParameter(14); // CuBox + CuFrame th232
+   minuit->FixParameter(15); // CuBox + CuFrame u238
+   minuit->FixParameter(16); // CuBox + CuFrame co60
+   minuit->FixParameter(17); // CuBox + CuFrame k40
    // minuit->FixParameter(18); // CuBox + CuFrame Sx th232 10
    // minuit->FixParameter(19); // CuBox + CuFrame Sx u238 10
    // minuit->FixParameter(20); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(21); // CuBox + CuFrame Sx pb210 0.1
 
-   // minuit->FixParameter(22); // Internal Shields th232
-   // minuit->FixParameter(23); // Internal Shields u238
-   // minuit->FixParameter(24); // Internal Shields co60
-   // minuit->FixParameter(25); // Internal Shields k40
+   minuit->FixParameter(22); // Internal Shields th232
+   minuit->FixParameter(23); // Internal Shields u238
+   minuit->FixParameter(24); // Internal Shields co60
+   minuit->FixParameter(25); // Internal Shields k40
    // minuit->FixParameter(26); // External Lead bi210 
 
    // minuit->FixParameter(27); // RLead co60
@@ -4683,7 +4683,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // minuit->FixParameter(34); // OVC u238
   // minuit->FixParameter(35); // TeO2 Sx pb210 1
   // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 0.01
-  // minuit->FixParameter(37);
 
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
@@ -4809,7 +4808,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapthM2->Add( hAdapOVCth232M2,    dDataIntegralM2*fParameters[29]);
   fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[30]);
 
-
+/*
   // M2Sum Parameters
   fModelTotAdapNDBDM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM2Sum*fParameters[0]);
   fModelTotAdap2NDBDM2Sum->Add( hAdapTeO22nuM2Sum,              dDataIntegralM2Sum*fParameters[1]);
@@ -4854,7 +4853,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapkM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM2Sum*fParameters[28]);
   fModelTotAdapthM2Sum->Add( hAdapOVCth232M2Sum,    dDataIntegralM2Sum*fParameters[29]);
   fModelTotAdapuM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM2Sum*fParameters[30]);
-
+*/
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
   cadap1->SetLogy();
@@ -5235,6 +5234,12 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 */
 
 
+  // This only gets the number of counts corrected for detector efficiency
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+    fParActivity[i] = fParameters[i]*dDataIntegralM1/fParEfficiencyM1[i];
+  }
+
   // Saving stuff
   // cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
@@ -5340,8 +5345,6 @@ void TBackgroundModel::DrawMC()
   legspb2sum->AddEntry(hCuBox_CuFramepb210M2Sum_1, "CuBox+CuFrame Sx Pb210 1", "l");
   legspb2sum->AddEntry(hCuBox_CuFramepb210M2Sum_10, "CuBox+CuFrame Sx Pb210 10", "l");
   legspb2sum->Draw();
-
-
 /*
   TCanvas *cPb2101 = new TCanvas("cPb2101", "cPb2101", 1200, 800);
   cPb2101->SetLogy();
@@ -5499,9 +5502,7 @@ void TBackgroundModel::DrawMC()
   legpo2sum->AddEntry(hTeO2Sxpo210M2Sum_01, "TeO2 Sx po210 0.1", "l");
   legpo2sum->AddEntry(hTeO2Sxpo210M2Sum_001, "TeO2 Sx po210 0.01", "l");
   legpo2sum->Draw();
-*/
 
-/*
   TLegend *legth1 = new TLegend(0.65,0.7,0.95,0.95);
   TLegend *legu1 = new TLegend(0.65,0.7,0.95,0.95);
   TLegend *legk1 = new TLegend(0.65,0.7,0.95,0.95);
@@ -5872,6 +5873,10 @@ TH1D *TBackgroundModel::SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1)
   return hSMC;
 }
 
+
+
+
+
 // Only use after fit
 // Need maybe an array with all of the names of the variables
 void TBackgroundModel::LatexResultTable(double fValue)
@@ -5921,15 +5926,27 @@ void TBackgroundModel::LatexResultTable(double fValue)
   // OutFile << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   OutFile << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
   OutFile << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << fParError[1]/fParameters[1] * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
-
+  OutFile << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/4 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/4) << endl;
+  
+  OutFile << "Residual RMS (Tot): " << dResidualRMSTot << endl;
+  OutFile << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
   OutFile << endl;
   OutFile << endl;
 
-  for(int i = 0; i < dNParam; i++)
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
-    OutFile << minuit->fCpnam[i] << Form(" & %.7f$\\pm$%.7f \\\\ ", fParameters[i], fParError[i] ) << endl;
+    OutFile << minuit->fCpnam[i] << Form(" & %.8f$\\pm$%.8f \\\\ ", fParameters[i], fParError[i] ) << endl;
+  }
+
+  OutFile << endl;
+  OutFile << endl;
+
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+    OutFile << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
   }
   OutFile.close();
+
 
 }
 
@@ -5946,11 +5963,12 @@ void TBackgroundModel::SanityCheck()
   // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
 }
 
+/*
 void TBackgroundModel::KernalConvolution(TH1D *hIn, TH1D *hOut)
 {
   double dGausNorm;
   double dConvolvedValue;
-  int binMax = hMC->GetNbinsX();
+  int binMax = hIn->GetNbinsX();
 
   // Set the Gaussian parameter, using 2.7 for resolution right now
 
@@ -5958,11 +5976,11 @@ void TBackgroundModel::KernalConvolution(TH1D *hIn, TH1D *hOut)
   {
     for(int j = 0; j < dAdaptiveBinsM1; j++)
     {
-      dGausNorm = hMC->GetBinWidth(j)*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*2.7);
+      dGausNorm = hIn->GetBinWidth(j)*hIn->GetBinContent(j)/(sqrt(2*TMath::Pi())*2.7);
 
       gaus->SetParameters(dGausNorm, hIn->GetBinCenter(j), 2.7);
 
-      dConvolvedValue = gaus->Derivative2(hIn->GetBinCenter(in));
+      dConvolvedValue = gaus->Derivative2(hIn->GetBinCenter(i));
 
       hOut->Fill(hOut->GetBinCenter(i), dConvolvedValue);
 
@@ -5970,6 +5988,7 @@ void TBackgroundModel::KernalConvolution(TH1D *hIn, TH1D *hOut)
   }
 
 }
+*/
 
 // Make sure to run in batch mode and make sure to have the 2nbb normalization FIXED
 // Probably best to run Minuit in quiet mode as well
