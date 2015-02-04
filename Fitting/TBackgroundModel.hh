@@ -12,6 +12,7 @@
 #include "TRandom3.h"
 #include "TDatime.h"
 #include <vector>
+#include <map>
 // #include <iostream>
 #include <fstream>
 
@@ -26,7 +27,7 @@ public:
 	std::vector<double> AdaptiveBinning(TH1D *h1, int dBinBase);
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
-  
+
 	bool DoTheFitAdaptive(double f2nuValue);
 
 	void DrawBkg();
@@ -60,10 +61,10 @@ public:
 
 	void SetParameters(int index, double value);
 
+	std::map<string, int> SetParMap(); 
+
 	void SetParEfficiency();
 	
-	TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double resolution1);
-
 	void Test();
 
 	void UpdateModelAdaptive();
@@ -114,6 +115,8 @@ public:
 	double 	*dAdaptiveArrayM1;
 	double 	*dAdaptiveArrayM2;
 	double 	*dAdaptiveArrayM2Sum;
+
+	std::map<string, int> dParMap;
 
 private:
 
@@ -1776,6 +1779,9 @@ private:
 	TFile *fBulkOuterM2Sum;
 	TFile *fSurfaceCrystal;
 	TFile *fSurfaceOther;
+
+	TFile *fBulkSmeared;
+	TFile *fSurfaceSmeared;
 
 	// For accidental coincidence test
 	TFile *fFileCoin;
