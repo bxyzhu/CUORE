@@ -1,6 +1,3 @@
-// Don't try to compile because it doesn't! 
-// Just run w/ CINT in ROOT
-
 #include "TMinuit.h"
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -18,10 +15,14 @@
 
 
 using namespace std;
+using std::cout;
+using std::endl;
+using std::map;
+using std::vector;
 
 ClassImp(TBackgroundModel)
   
-//first set up a global function that calls your classes method that calculates the quantity to minimise
+//first set up a global function that calls your classes method that calculates the quantity to minimize
 void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code)
 {
   // Required External Wrapper for function to be minimized by Minuit 
@@ -33,11 +34,11 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 37; i++ )
+  for(int i = 0; i < 33; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
-  // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimise fval
+  // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimize fval
     Obj->UpdateModelAdaptive();
     fval = Obj->GetChiSquareAdaptive();
 }
@@ -51,10 +52,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 {
 
   tTime = new TDatime();
-  dNParam = 37; // number of fitting parameters
+  dNParam = 33; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
+  // Data directories depending on QCC/local
   // dDataDir =  "/Users/brian/macros/Simulations/Production/";
   dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
    // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
@@ -64,8 +66,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
    // dSaveDir = "/cuore/user/zhubrian/code/Fitting";
   dDataIntegral = 0;
 
-  // Bin size (keV) -- base binning is 2 keV
-  dBinSize = 2; 
+  // Bin size (keV) -- base binning is 1 keV
+  dBinSize = 1; 
   // Histogram range - from 0 to 10 MeV
   dMinEnergy = 0.;
   dMaxEnergy = 10000.;
@@ -95,24 +97,26 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   // Data cuts 
   qtree = new TChain("qtree");
-  // qtree = new TChain("CombiTree");
   base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
   base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
-  base_cut = base_cut && "abs(BaselineSlope)<0.1";
-  base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
   base_cut = base_cut && "Channel != 1 && Channel != 10";
 
-  // Load data here
+  // Old PSA cuts
+  // base_cut = base_cut && "abs(BaselineSlope)<0.1";
+  // base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+
+  // New PSA cuts
+  base_cut = base_cut && "NormBaselineSlope < 4.8 && NormBaselineSlope > -4";
+  base_cut = base_cut && "NormRiseTime < 4.8 && NormRiseTime > -4";
+  base_cut = base_cut && "NormDecayTime < 4.8 && NormDecayTime > -4";
+  base_cut = base_cut && "NormDelay < 4.8 && NormDelay > -4";
+  base_cut = base_cut && "NormTVL < 5.3 && NormTVL > -6";
+  base_cut = base_cut && "NormTVR < 5.3 && NormTVR > -6";
+
   LoadData();
 
-
-  // Scale by Live-time (ds 2061 - 2100) 14647393.0 seconds
-  // fDataHistoM1->Scale(1/((936398+14647393.0) * dSecToYears));
-  // fDataHistoM2->Scale(1/((936398+14647393.0) * dSecToYears));  
-
-  // cout << "Normalized Data using Livetime of: " << (936398+14647393.0) * dSecToYears << " years" << endl;
-
   // Total model histograms M1
+  // M2Sum histograms created but not used (in case I need them someday...)
   fModelTotM1      = new TH1D("fModelTotM1",      "Frame",        dNBins, dMinEnergy, dMaxEnergy);  
   fModelTotthM1    = new TH1D("fModelTotthM1",    "Total th232",  dNBins, dMinEnergy, dMaxEnergy);
   fModelTotuM1     = new TH1D("fModelTotuM1",     "Total u238",   dNBins, dMinEnergy, dMaxEnergy);
@@ -579,7 +583,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 
 ////////// Roman Lead M1 and M2
-  // hPbRombi207M1     = new TH1D("hPbRombi207M1",  "hPbRombi207M1",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomco60M1      = new TH1D("hPbRomco60M1",   "hPbRomco60M1",   dNBins, dMinEnergy, dMaxEnergy);
   hPbRomcs137M1     = new TH1D("hPbRomcs137M1",  "hPbRomcs137M1",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomk40M1       = new TH1D("hPbRomk40M1",    "hPbRomk40M1",    dNBins, dMinEnergy, dMaxEnergy);
@@ -587,7 +590,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hPbRomth232M1     = new TH1D("hPbRomth232M1",  "hPbRomth232M1",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomu238M1      = new TH1D("hPbRomu238M1",   "hPbRomu238M1",   dNBins, dMinEnergy, dMaxEnergy);
 
-  // hPbRombi207M2     = new TH1D("hPbRombi207M2",  "hPbRombi207M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomco60M2      = new TH1D("hPbRomco60M2",   "hPbRomco60M2",   dNBins, dMinEnergy, dMaxEnergy);
   hPbRomcs137M2     = new TH1D("hPbRomcs137M2",  "hPbRomcs137M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomk40M2       = new TH1D("hPbRomk40M2",    "hPbRomk40M2",    dNBins, dMinEnergy, dMaxEnergy);
@@ -595,7 +597,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hPbRomth232M2     = new TH1D("hPbRomth232M2",  "hPbRomth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomu238M2      = new TH1D("hPbRomu238M2",   "hPbRomu238M2",   dNBins, dMinEnergy, dMaxEnergy);
 
-  // hPbRombi207M2Sum     = new TH1D("hPbRombi207M2Sum",  "hPbRombi207M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomco60M2Sum      = new TH1D("hPbRomco60M2Sum",   "hPbRomco60M2Sum",   dNBins, dMinEnergy, dMaxEnergy);
   hPbRomcs137M2Sum     = new TH1D("hPbRomcs137M2Sum",  "hPbRomcs137M2Sum",  dNBins, dMinEnergy, dMaxEnergy);  
   hPbRomk40M2Sum       = new TH1D("hPbRomk40M2Sum",    "hPbRomk40M2Sum",    dNBins, dMinEnergy, dMaxEnergy);
@@ -665,6 +666,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hExtPbbi210M2Sum = new TH1D("hExtPbbi210M2Sum", "hExtPbbi210M2Sum", dNBins, dMinEnergy, dMaxEnergy);
 
 
+// Mess with rebinning here 
+  // fDataHistoM1->Rebin(20);
+  // fDataHistoM2->Rebin(20);
+  // fDataHistoM2Sum->Rebin(20);
+  dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
  // Calculates adaptive binning vectors
@@ -683,31 +689,30 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fAdapDataHistoM2   = new TH1D("fAdapDataHistoM2",   "", dAdaptiveBinsM2, dAdaptiveArrayM2);
   fAdapDataHistoM2Sum   = new TH1D("fAdapDataHistoM2Sum",   "", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   
-  fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
-  fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
-  fDataHistoM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewM2Sum", dAdaptiveArrayM2Sum);
-
+  hnewM1 = fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
+  hnewM2 = fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
+  hnewM2Sum = fDataHistoM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewM2Sum", dAdaptiveArrayM2Sum);
 
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
-    fAdapDataHistoM1->SetBinContent(i, dBinSize * hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i));
-    fAdapDataHistoM1->SetBinError(i, dBinSize * TMath::Sqrt(hnewM1->GetBinContent(i))/hnewM1->GetBinWidth(i));
-    // fAdapDataHistoM1->SetBinError(i, 0);
+    fAdapDataHistoM1->SetBinContent(i, hnewM1->GetBinContent(i)/hnewM1->GetBinWidth(i));
+    fAdapDataHistoM1->SetBinError(i, TMath::Sqrt(hnewM1->GetBinContent(i))/hnewM1->GetBinWidth(i));
+    // fAdapDataHistoM1->SetBinError(i, 0); // If I don't want errors for some reason
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2; i++)
   {
-    fAdapDataHistoM2->SetBinContent(i, dBinSize * hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i));
-    fAdapDataHistoM2->SetBinError(i, dBinSize * TMath::Sqrt(hnewM2->GetBinContent(i))/hnewM2->GetBinWidth(i));
-    // fAdapDataHistoM2->SetBinError(i, 0);
+    fAdapDataHistoM2->SetBinContent(i, hnewM2->GetBinContent(i)/hnewM2->GetBinWidth(i));
+    fAdapDataHistoM2->SetBinError(i, TMath::Sqrt(hnewM2->GetBinContent(i))/hnewM2->GetBinWidth(i));
+    // fAdapDataHistoM2->SetBinError(i, 0); // If I don't want errors for some reason
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
   {
-    fAdapDataHistoM2Sum->SetBinContent(i, dBinSize * hnewM2Sum->GetBinContent(i)/hnewM2Sum->GetBinWidth(i));
-    fAdapDataHistoM2Sum->SetBinError(i, dBinSize * TMath::Sqrt(hnewM2Sum->GetBinContent(i))/hnewM2Sum->GetBinWidth(i));
-    // fAdapDataHistoM2Sum->SetBinError(i, 0);
+    fAdapDataHistoM2Sum->SetBinContent(i, hnewM2Sum->GetBinContent(i)/hnewM2Sum->GetBinWidth(i));
+    fAdapDataHistoM2Sum->SetBinError(i, TMath::Sqrt(hnewM2Sum->GetBinContent(i))/hnewM2Sum->GetBinWidth(i));
+    // fAdapDataHistoM2Sum->SetBinError(i, 0); // If I don't want errors for some reason
   }
 
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
@@ -748,12 +753,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   fModelTotAdapExtM1   = new TH1D("fModelTotAdapExtM1", "Total External", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  // fModelTotAdapAlphaM1      = new TH1D("fModelTotAdapAlphaM1",   "Total Alphas",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  // fModelTotAdapAlphaHighM1  = new TH1D("fModelTotAdapAlphaHighM1",   "Total Alphas High",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  // fModelTotAdapAlphaLowM1  = new TH1D("fModelTotAdapAlphaLowM1",   "Total Alphas Low",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-
-
 /////////// Total Adaptive binning histograms M2
   fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
   fModelTotAdapthM2    = new TH1D("fModelTotAdapthM2",    "Total th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -779,10 +778,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   fModelTotAdapExtM2   = new TH1D("fModelTotAdapExtM2", "Total External", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  // fModelTotAdapAlphaM2      = new TH1D("fModelTotAdapAlphaM2",   "Total Alphas",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  // fModelTotAdapAlphaHighM2  = new TH1D("fModelTotAdapAlphaHighM2",   "Total Alphas High",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  // fModelTotAdapAlphaLowM2  = new TH1D("fModelTotAdapAlphaLowM2",   "Total Alphas Low",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-
 /////////// Total Adaptive binning histograms M2Sum
   fModelTotAdapM2Sum      = new TH1D("fModelTotAdapM2Sum",      "Total PDF M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
   fModelTotAdapthM2Sum    = new TH1D("fModelTotAdapthM2Sum",    "Total th232",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
@@ -807,11 +802,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fModelTotAdapSpoM2Sum   = new TH1D("fModelTotAdapSpoM2Sum",   "Total S po210",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
   fModelTotAdapExtM2Sum   = new TH1D("fModelTotAdapExtM2Sum", "Total External", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-
-  // fModelTotAdapAlphaM2Sum      = new TH1D("fModelTotAdapAlphaM2Sum",   "Total Alphas",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  // fModelTotAdapAlphaHighM2Sum  = new TH1D("fModelTotAdapAlphaHighM2Sum",   "Total Alphas High",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  // fModelTotAdapAlphaLowM2Sum  = new TH1D("fModelTotAdapAlphaLowM2Sum",   "Total Alphas Low",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-
 
 
 /////////// Crystal M1 and M2
@@ -1303,12 +1293,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 
   // Loads all of the PDFs from file
-  Initialize2();
+  Initialize();
 
 /*
-  // Add events to background
+  // Add 2nbb events to background
   SanityCheck();
-  // Set Error Bars so I don't go crazy
+  // Set Error Bars to 0 for MC histograms so I don't go crazy
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
     fAdapDataHistoM1->SetBinError(i, 0);
@@ -1325,7 +1315,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   }
 */
 
-  // Scaling by livetime, don't use with Toy data
   dDataIntegral = fDataHistoM1->Integral(1, dNBins);
   dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
   dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
@@ -1343,23 +1332,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   nLoop = 0;
   DoTheFitAdaptive(0);
   LatexResultTable(0); 
-
-  // For Profile NLL calculation
-  // ProfileNLL(0.1274866, 8769.2); // Total with M2Sum
-  // ProfileNLL(0.1367351, 4223.69); // DR1 only
-  // ProfileNLL(0.1171083, 3614.55); // DR2 only
-  // ProfileNLL(0.1277500, 2902.32); // DR3 only
-
-  // ProfileNLL(0.1270216, 3500.13); // Total without M2Sum
-
-  // ProfileNLL(0.1267539, 3970.36); // Total
-  // ProfileNLL(0.1543494, 2163.72); // M1 Only
-
-
-  // gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
 }
   
-// Needs updating  
+// Probably needs updating  
 TBackgroundModel::~TBackgroundModel()
 {
   delete fDataHistoTot;
@@ -2444,120 +2419,153 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   double dDummyFill = 0;
   int j = 0;
   // 25 since start at 50 keV with 2 keV bin width
-  for(int i = 1; i < 25; i++)
+  for(int i = h1->FindBin(0); i < h1->FindBin(50); i++)
   {
     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i));
   }
-  for(int i = 25; i < dNBins; i++)
+  for(int i = h1->FindBin(50); i < h1->GetNbinsX(); i++)
   {
-
     // Added per each peak
-    // Pt peak 3200 - 3400
-    if(i >= 1576 && i < 1701)
+/*
+    // K40
+    if(i >= h1->FindBin(1440) && i < h1->FindBin(1480))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(1576));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1440)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+125;
+     i = i+(1480-1440)/dBaseBinSize;
+    }
+    // Tl-208
+    if(i >= h1->FindBin(2600) && i < h1->FindBin(2630))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2600)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(2630-2600)/dBaseBinSize;
+    }
+*/
+    // Pt peak 3150 - 3400
+    if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(3150)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(3400-3150)/dBaseBinSize;
     }
     // 4050 - 4150
-    if(i >= 2026 && i < 2076)
+    if(i >= h1->FindBin(4050) && i < h1->FindBin(4150))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2026));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4050)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+(4150-4050)/dBaseBinSize;
     }
     // 4200 - 4350
-    if(i >= 2101 && i < 2176)
+    if(i >= h1->FindBin(4200) && i < h1->FindBin(4350))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2101));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4200)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+75;
+     i = i+(4350-4200)/dBaseBinSize;
     }    
 
     // 4700 - 4850
-    if(i >= 2351 && i < 2426)
+    if(i >= h1->FindBin(4700) && i < h1->FindBin(4850))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2351));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4700)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+75;
+     i = i+(4850-4700)/dBaseBinSize;
     }
 
     // 4850 - 4950
-    if(i >= 2426 && i < 2476)
+    if(i >= h1->FindBin(4850) && i < h1->FindBin(4950))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2426));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4850)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+(4950-4850)/dBaseBinSize;
     }
 
     // 5200 - 5400
-    if(i >= 2601 && i < 2701)
+    if(i >= h1->FindBin(5200) && i < h1->FindBin(5400))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2601));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5200)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+100;
+     i = i+(5400-5200)/dBaseBinSize;
     }
     // 5400 - 5650
-    if(i >= 2701 && i < 2826)
+    if(i >= h1->FindBin(5400) && i < h1->FindBin(5650))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2701));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5400)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+125;
+     i = i+(5650-5400)/dBaseBinSize;
     }
 
-    // 5800 - 5900
-    if(i >= 2901 && i < 2951)
+    // 5800 - 6050
+    if(i >= h1->FindBin(5800) && i < h1->FindBin(6050))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(2901));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5800)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+50;
+     i = i+(6050-5800)/dBaseBinSize;
     }    
 
     // 6050 - 6350
-    if(i >= 3026 && i < 3176)
+    if(i >= h1->FindBin(6050) && i < h1->FindBin(6350))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3026));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6050)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+150;
+     i = i+(6350-6050)/dBaseBinSize;
     }    
 
     // 6700 - 6900
-    if(i >= 3351 && i < 3451)
+    if(i >= h1->FindBin(6700) && i < h1->FindBin(6900))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(3351));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6700)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+100;
+     i = i+(6900-6700)/dBaseBinSize;
     }    
+
+    // 8000 to the end 10000
+    if(i >= h1->FindBin(8000) && i < h1->FindBin(10000))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(8000)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(10000-8000)/dBaseBinSize;
+    }    
+
 
     dDummy = h1->GetBinContent(i);
     dDummyFill += dDummy;
@@ -2570,7 +2578,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
       dDummyFill = 0;
       j = 0;
     }
-    else if(i == dNBins-1) // for the very end if it doesn't reach 50 events (which it won't)
+    else if(i == h1->GetNbinsX()-1) // for the very end if it doesn't reach 50 events (which it won't)
     {
         dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
     }
@@ -2611,23 +2619,21 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   // Variables used in Residual calculations
   double dResidualX = 0, dResidualY = 0, dResidualXErr = 0, dResidualYErr = 0;
 
-  // binMin = 50;
-
   // Residual plot and distribution
   for(int j = binMin ; j < binMax ; j++)
   {
 
     if( hCloneBkg->GetBinCenter(j) >= 3150 && hCloneBkg->GetBinCenter(j) <= 3400)continue;    
-    // if( hCloneBkg->GetBinCenter(j) >= 658 && hCloneBkg->GetBinCenter(j) <= 664)continue;
-    // if( hCloneBkg->GetBinCenter(j) >= 800 && hCloneBkg->GetBinCenter(j) <= 808)continue;
-    // if( hCloneBkg->GetBinCenter(j) >= 1060 && hCloneBkg->GetBinCenter(j) <= 1068)continue;
+    if( hCloneBkg->GetBinCenter(j) >= 658 && hCloneBkg->GetBinCenter(j) <= 664)continue;
+    if( hCloneBkg->GetBinCenter(j) >= 800 && hCloneBkg->GetBinCenter(j) <= 808)continue;
+    if( hCloneBkg->GetBinCenter(j) >= 1060 && hCloneBkg->GetBinCenter(j) <= 1068)continue;
 
     dResidualX    = hCloneBkg->GetBinCenter(j);
     
     // Re-multiply bin content by bin width (for # of counts)
     
-    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize /
-              (TMath::Sqrt((hCloneBkg->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize) ); // Sqrt(MC + data) = sigma for poisson distribution
+    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j) /
+              (TMath::Sqrt((hCloneBkg->GetBinContent(j))*hCloneBkg->GetBinWidth(j)) ); // Sqrt(MC + data) = sigma for poisson distribution
     
     // dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j) /
               // (TMath::Sqrt(hCloneBkg->GetBinContent(i))/hCloneBkg->GetBinWidth(i) ); // Sqrt(MC + data) = sigma for poisson distribution
@@ -2728,11 +2734,11 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // Dividing by base bin size in chi-squared because the weight is width/base bin size when filling
     if( fAdapDataHistoM1->GetBinCenter(i) >= 3150 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
     // Skipping unknown peaks
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 658 && fAdapDataHistoM1->GetBinCenter(i) <= 664)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 800 && fAdapDataHistoM1->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1060 && fAdapDataHistoM1->GetBinCenter(i) <= 1068)continue;    
-    datam1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/dBinSize;
-    modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i)/dBinSize;
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 658 && fAdapDataHistoM1->GetBinCenter(i) <= 664)continue;
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 800 && fAdapDataHistoM1->GetBinCenter(i) <= 808)continue;
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 1060 && fAdapDataHistoM1->GetBinCenter(i) <= 1068)continue;    
+    datam1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
+    modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
 
     if(modelm1_i != 0 && datam1_i != 0)
     {
@@ -2748,8 +2754,8 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 658 && fAdapDataHistoM2->GetBinCenter(i) <= 664)continue;
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 800 && fAdapDataHistoM2->GetBinCenter(i) <= 808)continue;
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 1060 && fAdapDataHistoM2->GetBinCenter(i) <= 1068)continue;     
-    datam2_i = fAdapDataHistoM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/dBinSize;
-    modelm2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i)/dBinSize;
+    datam2_i = fAdapDataHistoM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i);
+    modelm2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i);
 
     if(modelm2_i != 0 && datam2_i != 0)
     {
@@ -2779,8 +2785,9 @@ double TBackgroundModel::GetChiSquareAdaptive()
 */
 
 /*
-// Penalty terms... add or subtract?
+// Penalty terms
   chiSquare += (fParameter[] - )(fParameter[] - ) /(dConstraintErr*dConstraintErr)
+
 
 */
 
@@ -2792,15 +2799,16 @@ void TBackgroundModel::Initialize()
 
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
+  cout << "Directory " << Form("%s/MCProduction", dMCDir.c_str()) << endl;
 
-  fBulkInner = new TFile(Form("%s/MCProduction_BulkInner.root", dMCDir.c_str()));
-  fBulkInnerM2Sum = new TFile(Form("%s/MCProduction_BulkInnerM2Sum.root", dMCDir.c_str()));
+  fBulkInner = new TFile(Form("%s/MCProduction_BulkInner_1keV.root", dMCDir.c_str()));
+  fBulkInnerM2Sum = new TFile(Form("%s/MCProduction_BulkInnerM2Sum_1keV.root", dMCDir.c_str()));
 
-  fBulkOuter = new TFile(Form("%s/MCProduction_BulkOuter.root", dMCDir.c_str()));
-  fBulkOuterM2Sum = new TFile(Form("%s/MCProduction_BulkOuterM2Sum.root", dMCDir.c_str()));
+  fBulkOuter = new TFile(Form("%s/MCProduction_BulkOuter_1keV.root", dMCDir.c_str()));
+  fBulkOuterM2Sum = new TFile(Form("%s/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
 
-  fSurfaceCrystal = new TFile(Form("%s/MCProduction_SurfaceCrystal.root", dMCDir.c_str()));
-  fSurfaceOther = new TFile(Form("%s/MCProduction_SurfaceOther.root", dMCDir.c_str()));
+  fSurfaceCrystal = new TFile(Form("%s/MCProduction_SurfaceCrystal_1keV.root", dMCDir.c_str()));
+  fSurfaceOther = new TFile(Form("%s/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
 
 ///////////// Bulk Histograms
 /////// Crystal M1 and M2
@@ -3294,334 +3302,319 @@ void TBackgroundModel::Initialize()
 
 ///////////// Get adaptive binned histograms
 //////// Crystal M1 and M2
-  hTeO20nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO20nuM1", dAdaptiveArrayM1);
-  hTeO22nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuM1", dAdaptiveArrayM1);
-  hTeO2co60M1->Rebin(dAdaptiveBinsM1, "hnewTeO2co60M1", dAdaptiveArrayM1);
-  hTeO2k40M1->Rebin(dAdaptiveBinsM1, "hnewTeO2k40M1", dAdaptiveArrayM1);
-  hTeO2pb210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2pb210M1", dAdaptiveArrayM1);
-  hTeO2po210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2po210M1", dAdaptiveArrayM1);
-  hTeO2te125M1->Rebin(dAdaptiveBinsM1, "hnewTeO2te125M1", dAdaptiveArrayM1);
-  hTeO2th232M1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232M1", dAdaptiveArrayM1);
-  // hTeO2th228M1->Rebin(dAdaptiveBinsM1, "hnewTeO2th228M1", dAdaptiveArrayM1);
-  // hTeO2ra226M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra226M1", dAdaptiveArrayM1);
-  // hTeO2rn222M1->Rebin(dAdaptiveBinsM1, "hnewTeO2rn222M1", dAdaptiveArrayM1);
-  hTeO2u238M1->Rebin(dAdaptiveBinsM1, "hnewTeO2u238M1", dAdaptiveArrayM1);
-  // hTeO2th230M1->Rebin(dAdaptiveBinsM1, "hnewTeO2th230M1", dAdaptiveArrayM1);
-  // hTeO2u234M1->Rebin(dAdaptiveBinsM1, "hnewTeO2u234M1", dAdaptiveArrayM1);
+  hnewTeO20nuM1 = hTeO20nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO20nuM1", dAdaptiveArrayM1);
+  hnewTeO22nuM1 = hTeO22nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuM1", dAdaptiveArrayM1);
+  hnewTeO2co60M1 = hTeO2co60M1->Rebin(dAdaptiveBinsM1, "hnewTeO2co60M1", dAdaptiveArrayM1);
+  hnewTeO2k40M1 = hTeO2k40M1->Rebin(dAdaptiveBinsM1, "hnewTeO2k40M1", dAdaptiveArrayM1);
+  hnewTeO2pb210M1 = hTeO2pb210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2pb210M1", dAdaptiveArrayM1);
+  hnewTeO2po210M1 = hTeO2po210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2po210M1", dAdaptiveArrayM1);
+  hnewTeO2te125M1 = hTeO2te125M1->Rebin(dAdaptiveBinsM1, "hnewTeO2te125M1", dAdaptiveArrayM1);
+  hnewTeO2th232M1 = hTeO2th232M1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232M1", dAdaptiveArrayM1);
+  hnewTeO2u238M1 = hTeO2u238M1->Rebin(dAdaptiveBinsM1, "hnewTeO2u238M1", dAdaptiveArrayM1);
 
-  hTeO2Spb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spb210M1_01", dAdaptiveArrayM1);
-  hTeO2Spo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_001", dAdaptiveArrayM1);
-  hTeO2Spo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_01", dAdaptiveArrayM1);
-  hTeO2Sth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sth232M1_01", dAdaptiveArrayM1);
-  hTeO2Su238M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Su238M1_01", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_001", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_01", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_10", dAdaptiveArrayM1);
-  hTeO2Sxpo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_001", dAdaptiveArrayM1);
-  hTeO2Sxpo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_01", dAdaptiveArrayM1);
-  hTeO2Sxpo210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_1", dAdaptiveArrayM1);
-  hTeO2Sxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_001", dAdaptiveArrayM1);
-  hTeO2Sxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_01", dAdaptiveArrayM1);
-  hTeO2Sxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_1", dAdaptiveArrayM1);
-  hTeO2Sxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_10", dAdaptiveArrayM1);
-  hTeO2Sxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_001", dAdaptiveArrayM1);
-  hTeO2Sxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_01", dAdaptiveArrayM1);
-  hTeO2Sxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_1", dAdaptiveArrayM1);
-  hTeO2Sxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_10", dAdaptiveArrayM1);
+  hnewTeO2Spb210M1_01 = hTeO2Spb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spb210M1_01", dAdaptiveArrayM1);
+  hnewTeO2Spo210M1_001 = hTeO2Spo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Spo210M1_01 = hTeO2Spo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sth232M1_01 = hTeO2Sth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sth232M1_01", dAdaptiveArrayM1);
+  hnewTeO2Su238M1_01 = hTeO2Su238M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Su238M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_001 = hTeO2Sxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_01 = hTeO2Sxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_1 = hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_10 = hTeO2Sxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_10", dAdaptiveArrayM1);
+  hnewTeO2Sxpo210M1_001 = hTeO2Sxpo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxpo210M1_01 = hTeO2Sxpo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sxpo210M1_1 = hTeO2Sxpo210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_1", dAdaptiveArrayM1);
+  hnewTeO2Sxth232M1_001 = hTeO2Sxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxth232M1_01 = hTeO2Sxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sxth232M1_1 = hTeO2Sxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_1", dAdaptiveArrayM1);
+  hnewTeO2Sxth232M1_10 = hTeO2Sxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_10", dAdaptiveArrayM1);
+  hnewTeO2Sxu238M1_001 = hTeO2Sxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxu238M1_01 = hTeO2Sxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_01", dAdaptiveArrayM1);
+  hnewTeO2Sxu238M1_1  = hTeO2Sxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_1", dAdaptiveArrayM1);
+  hnewTeO2Sxu238M1_10 = hTeO2Sxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238M1_10", dAdaptiveArrayM1);
 
-  hTeO2th232onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232onlyM1", dAdaptiveArrayM1);
-  hTeO2ra228pb208M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra228pb208M1", dAdaptiveArrayM1);
-  hTeO2th230onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th230onlyM1", dAdaptiveArrayM1);
+  hnewTeO2th232onlyM1 = hTeO2th232onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232onlyM1", dAdaptiveArrayM1);
+  hnewTeO2ra228pb208M1 = hTeO2ra228pb208M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra228pb208M1", dAdaptiveArrayM1);
+  hnewTeO2th230onlyM1 = hTeO2th230onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th230onlyM1", dAdaptiveArrayM1);
 
-  hTeO2Sxth232onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232onlyM1_001", dAdaptiveArrayM1);
-  hTeO2Sxra228pb208M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra228pb208M1_001", dAdaptiveArrayM1);
-  hTeO2Sxu238th230M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238th230M1_001", dAdaptiveArrayM1);
-  hTeO2Sxth230onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth230onlyM1_001", dAdaptiveArrayM1);
-  hTeO2Sxra226pb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra226pb210M1_001", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_0001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_0001", dAdaptiveArrayM1);
+  hnewTeO2Sxth232onlyM1_001 = hTeO2Sxth232onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232onlyM1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxra228pb208M1_001 = hTeO2Sxra228pb208M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra228pb208M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxu238th230M1_001 = hTeO2Sxu238th230M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238th230M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxth230onlyM1_001 = hTeO2Sxth230onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth230onlyM1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxra226pb210M1_001 = hTeO2Sxra226pb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra226pb210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_0001 = hTeO2Sxpb210M1_0001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_0001", dAdaptiveArrayM1);
 
 
-  hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
-  hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
-  hTeO2co60M2->Rebin(dAdaptiveBinsM2, "hnewTeO2co60M2", dAdaptiveArrayM2);
-  hTeO2k40M2->Rebin(dAdaptiveBinsM2, "hnewTeO2k40M2", dAdaptiveArrayM2);
-  hTeO2pb210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2pb210M2", dAdaptiveArrayM2);
-  hTeO2po210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2po210M2", dAdaptiveArrayM2);
-  hTeO2te125M2->Rebin(dAdaptiveBinsM2, "hnewTeO2te125M2", dAdaptiveArrayM2);
-  hTeO2th232M2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232M2", dAdaptiveArrayM2);
-  // hTeO2th228M2->Rebin(dAdaptiveBinsM2, "hnewTeO2th228M2", dAdaptiveArrayM2);
-  // hTeO2ra226M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra226M2", dAdaptiveArrayM2);
-  // hTeO2rn222M2->Rebin(dAdaptiveBinsM2, "hnewTeO2rn222M2", dAdaptiveArrayM2);
-  hTeO2u238M2->Rebin(dAdaptiveBinsM2, "hnewTeO2u238M2", dAdaptiveArrayM2);
-  // hTeO2th230M2->Rebin(dAdaptiveBinsM2, "hnewTeO2th230M2", dAdaptiveArrayM2);
-  // hTeO2u234M2->Rebin(dAdaptiveBinsM2, "hnewTeO2u234M2", dAdaptiveArrayM2);
+  hnewTeO20nuM2 = hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
+  hnewTeO22nuM2 = hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
+  hnewTeO2co60M2 = hTeO2co60M2->Rebin(dAdaptiveBinsM2, "hnewTeO2co60M2", dAdaptiveArrayM2);
+  hnewTeO2k40M2 = hTeO2k40M2->Rebin(dAdaptiveBinsM2, "hnewTeO2k40M2", dAdaptiveArrayM2);
+  hnewTeO2pb210M2 = hTeO2pb210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2pb210M2", dAdaptiveArrayM2);
+  hnewTeO2po210M2 = hTeO2po210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2po210M2", dAdaptiveArrayM2);
+  hnewTeO2te125M2 = hTeO2te125M2->Rebin(dAdaptiveBinsM2, "hnewTeO2te125M2", dAdaptiveArrayM2);
+  hnewTeO2th232M2 = hTeO2th232M2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232M2", dAdaptiveArrayM2);
+  hnewTeO2u238M2 = hTeO2u238M2->Rebin(dAdaptiveBinsM2, "hnewTeO2u238M2", dAdaptiveArrayM2);
 
-  hTeO2Spb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spb210M2_01", dAdaptiveArrayM2);
-  hTeO2Spo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_001", dAdaptiveArrayM2);
-  hTeO2Spo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_01", dAdaptiveArrayM2);
-  hTeO2Sth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sth232M2_01", dAdaptiveArrayM2);
-  hTeO2Su238M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Su238M2_01", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_001", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_01", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_10", dAdaptiveArrayM2);
-  hTeO2Sxpo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_001", dAdaptiveArrayM2);
-  hTeO2Sxpo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_01", dAdaptiveArrayM2);
-  hTeO2Sxpo210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_1", dAdaptiveArrayM2);
-  hTeO2Sxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_001", dAdaptiveArrayM2);
-  hTeO2Sxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_01", dAdaptiveArrayM2);
-  hTeO2Sxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_1", dAdaptiveArrayM2);
-  hTeO2Sxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_10", dAdaptiveArrayM2);
-  hTeO2Sxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_001", dAdaptiveArrayM2);
-  hTeO2Sxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_01", dAdaptiveArrayM2);
-  hTeO2Sxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_1", dAdaptiveArrayM2);
-  hTeO2Sxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_10", dAdaptiveArrayM2);
+  hnewTeO2Spb210M2_01 = hTeO2Spb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spb210M2_01", dAdaptiveArrayM2);
+  hnewTeO2Spo210M2_001 = hTeO2Spo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Spo210M2_01 = hTeO2Spo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sth232M2_01 = hTeO2Sth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sth232M2_01", dAdaptiveArrayM2);
+  hnewTeO2Su238M2_01 = hTeO2Su238M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Su238M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_001 = hTeO2Sxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_01 = hTeO2Sxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_1 = hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_10 = hTeO2Sxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_10", dAdaptiveArrayM2);
+  hnewTeO2Sxpo210M2_001 = hTeO2Sxpo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxpo210M2_01 = hTeO2Sxpo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sxpo210M2_1 = hTeO2Sxpo210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_1", dAdaptiveArrayM2);
+  hnewTeO2Sxth232M2_001 = hTeO2Sxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxth232M2_01 = hTeO2Sxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sxth232M2_1 = hTeO2Sxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_1", dAdaptiveArrayM2);
+  hnewTeO2Sxth232M2_10 = hTeO2Sxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_10", dAdaptiveArrayM2);
+  hnewTeO2Sxu238M2_001 = hTeO2Sxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxu238M2_01 = hTeO2Sxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_01", dAdaptiveArrayM2);
+  hnewTeO2Sxu238M2_1 = hTeO2Sxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_1", dAdaptiveArrayM2);
+  hnewTeO2Sxu238M2_10 = hTeO2Sxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238M2_10", dAdaptiveArrayM2);
 
-  hTeO2th232onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232onlyM2", dAdaptiveArrayM2);
-  hTeO2ra228pb208M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra228pb208M2", dAdaptiveArrayM2);
-  hTeO2th230onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th230onlyM2", dAdaptiveArrayM2);
+  hnewTeO2th232onlyM2 = hTeO2th232onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232onlyM2", dAdaptiveArrayM2);
+  hnewTeO2ra228pb208M2 = hTeO2ra228pb208M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra228pb208M2", dAdaptiveArrayM2);
+  hnewTeO2th230onlyM2 = hTeO2th230onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th230onlyM2", dAdaptiveArrayM2);
 
-  hTeO2Sxth232onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232onlyM2_001", dAdaptiveArrayM2);
-  hTeO2Sxra228pb208M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra228pb208M2_001", dAdaptiveArrayM2);
-  hTeO2Sxu238th230M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238th230M2_001", dAdaptiveArrayM2);
-  hTeO2Sxth230onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth230onlyM2_001", dAdaptiveArrayM2);
-  hTeO2Sxra226pb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra226pb210M2_001", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_0001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_0001", dAdaptiveArrayM2);
+  hnewTeO2Sxth232onlyM2_001 = hTeO2Sxth232onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232onlyM2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxra228pb208M2_001 = hTeO2Sxra228pb208M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra228pb208M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxu238th230M2_001 = hTeO2Sxu238th230M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238th230M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxth230onlyM2_001 = hTeO2Sxth230onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth230onlyM2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxra226pb210M2_001 = hTeO2Sxra226pb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra226pb210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_0001 = hTeO2Sxpb210M2_0001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_0001", dAdaptiveArrayM2);
 
 
-  hTeO20nuM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO20nuM2Sum", dAdaptiveArrayM2Sum);
-  hTeO22nuM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO22nuM2Sum", dAdaptiveArrayM2Sum);
-  hTeO2co60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2co60M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2k40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2k40M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2pb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2pb210M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2po210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2po210M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2te125M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2te125M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2th232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th232M2Sum", dAdaptiveArrayM2Sum);
-  // hTeO2th228M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th228M2Sum", dAdaptiveArrayM2Sum);
-  // hTeO2ra226M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2ra226M2Sum", dAdaptiveArrayM2Sum);
-  // hTeO2rn222M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2rn222M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2u238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2u238M2Sum", dAdaptiveArrayM2Sum);
-  // hTeO2th230M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th230M2Sum", dAdaptiveArrayM2Sum);
-  // hTeO2u234M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2u234M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO20nuM2Sum = hTeO20nuM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO20nuM2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO22nuM2Sum = hTeO22nuM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO22nuM2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2co60M2Sum = hTeO2co60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2co60M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2k40M2Sum = hTeO2k40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2k40M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2pb210M2Sum = hTeO2pb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2pb210M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2po210M2Sum = hTeO2po210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2po210M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2te125M2Sum = hTeO2te125M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2te125M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2th232M2Sum = hTeO2th232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th232M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2u238M2Sum = hTeO2u238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2u238M2Sum", dAdaptiveArrayM2Sum);
 
-  hTeO2Spb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spb210M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Spo210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Spo210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sth232M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Su238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Su238M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_1", dAdaptiveArrayM2Sum);
-  hTeO2Sxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_10", dAdaptiveArrayM2Sum);
-  hTeO2Sxpo210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxpo210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sxpo210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_1", dAdaptiveArrayM2Sum);
-  hTeO2Sxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_1", dAdaptiveArrayM2Sum);
-  hTeO2Sxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_10", dAdaptiveArrayM2Sum);
-  hTeO2Sxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_01", dAdaptiveArrayM2Sum);
-  hTeO2Sxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_1", dAdaptiveArrayM2Sum);
-  hTeO2Sxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewTeO2Spb210M2Sum_01 = hTeO2Spb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spb210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Spo210M2Sum_001 = hTeO2Spo210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Spo210M2Sum_01 = hTeO2Spo210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sth232M2Sum_01 = hTeO2Sth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sth232M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Su238M2Sum_01 = hTeO2Su238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Su238M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_001 = hTeO2Sxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_01 = hTeO2Sxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_1 = hTeO2Sxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_10 = hTeO2Sxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpo210M2Sum_001 = hTeO2Sxpo210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpo210M2Sum_01 = hTeO2Sxpo210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpo210M2Sum_1 = hTeO2Sxpo210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpo210M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232M2Sum_001 = hTeO2Sxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232M2Sum_01 = hTeO2Sxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232M2Sum_1 = hTeO2Sxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232M2Sum_10 = hTeO2Sxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxu238M2Sum_001 = hTeO2Sxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxu238M2Sum_01 = hTeO2Sxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxu238M2Sum_1 = hTeO2Sxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxu238M2Sum_10 = hTeO2Sxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_10", dAdaptiveArrayM2Sum);
 
-  hTeO2th232onlyM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th232onlyM2Sum", dAdaptiveArrayM2Sum);
-  hTeO2ra228pb208M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2ra228pb208M2Sum", dAdaptiveArrayM2Sum);
-  hTeO2th230onlyM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th230onlyM2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2th232onlyM2Sum = hTeO2th232onlyM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th232onlyM2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2ra228pb208M2Sum = hTeO2ra228pb208M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2ra228pb208M2Sum", dAdaptiveArrayM2Sum);
+  hnewTeO2th230onlyM2Sum = hTeO2th230onlyM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th230onlyM2Sum", dAdaptiveArrayM2Sum);
 
-  hTeO2Sxth232onlyM2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232onlyM2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxra228pb208M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxra228pb208M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxu238th230M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238th230M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxth230onlyM2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth230onlyM2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxra226pb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxra226pb210M2Sum_001", dAdaptiveArrayM2Sum);
-  hTeO2Sxpb210M2Sum_0001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_0001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232onlyM2Sum_001 = hTeO2Sxth232onlyM2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232onlyM2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxra228pb208M2Sum_001 = hTeO2Sxra228pb208M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxra228pb208M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxu238th230M2Sum_001 = hTeO2Sxu238th230M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238th230M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth230onlyM2Sum_001 = hTeO2Sxth230onlyM2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth230onlyM2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxra226pb210M2Sum_001 = hTeO2Sxra226pb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxra226pb210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_0001 = hTeO2Sxpb210M2Sum_0001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_0001", dAdaptiveArrayM2Sum);
 
 
 ////////// Frame M1 and M2
-  hCuFrameco58M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco58M1", dAdaptiveArrayM1);
-  hCuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco60M1", dAdaptiveArrayM1);
-  hCuFramecs137M1->Rebin(dAdaptiveBinsM1, "hnewCuFramecs137M1", dAdaptiveArrayM1);
-  hCuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuFramek40M1", dAdaptiveArrayM1);
-  hCuFramemn54M1->Rebin(dAdaptiveBinsM1, "hnewCuFramemn54M1", dAdaptiveArrayM1);
-  hCuFramepb210M1->Rebin(dAdaptiveBinsM1, "hnewCuFramepb210M1", dAdaptiveArrayM1);
-  hCuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameth232M1", dAdaptiveArrayM1);
-  hCuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameu238M1", dAdaptiveArrayM1);
+  hnewCuFrameco58M1 = hCuFrameco58M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco58M1", dAdaptiveArrayM1);
+  hnewCuFrameco60M1 = hCuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco60M1", dAdaptiveArrayM1);
+  hnewCuFramecs137M1 = hCuFramecs137M1->Rebin(dAdaptiveBinsM1, "hnewCuFramecs137M1", dAdaptiveArrayM1);
+  hnewCuFramek40M1 = hCuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuFramek40M1", dAdaptiveArrayM1);
+  hnewCuFramemn54M1 = hCuFramemn54M1->Rebin(dAdaptiveBinsM1, "hnewCuFramemn54M1", dAdaptiveArrayM1);
+  hnewCuFramepb210M1 = hCuFramepb210M1->Rebin(dAdaptiveBinsM1, "hnewCuFramepb210M1", dAdaptiveArrayM1);
+  hnewCuFrameth232M1 = hCuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameth232M1", dAdaptiveArrayM1);
+  hnewCuFrameu238M1 = hCuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameu238M1", dAdaptiveArrayM1);
 
-  hCuFrameSth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSth232M1_1", dAdaptiveArrayM1);
-  hCuFrameSu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSu238M1_1", dAdaptiveArrayM1);
-  hCuFrameSxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_001", dAdaptiveArrayM1);
-  hCuFrameSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_01", dAdaptiveArrayM1);
-  hCuFrameSxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_1", dAdaptiveArrayM1);
-  hCuFrameSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_10", dAdaptiveArrayM1);
-  hCuFrameSxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_001", dAdaptiveArrayM1);
-  hCuFrameSxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_01", dAdaptiveArrayM1);
-  hCuFrameSxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_1", dAdaptiveArrayM1);
-  hCuFrameSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_10", dAdaptiveArrayM1);
-  hCuFrameSxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_001", dAdaptiveArrayM1);
-  hCuFrameSxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_01", dAdaptiveArrayM1);
-  hCuFrameSxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_1", dAdaptiveArrayM1);
-  hCuFrameSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_10", dAdaptiveArrayM1);
+  hnewCuFrameSth232M1_1  = hCuFrameSth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSth232M1_1", dAdaptiveArrayM1);
+  hnewCuFrameSu238M1_1 = hCuFrameSu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSu238M1_1", dAdaptiveArrayM1);
+  hnewCuFrameSxpb210M1_001 = hCuFrameSxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_001", dAdaptiveArrayM1);
+  hnewCuFrameSxpb210M1_01 = hCuFrameSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_01", dAdaptiveArrayM1);
+  hnewCuFrameSxpb210M1_1 = hCuFrameSxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_1", dAdaptiveArrayM1);
+  hnewCuFrameSxpb210M1_10 = hCuFrameSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxpb210M1_10", dAdaptiveArrayM1);
+  hnewCuFrameSxth232M1_001 = hCuFrameSxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_001", dAdaptiveArrayM1);
+  hnewCuFrameSxth232M1_01 = hCuFrameSxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_01", dAdaptiveArrayM1);
+  hnewCuFrameSxth232M1_1 = hCuFrameSxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_1", dAdaptiveArrayM1);
+  hnewCuFrameSxth232M1_10 = hCuFrameSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxth232M1_10", dAdaptiveArrayM1);
+  hnewCuFrameSxu238M1_001 = hCuFrameSxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_001", dAdaptiveArrayM1);
+  hnewCuFrameSxu238M1_01 = hCuFrameSxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_01", dAdaptiveArrayM1);
+  hnewCuFrameSxu238M1_1 = hCuFrameSxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_1", dAdaptiveArrayM1);
+  hnewCuFrameSxu238M1_10 = hCuFrameSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuFrameSxu238M1_10", dAdaptiveArrayM1);
 
-  hCuFrameco58M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco58M2", dAdaptiveArrayM2);
-  hCuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco60M2", dAdaptiveArrayM2);
-  hCuFramecs137M2->Rebin(dAdaptiveBinsM2, "hnewCuFramecs137M2", dAdaptiveArrayM2);
-  hCuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuFramek40M2", dAdaptiveArrayM2);
-  hCuFramemn54M2->Rebin(dAdaptiveBinsM2, "hnewCuFramemn54M2", dAdaptiveArrayM2);
-  hCuFramepb210M2->Rebin(dAdaptiveBinsM2, "hnewCuFramepb210M2", dAdaptiveArrayM2);
-  hCuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameth232M2", dAdaptiveArrayM2);
-  hCuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameu238M2", dAdaptiveArrayM2);
+  hnewCuFrameco58M2 = hCuFrameco58M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco58M2", dAdaptiveArrayM2);
+  hnewCuFrameco60M2 = hCuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco60M2", dAdaptiveArrayM2);
+  hnewCuFramecs137M2 = hCuFramecs137M2->Rebin(dAdaptiveBinsM2, "hnewCuFramecs137M2", dAdaptiveArrayM2);
+  hnewCuFramek40M2 = hCuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuFramek40M2", dAdaptiveArrayM2);
+  hnewCuFramemn54M2 = hCuFramemn54M2->Rebin(dAdaptiveBinsM2, "hnewCuFramemn54M2", dAdaptiveArrayM2);
+  hnewCuFramepb210M2 = hCuFramepb210M2->Rebin(dAdaptiveBinsM2, "hnewCuFramepb210M2", dAdaptiveArrayM2);
+  hnewCuFrameth232M2 = hCuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameth232M2", dAdaptiveArrayM2);
+  hnewCuFrameu238M2 = hCuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameu238M2", dAdaptiveArrayM2);
 
-  hCuFrameSth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSth232M2_1", dAdaptiveArrayM2);
-  hCuFrameSu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSu238M2_1", dAdaptiveArrayM2);
-  hCuFrameSxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_001", dAdaptiveArrayM2);
-  hCuFrameSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_01", dAdaptiveArrayM2);
-  hCuFrameSxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_1", dAdaptiveArrayM2);
-  hCuFrameSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_10", dAdaptiveArrayM2);
-  hCuFrameSxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_001", dAdaptiveArrayM2);
-  hCuFrameSxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_01", dAdaptiveArrayM2);
-  hCuFrameSxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_1", dAdaptiveArrayM2);
-  hCuFrameSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_10", dAdaptiveArrayM2);
-  hCuFrameSxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_001", dAdaptiveArrayM2);
-  hCuFrameSxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_01", dAdaptiveArrayM2);
-  hCuFrameSxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_1", dAdaptiveArrayM2);
-  hCuFrameSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_10", dAdaptiveArrayM2);
+  hnewCuFrameSth232M2_1 = hCuFrameSth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSth232M2_1", dAdaptiveArrayM2);
+  hnewCuFrameSu238M2_1 = hCuFrameSu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSu238M2_1", dAdaptiveArrayM2);
+  hnewCuFrameSxpb210M2_001 = hCuFrameSxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_001", dAdaptiveArrayM2);
+  hnewCuFrameSxpb210M2_01 = hCuFrameSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_01", dAdaptiveArrayM2);
+  hnewCuFrameSxpb210M2_1 = hCuFrameSxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_1", dAdaptiveArrayM2);
+  hnewCuFrameSxpb210M2_10 = hCuFrameSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxpb210M2_10", dAdaptiveArrayM2);
+  hnewCuFrameSxth232M2_001 = hCuFrameSxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_001", dAdaptiveArrayM2);
+  hnewCuFrameSxth232M2_01 = hCuFrameSxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_01", dAdaptiveArrayM2);
+  hnewCuFrameSxth232M2_1 = hCuFrameSxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_1", dAdaptiveArrayM2);
+  hnewCuFrameSxth232M2_10 = hCuFrameSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxth232M2_10", dAdaptiveArrayM2);
+  hnewCuFrameSxu238M2_001 = hCuFrameSxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_001", dAdaptiveArrayM2);
+  hnewCuFrameSxu238M2_01 = hCuFrameSxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_01", dAdaptiveArrayM2);
+  hnewCuFrameSxu238M2_1 = hCuFrameSxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_1", dAdaptiveArrayM2);
+  hnewCuFrameSxu238M2_10 = hCuFrameSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuFrameSxu238M2_10", dAdaptiveArrayM2);
 
-  hCuFrameco58M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameco58M2Sum", dAdaptiveArrayM2Sum);
-  hCuFrameco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameco60M2Sum", dAdaptiveArrayM2Sum);
-  hCuFramecs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramecs137M2Sum", dAdaptiveArrayM2Sum);
-  hCuFramek40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramek40M2Sum", dAdaptiveArrayM2Sum);
-  hCuFramemn54M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramemn54M2Sum", dAdaptiveArrayM2Sum);
-  hCuFramepb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramepb210M2Sum", dAdaptiveArrayM2Sum);
-  hCuFrameth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameth232M2Sum", dAdaptiveArrayM2Sum);
-  hCuFrameu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFrameco58M2Sum = hCuFrameco58M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameco58M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFrameco60M2Sum = hCuFrameco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFramecs137M2Sum = hCuFramecs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramecs137M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFramek40M2Sum = hCuFramek40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramek40M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFramemn54M2Sum = hCuFramemn54M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramemn54M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFramepb210M2Sum = hCuFramepb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFramepb210M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFrameth232M2Sum = hCuFrameth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuFrameu238M2Sum = hCuFrameu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameu238M2Sum", dAdaptiveArrayM2Sum);
 
-  hCuFrameSth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSth232M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuFrameSu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSu238M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuFrameSxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuFrameSxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuFrameSxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuFrameSxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuFrameSxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuFrameSxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuFrameSxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuFrameSxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuFrameSxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuFrameSxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuFrameSxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuFrameSxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuFrameSth232M2Sum_1 = hCuFrameSth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSth232M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuFrameSu238M2Sum_1 = hCuFrameSu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSu238M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxpb210M2Sum_001 = hCuFrameSxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxpb210M2Sum_01 = hCuFrameSxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxpb210M2Sum_1 = hCuFrameSxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxpb210M2Sum_10 = hCuFrameSxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxpb210M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxth232M2Sum_001 = hCuFrameSxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxth232M2Sum_01 = hCuFrameSxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxth232M2Sum_1 = hCuFrameSxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxth232M2Sum_10 = hCuFrameSxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxth232M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxu238M2Sum_001 = hCuFrameSxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxu238M2Sum_01 = hCuFrameSxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxu238M2Sum_1 = hCuFrameSxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuFrameSxu238M2Sum_10 = hCuFrameSxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuFrameSxu238M2Sum_10", dAdaptiveArrayM2Sum);
 
 ///////// CuBox (TShield) M1 and M2
-  hCuBoxco58M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxco58M1", dAdaptiveArrayM1);
-  hCuBoxco60M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxco60M1", dAdaptiveArrayM1);
-  hCuBoxcs137M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxcs137M1", dAdaptiveArrayM1);
-  hCuBoxk40M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxk40M1", dAdaptiveArrayM1);
-  hCuBoxmn54M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxmn54M1", dAdaptiveArrayM1);
-  hCuBoxpb210M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxpb210M1", dAdaptiveArrayM1);
-  hCuBoxth232M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxth232M1", dAdaptiveArrayM1);
-  hCuBoxu238M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxu238M1", dAdaptiveArrayM1);
+  hnewCuBoxco58M1 = hCuBoxco58M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxco58M1", dAdaptiveArrayM1);
+  hnewCuBoxco60M1 = hCuBoxco60M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxco60M1", dAdaptiveArrayM1);
+  hnewCuBoxcs137M1 = hCuBoxcs137M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxcs137M1", dAdaptiveArrayM1);
+  hnewCuBoxk40M1 = hCuBoxk40M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxk40M1", dAdaptiveArrayM1);
+  hnewCuBoxmn54M1 = hCuBoxmn54M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxmn54M1", dAdaptiveArrayM1);
+  hnewCuBoxpb210M1 = hCuBoxpb210M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxpb210M1", dAdaptiveArrayM1);
+  hnewCuBoxth232M1 = hCuBoxth232M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxth232M1", dAdaptiveArrayM1);
+  hnewCuBoxu238M1 = hCuBoxu238M1->Rebin(dAdaptiveBinsM1, "hnewCuBoxu238M1", dAdaptiveArrayM1);
 
-  hCuBoxSth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSth232M1_1", dAdaptiveArrayM1);
-  hCuBoxSu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSu238M1_1", dAdaptiveArrayM1);
-  hCuBoxSxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_001", dAdaptiveArrayM1);
-  hCuBoxSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_01", dAdaptiveArrayM1);
-  hCuBoxSxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_1", dAdaptiveArrayM1);
-  hCuBoxSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_10", dAdaptiveArrayM1);
-  hCuBoxSxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_001", dAdaptiveArrayM1);
-  hCuBoxSxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_01", dAdaptiveArrayM1);
-  hCuBoxSxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_1", dAdaptiveArrayM1);
-  hCuBoxSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_10", dAdaptiveArrayM1);
-  hCuBoxSxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_001", dAdaptiveArrayM1);
-  hCuBoxSxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_01", dAdaptiveArrayM1);
-  hCuBoxSxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_1", dAdaptiveArrayM1);
-  hCuBoxSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSth232M1_1 = hCuBoxSth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSth232M1_1", dAdaptiveArrayM1);
+  hnewCuBoxSu238M1_1 = hCuBoxSu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSu238M1_1", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_001 = hCuBoxSxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_001", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_01 = hCuBoxSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_01", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_1 = hCuBoxSxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_1", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_10 = hCuBoxSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSxth232M1_001 = hCuBoxSxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_001", dAdaptiveArrayM1);
+  hnewCuBoxSxth232M1_01 = hCuBoxSxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_01", dAdaptiveArrayM1);
+  hnewCuBoxSxth232M1_1 = hCuBoxSxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_1", dAdaptiveArrayM1);
+  hnewCuBoxSxth232M1_10 = hCuBoxSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSxu238M1_001 = hCuBoxSxu238M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_001", dAdaptiveArrayM1);
+  hnewCuBoxSxu238M1_01 = hCuBoxSxu238M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_01", dAdaptiveArrayM1);
+  hnewCuBoxSxu238M1_1 = hCuBoxSxu238M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_1", dAdaptiveArrayM1);
+  hnewCuBoxSxu238M1_10 = hCuBoxSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_10", dAdaptiveArrayM1);
 
-  hCuBoxco58M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxco58M2", dAdaptiveArrayM2);
-  hCuBoxco60M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxco60M2", dAdaptiveArrayM2);
-  hCuBoxcs137M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxcs137M2", dAdaptiveArrayM2);
-  hCuBoxk40M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxk40M2", dAdaptiveArrayM2);
-  hCuBoxmn54M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxmn54M2", dAdaptiveArrayM2);
-  hCuBoxpb210M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxpb210M2", dAdaptiveArrayM2);
-  hCuBoxth232M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxth232M2", dAdaptiveArrayM2);
-  hCuBoxu238M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxu238M2", dAdaptiveArrayM2);
+  hnewCuBoxco58M2 = hCuBoxco58M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxco58M2", dAdaptiveArrayM2);
+  hnewCuBoxco60M2 = hCuBoxco60M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxco60M2", dAdaptiveArrayM2);
+  hnewCuBoxcs137M2 = hCuBoxcs137M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxcs137M2", dAdaptiveArrayM2);
+  hnewCuBoxk40M2 = hCuBoxk40M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxk40M2", dAdaptiveArrayM2);
+  hnewCuBoxmn54M2 = hCuBoxmn54M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxmn54M2", dAdaptiveArrayM2);
+  hnewCuBoxpb210M2 = hCuBoxpb210M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxpb210M2", dAdaptiveArrayM2);
+  hnewCuBoxth232M2 = hCuBoxth232M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxth232M2", dAdaptiveArrayM2);
+  hnewCuBoxu238M2 = hCuBoxu238M2->Rebin(dAdaptiveBinsM2, "hnewCuBoxu238M2", dAdaptiveArrayM2);
 
-  hCuBoxSth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSth232M2_1", dAdaptiveArrayM2);
-  hCuBoxSu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSu238M2_1", dAdaptiveArrayM2);
-  hCuBoxSxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_001", dAdaptiveArrayM2);
-  hCuBoxSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_01", dAdaptiveArrayM2);
-  hCuBoxSxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_1", dAdaptiveArrayM2);
-  hCuBoxSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_10", dAdaptiveArrayM2);
-  hCuBoxSxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_001", dAdaptiveArrayM2);
-  hCuBoxSxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_01", dAdaptiveArrayM2);
-  hCuBoxSxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_1", dAdaptiveArrayM2);
-  hCuBoxSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_10", dAdaptiveArrayM2);
-  hCuBoxSxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_001", dAdaptiveArrayM2);
-  hCuBoxSxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_01", dAdaptiveArrayM2);
-  hCuBoxSxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_1", dAdaptiveArrayM2);
-  hCuBoxSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSth232M2_1 = hCuBoxSth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSth232M2_1", dAdaptiveArrayM2);
+  hnewCuBoxSu238M2_1 = hCuBoxSu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSu238M2_1", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_001 = hCuBoxSxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_001", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_01 = hCuBoxSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_01", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_1 = hCuBoxSxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_1", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_10 = hCuBoxSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSxth232M2_001 = hCuBoxSxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_001", dAdaptiveArrayM2);
+  hnewCuBoxSxth232M2_01 = hCuBoxSxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_01", dAdaptiveArrayM2);
+  hnewCuBoxSxth232M2_1 = hCuBoxSxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_1", dAdaptiveArrayM2);
+  hnewCuBoxSxth232M2_10 = hCuBoxSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSxu238M2_001 = hCuBoxSxu238M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_001", dAdaptiveArrayM2);
+  hnewCuBoxSxu238M2_01 = hCuBoxSxu238M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_01", dAdaptiveArrayM2);
+  hnewCuBoxSxu238M2_1 = hCuBoxSxu238M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_1", dAdaptiveArrayM2);
+  hnewCuBoxSxu238M2_10 = hCuBoxSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_10", dAdaptiveArrayM2);
 
 
-  hCuBoxco58M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxco58M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxco60M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxcs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxcs137M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxk40M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxmn54M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxmn54M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxpb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxpb210M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxth232M2Sum", dAdaptiveArrayM2Sum);
-  hCuBoxu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxco58M2Sum = hCuBoxco58M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxco58M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxco60M2Sum = hCuBoxco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxcs137M2Sum = hCuBoxcs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxcs137M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxk40M2Sum = hCuBoxk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxk40M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxmn54M2Sum = hCuBoxmn54M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxmn54M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxpb210M2Sum = hCuBoxpb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxpb210M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxth232M2Sum = hCuBoxth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBoxu238M2Sum = hCuBoxu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxu238M2Sum", dAdaptiveArrayM2Sum);
 
-  hCuBoxSth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSth232M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBoxSu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSu238M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBoxSxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuBoxSxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuBoxSxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBoxSxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuBoxSxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuBoxSxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuBoxSxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBoxSxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuBoxSxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_001", dAdaptiveArrayM2Sum);
-  hCuBoxSxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuBoxSxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBoxSxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBoxSth232M2Sum_1 = hCuBoxSth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSth232M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBoxSu238M2Sum_1 = hCuBoxSu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSu238M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxpb210M2Sum_001 = hCuBoxSxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxpb210M2Sum_01 = hCuBoxSxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxpb210M2Sum_1 = hCuBoxSxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxpb210M2Sum_10 = hCuBoxSxpb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxpb210M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxth232M2Sum_001 = hCuBoxSxth232M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxth232M2Sum_01 = hCuBoxSxth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxth232M2Sum_1 = hCuBoxSxth232M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxth232M2Sum_10 = hCuBoxSxth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxth232M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxu238M2Sum_001 = hCuBoxSxu238M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxu238M2Sum_01 = hCuBoxSxu238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxu238M2Sum_1 = hCuBoxSxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBoxSxu238M2Sum_10 = hCuBoxSxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBoxSxu238M2Sum_10", dAdaptiveArrayM2Sum);
 
 
 ///////// CuBox + CuFrame M1 and M2
-  hCuBox_CuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameco60M1", dAdaptiveArrayM1);
-  hCuBox_CuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramek40M1", dAdaptiveArrayM1);
-  hCuBox_CuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameth232M1", dAdaptiveArrayM1);
-  hCuBox_CuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameu238M1", dAdaptiveArrayM1);
+  hnewCuBox_CuFrameco60M1 = hCuBox_CuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameco60M1", dAdaptiveArrayM1);
+  hnewCuBox_CuFramek40M1 = hCuBox_CuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramek40M1", dAdaptiveArrayM1);
+  hnewCuBox_CuFrameth232M1 = hCuBox_CuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameth232M1", dAdaptiveArrayM1);
+  hnewCuBox_CuFrameu238M1 = hCuBox_CuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameu238M1", dAdaptiveArrayM1);
 
-  hCuBox_CuFrameth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameth232M1_10", dAdaptiveArrayM1);
-  hCuBox_CuFrameu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameu238M1_10", dAdaptiveArrayM1);
-  hCuBox_CuFramepb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_10", dAdaptiveArrayM1);
-  hCuBox_CuFramepb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_1", dAdaptiveArrayM1);
-  hCuBox_CuFramepb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_01", dAdaptiveArrayM1);
-  hCuBox_CuFramepb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_001", dAdaptiveArrayM1);
+  hnewCuBox_CuFrameth232M1_10 = hCuBox_CuFrameth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameth232M1_10", dAdaptiveArrayM1);
+  hnewCuBox_CuFrameu238M1_10 = hCuBox_CuFrameu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFrameu238M1_10", dAdaptiveArrayM1);
+  hnewCuBox_CuFramepb210M1_10 = hCuBox_CuFramepb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_10", dAdaptiveArrayM1);
+  hnewCuBox_CuFramepb210M1_1 = hCuBox_CuFramepb210M1_1->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_1", dAdaptiveArrayM1);
+  hnewCuBox_CuFramepb210M1_01 = hCuBox_CuFramepb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_01", dAdaptiveArrayM1);
+  hnewCuBox_CuFramepb210M1_001 = hCuBox_CuFramepb210M1_001->Rebin(dAdaptiveBinsM1, "hnewCuBox_CuFramepb210M1_001", dAdaptiveArrayM1);
 
-  hCuBox_CuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameco60M2", dAdaptiveArrayM2);
-  hCuBox_CuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramek40M2", dAdaptiveArrayM2);
-  hCuBox_CuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameth232M2", dAdaptiveArrayM2);
-  hCuBox_CuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameu238M2", dAdaptiveArrayM2);
+  hnewCuBox_CuFrameco60M2 = hCuBox_CuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameco60M2", dAdaptiveArrayM2);
+  hnewCuBox_CuFramek40M2 = hCuBox_CuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramek40M2", dAdaptiveArrayM2);
+  hnewCuBox_CuFrameth232M2 = hCuBox_CuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameth232M2", dAdaptiveArrayM2);
+  hnewCuBox_CuFrameu238M2 = hCuBox_CuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameu238M2", dAdaptiveArrayM2);
 
-  hCuBox_CuFrameth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameth232M2_10", dAdaptiveArrayM2);
-  hCuBox_CuFrameu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameu238M2_10", dAdaptiveArrayM2);
-  hCuBox_CuFramepb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_10", dAdaptiveArrayM2);
-  hCuBox_CuFramepb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_1", dAdaptiveArrayM2);
-  hCuBox_CuFramepb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_01", dAdaptiveArrayM2);
-  hCuBox_CuFramepb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_001", dAdaptiveArrayM2);
+  hnewCuBox_CuFrameth232M2_10 = hCuBox_CuFrameth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameth232M2_10", dAdaptiveArrayM2);
+  hnewCuBox_CuFrameu238M2_10 = hCuBox_CuFrameu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFrameu238M2_10", dAdaptiveArrayM2);
+  hnewCuBox_CuFramepb210M2_10 = hCuBox_CuFramepb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_10", dAdaptiveArrayM2);
+  hnewCuBox_CuFramepb210M2_1 = hCuBox_CuFramepb210M2_1->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_1", dAdaptiveArrayM2);
+  hnewCuBox_CuFramepb210M2_01 = hCuBox_CuFramepb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_01", dAdaptiveArrayM2);
+  hnewCuBox_CuFramepb210M2_001 = hCuBox_CuFramepb210M2_001->Rebin(dAdaptiveBinsM2, "hnewCuBox_CuFramepb210M2_001", dAdaptiveArrayM2);
 
-  hCuBox_CuFrameco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameco60M2Sum", dAdaptiveArrayM2Sum);
-  hCuBox_CuFramek40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramek40M2Sum", dAdaptiveArrayM2Sum);
-  hCuBox_CuFrameth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameth232M2Sum", dAdaptiveArrayM2Sum);
-  hCuBox_CuFrameu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFrameco60M2Sum = hCuBox_CuFrameco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFramek40M2Sum = hCuBox_CuFramek40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramek40M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFrameth232M2Sum = hCuBox_CuFrameth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFrameu238M2Sum = hCuBox_CuFrameu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameu238M2Sum", dAdaptiveArrayM2Sum);
 
-  hCuBox_CuFrameth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameth232M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuBox_CuFrameu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameu238M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuBox_CuFramepb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_10", dAdaptiveArrayM2Sum);
-  hCuBox_CuFramepb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_1", dAdaptiveArrayM2Sum);
-  hCuBox_CuFramepb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_01", dAdaptiveArrayM2Sum);
-  hCuBox_CuFramepb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_001", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFrameth232M2Sum_10 = hCuBox_CuFrameth232M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameth232M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFrameu238M2Sum_10 = hCuBox_CuFrameu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameu238M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFramepb210M2Sum_10 = hCuBox_CuFramepb210M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_10", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFramepb210M2Sum_1 = hCuBox_CuFramepb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_1", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFramepb210M2Sum_01 = hCuBox_CuFramepb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_01", dAdaptiveArrayM2Sum);
+  hnewCuBox_CuFramepb210M2Sum_001 = hCuBox_CuFramepb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_001", dAdaptiveArrayM2Sum);
 
 /*
 ////////// 50mK M1 and M2
@@ -3651,65 +3644,62 @@ void TBackgroundModel::Initialize()
   h50mKpb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKpb210M2Sum", dAdaptiveArrayM2Sum);
   h50mKth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKth232M2Sum", dAdaptiveArrayM2Sum);
   h50mKu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKu238M2Sum", dAdaptiveArrayM2Sum);
-
-//////// 600mK
-  h600mKco60M1->Rebin(dAdaptiveBinsM1, "hnew600mKco60M1", dAdaptiveArrayM1);
-  h600mKk40M1->Rebin(dAdaptiveBinsM1, "hnew600mKk40M1", dAdaptiveArrayM1);
-  h600mKth232M1->Rebin(dAdaptiveBinsM1, "hnew600mKth232M1", dAdaptiveArrayM1);
-  h600mKu238M1->Rebin(dAdaptiveBinsM1, "hnew600mKu238M1", dAdaptiveArrayM1);
-
-  h600mKco60M2->Rebin(dAdaptiveBinsM2, "hnew600mKco60M2", dAdaptiveArrayM2);
-  h600mKk40M2->Rebin(dAdaptiveBinsM2, "hnew600mKk40M2", dAdaptiveArrayM2);
-  h600mKth232M2->Rebin(dAdaptiveBinsM2, "hnew600mKth232M2", dAdaptiveArrayM2);
-  h600mKu238M2->Rebin(dAdaptiveBinsM2, "hnew600mKu238M2", dAdaptiveArrayM2);
-
-  h600mKco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKco60M2Sum", dAdaptiveArrayM2Sum);
-  h600mKk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKk40M2Sum", dAdaptiveArrayM2Sum);
-  h600mKth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKth232M2Sum", dAdaptiveArrayM2Sum);
-  h600mKu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKu238M2Sum", dAdaptiveArrayM2Sum);
 */
+//////// 600mK
+  hnew600mKco60M1 = h600mKco60M1->Rebin(dAdaptiveBinsM1, "hnew600mKco60M1", dAdaptiveArrayM1);
+  hnew600mKk40M1 = h600mKk40M1->Rebin(dAdaptiveBinsM1, "hnew600mKk40M1", dAdaptiveArrayM1);
+  hnew600mKth232M1 = h600mKth232M1->Rebin(dAdaptiveBinsM1, "hnew600mKth232M1", dAdaptiveArrayM1);
+  hnew600mKu238M1 = h600mKu238M1->Rebin(dAdaptiveBinsM1, "hnew600mKu238M1", dAdaptiveArrayM1);
+
+  hnew600mKco60M2 = h600mKco60M2->Rebin(dAdaptiveBinsM2, "hnew600mKco60M2", dAdaptiveArrayM2);
+  hnew600mKk40M2 = h600mKk40M2->Rebin(dAdaptiveBinsM2, "hnew600mKk40M2", dAdaptiveArrayM2);
+  hnew600mKth232M2 = h600mKth232M2->Rebin(dAdaptiveBinsM2, "hnew600mKth232M2", dAdaptiveArrayM2);
+  hnew600mKu238M2 = h600mKu238M2->Rebin(dAdaptiveBinsM2, "hnew600mKu238M2", dAdaptiveArrayM2);
+
+  hnew600mKco60M2Sum = h600mKco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKco60M2Sum", dAdaptiveArrayM2Sum);
+  hnew600mKk40M2Sum = h600mKk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKk40M2Sum", dAdaptiveArrayM2Sum);
+  hnew600mKth232M2Sum = h600mKth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKth232M2Sum", dAdaptiveArrayM2Sum);
+  hnew600mKu238M2Sum = h600mKu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew600mKu238M2Sum", dAdaptiveArrayM2Sum);
+
 
 ///////// Roman Lead M1 and M2
-  // hPbRombi207M1->Rebin(dAdaptiveBinsM1, "hnewPbRombi207M1", dAdaptiveArrayM1);
-  hPbRomco60M1->Rebin(dAdaptiveBinsM1, "hnewPbRomco60M1", dAdaptiveArrayM1);
-  hPbRomcs137M1->Rebin(dAdaptiveBinsM1, "hnewPbRomcs137M1", dAdaptiveArrayM1);
-  hPbRomk40M1->Rebin(dAdaptiveBinsM1, "hnewPbRomk40M1", dAdaptiveArrayM1);
-  hPbRompb210M1->Rebin(dAdaptiveBinsM1, "hnewPbRompb210M1", dAdaptiveArrayM1);
-  hPbRomth232M1->Rebin(dAdaptiveBinsM1, "hnewPbRomth232M1", dAdaptiveArrayM1);
-  hPbRomu238M1->Rebin(dAdaptiveBinsM1, "hnewPbRomu238M1", dAdaptiveArrayM1);
+  hnewPbRomco60M1 = hPbRomco60M1->Rebin(dAdaptiveBinsM1, "hnewPbRomco60M1", dAdaptiveArrayM1);
+  hnewPbRomcs137M1 = hPbRomcs137M1->Rebin(dAdaptiveBinsM1, "hnewPbRomcs137M1", dAdaptiveArrayM1);
+  hnewPbRomk40M1 = hPbRomk40M1->Rebin(dAdaptiveBinsM1, "hnewPbRomk40M1", dAdaptiveArrayM1);
+  hnewPbRompb210M1 = hPbRompb210M1->Rebin(dAdaptiveBinsM1, "hnewPbRompb210M1", dAdaptiveArrayM1);
+  hnewPbRomth232M1 = hPbRomth232M1->Rebin(dAdaptiveBinsM1, "hnewPbRomth232M1", dAdaptiveArrayM1);
+  hnewPbRomu238M1 = hPbRomu238M1->Rebin(dAdaptiveBinsM1, "hnewPbRomu238M1", dAdaptiveArrayM1);
 
-  // hPbRombi207M2->Rebin(dAdaptiveBinsM2, "hnewPbRombi207M2", dAdaptiveArrayM2);
-  hPbRomco60M2->Rebin(dAdaptiveBinsM2, "hnewPbRomco60M2", dAdaptiveArrayM2);
-  hPbRomcs137M2->Rebin(dAdaptiveBinsM2, "hnewPbRomcs137M2", dAdaptiveArrayM2);
-  hPbRomk40M2->Rebin(dAdaptiveBinsM2, "hnewPbRomk40M2", dAdaptiveArrayM2);
-  hPbRompb210M2->Rebin(dAdaptiveBinsM2, "hnewPbRompb210M2", dAdaptiveArrayM2);
-  hPbRomth232M2->Rebin(dAdaptiveBinsM2, "hnewPbRomth232M2", dAdaptiveArrayM2);
-  hPbRomu238M2->Rebin(dAdaptiveBinsM2, "hnewPbRomu238M2", dAdaptiveArrayM2);
+  hnewPbRomco60M2 = hPbRomco60M2->Rebin(dAdaptiveBinsM2, "hnewPbRomco60M2", dAdaptiveArrayM2);
+  hnewPbRomcs137M2 = hPbRomcs137M2->Rebin(dAdaptiveBinsM2, "hnewPbRomcs137M2", dAdaptiveArrayM2);
+  hnewPbRomk40M2 = hPbRomk40M2->Rebin(dAdaptiveBinsM2, "hnewPbRomk40M2", dAdaptiveArrayM2);
+  hnewPbRompb210M2 = hPbRompb210M2->Rebin(dAdaptiveBinsM2, "hnewPbRompb210M2", dAdaptiveArrayM2);
+  hnewPbRomth232M2 = hPbRomth232M2->Rebin(dAdaptiveBinsM2, "hnewPbRomth232M2", dAdaptiveArrayM2);
+  hnewPbRomu238M2 = hPbRomu238M2->Rebin(dAdaptiveBinsM2, "hnewPbRomu238M2", dAdaptiveArrayM2);
 
-  // hPbRombi207M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRombi207M2Sum", dAdaptiveArrayM2Sum);
-  hPbRomco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomco60M2Sum", dAdaptiveArrayM2Sum);
-  hPbRomcs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomcs137M2Sum", dAdaptiveArrayM2Sum);
-  hPbRomk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomk40M2Sum", dAdaptiveArrayM2Sum);
-  hPbRompb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRompb210M2Sum", dAdaptiveArrayM2Sum);
-  hPbRomth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomth232M2Sum", dAdaptiveArrayM2Sum);
-  hPbRomu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRomco60M2Sum = hPbRomco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRomcs137M2Sum = hPbRomcs137M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomcs137M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRomk40M2Sum = hPbRomk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomk40M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRompb210M2Sum = hPbRompb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRompb210M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRomth232M2Sum = hPbRomth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRomu238M2Sum = hPbRomu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRomu238M2Sum", dAdaptiveArrayM2Sum);
 
 
 ////////// Internal Shields
-  hInternalco60M1->Rebin(dAdaptiveBinsM1, "hnewInternalco60M1", dAdaptiveArrayM1);
-  hInternalk40M1->Rebin(dAdaptiveBinsM1, "hnewInternalk40M1", dAdaptiveArrayM1);
-  hInternalth232M1->Rebin(dAdaptiveBinsM1, "hnewInternalth232M1", dAdaptiveArrayM1);
-  hInternalu238M1->Rebin(dAdaptiveBinsM1, "hnewInternalu238M1", dAdaptiveArrayM1);
+  hnewInternalco60M1 = hInternalco60M1->Rebin(dAdaptiveBinsM1, "hnewInternalco60M1", dAdaptiveArrayM1);
+  hnewInternalk40M1 = hInternalk40M1->Rebin(dAdaptiveBinsM1, "hnewInternalk40M1", dAdaptiveArrayM1);
+  hnewInternalth232M1 = hInternalth232M1->Rebin(dAdaptiveBinsM1, "hnewInternalth232M1", dAdaptiveArrayM1);
+  hnewInternalu238M1 = hInternalu238M1->Rebin(dAdaptiveBinsM1, "hnewInternalu238M1", dAdaptiveArrayM1);
 
-  hInternalco60M2->Rebin(dAdaptiveBinsM2, "hnewInternalco60M2", dAdaptiveArrayM2);
-  hInternalk40M2->Rebin(dAdaptiveBinsM2, "hnewInternalk40M2", dAdaptiveArrayM2);
-  hInternalth232M2->Rebin(dAdaptiveBinsM2, "hnewInternalth232M2", dAdaptiveArrayM2);
-  hInternalu238M2->Rebin(dAdaptiveBinsM2, "hnewInternalu238M2", dAdaptiveArrayM2);
+  hnewInternalco60M2 = hInternalco60M2->Rebin(dAdaptiveBinsM2, "hnewInternalco60M2", dAdaptiveArrayM2);
+  hnewInternalk40M2 = hInternalk40M2->Rebin(dAdaptiveBinsM2, "hnewInternalk40M2", dAdaptiveArrayM2);
+  hnewInternalth232M2 = hInternalth232M2->Rebin(dAdaptiveBinsM2, "hnewInternalth232M2", dAdaptiveArrayM2);
+  hnewInternalu238M2 = hInternalu238M2->Rebin(dAdaptiveBinsM2, "hnewInternalu238M2", dAdaptiveArrayM2);
 
-  hInternalco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalco60M2Sum", dAdaptiveArrayM2Sum);
-  hInternalk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalk40M2Sum", dAdaptiveArrayM2Sum);
-  hInternalth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalth232M2Sum", dAdaptiveArrayM2Sum);
-  hInternalu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewInternalco60M2Sum = hInternalco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewInternalk40M2Sum = hInternalk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalk40M2Sum", dAdaptiveArrayM2Sum);
+  hnewInternalth232M2Sum = hInternalth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewInternalu238M2Sum = hInternalu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalu238M2Sum", dAdaptiveArrayM2Sum);
 
 /*
 ////////// Main Bath M1 and M2
@@ -3759,516 +3749,516 @@ void TBackgroundModel::Initialize()
 */
 
 ////////// OVC M1 and M2
-  hOVCco60M1->Rebin(dAdaptiveBinsM1, "hnewOVCco60M1", dAdaptiveArrayM1);
-  hOVCk40M1->Rebin(dAdaptiveBinsM1, "hnewOVCk40M1", dAdaptiveArrayM1);
-  hOVCth232M1->Rebin(dAdaptiveBinsM1, "hnewOVCth232M1", dAdaptiveArrayM1);
-  hOVCu238M1->Rebin(dAdaptiveBinsM1, "hnewOVCu238M1", dAdaptiveArrayM1);
+  hnewOVCco60M1 = hOVCco60M1->Rebin(dAdaptiveBinsM1, "hnewOVCco60M1", dAdaptiveArrayM1);
+  hnewOVCk40M1 = hOVCk40M1->Rebin(dAdaptiveBinsM1, "hnewOVCk40M1", dAdaptiveArrayM1);
+  hnewOVCth232M1 = hOVCth232M1->Rebin(dAdaptiveBinsM1, "hnewOVCth232M1", dAdaptiveArrayM1);
+  hnewOVCu238M1 = hOVCu238M1->Rebin(dAdaptiveBinsM1, "hnewOVCu238M1", dAdaptiveArrayM1);
 
-  hOVCco60M2->Rebin(dAdaptiveBinsM2, "hnewOVCco60M2", dAdaptiveArrayM2);
-  hOVCk40M2->Rebin(dAdaptiveBinsM2, "hnewOVCk40M2", dAdaptiveArrayM2);
-  hOVCth232M2->Rebin(dAdaptiveBinsM2, "hnewOVCth232M2", dAdaptiveArrayM2);
-  hOVCu238M2->Rebin(dAdaptiveBinsM2, "hnewOVCu238M2", dAdaptiveArrayM2);
+  hnewOVCco60M2 = hOVCco60M2->Rebin(dAdaptiveBinsM2, "hnewOVCco60M2", dAdaptiveArrayM2);
+  hnewOVCk40M2 = hOVCk40M2->Rebin(dAdaptiveBinsM2, "hnewOVCk40M2", dAdaptiveArrayM2);
+  hnewOVCth232M2 = hOVCth232M2->Rebin(dAdaptiveBinsM2, "hnewOVCth232M2", dAdaptiveArrayM2);
+  hnewOVCu238M2 = hOVCu238M2->Rebin(dAdaptiveBinsM2, "hnewOVCu238M2", dAdaptiveArrayM2);
 
-  hOVCco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCco60M2Sum", dAdaptiveArrayM2Sum);
-  hOVCk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCk40M2Sum", dAdaptiveArrayM2Sum);
-  hOVCth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCth232M2Sum", dAdaptiveArrayM2Sum);
-  hOVCu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCu238M2Sum", dAdaptiveArrayM2Sum);
+  hnewOVCco60M2Sum = hOVCco60M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCco60M2Sum", dAdaptiveArrayM2Sum);
+  hnewOVCk40M2Sum = hOVCk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCk40M2Sum", dAdaptiveArrayM2Sum);
+  hnewOVCth232M2Sum = hOVCth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCth232M2Sum", dAdaptiveArrayM2Sum);
+  hnewOVCu238M2Sum = hOVCu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVCu238M2Sum", dAdaptiveArrayM2Sum);
 
-  hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
-  hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
-  hExtPbbi210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewExtPbbi210M2Sum", dAdaptiveArrayM2Sum);
+  hnewExtPbbi210M1 = hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
+  hnewExtPbbi210M2 = hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
+  hnewExtPbbi210M2Sum = hExtPbbi210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewExtPbbi210M2Sum", dAdaptiveArrayM2Sum);
 
 
 
   // Fill adaptive binning histograms
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
-    hAdapTeO20nuM1->SetBinContent(i, dBinSize * hnewTeO20nuM1->GetBinContent(i)/hnewTeO20nuM1->GetBinWidth(i));
-    hAdapTeO22nuM1->SetBinContent(i, dBinSize * hnewTeO22nuM1->GetBinContent(i)/hnewTeO22nuM1->GetBinWidth(i));
-    hAdapTeO2co60M1->SetBinContent(i, dBinSize * hnewTeO2co60M1->GetBinContent(i)/hnewTeO2co60M1->GetBinWidth(i));
-    hAdapTeO2k40M1->SetBinContent(i, dBinSize * hnewTeO2k40M1->GetBinContent(i)/hnewTeO2k40M1->GetBinWidth(i));
-    hAdapTeO2pb210M1->SetBinContent(i, dBinSize * hnewTeO2pb210M1->GetBinContent(i)/hnewTeO2pb210M1->GetBinWidth(i));
-    hAdapTeO2po210M1->SetBinContent(i, dBinSize * hnewTeO2po210M1->GetBinContent(i)/hnewTeO2po210M1->GetBinWidth(i));
-    hAdapTeO2te125M1->SetBinContent(i, dBinSize * hnewTeO2te125M1->GetBinContent(i)/hnewTeO2te125M1->GetBinWidth(i));
-    hAdapTeO2th232M1->SetBinContent(i, dBinSize * hnewTeO2th232M1->GetBinContent(i)/hnewTeO2th232M1->GetBinWidth(i));
-    // hAdapTeO2th228M1->SetBinContent(i, dBinSize * hnewTeO2th228M1->GetBinContent(i)/hnewTeO2th228M1->GetBinWidth(i));
-    // hAdapTeO2ra226M1->SetBinContent(i, dBinSize * hnewTeO2ra226M1->GetBinContent(i)/hnewTeO2ra226M1->GetBinWidth(i));
-    // hAdapTeO2rn222M1->SetBinContent(i, dBinSize * hnewTeO2rn222M1->GetBinContent(i)/hnewTeO2rn222M1->GetBinWidth(i));
-    hAdapTeO2u238M1->SetBinContent(i, dBinSize * hnewTeO2u238M1->GetBinContent(i)/hnewTeO2u238M1->GetBinWidth(i));
-    // hAdapTeO2th230M1->SetBinContent(i, dBinSize * hnewTeO2th230M1->GetBinContent(i)/hnewTeO2th230M1->GetBinWidth(i));
-    // hAdapTeO2u234M1->SetBinContent(i, dBinSize * hnewTeO2u234M1->GetBinContent(i)/hnewTeO2u234M1->GetBinWidth(i));
+    hAdapTeO20nuM1->SetBinContent(i, hnewTeO20nuM1->GetBinContent(i)/hnewTeO20nuM1->GetBinWidth(i));
+    hAdapTeO22nuM1->SetBinContent(i, hnewTeO22nuM1->GetBinContent(i)/hnewTeO22nuM1->GetBinWidth(i));
+    hAdapTeO2co60M1->SetBinContent(i, hnewTeO2co60M1->GetBinContent(i)/hnewTeO2co60M1->GetBinWidth(i));
+    hAdapTeO2k40M1->SetBinContent(i, hnewTeO2k40M1->GetBinContent(i)/hnewTeO2k40M1->GetBinWidth(i));
+    hAdapTeO2pb210M1->SetBinContent(i, hnewTeO2pb210M1->GetBinContent(i)/hnewTeO2pb210M1->GetBinWidth(i));
+    hAdapTeO2po210M1->SetBinContent(i, hnewTeO2po210M1->GetBinContent(i)/hnewTeO2po210M1->GetBinWidth(i));
+    hAdapTeO2te125M1->SetBinContent(i, hnewTeO2te125M1->GetBinContent(i)/hnewTeO2te125M1->GetBinWidth(i));
+    hAdapTeO2th232M1->SetBinContent(i, hnewTeO2th232M1->GetBinContent(i)/hnewTeO2th232M1->GetBinWidth(i));
+    // hAdapTeO2th228M1->SetBinContent(i, hnewTeO2th228M1->GetBinContent(i)/hnewTeO2th228M1->GetBinWidth(i));
+    // hAdapTeO2ra226M1->SetBinContent(i, hnewTeO2ra226M1->GetBinContent(i)/hnewTeO2ra226M1->GetBinWidth(i));
+    // hAdapTeO2rn222M1->SetBinContent(i, hnewTeO2rn222M1->GetBinContent(i)/hnewTeO2rn222M1->GetBinWidth(i));
+    hAdapTeO2u238M1->SetBinContent(i, hnewTeO2u238M1->GetBinContent(i)/hnewTeO2u238M1->GetBinWidth(i));
+    // hAdapTeO2th230M1->SetBinContent(i, hnewTeO2th230M1->GetBinContent(i)/hnewTeO2th230M1->GetBinWidth(i));
+    // hAdapTeO2u234M1->SetBinContent(i, hnewTeO2u234M1->GetBinContent(i)/hnewTeO2u234M1->GetBinWidth(i));
 
-    hAdapTeO2th232onlyM1->SetBinContent(i, dBinSize * hnewTeO2th232onlyM1->GetBinContent(i)/hnewTeO2th232onlyM1->GetBinWidth(i));
-    hAdapTeO2ra228pb208M1->SetBinContent(i, dBinSize * hnewTeO2ra228pb208M1->GetBinContent(i)/hnewTeO2ra228pb208M1->GetBinWidth(i));
-    hAdapTeO2th230onlyM1->SetBinContent(i, dBinSize * hnewTeO2th230onlyM1->GetBinContent(i)/hnewTeO2th230onlyM1->GetBinWidth(i));
+    hAdapTeO2th232onlyM1->SetBinContent(i, hnewTeO2th232onlyM1->GetBinContent(i)/hnewTeO2th232onlyM1->GetBinWidth(i));
+    hAdapTeO2ra228pb208M1->SetBinContent(i, hnewTeO2ra228pb208M1->GetBinContent(i)/hnewTeO2ra228pb208M1->GetBinWidth(i));
+    hAdapTeO2th230onlyM1->SetBinContent(i, hnewTeO2th230onlyM1->GetBinContent(i)/hnewTeO2th230onlyM1->GetBinWidth(i));
 
-    hAdapTeO2Sxth232onlyM1_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232onlyM1_001->GetBinContent(i)/hnewTeO2Sxth232onlyM1_001->GetBinWidth(i));
-    hAdapTeO2Sxra228pb208M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxra228pb208M1_001->GetBinContent(i)/hnewTeO2Sxra228pb208M1_001->GetBinWidth(i));
-    hAdapTeO2Sxu238th230M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238th230M1_001->GetBinContent(i)/hnewTeO2Sxu238th230M1_001->GetBinWidth(i));
-    hAdapTeO2Sxth230onlyM1_001->SetBinContent(i, dBinSize * hnewTeO2Sxth230onlyM1_001->GetBinContent(i)/hnewTeO2Sxth230onlyM1_001->GetBinWidth(i));
-    hAdapTeO2Sxra226pb210M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M1_001->GetBinContent(i)/hnewTeO2Sxra226pb210M1_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M1_0001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_0001->GetBinContent(i)/hnewTeO2Sxpb210M1_0001->GetBinWidth(i));
+    hAdapTeO2Sxth232onlyM1_001->SetBinContent(i, hnewTeO2Sxth232onlyM1_001->GetBinContent(i)/hnewTeO2Sxth232onlyM1_001->GetBinWidth(i));
+    hAdapTeO2Sxra228pb208M1_001->SetBinContent(i, hnewTeO2Sxra228pb208M1_001->GetBinContent(i)/hnewTeO2Sxra228pb208M1_001->GetBinWidth(i));
+    hAdapTeO2Sxu238th230M1_001->SetBinContent(i, hnewTeO2Sxu238th230M1_001->GetBinContent(i)/hnewTeO2Sxu238th230M1_001->GetBinWidth(i));
+    hAdapTeO2Sxth230onlyM1_001->SetBinContent(i, hnewTeO2Sxth230onlyM1_001->GetBinContent(i)/hnewTeO2Sxth230onlyM1_001->GetBinWidth(i));
+    hAdapTeO2Sxra226pb210M1_001->SetBinContent(i, hnewTeO2Sxra226pb210M1_001->GetBinContent(i)/hnewTeO2Sxra226pb210M1_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M1_0001->SetBinContent(i, hnewTeO2Sxpb210M1_0001->GetBinContent(i)/hnewTeO2Sxpb210M1_0001->GetBinWidth(i));
 
-    hAdapTeO2Spb210M1_01->SetBinContent(i, dBinSize * hnewTeO2Spb210M1_01->GetBinContent(i)/hnewTeO2Spb210M1_01->GetBinWidth(i));
-    hAdapTeO2Spo210M1_001->SetBinContent(i, dBinSize * hnewTeO2Spo210M1_001->GetBinContent(i)/hnewTeO2Spo210M1_001->GetBinWidth(i));
-    hAdapTeO2Spo210M1_01->SetBinContent(i, dBinSize * hnewTeO2Spo210M1_01->GetBinContent(i)/hnewTeO2Spo210M1_01->GetBinWidth(i));
-    hAdapTeO2Sth232M1_01->SetBinContent(i, dBinSize * hnewTeO2Sth232M1_01->GetBinContent(i)/hnewTeO2Sth232M1_01->GetBinWidth(i));
-    hAdapTeO2Su238M1_01->SetBinContent(i, dBinSize * hnewTeO2Su238M1_01->GetBinContent(i)/hnewTeO2Su238M1_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_001->GetBinContent(i)/hnewTeO2Sxpb210M1_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M1_01->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_01->GetBinContent(i)/hnewTeO2Sxpb210M1_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_1->GetBinContent(i)/hnewTeO2Sxpb210M1_1->GetBinWidth(i));
-    hAdapTeO2Sxpb210M1_10->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_10->GetBinContent(i)/hnewTeO2Sxpb210M1_10->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M1_001->GetBinContent(i)/hnewTeO2Sxpo210M1_001->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_01->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M1_01->GetBinContent(i)/hnewTeO2Sxpo210M1_01->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M1_1->GetBinContent(i)/hnewTeO2Sxpo210M1_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232M1_001->GetBinContent(i)/hnewTeO2Sxth232M1_001->GetBinWidth(i));
-    hAdapTeO2Sxth232M1_01->SetBinContent(i, dBinSize * hnewTeO2Sxth232M1_01->GetBinContent(i)/hnewTeO2Sxth232M1_01->GetBinWidth(i));
-    hAdapTeO2Sxth232M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxth232M1_1->GetBinContent(i)/hnewTeO2Sxth232M1_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M1_10->SetBinContent(i, dBinSize * hnewTeO2Sxth232M1_10->GetBinContent(i)/hnewTeO2Sxth232M1_10->GetBinWidth(i));
-    hAdapTeO2Sxu238M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_001->GetBinContent(i)/hnewTeO2Sxu238M1_001->GetBinWidth(i));
-    hAdapTeO2Sxu238M1_01->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_01->GetBinContent(i)/hnewTeO2Sxu238M1_01->GetBinWidth(i));
-    hAdapTeO2Sxu238M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_1->GetBinContent(i)/hnewTeO2Sxu238M1_1->GetBinWidth(i));
-    hAdapTeO2Sxu238M1_10->SetBinContent(i, dBinSize * hnewTeO2Sxu238M1_10->GetBinContent(i)/hnewTeO2Sxu238M1_10->GetBinWidth(i));
+    hAdapTeO2Spb210M1_01->SetBinContent(i, hnewTeO2Spb210M1_01->GetBinContent(i)/hnewTeO2Spb210M1_01->GetBinWidth(i));
+    hAdapTeO2Spo210M1_001->SetBinContent(i, hnewTeO2Spo210M1_001->GetBinContent(i)/hnewTeO2Spo210M1_001->GetBinWidth(i));
+    hAdapTeO2Spo210M1_01->SetBinContent(i, hnewTeO2Spo210M1_01->GetBinContent(i)/hnewTeO2Spo210M1_01->GetBinWidth(i));
+    hAdapTeO2Sth232M1_01->SetBinContent(i, hnewTeO2Sth232M1_01->GetBinContent(i)/hnewTeO2Sth232M1_01->GetBinWidth(i));
+    hAdapTeO2Su238M1_01->SetBinContent(i, hnewTeO2Su238M1_01->GetBinContent(i)/hnewTeO2Su238M1_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M1_001->SetBinContent(i, hnewTeO2Sxpb210M1_001->GetBinContent(i)/hnewTeO2Sxpb210M1_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M1_01->SetBinContent(i, hnewTeO2Sxpb210M1_01->GetBinContent(i)/hnewTeO2Sxpb210M1_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M1_1->SetBinContent(i, hnewTeO2Sxpb210M1_1->GetBinContent(i)/hnewTeO2Sxpb210M1_1->GetBinWidth(i));
+    hAdapTeO2Sxpb210M1_10->SetBinContent(i, hnewTeO2Sxpb210M1_10->GetBinContent(i)/hnewTeO2Sxpb210M1_10->GetBinWidth(i));
+    hAdapTeO2Sxpo210M1_001->SetBinContent(i, hnewTeO2Sxpo210M1_001->GetBinContent(i)/hnewTeO2Sxpo210M1_001->GetBinWidth(i));
+    hAdapTeO2Sxpo210M1_01->SetBinContent(i, hnewTeO2Sxpo210M1_01->GetBinContent(i)/hnewTeO2Sxpo210M1_01->GetBinWidth(i));
+    hAdapTeO2Sxpo210M1_1->SetBinContent(i, hnewTeO2Sxpo210M1_1->GetBinContent(i)/hnewTeO2Sxpo210M1_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M1_001->SetBinContent(i, hnewTeO2Sxth232M1_001->GetBinContent(i)/hnewTeO2Sxth232M1_001->GetBinWidth(i));
+    hAdapTeO2Sxth232M1_01->SetBinContent(i, hnewTeO2Sxth232M1_01->GetBinContent(i)/hnewTeO2Sxth232M1_01->GetBinWidth(i));
+    hAdapTeO2Sxth232M1_1->SetBinContent(i, hnewTeO2Sxth232M1_1->GetBinContent(i)/hnewTeO2Sxth232M1_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M1_10->SetBinContent(i, hnewTeO2Sxth232M1_10->GetBinContent(i)/hnewTeO2Sxth232M1_10->GetBinWidth(i));
+    hAdapTeO2Sxu238M1_001->SetBinContent(i, hnewTeO2Sxu238M1_001->GetBinContent(i)/hnewTeO2Sxu238M1_001->GetBinWidth(i));
+    hAdapTeO2Sxu238M1_01->SetBinContent(i, hnewTeO2Sxu238M1_01->GetBinContent(i)/hnewTeO2Sxu238M1_01->GetBinWidth(i));
+    hAdapTeO2Sxu238M1_1->SetBinContent(i, hnewTeO2Sxu238M1_1->GetBinContent(i)/hnewTeO2Sxu238M1_1->GetBinWidth(i));
+    hAdapTeO2Sxu238M1_10->SetBinContent(i, hnewTeO2Sxu238M1_10->GetBinContent(i)/hnewTeO2Sxu238M1_10->GetBinWidth(i));
 
 
-    hAdapCuFrameco58M1->SetBinContent(i, dBinSize * hnewCuFrameco58M1->GetBinContent(i)/hnewCuFrameco58M1->GetBinWidth(i));
-    hAdapCuFrameco60M1->SetBinContent(i, dBinSize * hnewCuFrameco60M1->GetBinContent(i)/hnewCuFrameco60M1->GetBinWidth(i));
-    hAdapCuFramecs137M1->SetBinContent(i, dBinSize * hnewCuFramecs137M1->GetBinContent(i)/hnewCuFramecs137M1->GetBinWidth(i));
-    hAdapCuFramek40M1->SetBinContent(i, dBinSize * hnewCuFramek40M1->GetBinContent(i)/hnewCuFramek40M1->GetBinWidth(i));
-    hAdapCuFramemn54M1->SetBinContent(i, dBinSize * hnewCuFramemn54M1->GetBinContent(i)/hnewCuFramemn54M1->GetBinWidth(i));
-    hAdapCuFramepb210M1->SetBinContent(i, dBinSize * hnewCuFramepb210M1->GetBinContent(i)/hnewCuFramepb210M1->GetBinWidth(i));
-    hAdapCuFrameth232M1->SetBinContent(i, dBinSize * hnewCuFrameth232M1->GetBinContent(i)/hnewCuFrameth232M1->GetBinWidth(i));
-    hAdapCuFrameu238M1->SetBinContent(i, dBinSize * hnewCuFrameu238M1->GetBinContent(i)/hnewCuFrameu238M1->GetBinWidth(i));
+    hAdapCuFrameco58M1->SetBinContent(i, hnewCuFrameco58M1->GetBinContent(i)/hnewCuFrameco58M1->GetBinWidth(i));
+    hAdapCuFrameco60M1->SetBinContent(i, hnewCuFrameco60M1->GetBinContent(i)/hnewCuFrameco60M1->GetBinWidth(i));
+    hAdapCuFramecs137M1->SetBinContent(i, hnewCuFramecs137M1->GetBinContent(i)/hnewCuFramecs137M1->GetBinWidth(i));
+    hAdapCuFramek40M1->SetBinContent(i, hnewCuFramek40M1->GetBinContent(i)/hnewCuFramek40M1->GetBinWidth(i));
+    hAdapCuFramemn54M1->SetBinContent(i, hnewCuFramemn54M1->GetBinContent(i)/hnewCuFramemn54M1->GetBinWidth(i));
+    hAdapCuFramepb210M1->SetBinContent(i, hnewCuFramepb210M1->GetBinContent(i)/hnewCuFramepb210M1->GetBinWidth(i));
+    hAdapCuFrameth232M1->SetBinContent(i, hnewCuFrameth232M1->GetBinContent(i)/hnewCuFrameth232M1->GetBinWidth(i));
+    hAdapCuFrameu238M1->SetBinContent(i, hnewCuFrameu238M1->GetBinContent(i)/hnewCuFrameu238M1->GetBinWidth(i));
 
-    hAdapCuFrameSth232M1_1->SetBinContent(i, dBinSize * hnewCuFrameSth232M1_1->GetBinContent(i)/hnewCuFrameSth232M1_1->GetBinWidth(i));
-    hAdapCuFrameSu238M1_1->SetBinContent(i, dBinSize * hnewCuFrameSu238M1_1->GetBinContent(i)/hnewCuFrameSu238M1_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M1_001->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M1_001->GetBinContent(i)/hnewCuFrameSxpb210M1_001->GetBinWidth(i));
-    hAdapCuFrameSxpb210M1_01->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M1_01->GetBinContent(i)/hnewCuFrameSxpb210M1_01->GetBinWidth(i));
-    hAdapCuFrameSxpb210M1_1->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M1_1->GetBinContent(i)/hnewCuFrameSxpb210M1_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M1_10->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M1_10->GetBinContent(i)/hnewCuFrameSxpb210M1_10->GetBinWidth(i));
-    hAdapCuFrameSxth232M1_001->SetBinContent(i, dBinSize * hnewCuFrameSxth232M1_001->GetBinContent(i)/hnewCuFrameSxth232M1_001->GetBinWidth(i));
-    hAdapCuFrameSxth232M1_01->SetBinContent(i, dBinSize * hnewCuFrameSxth232M1_01->GetBinContent(i)/hnewCuFrameSxth232M1_01->GetBinWidth(i));
-    hAdapCuFrameSxth232M1_1->SetBinContent(i, dBinSize * hnewCuFrameSxth232M1_1->GetBinContent(i)/hnewCuFrameSxth232M1_1->GetBinWidth(i));
-    hAdapCuFrameSxth232M1_10->SetBinContent(i, dBinSize * hnewCuFrameSxth232M1_10->GetBinContent(i)/hnewCuFrameSxth232M1_10->GetBinWidth(i));
-    hAdapCuFrameSxu238M1_001->SetBinContent(i, dBinSize * hnewCuFrameSxu238M1_001->GetBinContent(i)/hnewCuFrameSxu238M1_001->GetBinWidth(i));
-    hAdapCuFrameSxu238M1_01->SetBinContent(i, dBinSize * hnewCuFrameSxu238M1_01->GetBinContent(i)/hnewCuFrameSxu238M1_01->GetBinWidth(i));
-    hAdapCuFrameSxu238M1_1->SetBinContent(i, dBinSize * hnewCuFrameSxu238M1_1->GetBinContent(i)/hnewCuFrameSxu238M1_1->GetBinWidth(i));
-    hAdapCuFrameSxu238M1_10->SetBinContent(i, dBinSize * hnewCuFrameSxu238M1_10->GetBinContent(i)/hnewCuFrameSxu238M1_10->GetBinWidth(i));
+    hAdapCuFrameSth232M1_1->SetBinContent(i, hnewCuFrameSth232M1_1->GetBinContent(i)/hnewCuFrameSth232M1_1->GetBinWidth(i));
+    hAdapCuFrameSu238M1_1->SetBinContent(i, hnewCuFrameSu238M1_1->GetBinContent(i)/hnewCuFrameSu238M1_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M1_001->SetBinContent(i, hnewCuFrameSxpb210M1_001->GetBinContent(i)/hnewCuFrameSxpb210M1_001->GetBinWidth(i));
+    hAdapCuFrameSxpb210M1_01->SetBinContent(i, hnewCuFrameSxpb210M1_01->GetBinContent(i)/hnewCuFrameSxpb210M1_01->GetBinWidth(i));
+    hAdapCuFrameSxpb210M1_1->SetBinContent(i, hnewCuFrameSxpb210M1_1->GetBinContent(i)/hnewCuFrameSxpb210M1_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M1_10->SetBinContent(i, hnewCuFrameSxpb210M1_10->GetBinContent(i)/hnewCuFrameSxpb210M1_10->GetBinWidth(i));
+    hAdapCuFrameSxth232M1_001->SetBinContent(i, hnewCuFrameSxth232M1_001->GetBinContent(i)/hnewCuFrameSxth232M1_001->GetBinWidth(i));
+    hAdapCuFrameSxth232M1_01->SetBinContent(i, hnewCuFrameSxth232M1_01->GetBinContent(i)/hnewCuFrameSxth232M1_01->GetBinWidth(i));
+    hAdapCuFrameSxth232M1_1->SetBinContent(i, hnewCuFrameSxth232M1_1->GetBinContent(i)/hnewCuFrameSxth232M1_1->GetBinWidth(i));
+    hAdapCuFrameSxth232M1_10->SetBinContent(i, hnewCuFrameSxth232M1_10->GetBinContent(i)/hnewCuFrameSxth232M1_10->GetBinWidth(i));
+    hAdapCuFrameSxu238M1_001->SetBinContent(i, hnewCuFrameSxu238M1_001->GetBinContent(i)/hnewCuFrameSxu238M1_001->GetBinWidth(i));
+    hAdapCuFrameSxu238M1_01->SetBinContent(i, hnewCuFrameSxu238M1_01->GetBinContent(i)/hnewCuFrameSxu238M1_01->GetBinWidth(i));
+    hAdapCuFrameSxu238M1_1->SetBinContent(i, hnewCuFrameSxu238M1_1->GetBinContent(i)/hnewCuFrameSxu238M1_1->GetBinWidth(i));
+    hAdapCuFrameSxu238M1_10->SetBinContent(i, hnewCuFrameSxu238M1_10->GetBinContent(i)/hnewCuFrameSxu238M1_10->GetBinWidth(i));
 
-    hAdapCuBoxco58M1->SetBinContent(i, dBinSize * hnewCuBoxco58M1->GetBinContent(i)/hnewCuBoxco58M1->GetBinWidth(i));
-    hAdapCuBoxco60M1->SetBinContent(i, dBinSize * hnewCuBoxco60M1->GetBinContent(i)/hnewCuBoxco60M1->GetBinWidth(i));
-    hAdapCuBoxcs137M1->SetBinContent(i, dBinSize * hnewCuBoxcs137M1->GetBinContent(i)/hnewCuBoxcs137M1->GetBinWidth(i));
-    hAdapCuBoxk40M1->SetBinContent(i, dBinSize * hnewCuBoxk40M1->GetBinContent(i)/hnewCuBoxk40M1->GetBinWidth(i));
-    hAdapCuBoxmn54M1->SetBinContent(i, dBinSize * hnewCuBoxmn54M1->GetBinContent(i)/hnewCuBoxmn54M1->GetBinWidth(i));
-    hAdapCuBoxpb210M1->SetBinContent(i, dBinSize * hnewCuBoxpb210M1->GetBinContent(i)/hnewCuBoxpb210M1->GetBinWidth(i));
-    hAdapCuBoxth232M1->SetBinContent(i, dBinSize * hnewCuBoxth232M1->GetBinContent(i)/hnewCuBoxth232M1->GetBinWidth(i));
-    hAdapCuBoxu238M1->SetBinContent(i, dBinSize * hnewCuBoxu238M1->GetBinContent(i)/hnewCuBoxu238M1->GetBinWidth(i));
+    hAdapCuBoxco58M1->SetBinContent(i, hnewCuBoxco58M1->GetBinContent(i)/hnewCuBoxco58M1->GetBinWidth(i));
+    hAdapCuBoxco60M1->SetBinContent(i, hnewCuBoxco60M1->GetBinContent(i)/hnewCuBoxco60M1->GetBinWidth(i));
+    hAdapCuBoxcs137M1->SetBinContent(i, hnewCuBoxcs137M1->GetBinContent(i)/hnewCuBoxcs137M1->GetBinWidth(i));
+    hAdapCuBoxk40M1->SetBinContent(i, hnewCuBoxk40M1->GetBinContent(i)/hnewCuBoxk40M1->GetBinWidth(i));
+    hAdapCuBoxmn54M1->SetBinContent(i, hnewCuBoxmn54M1->GetBinContent(i)/hnewCuBoxmn54M1->GetBinWidth(i));
+    hAdapCuBoxpb210M1->SetBinContent(i, hnewCuBoxpb210M1->GetBinContent(i)/hnewCuBoxpb210M1->GetBinWidth(i));
+    hAdapCuBoxth232M1->SetBinContent(i, hnewCuBoxth232M1->GetBinContent(i)/hnewCuBoxth232M1->GetBinWidth(i));
+    hAdapCuBoxu238M1->SetBinContent(i, hnewCuBoxu238M1->GetBinContent(i)/hnewCuBoxu238M1->GetBinWidth(i));
 
-    hAdapCuBoxSth232M1_1->SetBinContent(i, dBinSize * hnewCuBoxSth232M1_1->GetBinContent(i)/hnewCuBoxSth232M1_1->GetBinWidth(i));
-    hAdapCuBoxSu238M1_1->SetBinContent(i, dBinSize * hnewCuBoxSu238M1_1->GetBinContent(i)/hnewCuBoxSu238M1_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M1_001->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M1_001->GetBinContent(i)/hnewCuBoxSxpb210M1_001->GetBinWidth(i));
-    hAdapCuBoxSxpb210M1_01->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M1_01->GetBinContent(i)/hnewCuBoxSxpb210M1_01->GetBinWidth(i));
-    hAdapCuBoxSxpb210M1_1->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M1_1->GetBinContent(i)/hnewCuBoxSxpb210M1_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M1_10->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M1_10->GetBinContent(i)/hnewCuBoxSxpb210M1_10->GetBinWidth(i));
-    hAdapCuBoxSxth232M1_001->SetBinContent(i, dBinSize * hnewCuBoxSxth232M1_001->GetBinContent(i)/hnewCuBoxSxth232M1_001->GetBinWidth(i));
-    hAdapCuBoxSxth232M1_01->SetBinContent(i, dBinSize * hnewCuBoxSxth232M1_01->GetBinContent(i)/hnewCuBoxSxth232M1_01->GetBinWidth(i));
-    hAdapCuBoxSxth232M1_1->SetBinContent(i, dBinSize * hnewCuBoxSxth232M1_1->GetBinContent(i)/hnewCuBoxSxth232M1_1->GetBinWidth(i));
-    hAdapCuBoxSxth232M1_10->SetBinContent(i, dBinSize * hnewCuBoxSxth232M1_10->GetBinContent(i)/hnewCuBoxSxth232M1_10->GetBinWidth(i));
-    hAdapCuBoxSxu238M1_001->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_001->GetBinContent(i)/hnewCuBoxSxu238M1_001->GetBinWidth(i));
-    hAdapCuBoxSxu238M1_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_01->GetBinContent(i)/hnewCuBoxSxu238M1_01->GetBinWidth(i));
-    hAdapCuBoxSxu238M1_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_1->GetBinContent(i)/hnewCuBoxSxu238M1_1->GetBinWidth(i));
-    hAdapCuBoxSxu238M1_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M1_10->GetBinContent(i)/hnewCuBoxSxu238M1_10->GetBinWidth(i));
+    hAdapCuBoxSth232M1_1->SetBinContent(i, hnewCuBoxSth232M1_1->GetBinContent(i)/hnewCuBoxSth232M1_1->GetBinWidth(i));
+    hAdapCuBoxSu238M1_1->SetBinContent(i, hnewCuBoxSu238M1_1->GetBinContent(i)/hnewCuBoxSu238M1_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M1_001->SetBinContent(i, hnewCuBoxSxpb210M1_001->GetBinContent(i)/hnewCuBoxSxpb210M1_001->GetBinWidth(i));
+    hAdapCuBoxSxpb210M1_01->SetBinContent(i, hnewCuBoxSxpb210M1_01->GetBinContent(i)/hnewCuBoxSxpb210M1_01->GetBinWidth(i));
+    hAdapCuBoxSxpb210M1_1->SetBinContent(i, hnewCuBoxSxpb210M1_1->GetBinContent(i)/hnewCuBoxSxpb210M1_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M1_10->SetBinContent(i, hnewCuBoxSxpb210M1_10->GetBinContent(i)/hnewCuBoxSxpb210M1_10->GetBinWidth(i));
+    hAdapCuBoxSxth232M1_001->SetBinContent(i, hnewCuBoxSxth232M1_001->GetBinContent(i)/hnewCuBoxSxth232M1_001->GetBinWidth(i));
+    hAdapCuBoxSxth232M1_01->SetBinContent(i, hnewCuBoxSxth232M1_01->GetBinContent(i)/hnewCuBoxSxth232M1_01->GetBinWidth(i));
+    hAdapCuBoxSxth232M1_1->SetBinContent(i, hnewCuBoxSxth232M1_1->GetBinContent(i)/hnewCuBoxSxth232M1_1->GetBinWidth(i));
+    hAdapCuBoxSxth232M1_10->SetBinContent(i, hnewCuBoxSxth232M1_10->GetBinContent(i)/hnewCuBoxSxth232M1_10->GetBinWidth(i));
+    hAdapCuBoxSxu238M1_001->SetBinContent(i, hnewCuBoxSxu238M1_001->GetBinContent(i)/hnewCuBoxSxu238M1_001->GetBinWidth(i));
+    hAdapCuBoxSxu238M1_01->SetBinContent(i, hnewCuBoxSxu238M1_01->GetBinContent(i)/hnewCuBoxSxu238M1_01->GetBinWidth(i));
+    hAdapCuBoxSxu238M1_1->SetBinContent(i, hnewCuBoxSxu238M1_1->GetBinContent(i)/hnewCuBoxSxu238M1_1->GetBinWidth(i));
+    hAdapCuBoxSxu238M1_10->SetBinContent(i, hnewCuBoxSxu238M1_10->GetBinContent(i)/hnewCuBoxSxu238M1_10->GetBinWidth(i));
 
-    hAdapCuBox_CuFrameco60M1->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M1->GetBinContent(i)/hnewCuBox_CuFrameco60M1->GetBinWidth(i));
-    hAdapCuBox_CuFramek40M1->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M1->GetBinContent(i)/hnewCuBox_CuFramek40M1->GetBinWidth(i));
-    hAdapCuBox_CuFrameth232M1->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M1->GetBinContent(i)/hnewCuBox_CuFrameth232M1->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M1->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M1->GetBinContent(i)/hnewCuBox_CuFrameu238M1->GetBinWidth(i));
+    hAdapCuBox_CuFrameco60M1->SetBinContent(i, hnewCuBox_CuFrameco60M1->GetBinContent(i)/hnewCuBox_CuFrameco60M1->GetBinWidth(i));
+    hAdapCuBox_CuFramek40M1->SetBinContent(i, hnewCuBox_CuFramek40M1->GetBinContent(i)/hnewCuBox_CuFramek40M1->GetBinWidth(i));
+    hAdapCuBox_CuFrameth232M1->SetBinContent(i, hnewCuBox_CuFrameth232M1->GetBinContent(i)/hnewCuBox_CuFrameth232M1->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M1->SetBinContent(i, hnewCuBox_CuFrameu238M1->GetBinContent(i)/hnewCuBox_CuFrameu238M1->GetBinWidth(i));
 
-    hAdapCuBox_CuFrameth232M1_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M1_10->GetBinContent(i)/hnewCuBox_CuFrameth232M1_10->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M1_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M1_10->GetBinContent(i)/hnewCuBox_CuFrameu238M1_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M1_10->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M1_10->GetBinContent(i)/hnewCuBox_CuFramepb210M1_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M1_1->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M1_1->GetBinContent(i)/hnewCuBox_CuFramepb210M1_1->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M1_01->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M1_01->GetBinContent(i)/hnewCuBox_CuFramepb210M1_01->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M1_001->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M1_001->GetBinContent(i)/hnewCuBox_CuFramepb210M1_001->GetBinWidth(i));
-
-/*
-    hAdap50mKco58M1->SetBinContent(i, dBinSize * hnew50mKco58M1->GetBinContent(i)/hnew50mKco58M1->GetBinWidth(i));
-    hAdap50mKco60M1->SetBinContent(i, dBinSize * hnew50mKco60M1->GetBinContent(i)/hnew50mKco60M1->GetBinWidth(i));
-    hAdap50mKcs137M1->SetBinContent(i, dBinSize * hnew50mKcs137M1->GetBinContent(i)/hnew50mKcs137M1->GetBinWidth(i));
-    hAdap50mKk40M1->SetBinContent(i, dBinSize * hnew50mKk40M1->GetBinContent(i)/hnew50mKk40M1->GetBinWidth(i));
-    hAdap50mKmn54M1->SetBinContent(i, dBinSize * hnew50mKmn54M1->GetBinContent(i)/hnew50mKmn54M1->GetBinWidth(i));
-    hAdap50mKpb210M1->SetBinContent(i, dBinSize * hnew50mKpb210M1->GetBinContent(i)/hnew50mKpb210M1->GetBinWidth(i));
-    hAdap50mKth232M1->SetBinContent(i, dBinSize * hnew50mKth232M1->GetBinContent(i)/hnew50mKth232M1->GetBinWidth(i));
-    hAdap50mKu238M1->SetBinContent(i, dBinSize * hnew50mKu238M1->GetBinContent(i)/hnew50mKu238M1->GetBinWidth(i));
-
-    hAdap600mKco60M1->SetBinContent(i, dBinSize * hnew600mKco60M1->GetBinContent(i)/hnew600mKco60M1->GetBinWidth(i));
-    hAdap600mKk40M1->SetBinContent(i, dBinSize * hnew600mKk40M1->GetBinContent(i)/hnew600mKk40M1->GetBinWidth(i));
-    hAdap600mKth232M1->SetBinContent(i, dBinSize * hnew600mKth232M1->GetBinContent(i)/hnew600mKth232M1->GetBinWidth(i));
-    hAdap600mKu238M1->SetBinContent(i, dBinSize * hnew600mKu238M1->GetBinContent(i)/hnew600mKu238M1->GetBinWidth(i));
-*/
-
-    // hAdapPbRombi207M1->SetBinContent(i, dBinSize * hnewPbRombi207M1->GetBinContent(i)/hnewPbRombi207M1->GetBinWidth(i));
-    hAdapPbRomco60M1->SetBinContent(i, dBinSize * hnewPbRomco60M1->GetBinContent(i)/hnewPbRomco60M1->GetBinWidth(i));
-    hAdapPbRomcs137M1->SetBinContent(i, dBinSize * hnewPbRomcs137M1->GetBinContent(i)/hnewPbRomcs137M1->GetBinWidth(i));
-    hAdapPbRomk40M1->SetBinContent(i, dBinSize * hnewPbRomk40M1->GetBinContent(i)/hnewPbRomk40M1->GetBinWidth(i));
-    hAdapPbRompb210M1->SetBinContent(i, dBinSize * hnewPbRompb210M1->GetBinContent(i)/hnewPbRompb210M1->GetBinWidth(i));
-    hAdapPbRomth232M1->SetBinContent(i, dBinSize * hnewPbRomth232M1->GetBinContent(i)/hnewPbRomth232M1->GetBinWidth(i));
-    hAdapPbRomu238M1->SetBinContent(i, dBinSize * hnewPbRomu238M1->GetBinContent(i)/hnewPbRomu238M1->GetBinWidth(i));
-
-    hAdapInternalco60M1->SetBinContent(i, dBinSize * hnewInternalco60M1->GetBinContent(i)/hnewInternalco60M1->GetBinWidth(i));
-    hAdapInternalk40M1->SetBinContent(i, dBinSize * hnewInternalk40M1->GetBinContent(i)/hnewInternalk40M1->GetBinWidth(i));
-    hAdapInternalth232M1->SetBinContent(i, dBinSize * hnewInternalth232M1->GetBinContent(i)/hnewInternalth232M1->GetBinWidth(i));
-    hAdapInternalu238M1->SetBinContent(i, dBinSize * hnewInternalu238M1->GetBinContent(i)/hnewInternalu238M1->GetBinWidth(i));
+    hAdapCuBox_CuFrameth232M1_10->SetBinContent(i, hnewCuBox_CuFrameth232M1_10->GetBinContent(i)/hnewCuBox_CuFrameth232M1_10->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M1_10->SetBinContent(i, hnewCuBox_CuFrameu238M1_10->GetBinContent(i)/hnewCuBox_CuFrameu238M1_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M1_10->SetBinContent(i, hnewCuBox_CuFramepb210M1_10->GetBinContent(i)/hnewCuBox_CuFramepb210M1_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M1_1->SetBinContent(i, hnewCuBox_CuFramepb210M1_1->GetBinContent(i)/hnewCuBox_CuFramepb210M1_1->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M1_01->SetBinContent(i, hnewCuBox_CuFramepb210M1_01->GetBinContent(i)/hnewCuBox_CuFramepb210M1_01->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M1_001->SetBinContent(i, hnewCuBox_CuFramepb210M1_001->GetBinContent(i)/hnewCuBox_CuFramepb210M1_001->GetBinWidth(i));
 
 /*
-    hAdapMBco60M1->SetBinContent(i, dBinSize * hnewMBco60M1->GetBinContent(i)/hnewMBco60M1->GetBinWidth(i));
-    hAdapMBk40M1->SetBinContent(i, dBinSize * hnewMBk40M1->GetBinContent(i)/hnewMBk40M1->GetBinWidth(i));
-    hAdapMBth232M1->SetBinContent(i, dBinSize * hnewMBth232M1->GetBinContent(i)/hnewMBth232M1->GetBinWidth(i));
-    hAdapMBu238M1->SetBinContent(i, dBinSize * hnewMBu238M1->GetBinContent(i)/hnewMBu238M1->GetBinWidth(i));
+    hAdap50mKco58M1->SetBinContent(i, hnew50mKco58M1->GetBinContent(i)/hnew50mKco58M1->GetBinWidth(i));
+    hAdap50mKco60M1->SetBinContent(i, hnew50mKco60M1->GetBinContent(i)/hnew50mKco60M1->GetBinWidth(i));
+    hAdap50mKcs137M1->SetBinContent(i, hnew50mKcs137M1->GetBinContent(i)/hnew50mKcs137M1->GetBinWidth(i));
+    hAdap50mKk40M1->SetBinContent(i, hnew50mKk40M1->GetBinContent(i)/hnew50mKk40M1->GetBinWidth(i));
+    hAdap50mKmn54M1->SetBinContent(i, hnew50mKmn54M1->GetBinContent(i)/hnew50mKmn54M1->GetBinWidth(i));
+    hAdap50mKpb210M1->SetBinContent(i, hnew50mKpb210M1->GetBinContent(i)/hnew50mKpb210M1->GetBinWidth(i));
+    hAdap50mKth232M1->SetBinContent(i, hnew50mKth232M1->GetBinContent(i)/hnew50mKth232M1->GetBinWidth(i));
+    hAdap50mKu238M1->SetBinContent(i, hnew50mKu238M1->GetBinContent(i)/hnew50mKu238M1->GetBinWidth(i));
 
-    hAdapSIk40M1->SetBinContent(i, dBinSize * hnewSIk40M1->GetBinContent(i)/hnewSIk40M1->GetBinWidth(i));
-    hAdapSIth232M1->SetBinContent(i, dBinSize * hnewSIth232M1->GetBinContent(i)/hnewSIth232M1->GetBinWidth(i));
-    hAdapSIu238M1->SetBinContent(i, dBinSize * hnewSIu238M1->GetBinContent(i)/hnewSIu238M1->GetBinWidth(i));
-
-    hAdapIVCco60M1->SetBinContent(i, dBinSize * hnewIVCco60M1->GetBinContent(i)/hnewIVCco60M1->GetBinWidth(i));
-    hAdapIVCk40M1->SetBinContent(i, dBinSize * hnewIVCk40M1->GetBinContent(i)/hnewIVCk40M1->GetBinWidth(i));
-    hAdapIVCth232M1->SetBinContent(i, dBinSize * hnewIVCth232M1->GetBinContent(i)/hnewIVCth232M1->GetBinWidth(i));
-    hAdapIVCu238M1->SetBinContent(i, dBinSize * hnewIVCu238M1->GetBinContent(i)/hnewIVCu238M1->GetBinWidth(i));
+    hAdap600mKco60M1->SetBinContent(i, hnew600mKco60M1->GetBinContent(i)/hnew600mKco60M1->GetBinWidth(i));
+    hAdap600mKk40M1->SetBinContent(i, hnew600mKk40M1->GetBinContent(i)/hnew600mKk40M1->GetBinWidth(i));
+    hAdap600mKth232M1->SetBinContent(i, hnew600mKth232M1->GetBinContent(i)/hnew600mKth232M1->GetBinWidth(i));
+    hAdap600mKu238M1->SetBinContent(i, hnew600mKu238M1->GetBinContent(i)/hnew600mKu238M1->GetBinWidth(i));
 */
-    hAdapOVCco60M1->SetBinContent(i, dBinSize * hnewOVCco60M1->GetBinContent(i)/hnewOVCco60M1->GetBinWidth(i));
-    hAdapOVCk40M1->SetBinContent(i, dBinSize * hnewOVCk40M1->GetBinContent(i)/hnewOVCk40M1->GetBinWidth(i));
-    hAdapOVCth232M1->SetBinContent(i, dBinSize * hnewOVCth232M1->GetBinContent(i)/hnewOVCth232M1->GetBinWidth(i));
-    hAdapOVCu238M1->SetBinContent(i, dBinSize * hnewOVCu238M1->GetBinContent(i)/hnewOVCu238M1->GetBinWidth(i));
 
-    hAdapExtPbbi210M1->SetBinContent(i, dBinSize * hnewExtPbbi210M1->GetBinContent(i)/hnewExtPbbi210M1->GetBinWidth(i));
+    // hAdapPbRombi207M1->SetBinContent(i, hnewPbRombi207M1->GetBinContent(i)/hnewPbRombi207M1->GetBinWidth(i));
+    hAdapPbRomco60M1->SetBinContent(i, hnewPbRomco60M1->GetBinContent(i)/hnewPbRomco60M1->GetBinWidth(i));
+    hAdapPbRomcs137M1->SetBinContent(i, hnewPbRomcs137M1->GetBinContent(i)/hnewPbRomcs137M1->GetBinWidth(i));
+    hAdapPbRomk40M1->SetBinContent(i, hnewPbRomk40M1->GetBinContent(i)/hnewPbRomk40M1->GetBinWidth(i));
+    hAdapPbRompb210M1->SetBinContent(i, hnewPbRompb210M1->GetBinContent(i)/hnewPbRompb210M1->GetBinWidth(i));
+    hAdapPbRomth232M1->SetBinContent(i, hnewPbRomth232M1->GetBinContent(i)/hnewPbRomth232M1->GetBinWidth(i));
+    hAdapPbRomu238M1->SetBinContent(i, hnewPbRomu238M1->GetBinContent(i)/hnewPbRomu238M1->GetBinWidth(i));
+
+    hAdapInternalco60M1->SetBinContent(i, hnewInternalco60M1->GetBinContent(i)/hnewInternalco60M1->GetBinWidth(i));
+    hAdapInternalk40M1->SetBinContent(i, hnewInternalk40M1->GetBinContent(i)/hnewInternalk40M1->GetBinWidth(i));
+    hAdapInternalth232M1->SetBinContent(i, hnewInternalth232M1->GetBinContent(i)/hnewInternalth232M1->GetBinWidth(i));
+    hAdapInternalu238M1->SetBinContent(i, hnewInternalu238M1->GetBinContent(i)/hnewInternalu238M1->GetBinWidth(i));
+
+/*
+    hAdapMBco60M1->SetBinContent(i, hnewMBco60M1->GetBinContent(i)/hnewMBco60M1->GetBinWidth(i));
+    hAdapMBk40M1->SetBinContent(i, hnewMBk40M1->GetBinContent(i)/hnewMBk40M1->GetBinWidth(i));
+    hAdapMBth232M1->SetBinContent(i, hnewMBth232M1->GetBinContent(i)/hnewMBth232M1->GetBinWidth(i));
+    hAdapMBu238M1->SetBinContent(i, hnewMBu238M1->GetBinContent(i)/hnewMBu238M1->GetBinWidth(i));
+
+    hAdapSIk40M1->SetBinContent(i, hnewSIk40M1->GetBinContent(i)/hnewSIk40M1->GetBinWidth(i));
+    hAdapSIth232M1->SetBinContent(i, hnewSIth232M1->GetBinContent(i)/hnewSIth232M1->GetBinWidth(i));
+    hAdapSIu238M1->SetBinContent(i, hnewSIu238M1->GetBinContent(i)/hnewSIu238M1->GetBinWidth(i));
+
+    hAdapIVCco60M1->SetBinContent(i, hnewIVCco60M1->GetBinContent(i)/hnewIVCco60M1->GetBinWidth(i));
+    hAdapIVCk40M1->SetBinContent(i, hnewIVCk40M1->GetBinContent(i)/hnewIVCk40M1->GetBinWidth(i));
+    hAdapIVCth232M1->SetBinContent(i, hnewIVCth232M1->GetBinContent(i)/hnewIVCth232M1->GetBinWidth(i));
+    hAdapIVCu238M1->SetBinContent(i, hnewIVCu238M1->GetBinContent(i)/hnewIVCu238M1->GetBinWidth(i));
+*/
+    hAdapOVCco60M1->SetBinContent(i, hnewOVCco60M1->GetBinContent(i)/hnewOVCco60M1->GetBinWidth(i));
+    hAdapOVCk40M1->SetBinContent(i, hnewOVCk40M1->GetBinContent(i)/hnewOVCk40M1->GetBinWidth(i));
+    hAdapOVCth232M1->SetBinContent(i, hnewOVCth232M1->GetBinContent(i)/hnewOVCth232M1->GetBinWidth(i));
+    hAdapOVCu238M1->SetBinContent(i, hnewOVCu238M1->GetBinContent(i)/hnewOVCu238M1->GetBinWidth(i));
+
+    hAdapExtPbbi210M1->SetBinContent(i, hnewExtPbbi210M1->GetBinContent(i)/hnewExtPbbi210M1->GetBinWidth(i));
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2; i++)
   {
-    hAdapTeO20nuM2->SetBinContent(i, dBinSize * hnewTeO20nuM2->GetBinContent(i)/hnewTeO20nuM2->GetBinWidth(i));
-    hAdapTeO22nuM2->SetBinContent(i, dBinSize * hnewTeO22nuM2->GetBinContent(i)/hnewTeO22nuM2->GetBinWidth(i));
-    hAdapTeO2co60M2->SetBinContent(i, dBinSize * hnewTeO2co60M2->GetBinContent(i)/hnewTeO2co60M2->GetBinWidth(i));
-    hAdapTeO2k40M2->SetBinContent(i, dBinSize * hnewTeO2k40M2->GetBinContent(i)/hnewTeO2k40M2->GetBinWidth(i));
-    hAdapTeO2pb210M2->SetBinContent(i, dBinSize * hnewTeO2pb210M2->GetBinContent(i)/hnewTeO2pb210M2->GetBinWidth(i));
-    hAdapTeO2po210M2->SetBinContent(i, dBinSize * hnewTeO2po210M2->GetBinContent(i)/hnewTeO2po210M2->GetBinWidth(i));
-    hAdapTeO2te125M2->SetBinContent(i, dBinSize * hnewTeO2te125M2->GetBinContent(i)/hnewTeO2te125M2->GetBinWidth(i));
-    hAdapTeO2th232M2->SetBinContent(i, dBinSize * hnewTeO2th232M2->GetBinContent(i)/hnewTeO2th232M2->GetBinWidth(i));
-    // hAdapTeO2th228M2->SetBinContent(i, dBinSize * hnewTeO2th228M2->GetBinContent(i)/hnewTeO2th228M2->GetBinWidth(i));
-    // hAdapTeO2ra226M2->SetBinContent(i, dBinSize * hnewTeO2ra226M2->GetBinContent(i)/hnewTeO2ra226M2->GetBinWidth(i));
-    // hAdapTeO2rn222M2->SetBinContent(i, dBinSize * hnewTeO2rn222M2->GetBinContent(i)/hnewTeO2rn222M2->GetBinWidth(i));
-    hAdapTeO2u238M2->SetBinContent(i, dBinSize * hnewTeO2u238M2->GetBinContent(i)/hnewTeO2u238M2->GetBinWidth(i));
-    // hAdapTeO2th230M2->SetBinContent(i, dBinSize * hnewTeO2th230M2->GetBinContent(i)/hnewTeO2th230M2->GetBinWidth(i));
-    // hAdapTeO2u234M2->SetBinContent(i, dBinSize * hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
+    hAdapTeO20nuM2->SetBinContent(i, hnewTeO20nuM2->GetBinContent(i)/hnewTeO20nuM2->GetBinWidth(i));
+    hAdapTeO22nuM2->SetBinContent(i, hnewTeO22nuM2->GetBinContent(i)/hnewTeO22nuM2->GetBinWidth(i));
+    hAdapTeO2co60M2->SetBinContent(i, hnewTeO2co60M2->GetBinContent(i)/hnewTeO2co60M2->GetBinWidth(i));
+    hAdapTeO2k40M2->SetBinContent(i, hnewTeO2k40M2->GetBinContent(i)/hnewTeO2k40M2->GetBinWidth(i));
+    hAdapTeO2pb210M2->SetBinContent(i, hnewTeO2pb210M2->GetBinContent(i)/hnewTeO2pb210M2->GetBinWidth(i));
+    hAdapTeO2po210M2->SetBinContent(i, hnewTeO2po210M2->GetBinContent(i)/hnewTeO2po210M2->GetBinWidth(i));
+    hAdapTeO2te125M2->SetBinContent(i, hnewTeO2te125M2->GetBinContent(i)/hnewTeO2te125M2->GetBinWidth(i));
+    hAdapTeO2th232M2->SetBinContent(i, hnewTeO2th232M2->GetBinContent(i)/hnewTeO2th232M2->GetBinWidth(i));
+    // hAdapTeO2th228M2->SetBinContent(i, hnewTeO2th228M2->GetBinContent(i)/hnewTeO2th228M2->GetBinWidth(i));
+    // hAdapTeO2ra226M2->SetBinContent(i, hnewTeO2ra226M2->GetBinContent(i)/hnewTeO2ra226M2->GetBinWidth(i));
+    // hAdapTeO2rn222M2->SetBinContent(i, hnewTeO2rn222M2->GetBinContent(i)/hnewTeO2rn222M2->GetBinWidth(i));
+    hAdapTeO2u238M2->SetBinContent(i, hnewTeO2u238M2->GetBinContent(i)/hnewTeO2u238M2->GetBinWidth(i));
+    // hAdapTeO2th230M2->SetBinContent(i, hnewTeO2th230M2->GetBinContent(i)/hnewTeO2th230M2->GetBinWidth(i));
+    // hAdapTeO2u234M2->SetBinContent(i, hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
 
-    hAdapTeO2Spb210M2_01->SetBinContent(i, dBinSize * hnewTeO2Spb210M2_01->GetBinContent(i)/hnewTeO2Spb210M2_01->GetBinWidth(i));
-    hAdapTeO2Spo210M2_001->SetBinContent(i, dBinSize * hnewTeO2Spo210M2_001->GetBinContent(i)/hnewTeO2Spo210M2_001->GetBinWidth(i));
-    hAdapTeO2Spo210M2_01->SetBinContent(i, dBinSize * hnewTeO2Spo210M2_01->GetBinContent(i)/hnewTeO2Spo210M2_01->GetBinWidth(i));
-    hAdapTeO2Sth232M2_01->SetBinContent(i, dBinSize * hnewTeO2Sth232M2_01->GetBinContent(i)/hnewTeO2Sth232M2_01->GetBinWidth(i));
-    hAdapTeO2Su238M2_01->SetBinContent(i, dBinSize * hnewTeO2Su238M2_01->GetBinContent(i)/hnewTeO2Su238M2_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_001->GetBinContent(i)/hnewTeO2Sxpb210M2_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2_01->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_01->GetBinContent(i)/hnewTeO2Sxpb210M2_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2_1->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_1->GetBinContent(i)/hnewTeO2Sxpb210M2_1->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2_10->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_10->GetBinContent(i)/hnewTeO2Sxpb210M2_10->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2_001->GetBinContent(i)/hnewTeO2Sxpo210M2_001->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_01->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2_01->GetBinContent(i)/hnewTeO2Sxpo210M2_01->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_1->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2_1->GetBinContent(i)/hnewTeO2Sxpo210M2_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2_001->GetBinContent(i)/hnewTeO2Sxth232M2_001->GetBinWidth(i));
-    hAdapTeO2Sxth232M2_01->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2_01->GetBinContent(i)/hnewTeO2Sxth232M2_01->GetBinWidth(i));
-    hAdapTeO2Sxth232M2_1->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2_1->GetBinContent(i)/hnewTeO2Sxth232M2_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M2_10->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2_10->GetBinContent(i)/hnewTeO2Sxth232M2_10->GetBinWidth(i));
-    hAdapTeO2Sxu238M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2_001->GetBinContent(i)/hnewTeO2Sxu238M2_001->GetBinWidth(i));
-    hAdapTeO2Sxu238M2_01->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2_01->GetBinContent(i)/hnewTeO2Sxu238M2_01->GetBinWidth(i));
-    hAdapTeO2Sxu238M2_1->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2_1->GetBinContent(i)/hnewTeO2Sxu238M2_1->GetBinWidth(i));
-    hAdapTeO2Sxu238M2_10->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2_10->GetBinContent(i)/hnewTeO2Sxu238M2_10->GetBinWidth(i));
+    hAdapTeO2Spb210M2_01->SetBinContent(i, hnewTeO2Spb210M2_01->GetBinContent(i)/hnewTeO2Spb210M2_01->GetBinWidth(i));
+    hAdapTeO2Spo210M2_001->SetBinContent(i, hnewTeO2Spo210M2_001->GetBinContent(i)/hnewTeO2Spo210M2_001->GetBinWidth(i));
+    hAdapTeO2Spo210M2_01->SetBinContent(i, hnewTeO2Spo210M2_01->GetBinContent(i)/hnewTeO2Spo210M2_01->GetBinWidth(i));
+    hAdapTeO2Sth232M2_01->SetBinContent(i, hnewTeO2Sth232M2_01->GetBinContent(i)/hnewTeO2Sth232M2_01->GetBinWidth(i));
+    hAdapTeO2Su238M2_01->SetBinContent(i, hnewTeO2Su238M2_01->GetBinContent(i)/hnewTeO2Su238M2_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2_001->SetBinContent(i, hnewTeO2Sxpb210M2_001->GetBinContent(i)/hnewTeO2Sxpb210M2_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2_01->SetBinContent(i, hnewTeO2Sxpb210M2_01->GetBinContent(i)/hnewTeO2Sxpb210M2_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2_1->SetBinContent(i, hnewTeO2Sxpb210M2_1->GetBinContent(i)/hnewTeO2Sxpb210M2_1->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2_10->SetBinContent(i, hnewTeO2Sxpb210M2_10->GetBinContent(i)/hnewTeO2Sxpb210M2_10->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2_001->SetBinContent(i, hnewTeO2Sxpo210M2_001->GetBinContent(i)/hnewTeO2Sxpo210M2_001->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2_01->SetBinContent(i, hnewTeO2Sxpo210M2_01->GetBinContent(i)/hnewTeO2Sxpo210M2_01->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2_1->SetBinContent(i, hnewTeO2Sxpo210M2_1->GetBinContent(i)/hnewTeO2Sxpo210M2_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M2_001->SetBinContent(i, hnewTeO2Sxth232M2_001->GetBinContent(i)/hnewTeO2Sxth232M2_001->GetBinWidth(i));
+    hAdapTeO2Sxth232M2_01->SetBinContent(i, hnewTeO2Sxth232M2_01->GetBinContent(i)/hnewTeO2Sxth232M2_01->GetBinWidth(i));
+    hAdapTeO2Sxth232M2_1->SetBinContent(i, hnewTeO2Sxth232M2_1->GetBinContent(i)/hnewTeO2Sxth232M2_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M2_10->SetBinContent(i, hnewTeO2Sxth232M2_10->GetBinContent(i)/hnewTeO2Sxth232M2_10->GetBinWidth(i));
+    hAdapTeO2Sxu238M2_001->SetBinContent(i, hnewTeO2Sxu238M2_001->GetBinContent(i)/hnewTeO2Sxu238M2_001->GetBinWidth(i));
+    hAdapTeO2Sxu238M2_01->SetBinContent(i, hnewTeO2Sxu238M2_01->GetBinContent(i)/hnewTeO2Sxu238M2_01->GetBinWidth(i));
+    hAdapTeO2Sxu238M2_1->SetBinContent(i, hnewTeO2Sxu238M2_1->GetBinContent(i)/hnewTeO2Sxu238M2_1->GetBinWidth(i));
+    hAdapTeO2Sxu238M2_10->SetBinContent(i, hnewTeO2Sxu238M2_10->GetBinContent(i)/hnewTeO2Sxu238M2_10->GetBinWidth(i));
 
-    hAdapTeO2th232onlyM2->SetBinContent(i, dBinSize * hnewTeO2th232onlyM2->GetBinContent(i)/hnewTeO2th232onlyM2->GetBinWidth(i));
-    hAdapTeO2ra228pb208M2->SetBinContent(i, dBinSize * hnewTeO2ra228pb208M2->GetBinContent(i)/hnewTeO2ra228pb208M2->GetBinWidth(i));
-    hAdapTeO2th230onlyM2->SetBinContent(i, dBinSize * hnewTeO2th230onlyM2->GetBinContent(i)/hnewTeO2th230onlyM2->GetBinWidth(i));
+    hAdapTeO2th232onlyM2->SetBinContent(i, hnewTeO2th232onlyM2->GetBinContent(i)/hnewTeO2th232onlyM2->GetBinWidth(i));
+    hAdapTeO2ra228pb208M2->SetBinContent(i, hnewTeO2ra228pb208M2->GetBinContent(i)/hnewTeO2ra228pb208M2->GetBinWidth(i));
+    hAdapTeO2th230onlyM2->SetBinContent(i, hnewTeO2th230onlyM2->GetBinContent(i)/hnewTeO2th230onlyM2->GetBinWidth(i));
 
-    hAdapTeO2Sxth232onlyM2_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232onlyM2_001->GetBinContent(i)/hnewTeO2Sxth232onlyM2_001->GetBinWidth(i));
-    hAdapTeO2Sxra228pb208M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxra228pb208M2_001->GetBinContent(i)/hnewTeO2Sxra228pb208M2_001->GetBinWidth(i));
-    hAdapTeO2Sxu238th230M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238th230M2_001->GetBinContent(i)/hnewTeO2Sxu238th230M2_001->GetBinWidth(i));
-    hAdapTeO2Sxth230onlyM2_001->SetBinContent(i, dBinSize * hnewTeO2Sxth230onlyM2_001->GetBinContent(i)/hnewTeO2Sxth230onlyM2_001->GetBinWidth(i));
-    hAdapTeO2Sxra226pb210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M2_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2_0001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_0001->GetBinContent(i)/hnewTeO2Sxpb210M2_0001->GetBinWidth(i));
-
-
-    hAdapCuFrameco58M2->SetBinContent(i, dBinSize * hnewCuFrameco58M2->GetBinContent(i)/hnewCuFrameco58M2->GetBinWidth(i));
-    hAdapCuFrameco60M2->SetBinContent(i, dBinSize * hnewCuFrameco60M2->GetBinContent(i)/hnewCuFrameco60M2->GetBinWidth(i));
-    hAdapCuFramecs137M2->SetBinContent(i, dBinSize * hnewCuFramecs137M2->GetBinContent(i)/hnewCuFramecs137M2->GetBinWidth(i));
-    hAdapCuFramek40M2->SetBinContent(i, dBinSize * hnewCuFramek40M2->GetBinContent(i)/hnewCuFramek40M2->GetBinWidth(i));
-    hAdapCuFramemn54M2->SetBinContent(i, dBinSize * hnewCuFramemn54M2->GetBinContent(i)/hnewCuFramemn54M2->GetBinWidth(i));
-    hAdapCuFramepb210M2->SetBinContent(i, dBinSize * hnewCuFramepb210M2->GetBinContent(i)/hnewCuFramepb210M2->GetBinWidth(i));
-    hAdapCuFrameth232M2->SetBinContent(i, dBinSize * hnewCuFrameth232M2->GetBinContent(i)/hnewCuFrameth232M2->GetBinWidth(i));
-    hAdapCuFrameu238M2->SetBinContent(i, dBinSize * hnewCuFrameu238M2->GetBinContent(i)/hnewCuFrameu238M2->GetBinWidth(i));
-
-    hAdapCuFrameSth232M2_1->SetBinContent(i, dBinSize * hnewCuFrameSth232M2_1->GetBinContent(i)/hnewCuFrameSth232M2_1->GetBinWidth(i));
-    hAdapCuFrameSu238M2_1->SetBinContent(i, dBinSize * hnewCuFrameSu238M2_1->GetBinContent(i)/hnewCuFrameSu238M2_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2_001->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2_001->GetBinContent(i)/hnewCuFrameSxpb210M2_001->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2_01->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2_01->GetBinContent(i)/hnewCuFrameSxpb210M2_01->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2_1->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2_1->GetBinContent(i)/hnewCuFrameSxpb210M2_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2_10->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2_10->GetBinContent(i)/hnewCuFrameSxpb210M2_10->GetBinWidth(i));
-    hAdapCuFrameSxth232M2_001->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2_001->GetBinContent(i)/hnewCuFrameSxth232M2_001->GetBinWidth(i));
-    hAdapCuFrameSxth232M2_01->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2_01->GetBinContent(i)/hnewCuFrameSxth232M2_01->GetBinWidth(i));
-    hAdapCuFrameSxth232M2_1->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2_1->GetBinContent(i)/hnewCuFrameSxth232M2_1->GetBinWidth(i));
-    hAdapCuFrameSxth232M2_10->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2_10->GetBinContent(i)/hnewCuFrameSxth232M2_10->GetBinWidth(i));
-    hAdapCuFrameSxu238M2_001->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2_001->GetBinContent(i)/hnewCuFrameSxu238M2_001->GetBinWidth(i));
-    hAdapCuFrameSxu238M2_01->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2_01->GetBinContent(i)/hnewCuFrameSxu238M2_01->GetBinWidth(i));
-    hAdapCuFrameSxu238M2_1->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2_1->GetBinContent(i)/hnewCuFrameSxu238M2_1->GetBinWidth(i));
-    hAdapCuFrameSxu238M2_10->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2_10->GetBinContent(i)/hnewCuFrameSxu238M2_10->GetBinWidth(i));
-
-    hAdapCuBoxco58M2->SetBinContent(i, dBinSize * hnewCuBoxco58M2->GetBinContent(i)/hnewCuBoxco58M2->GetBinWidth(i));
-    hAdapCuBoxco60M2->SetBinContent(i, dBinSize * hnewCuBoxco60M2->GetBinContent(i)/hnewCuBoxco60M2->GetBinWidth(i));
-    hAdapCuBoxcs137M2->SetBinContent(i, dBinSize * hnewCuBoxcs137M2->GetBinContent(i)/hnewCuBoxcs137M2->GetBinWidth(i));
-    hAdapCuBoxk40M2->SetBinContent(i, dBinSize * hnewCuBoxk40M2->GetBinContent(i)/hnewCuBoxk40M2->GetBinWidth(i));
-    hAdapCuBoxmn54M2->SetBinContent(i, dBinSize * hnewCuBoxmn54M2->GetBinContent(i)/hnewCuBoxmn54M2->GetBinWidth(i));
-    hAdapCuBoxpb210M2->SetBinContent(i, dBinSize * hnewCuBoxpb210M2->GetBinContent(i)/hnewCuBoxpb210M2->GetBinWidth(i));
-    hAdapCuBoxth232M2->SetBinContent(i, dBinSize * hnewCuBoxth232M2->GetBinContent(i)/hnewCuBoxth232M2->GetBinWidth(i));
-    hAdapCuBoxu238M2->SetBinContent(i, dBinSize * hnewCuBoxu238M2->GetBinContent(i)/hnewCuBoxu238M2->GetBinWidth(i));
-
-    hAdapCuBoxSth232M2_1->SetBinContent(i, dBinSize * hnewCuBoxSth232M2_1->GetBinContent(i)/hnewCuBoxSth232M2_1->GetBinWidth(i));
-    hAdapCuBoxSu238M2_1->SetBinContent(i, dBinSize * hnewCuBoxSu238M2_1->GetBinContent(i)/hnewCuBoxSu238M2_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2_001->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2_001->GetBinContent(i)/hnewCuBoxSxpb210M2_001->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2_01->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2_01->GetBinContent(i)/hnewCuBoxSxpb210M2_01->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2_1->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2_1->GetBinContent(i)/hnewCuBoxSxpb210M2_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2_10->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2_10->GetBinContent(i)/hnewCuBoxSxpb210M2_10->GetBinWidth(i));
-    hAdapCuBoxSxth232M2_001->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2_001->GetBinContent(i)/hnewCuBoxSxth232M2_001->GetBinWidth(i));
-    hAdapCuBoxSxth232M2_01->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2_01->GetBinContent(i)/hnewCuBoxSxth232M2_01->GetBinWidth(i));
-    hAdapCuBoxSxth232M2_1->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2_1->GetBinContent(i)/hnewCuBoxSxth232M2_1->GetBinWidth(i));
-    hAdapCuBoxSxth232M2_10->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2_10->GetBinContent(i)/hnewCuBoxSxth232M2_10->GetBinWidth(i));
-    hAdapCuBoxSxu238M2_001->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_001->GetBinContent(i)/hnewCuBoxSxu238M2_001->GetBinWidth(i));
-    hAdapCuBoxSxu238M2_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_01->GetBinContent(i)/hnewCuBoxSxu238M2_01->GetBinWidth(i));
-    hAdapCuBoxSxu238M2_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_1->GetBinContent(i)/hnewCuBoxSxu238M2_1->GetBinWidth(i));
-    hAdapCuBoxSxu238M2_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2_10->GetBinContent(i)/hnewCuBoxSxu238M2_10->GetBinWidth(i));
+    hAdapTeO2Sxth232onlyM2_001->SetBinContent(i, hnewTeO2Sxth232onlyM2_001->GetBinContent(i)/hnewTeO2Sxth232onlyM2_001->GetBinWidth(i));
+    hAdapTeO2Sxra228pb208M2_001->SetBinContent(i, hnewTeO2Sxra228pb208M2_001->GetBinContent(i)/hnewTeO2Sxra228pb208M2_001->GetBinWidth(i));
+    hAdapTeO2Sxu238th230M2_001->SetBinContent(i, hnewTeO2Sxu238th230M2_001->GetBinContent(i)/hnewTeO2Sxu238th230M2_001->GetBinWidth(i));
+    hAdapTeO2Sxth230onlyM2_001->SetBinContent(i, hnewTeO2Sxth230onlyM2_001->GetBinContent(i)/hnewTeO2Sxth230onlyM2_001->GetBinWidth(i));
+    hAdapTeO2Sxra226pb210M2_001->SetBinContent(i, hnewTeO2Sxra226pb210M2_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2_0001->SetBinContent(i, hnewTeO2Sxpb210M2_0001->GetBinContent(i)/hnewTeO2Sxpb210M2_0001->GetBinWidth(i));
 
 
-    hAdapCuBox_CuFrameco60M2->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M2->GetBinContent(i)/hnewCuBox_CuFrameco60M2->GetBinWidth(i));
-    hAdapCuBox_CuFramek40M2->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M2->GetBinContent(i)/hnewCuBox_CuFramek40M2->GetBinWidth(i));
-    hAdapCuBox_CuFrameth232M2->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M2->GetBinContent(i)/hnewCuBox_CuFrameth232M2->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M2->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M2->GetBinContent(i)/hnewCuBox_CuFrameu238M2->GetBinWidth(i));
+    hAdapCuFrameco58M2->SetBinContent(i, hnewCuFrameco58M2->GetBinContent(i)/hnewCuFrameco58M2->GetBinWidth(i));
+    hAdapCuFrameco60M2->SetBinContent(i, hnewCuFrameco60M2->GetBinContent(i)/hnewCuFrameco60M2->GetBinWidth(i));
+    hAdapCuFramecs137M2->SetBinContent(i, hnewCuFramecs137M2->GetBinContent(i)/hnewCuFramecs137M2->GetBinWidth(i));
+    hAdapCuFramek40M2->SetBinContent(i, hnewCuFramek40M2->GetBinContent(i)/hnewCuFramek40M2->GetBinWidth(i));
+    hAdapCuFramemn54M2->SetBinContent(i, hnewCuFramemn54M2->GetBinContent(i)/hnewCuFramemn54M2->GetBinWidth(i));
+    hAdapCuFramepb210M2->SetBinContent(i, hnewCuFramepb210M2->GetBinContent(i)/hnewCuFramepb210M2->GetBinWidth(i));
+    hAdapCuFrameth232M2->SetBinContent(i, hnewCuFrameth232M2->GetBinContent(i)/hnewCuFrameth232M2->GetBinWidth(i));
+    hAdapCuFrameu238M2->SetBinContent(i, hnewCuFrameu238M2->GetBinContent(i)/hnewCuFrameu238M2->GetBinWidth(i));
 
-    hAdapCuBox_CuFrameth232M2_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M2_10->GetBinContent(i)/hnewCuBox_CuFrameth232M2_10->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M2_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M2_10->GetBinContent(i)/hnewCuBox_CuFrameu238M2_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2_10->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2_10->GetBinContent(i)/hnewCuBox_CuFramepb210M2_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2_1->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2_1->GetBinContent(i)/hnewCuBox_CuFramepb210M2_1->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2_01->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2_01->GetBinContent(i)/hnewCuBox_CuFramepb210M2_01->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2_001->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2_001->GetBinContent(i)/hnewCuBox_CuFramepb210M2_001->GetBinWidth(i));
+    hAdapCuFrameSth232M2_1->SetBinContent(i, hnewCuFrameSth232M2_1->GetBinContent(i)/hnewCuFrameSth232M2_1->GetBinWidth(i));
+    hAdapCuFrameSu238M2_1->SetBinContent(i, hnewCuFrameSu238M2_1->GetBinContent(i)/hnewCuFrameSu238M2_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2_001->SetBinContent(i, hnewCuFrameSxpb210M2_001->GetBinContent(i)/hnewCuFrameSxpb210M2_001->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2_01->SetBinContent(i, hnewCuFrameSxpb210M2_01->GetBinContent(i)/hnewCuFrameSxpb210M2_01->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2_1->SetBinContent(i, hnewCuFrameSxpb210M2_1->GetBinContent(i)/hnewCuFrameSxpb210M2_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2_10->SetBinContent(i, hnewCuFrameSxpb210M2_10->GetBinContent(i)/hnewCuFrameSxpb210M2_10->GetBinWidth(i));
+    hAdapCuFrameSxth232M2_001->SetBinContent(i, hnewCuFrameSxth232M2_001->GetBinContent(i)/hnewCuFrameSxth232M2_001->GetBinWidth(i));
+    hAdapCuFrameSxth232M2_01->SetBinContent(i, hnewCuFrameSxth232M2_01->GetBinContent(i)/hnewCuFrameSxth232M2_01->GetBinWidth(i));
+    hAdapCuFrameSxth232M2_1->SetBinContent(i, hnewCuFrameSxth232M2_1->GetBinContent(i)/hnewCuFrameSxth232M2_1->GetBinWidth(i));
+    hAdapCuFrameSxth232M2_10->SetBinContent(i, hnewCuFrameSxth232M2_10->GetBinContent(i)/hnewCuFrameSxth232M2_10->GetBinWidth(i));
+    hAdapCuFrameSxu238M2_001->SetBinContent(i, hnewCuFrameSxu238M2_001->GetBinContent(i)/hnewCuFrameSxu238M2_001->GetBinWidth(i));
+    hAdapCuFrameSxu238M2_01->SetBinContent(i, hnewCuFrameSxu238M2_01->GetBinContent(i)/hnewCuFrameSxu238M2_01->GetBinWidth(i));
+    hAdapCuFrameSxu238M2_1->SetBinContent(i, hnewCuFrameSxu238M2_1->GetBinContent(i)/hnewCuFrameSxu238M2_1->GetBinWidth(i));
+    hAdapCuFrameSxu238M2_10->SetBinContent(i, hnewCuFrameSxu238M2_10->GetBinContent(i)/hnewCuFrameSxu238M2_10->GetBinWidth(i));
+
+    hAdapCuBoxco58M2->SetBinContent(i, hnewCuBoxco58M2->GetBinContent(i)/hnewCuBoxco58M2->GetBinWidth(i));
+    hAdapCuBoxco60M2->SetBinContent(i, hnewCuBoxco60M2->GetBinContent(i)/hnewCuBoxco60M2->GetBinWidth(i));
+    hAdapCuBoxcs137M2->SetBinContent(i, hnewCuBoxcs137M2->GetBinContent(i)/hnewCuBoxcs137M2->GetBinWidth(i));
+    hAdapCuBoxk40M2->SetBinContent(i, hnewCuBoxk40M2->GetBinContent(i)/hnewCuBoxk40M2->GetBinWidth(i));
+    hAdapCuBoxmn54M2->SetBinContent(i, hnewCuBoxmn54M2->GetBinContent(i)/hnewCuBoxmn54M2->GetBinWidth(i));
+    hAdapCuBoxpb210M2->SetBinContent(i, hnewCuBoxpb210M2->GetBinContent(i)/hnewCuBoxpb210M2->GetBinWidth(i));
+    hAdapCuBoxth232M2->SetBinContent(i, hnewCuBoxth232M2->GetBinContent(i)/hnewCuBoxth232M2->GetBinWidth(i));
+    hAdapCuBoxu238M2->SetBinContent(i, hnewCuBoxu238M2->GetBinContent(i)/hnewCuBoxu238M2->GetBinWidth(i));
+
+    hAdapCuBoxSth232M2_1->SetBinContent(i, hnewCuBoxSth232M2_1->GetBinContent(i)/hnewCuBoxSth232M2_1->GetBinWidth(i));
+    hAdapCuBoxSu238M2_1->SetBinContent(i, hnewCuBoxSu238M2_1->GetBinContent(i)/hnewCuBoxSu238M2_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2_001->SetBinContent(i, hnewCuBoxSxpb210M2_001->GetBinContent(i)/hnewCuBoxSxpb210M2_001->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2_01->SetBinContent(i, hnewCuBoxSxpb210M2_01->GetBinContent(i)/hnewCuBoxSxpb210M2_01->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2_1->SetBinContent(i, hnewCuBoxSxpb210M2_1->GetBinContent(i)/hnewCuBoxSxpb210M2_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2_10->SetBinContent(i, hnewCuBoxSxpb210M2_10->GetBinContent(i)/hnewCuBoxSxpb210M2_10->GetBinWidth(i));
+    hAdapCuBoxSxth232M2_001->SetBinContent(i, hnewCuBoxSxth232M2_001->GetBinContent(i)/hnewCuBoxSxth232M2_001->GetBinWidth(i));
+    hAdapCuBoxSxth232M2_01->SetBinContent(i, hnewCuBoxSxth232M2_01->GetBinContent(i)/hnewCuBoxSxth232M2_01->GetBinWidth(i));
+    hAdapCuBoxSxth232M2_1->SetBinContent(i, hnewCuBoxSxth232M2_1->GetBinContent(i)/hnewCuBoxSxth232M2_1->GetBinWidth(i));
+    hAdapCuBoxSxth232M2_10->SetBinContent(i, hnewCuBoxSxth232M2_10->GetBinContent(i)/hnewCuBoxSxth232M2_10->GetBinWidth(i));
+    hAdapCuBoxSxu238M2_001->SetBinContent(i, hnewCuBoxSxu238M2_001->GetBinContent(i)/hnewCuBoxSxu238M2_001->GetBinWidth(i));
+    hAdapCuBoxSxu238M2_01->SetBinContent(i, hnewCuBoxSxu238M2_01->GetBinContent(i)/hnewCuBoxSxu238M2_01->GetBinWidth(i));
+    hAdapCuBoxSxu238M2_1->SetBinContent(i, hnewCuBoxSxu238M2_1->GetBinContent(i)/hnewCuBoxSxu238M2_1->GetBinWidth(i));
+    hAdapCuBoxSxu238M2_10->SetBinContent(i, hnewCuBoxSxu238M2_10->GetBinContent(i)/hnewCuBoxSxu238M2_10->GetBinWidth(i));
+
+
+    hAdapCuBox_CuFrameco60M2->SetBinContent(i, hnewCuBox_CuFrameco60M2->GetBinContent(i)/hnewCuBox_CuFrameco60M2->GetBinWidth(i));
+    hAdapCuBox_CuFramek40M2->SetBinContent(i, hnewCuBox_CuFramek40M2->GetBinContent(i)/hnewCuBox_CuFramek40M2->GetBinWidth(i));
+    hAdapCuBox_CuFrameth232M2->SetBinContent(i, hnewCuBox_CuFrameth232M2->GetBinContent(i)/hnewCuBox_CuFrameth232M2->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M2->SetBinContent(i, hnewCuBox_CuFrameu238M2->GetBinContent(i)/hnewCuBox_CuFrameu238M2->GetBinWidth(i));
+
+    hAdapCuBox_CuFrameth232M2_10->SetBinContent(i, hnewCuBox_CuFrameth232M2_10->GetBinContent(i)/hnewCuBox_CuFrameth232M2_10->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M2_10->SetBinContent(i, hnewCuBox_CuFrameu238M2_10->GetBinContent(i)/hnewCuBox_CuFrameu238M2_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2_10->SetBinContent(i, hnewCuBox_CuFramepb210M2_10->GetBinContent(i)/hnewCuBox_CuFramepb210M2_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2_1->SetBinContent(i, hnewCuBox_CuFramepb210M2_1->GetBinContent(i)/hnewCuBox_CuFramepb210M2_1->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2_01->SetBinContent(i, hnewCuBox_CuFramepb210M2_01->GetBinContent(i)/hnewCuBox_CuFramepb210M2_01->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2_001->SetBinContent(i, hnewCuBox_CuFramepb210M2_001->GetBinContent(i)/hnewCuBox_CuFramepb210M2_001->GetBinWidth(i));
 /*
-    hAdap50mKco58M2->SetBinContent(i, dBinSize * hnew50mKco58M2->GetBinContent(i)/hnew50mKco58M2->GetBinWidth(i));
-    hAdap50mKco60M2->SetBinContent(i, dBinSize * hnew50mKco60M2->GetBinContent(i)/hnew50mKco60M2->GetBinWidth(i));
-    hAdap50mKcs137M2->SetBinContent(i, dBinSize * hnew50mKcs137M2->GetBinContent(i)/hnew50mKcs137M2->GetBinWidth(i));
-    hAdap50mKk40M2->SetBinContent(i, dBinSize * hnew50mKk40M2->GetBinContent(i)/hnew50mKk40M2->GetBinWidth(i));
-    hAdap50mKmn54M2->SetBinContent(i, dBinSize * hnew50mKmn54M2->GetBinContent(i)/hnew50mKmn54M2->GetBinWidth(i));
-    hAdap50mKpb210M2->SetBinContent(i, dBinSize * hnew50mKpb210M2->GetBinContent(i)/hnew50mKpb210M2->GetBinWidth(i));
-    hAdap50mKth232M2->SetBinContent(i, dBinSize * hnew50mKth232M2->GetBinContent(i)/hnew50mKth232M2->GetBinWidth(i));
-    hAdap50mKu238M2->SetBinContent(i, dBinSize * hnew50mKu238M2->GetBinContent(i)/hnew50mKu238M2->GetBinWidth(i));
+    hAdap50mKco58M2->SetBinContent(i, hnew50mKco58M2->GetBinContent(i)/hnew50mKco58M2->GetBinWidth(i));
+    hAdap50mKco60M2->SetBinContent(i, hnew50mKco60M2->GetBinContent(i)/hnew50mKco60M2->GetBinWidth(i));
+    hAdap50mKcs137M2->SetBinContent(i, hnew50mKcs137M2->GetBinContent(i)/hnew50mKcs137M2->GetBinWidth(i));
+    hAdap50mKk40M2->SetBinContent(i, hnew50mKk40M2->GetBinContent(i)/hnew50mKk40M2->GetBinWidth(i));
+    hAdap50mKmn54M2->SetBinContent(i, hnew50mKmn54M2->GetBinContent(i)/hnew50mKmn54M2->GetBinWidth(i));
+    hAdap50mKpb210M2->SetBinContent(i, hnew50mKpb210M2->GetBinContent(i)/hnew50mKpb210M2->GetBinWidth(i));
+    hAdap50mKth232M2->SetBinContent(i, hnew50mKth232M2->GetBinContent(i)/hnew50mKth232M2->GetBinWidth(i));
+    hAdap50mKu238M2->SetBinContent(i, hnew50mKu238M2->GetBinContent(i)/hnew50mKu238M2->GetBinWidth(i));
 
-    hAdap600mKco60M2->SetBinContent(i, dBinSize * hnew600mKco60M2->GetBinContent(i)/hnew600mKco60M2->GetBinWidth(i));
-    hAdap600mKk40M2->SetBinContent(i, dBinSize * hnew600mKk40M2->GetBinContent(i)/hnew600mKk40M2->GetBinWidth(i));
-    hAdap600mKth232M2->SetBinContent(i, dBinSize * hnew600mKth232M2->GetBinContent(i)/hnew600mKth232M2->GetBinWidth(i));
-    hAdap600mKu238M2->SetBinContent(i, dBinSize * hnew600mKu238M2->GetBinContent(i)/hnew600mKu238M2->GetBinWidth(i));
+    hAdap600mKco60M2->SetBinContent(i, hnew600mKco60M2->GetBinContent(i)/hnew600mKco60M2->GetBinWidth(i));
+    hAdap600mKk40M2->SetBinContent(i, hnew600mKk40M2->GetBinContent(i)/hnew600mKk40M2->GetBinWidth(i));
+    hAdap600mKth232M2->SetBinContent(i, hnew600mKth232M2->GetBinContent(i)/hnew600mKth232M2->GetBinWidth(i));
+    hAdap600mKu238M2->SetBinContent(i, hnew600mKu238M2->GetBinContent(i)/hnew600mKu238M2->GetBinWidth(i));
 */
 
-    // hAdapPbRombi207M2->SetBinContent(i, dBinSize * hnewPbRombi207M2->GetBinContent(i)/hnewPbRombi207M2->GetBinWidth(i));
-    hAdapPbRomco60M2->SetBinContent(i, dBinSize * hnewPbRomco60M2->GetBinContent(i)/hnewPbRomco60M2->GetBinWidth(i));
-    hAdapPbRomcs137M2->SetBinContent(i, dBinSize * hnewPbRomcs137M2->GetBinContent(i)/hnewPbRomcs137M2->GetBinWidth(i));
-    hAdapPbRomk40M2->SetBinContent(i, dBinSize * hnewPbRomk40M2->GetBinContent(i)/hnewPbRomk40M2->GetBinWidth(i));
-    hAdapPbRompb210M2->SetBinContent(i, dBinSize * hnewPbRompb210M2->GetBinContent(i)/hnewPbRompb210M2->GetBinWidth(i));
-    hAdapPbRomth232M2->SetBinContent(i, dBinSize * hnewPbRomth232M2->GetBinContent(i)/hnewPbRomth232M2->GetBinWidth(i));
-    hAdapPbRomu238M2->SetBinContent(i, dBinSize * hnewPbRomu238M2->GetBinContent(i)/hnewPbRomu238M2->GetBinWidth(i));
+    // hAdapPbRombi207M2->SetBinContent(i, hnewPbRombi207M2->GetBinContent(i)/hnewPbRombi207M2->GetBinWidth(i));
+    hAdapPbRomco60M2->SetBinContent(i, hnewPbRomco60M2->GetBinContent(i)/hnewPbRomco60M2->GetBinWidth(i));
+    hAdapPbRomcs137M2->SetBinContent(i, hnewPbRomcs137M2->GetBinContent(i)/hnewPbRomcs137M2->GetBinWidth(i));
+    hAdapPbRomk40M2->SetBinContent(i, hnewPbRomk40M2->GetBinContent(i)/hnewPbRomk40M2->GetBinWidth(i));
+    hAdapPbRompb210M2->SetBinContent(i, hnewPbRompb210M2->GetBinContent(i)/hnewPbRompb210M2->GetBinWidth(i));
+    hAdapPbRomth232M2->SetBinContent(i, hnewPbRomth232M2->GetBinContent(i)/hnewPbRomth232M2->GetBinWidth(i));
+    hAdapPbRomu238M2->SetBinContent(i, hnewPbRomu238M2->GetBinContent(i)/hnewPbRomu238M2->GetBinWidth(i));
 
-    hAdapInternalco60M2->SetBinContent(i, dBinSize * hnewInternalco60M2->GetBinContent(i)/hnewInternalco60M2->GetBinWidth(i));
-    hAdapInternalk40M2->SetBinContent(i, dBinSize * hnewInternalk40M2->GetBinContent(i)/hnewInternalk40M2->GetBinWidth(i));
-    hAdapInternalth232M2->SetBinContent(i, dBinSize * hnewInternalth232M2->GetBinContent(i)/hnewInternalth232M2->GetBinWidth(i));
-    hAdapInternalu238M2->SetBinContent(i, dBinSize * hnewInternalu238M2->GetBinContent(i)/hnewInternalu238M2->GetBinWidth(i));
+    hAdapInternalco60M2->SetBinContent(i, hnewInternalco60M2->GetBinContent(i)/hnewInternalco60M2->GetBinWidth(i));
+    hAdapInternalk40M2->SetBinContent(i, hnewInternalk40M2->GetBinContent(i)/hnewInternalk40M2->GetBinWidth(i));
+    hAdapInternalth232M2->SetBinContent(i, hnewInternalth232M2->GetBinContent(i)/hnewInternalth232M2->GetBinWidth(i));
+    hAdapInternalu238M2->SetBinContent(i, hnewInternalu238M2->GetBinContent(i)/hnewInternalu238M2->GetBinWidth(i));
 
 /*
-    hAdapMBco60M2->SetBinContent(i, dBinSize * hnewMBco60M2->GetBinContent(i)/hnewMBco60M2->GetBinWidth(i));
-    hAdapMBk40M2->SetBinContent(i, dBinSize * hnewMBk40M2->GetBinContent(i)/hnewMBk40M2->GetBinWidth(i));
-    hAdapMBth232M2->SetBinContent(i, dBinSize * hnewMBth232M2->GetBinContent(i)/hnewMBth232M2->GetBinWidth(i));
-    hAdapMBu238M2->SetBinContent(i, dBinSize * hnewMBu238M2->GetBinContent(i)/hnewMBu238M2->GetBinWidth(i));
+    hAdapMBco60M2->SetBinContent(i, hnewMBco60M2->GetBinContent(i)/hnewMBco60M2->GetBinWidth(i));
+    hAdapMBk40M2->SetBinContent(i, hnewMBk40M2->GetBinContent(i)/hnewMBk40M2->GetBinWidth(i));
+    hAdapMBth232M2->SetBinContent(i, hnewMBth232M2->GetBinContent(i)/hnewMBth232M2->GetBinWidth(i));
+    hAdapMBu238M2->SetBinContent(i, hnewMBu238M2->GetBinContent(i)/hnewMBu238M2->GetBinWidth(i));
 
-    hAdapSIk40M2->SetBinContent(i, dBinSize * hnewSIk40M2->GetBinContent(i)/hnewSIk40M2->GetBinWidth(i));
-    hAdapSIth232M2->SetBinContent(i, dBinSize * hnewSIth232M2->GetBinContent(i)/hnewSIth232M2->GetBinWidth(i));
-    hAdapSIu238M2->SetBinContent(i, dBinSize * hnewSIu238M2->GetBinContent(i)/hnewSIu238M2->GetBinWidth(i));
+    hAdapSIk40M2->SetBinContent(i, hnewSIk40M2->GetBinContent(i)/hnewSIk40M2->GetBinWidth(i));
+    hAdapSIth232M2->SetBinContent(i, hnewSIth232M2->GetBinContent(i)/hnewSIth232M2->GetBinWidth(i));
+    hAdapSIu238M2->SetBinContent(i, hnewSIu238M2->GetBinContent(i)/hnewSIu238M2->GetBinWidth(i));
 
 
-    hAdapIVCco60M2->SetBinContent(i, dBinSize * hnewIVCco60M2->GetBinContent(i)/hnewIVCco60M2->GetBinWidth(i));
-    hAdapIVCk40M2->SetBinContent(i, dBinSize * hnewIVCk40M2->GetBinContent(i)/hnewIVCk40M2->GetBinWidth(i));
-    hAdapIVCth232M2->SetBinContent(i, dBinSize * hnewIVCth232M2->GetBinContent(i)/hnewIVCth232M2->GetBinWidth(i));
-    hAdapIVCu238M2->SetBinContent(i, dBinSize * hnewIVCu238M2->GetBinContent(i)/hnewIVCu238M2->GetBinWidth(i));
+    hAdapIVCco60M2->SetBinContent(i, hnewIVCco60M2->GetBinContent(i)/hnewIVCco60M2->GetBinWidth(i));
+    hAdapIVCk40M2->SetBinContent(i, hnewIVCk40M2->GetBinContent(i)/hnewIVCk40M2->GetBinWidth(i));
+    hAdapIVCth232M2->SetBinContent(i, hnewIVCth232M2->GetBinContent(i)/hnewIVCth232M2->GetBinWidth(i));
+    hAdapIVCu238M2->SetBinContent(i, hnewIVCu238M2->GetBinContent(i)/hnewIVCu238M2->GetBinWidth(i));
 */
 
-    hAdapOVCco60M2->SetBinContent(i, dBinSize * hnewOVCco60M2->GetBinContent(i)/hnewOVCco60M2->GetBinWidth(i));
-    hAdapOVCk40M2->SetBinContent(i, dBinSize * hnewOVCk40M2->GetBinContent(i)/hnewOVCk40M2->GetBinWidth(i));
-    hAdapOVCth232M2->SetBinContent(i, dBinSize * hnewOVCth232M2->GetBinContent(i)/hnewOVCth232M2->GetBinWidth(i));
-    hAdapOVCu238M2->SetBinContent(i, dBinSize * hnewOVCu238M2->GetBinContent(i)/hnewOVCu238M2->GetBinWidth(i));
+    hAdapOVCco60M2->SetBinContent(i, hnewOVCco60M2->GetBinContent(i)/hnewOVCco60M2->GetBinWidth(i));
+    hAdapOVCk40M2->SetBinContent(i, hnewOVCk40M2->GetBinContent(i)/hnewOVCk40M2->GetBinWidth(i));
+    hAdapOVCth232M2->SetBinContent(i, hnewOVCth232M2->GetBinContent(i)/hnewOVCth232M2->GetBinWidth(i));
+    hAdapOVCu238M2->SetBinContent(i, hnewOVCu238M2->GetBinContent(i)/hnewOVCu238M2->GetBinWidth(i));
 
-    hAdapExtPbbi210M2->SetBinContent(i, dBinSize * hnewExtPbbi210M2->GetBinContent(i)/hnewExtPbbi210M2->GetBinWidth(i));
+    hAdapExtPbbi210M2->SetBinContent(i, hnewExtPbbi210M2->GetBinContent(i)/hnewExtPbbi210M2->GetBinWidth(i));
   }
 
 /*
   for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
   {
-    hAdapTeO20nuM2Sum->SetBinContent(i, dBinSize * hnewTeO20nuM2Sum->GetBinContent(i)/hnewTeO20nuM2Sum->GetBinWidth(i));
-    hAdapTeO22nuM2Sum->SetBinContent(i, dBinSize * hnewTeO22nuM2Sum->GetBinContent(i)/hnewTeO22nuM2Sum->GetBinWidth(i));
-    hAdapTeO2co60M2Sum->SetBinContent(i, dBinSize * hnewTeO2co60M2Sum->GetBinContent(i)/hnewTeO2co60M2Sum->GetBinWidth(i));
-    hAdapTeO2k40M2Sum->SetBinContent(i, dBinSize * hnewTeO2k40M2Sum->GetBinContent(i)/hnewTeO2k40M2Sum->GetBinWidth(i));
-    hAdapTeO2pb210M2Sum->SetBinContent(i, dBinSize * hnewTeO2pb210M2Sum->GetBinContent(i)/hnewTeO2pb210M2Sum->GetBinWidth(i));
-    hAdapTeO2po210M2Sum->SetBinContent(i, dBinSize * hnewTeO2po210M2Sum->GetBinContent(i)/hnewTeO2po210M2Sum->GetBinWidth(i));
-    hAdapTeO2te125M2Sum->SetBinContent(i, dBinSize * hnewTeO2te125M2Sum->GetBinContent(i)/hnewTeO2te125M2Sum->GetBinWidth(i));
-    hAdapTeO2th232M2Sum->SetBinContent(i, dBinSize * hnewTeO2th232M2Sum->GetBinContent(i)/hnewTeO2th232M2Sum->GetBinWidth(i));
-    // hAdapTeO2th228M2Sum->SetBinContent(i, dBinSize * hnewTeO2th228M2Sum->GetBinContent(i)/hnewTeO2th228M2Sum->GetBinWidth(i));
-    // hAdapTeO2ra226M2Sum->SetBinContent(i, dBinSize * hnewTeO2ra226M2Sum->GetBinContent(i)/hnewTeO2ra226M2Sum->GetBinWidth(i));
-    // hAdapTeO2rn222M2Sum->SetBinContent(i, dBinSize * hnewTeO2rn222M2Sum->GetBinContent(i)/hnewTeO2rn222M2Sum->GetBinWidth(i));
-    hAdapTeO2u238M2Sum->SetBinContent(i, dBinSize * hnewTeO2u238M2Sum->GetBinContent(i)/hnewTeO2u238M2Sum->GetBinWidth(i));
-    // hAdapTeO2th230M2Sum->SetBinContent(i, dBinSize * hnewTeO2th230M2Sum->GetBinContent(i)/hnewTeO2th230M2Sum->GetBinWidth(i));
-    // hAdapTeO2u234M2Sum->SetBinContent(i, dBinSize * hnewTeO2u234M2Sum->GetBinContent(i)/hnewTeO2u234M2Sum->GetBinWidth(i));
+    hAdapTeO20nuM2Sum->SetBinContent(i, hnewTeO20nuM2Sum->GetBinContent(i)/hnewTeO20nuM2Sum->GetBinWidth(i));
+    hAdapTeO22nuM2Sum->SetBinContent(i, hnewTeO22nuM2Sum->GetBinContent(i)/hnewTeO22nuM2Sum->GetBinWidth(i));
+    hAdapTeO2co60M2Sum->SetBinContent(i, hnewTeO2co60M2Sum->GetBinContent(i)/hnewTeO2co60M2Sum->GetBinWidth(i));
+    hAdapTeO2k40M2Sum->SetBinContent(i, hnewTeO2k40M2Sum->GetBinContent(i)/hnewTeO2k40M2Sum->GetBinWidth(i));
+    hAdapTeO2pb210M2Sum->SetBinContent(i, hnewTeO2pb210M2Sum->GetBinContent(i)/hnewTeO2pb210M2Sum->GetBinWidth(i));
+    hAdapTeO2po210M2Sum->SetBinContent(i, hnewTeO2po210M2Sum->GetBinContent(i)/hnewTeO2po210M2Sum->GetBinWidth(i));
+    hAdapTeO2te125M2Sum->SetBinContent(i, hnewTeO2te125M2Sum->GetBinContent(i)/hnewTeO2te125M2Sum->GetBinWidth(i));
+    hAdapTeO2th232M2Sum->SetBinContent(i, hnewTeO2th232M2Sum->GetBinContent(i)/hnewTeO2th232M2Sum->GetBinWidth(i));
+    // hAdapTeO2th228M2Sum->SetBinContent(i, hnewTeO2th228M2Sum->GetBinContent(i)/hnewTeO2th228M2Sum->GetBinWidth(i));
+    // hAdapTeO2ra226M2Sum->SetBinContent(i, hnewTeO2ra226M2Sum->GetBinContent(i)/hnewTeO2ra226M2Sum->GetBinWidth(i));
+    // hAdapTeO2rn222M2Sum->SetBinContent(i, hnewTeO2rn222M2Sum->GetBinContent(i)/hnewTeO2rn222M2Sum->GetBinWidth(i));
+    hAdapTeO2u238M2Sum->SetBinContent(i, hnewTeO2u238M2Sum->GetBinContent(i)/hnewTeO2u238M2Sum->GetBinWidth(i));
+    // hAdapTeO2th230M2Sum->SetBinContent(i, hnewTeO2th230M2Sum->GetBinContent(i)/hnewTeO2th230M2Sum->GetBinWidth(i));
+    // hAdapTeO2u234M2Sum->SetBinContent(i, hnewTeO2u234M2Sum->GetBinContent(i)/hnewTeO2u234M2Sum->GetBinWidth(i));
 
-    hAdapTeO2Spb210M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Spb210M2Sum_01->GetBinContent(i)/hnewTeO2Spb210M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Spo210M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Spo210M2Sum_001->GetBinContent(i)/hnewTeO2Spo210M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Spo210M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Spo210M2Sum_01->GetBinContent(i)/hnewTeO2Spo210M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sth232M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Sth232M2Sum_01->GetBinContent(i)/hnewTeO2Sth232M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Su238M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Su238M2Sum_01->GetBinContent(i)/hnewTeO2Su238M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_01->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2Sum_1->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_1->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_1->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2Sum_10->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_10->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_10->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2Sum_001->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2Sum_01->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2Sum_1->SetBinContent(i, dBinSize * hnewTeO2Sxpo210M2Sum_1->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2Sum_001->GetBinContent(i)/hnewTeO2Sxth232M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxth232M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2Sum_01->GetBinContent(i)/hnewTeO2Sxth232M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sxth232M2Sum_1->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2Sum_1->GetBinContent(i)/hnewTeO2Sxth232M2Sum_1->GetBinWidth(i));
-    hAdapTeO2Sxth232M2Sum_10->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2Sum_10->GetBinContent(i)/hnewTeO2Sxth232M2Sum_10->GetBinWidth(i));
-    hAdapTeO2Sxu238M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2Sum_001->GetBinContent(i)/hnewTeO2Sxu238M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxu238M2Sum_01->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2Sum_01->GetBinContent(i)/hnewTeO2Sxu238M2Sum_01->GetBinWidth(i));
-    hAdapTeO2Sxu238M2Sum_1->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2Sum_1->GetBinContent(i)/hnewTeO2Sxu238M2Sum_1->GetBinWidth(i));
-    hAdapTeO2Sxu238M2Sum_10->SetBinContent(i, dBinSize * hnewTeO2Sxu238M2Sum_10->GetBinContent(i)/hnewTeO2Sxu238M2Sum_10->GetBinWidth(i));
+    hAdapTeO2Spb210M2Sum_01->SetBinContent(i, hnewTeO2Spb210M2Sum_01->GetBinContent(i)/hnewTeO2Spb210M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Spo210M2Sum_001->SetBinContent(i, hnewTeO2Spo210M2Sum_001->GetBinContent(i)/hnewTeO2Spo210M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Spo210M2Sum_01->SetBinContent(i, hnewTeO2Spo210M2Sum_01->GetBinContent(i)/hnewTeO2Spo210M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sth232M2Sum_01->SetBinContent(i, hnewTeO2Sth232M2Sum_01->GetBinContent(i)/hnewTeO2Sth232M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Su238M2Sum_01->SetBinContent(i, hnewTeO2Su238M2Sum_01->GetBinContent(i)/hnewTeO2Su238M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2Sum_001->SetBinContent(i, hnewTeO2Sxpb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2Sum_01->SetBinContent(i, hnewTeO2Sxpb210M2Sum_01->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2Sum_1->SetBinContent(i, hnewTeO2Sxpb210M2Sum_1->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_1->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2Sum_10->SetBinContent(i, hnewTeO2Sxpb210M2Sum_10->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_10->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2Sum_001->SetBinContent(i, hnewTeO2Sxpo210M2Sum_001->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2Sum_01->SetBinContent(i, hnewTeO2Sxpo210M2Sum_01->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sxpo210M2Sum_1->SetBinContent(i, hnewTeO2Sxpo210M2Sum_1->GetBinContent(i)/hnewTeO2Sxpo210M2Sum_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M2Sum_001->SetBinContent(i, hnewTeO2Sxth232M2Sum_001->GetBinContent(i)/hnewTeO2Sxth232M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxth232M2Sum_01->SetBinContent(i, hnewTeO2Sxth232M2Sum_01->GetBinContent(i)/hnewTeO2Sxth232M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sxth232M2Sum_1->SetBinContent(i, hnewTeO2Sxth232M2Sum_1->GetBinContent(i)/hnewTeO2Sxth232M2Sum_1->GetBinWidth(i));
+    hAdapTeO2Sxth232M2Sum_10->SetBinContent(i, hnewTeO2Sxth232M2Sum_10->GetBinContent(i)/hnewTeO2Sxth232M2Sum_10->GetBinWidth(i));
+    hAdapTeO2Sxu238M2Sum_001->SetBinContent(i, hnewTeO2Sxu238M2Sum_001->GetBinContent(i)/hnewTeO2Sxu238M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxu238M2Sum_01->SetBinContent(i, hnewTeO2Sxu238M2Sum_01->GetBinContent(i)/hnewTeO2Sxu238M2Sum_01->GetBinWidth(i));
+    hAdapTeO2Sxu238M2Sum_1->SetBinContent(i, hnewTeO2Sxu238M2Sum_1->GetBinContent(i)/hnewTeO2Sxu238M2Sum_1->GetBinWidth(i));
+    hAdapTeO2Sxu238M2Sum_10->SetBinContent(i, hnewTeO2Sxu238M2Sum_10->GetBinContent(i)/hnewTeO2Sxu238M2Sum_10->GetBinWidth(i));
 
-    hAdapTeO2th232onlyM2Sum->SetBinContent(i, dBinSize * hnewTeO2th232onlyM2Sum->GetBinContent(i)/hnewTeO2th232onlyM2Sum->GetBinWidth(i));
-    hAdapTeO2ra228pb208M2Sum->SetBinContent(i, dBinSize * hnewTeO2ra228pb208M2Sum->GetBinContent(i)/hnewTeO2ra228pb208M2Sum->GetBinWidth(i));
-    hAdapTeO2th230onlyM2Sum->SetBinContent(i, dBinSize * hnewTeO2th230onlyM2Sum->GetBinContent(i)/hnewTeO2th230onlyM2Sum->GetBinWidth(i));
+    hAdapTeO2th232onlyM2Sum->SetBinContent(i, hnewTeO2th232onlyM2Sum->GetBinContent(i)/hnewTeO2th232onlyM2Sum->GetBinWidth(i));
+    hAdapTeO2ra228pb208M2Sum->SetBinContent(i, hnewTeO2ra228pb208M2Sum->GetBinContent(i)/hnewTeO2ra228pb208M2Sum->GetBinWidth(i));
+    hAdapTeO2th230onlyM2Sum->SetBinContent(i, hnewTeO2th230onlyM2Sum->GetBinContent(i)/hnewTeO2th230onlyM2Sum->GetBinWidth(i));
 
-    hAdapTeO2Sxth232onlyM2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232onlyM2Sum_001->GetBinContent(i)/hnewTeO2Sxth232onlyM2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxra228pb208M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxra228pb208M2Sum_001->GetBinContent(i)/hnewTeO2Sxra228pb208M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxu238th230M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxu238th230M2Sum_001->GetBinContent(i)/hnewTeO2Sxu238th230M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxth230onlyM2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxth230onlyM2Sum_001->GetBinContent(i)/hnewTeO2Sxth230onlyM2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxra226pb210M2Sum_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2Sum_001->GetBinWidth(i));
-    hAdapTeO2Sxpb210M2Sum_0001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2Sum_0001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_0001->GetBinWidth(i));
-
-
-    hAdapCuFrameco58M2Sum->SetBinContent(i, dBinSize * hnewCuFrameco58M2Sum->GetBinContent(i)/hnewCuFrameco58M2Sum->GetBinWidth(i));
-    hAdapCuFrameco60M2Sum->SetBinContent(i, dBinSize * hnewCuFrameco60M2Sum->GetBinContent(i)/hnewCuFrameco60M2Sum->GetBinWidth(i));
-    hAdapCuFramecs137M2Sum->SetBinContent(i, dBinSize * hnewCuFramecs137M2Sum->GetBinContent(i)/hnewCuFramecs137M2Sum->GetBinWidth(i));
-    hAdapCuFramek40M2Sum->SetBinContent(i, dBinSize * hnewCuFramek40M2Sum->GetBinContent(i)/hnewCuFramek40M2Sum->GetBinWidth(i));
-    hAdapCuFramemn54M2Sum->SetBinContent(i, dBinSize * hnewCuFramemn54M2Sum->GetBinContent(i)/hnewCuFramemn54M2Sum->GetBinWidth(i));
-    hAdapCuFramepb210M2Sum->SetBinContent(i, dBinSize * hnewCuFramepb210M2Sum->GetBinContent(i)/hnewCuFramepb210M2Sum->GetBinWidth(i));
-    hAdapCuFrameth232M2Sum->SetBinContent(i, dBinSize * hnewCuFrameth232M2Sum->GetBinContent(i)/hnewCuFrameth232M2Sum->GetBinWidth(i));
-    hAdapCuFrameu238M2Sum->SetBinContent(i, dBinSize * hnewCuFrameu238M2Sum->GetBinContent(i)/hnewCuFrameu238M2Sum->GetBinWidth(i));
-
-    hAdapCuFrameSth232M2Sum_1->SetBinContent(i, dBinSize * hnewCuFrameSth232M2Sum_1->GetBinContent(i)/hnewCuFrameSth232M2Sum_1->GetBinWidth(i));
-    hAdapCuFrameSu238M2Sum_1->SetBinContent(i, dBinSize * hnewCuFrameSu238M2Sum_1->GetBinContent(i)/hnewCuFrameSu238M2Sum_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2Sum_001->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2Sum_001->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_001->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2Sum_01->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2Sum_01->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_01->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2Sum_1->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2Sum_1->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_1->GetBinWidth(i));
-    hAdapCuFrameSxpb210M2Sum_10->SetBinContent(i, dBinSize * hnewCuFrameSxpb210M2Sum_10->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_10->GetBinWidth(i));
-    hAdapCuFrameSxth232M2Sum_001->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2Sum_001->GetBinContent(i)/hnewCuFrameSxth232M2Sum_001->GetBinWidth(i));
-    hAdapCuFrameSxth232M2Sum_01->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2Sum_01->GetBinContent(i)/hnewCuFrameSxth232M2Sum_01->GetBinWidth(i));
-    hAdapCuFrameSxth232M2Sum_1->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2Sum_1->GetBinContent(i)/hnewCuFrameSxth232M2Sum_1->GetBinWidth(i));
-    hAdapCuFrameSxth232M2Sum_10->SetBinContent(i, dBinSize * hnewCuFrameSxth232M2Sum_10->GetBinContent(i)/hnewCuFrameSxth232M2Sum_10->GetBinWidth(i));
-    hAdapCuFrameSxu238M2Sum_001->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2Sum_001->GetBinContent(i)/hnewCuFrameSxu238M2Sum_001->GetBinWidth(i));
-    hAdapCuFrameSxu238M2Sum_01->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2Sum_01->GetBinContent(i)/hnewCuFrameSxu238M2Sum_01->GetBinWidth(i));
-    hAdapCuFrameSxu238M2Sum_1->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2Sum_1->GetBinContent(i)/hnewCuFrameSxu238M2Sum_1->GetBinWidth(i));
-    hAdapCuFrameSxu238M2Sum_10->SetBinContent(i, dBinSize * hnewCuFrameSxu238M2Sum_10->GetBinContent(i)/hnewCuFrameSxu238M2Sum_10->GetBinWidth(i));
-
-    hAdapCuBoxco58M2Sum->SetBinContent(i, dBinSize * hnewCuBoxco58M2Sum->GetBinContent(i)/hnewCuBoxco58M2Sum->GetBinWidth(i));
-    hAdapCuBoxco60M2Sum->SetBinContent(i, dBinSize * hnewCuBoxco60M2Sum->GetBinContent(i)/hnewCuBoxco60M2Sum->GetBinWidth(i));
-    hAdapCuBoxcs137M2Sum->SetBinContent(i, dBinSize * hnewCuBoxcs137M2Sum->GetBinContent(i)/hnewCuBoxcs137M2Sum->GetBinWidth(i));
-    hAdapCuBoxk40M2Sum->SetBinContent(i, dBinSize * hnewCuBoxk40M2Sum->GetBinContent(i)/hnewCuBoxk40M2Sum->GetBinWidth(i));
-    hAdapCuBoxmn54M2Sum->SetBinContent(i, dBinSize * hnewCuBoxmn54M2Sum->GetBinContent(i)/hnewCuBoxmn54M2Sum->GetBinWidth(i));
-    hAdapCuBoxpb210M2Sum->SetBinContent(i, dBinSize * hnewCuBoxpb210M2Sum->GetBinContent(i)/hnewCuBoxpb210M2Sum->GetBinWidth(i));
-    hAdapCuBoxth232M2Sum->SetBinContent(i, dBinSize * hnewCuBoxth232M2Sum->GetBinContent(i)/hnewCuBoxth232M2Sum->GetBinWidth(i));
-    hAdapCuBoxu238M2Sum->SetBinContent(i, dBinSize * hnewCuBoxu238M2Sum->GetBinContent(i)/hnewCuBoxu238M2Sum->GetBinWidth(i));
-
-    hAdapCuBoxSth232M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSth232M2Sum_1->GetBinContent(i)/hnewCuBoxSth232M2Sum_1->GetBinWidth(i));
-    hAdapCuBoxSu238M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSu238M2Sum_1->GetBinContent(i)/hnewCuBoxSu238M2Sum_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2Sum_001->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2Sum_001->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_001->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2Sum_01->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2Sum_01->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_01->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2Sum_1->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_1->GetBinWidth(i));
-    hAdapCuBoxSxpb210M2Sum_10->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2Sum_10->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_10->GetBinWidth(i));
-    hAdapCuBoxSxth232M2Sum_001->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2Sum_001->GetBinContent(i)/hnewCuBoxSxth232M2Sum_001->GetBinWidth(i));
-    hAdapCuBoxSxth232M2Sum_01->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2Sum_01->GetBinContent(i)/hnewCuBoxSxth232M2Sum_01->GetBinWidth(i));
-    hAdapCuBoxSxth232M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2Sum_1->GetBinContent(i)/hnewCuBoxSxth232M2Sum_1->GetBinWidth(i));
-    hAdapCuBoxSxth232M2Sum_10->SetBinContent(i, dBinSize * hnewCuBoxSxth232M2Sum_10->GetBinContent(i)/hnewCuBoxSxth232M2Sum_10->GetBinWidth(i));
-    hAdapCuBoxSxu238M2Sum_001->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_001->GetBinContent(i)/hnewCuBoxSxu238M2Sum_001->GetBinWidth(i));
-    hAdapCuBoxSxu238M2Sum_01->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_01->GetBinContent(i)/hnewCuBoxSxu238M2Sum_01->GetBinWidth(i));
-    hAdapCuBoxSxu238M2Sum_1->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_1->GetBinContent(i)/hnewCuBoxSxu238M2Sum_1->GetBinWidth(i));
-    hAdapCuBoxSxu238M2Sum_10->SetBinContent(i, dBinSize * hnewCuBoxSxu238M2Sum_10->GetBinContent(i)/hnewCuBoxSxu238M2Sum_10->GetBinWidth(i));
+    hAdapTeO2Sxth232onlyM2Sum_001->SetBinContent(i, hnewTeO2Sxth232onlyM2Sum_001->GetBinContent(i)/hnewTeO2Sxth232onlyM2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxra228pb208M2Sum_001->SetBinContent(i, hnewTeO2Sxra228pb208M2Sum_001->GetBinContent(i)/hnewTeO2Sxra228pb208M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxu238th230M2Sum_001->SetBinContent(i, hnewTeO2Sxu238th230M2Sum_001->GetBinContent(i)/hnewTeO2Sxu238th230M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxth230onlyM2Sum_001->SetBinContent(i, hnewTeO2Sxth230onlyM2Sum_001->GetBinContent(i)/hnewTeO2Sxth230onlyM2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxra226pb210M2Sum_001->SetBinContent(i, hnewTeO2Sxra226pb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2Sum_001->GetBinWidth(i));
+    hAdapTeO2Sxpb210M2Sum_0001->SetBinContent(i, hnewTeO2Sxpb210M2Sum_0001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_0001->GetBinWidth(i));
 
 
-    hAdapCuBox_CuFrameco60M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFrameco60M2Sum->GetBinContent(i)/hnewCuBox_CuFrameco60M2Sum->GetBinWidth(i));
-    hAdapCuBox_CuFramek40M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFramek40M2Sum->GetBinContent(i)/hnewCuBox_CuFramek40M2Sum->GetBinWidth(i));
-    hAdapCuBox_CuFrameth232M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M2Sum->GetBinContent(i)/hnewCuBox_CuFrameth232M2Sum->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M2Sum->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M2Sum->GetBinContent(i)/hnewCuBox_CuFrameu238M2Sum->GetBinWidth(i));
+    hAdapCuFrameco58M2Sum->SetBinContent(i, hnewCuFrameco58M2Sum->GetBinContent(i)/hnewCuFrameco58M2Sum->GetBinWidth(i));
+    hAdapCuFrameco60M2Sum->SetBinContent(i, hnewCuFrameco60M2Sum->GetBinContent(i)/hnewCuFrameco60M2Sum->GetBinWidth(i));
+    hAdapCuFramecs137M2Sum->SetBinContent(i, hnewCuFramecs137M2Sum->GetBinContent(i)/hnewCuFramecs137M2Sum->GetBinWidth(i));
+    hAdapCuFramek40M2Sum->SetBinContent(i, hnewCuFramek40M2Sum->GetBinContent(i)/hnewCuFramek40M2Sum->GetBinWidth(i));
+    hAdapCuFramemn54M2Sum->SetBinContent(i, hnewCuFramemn54M2Sum->GetBinContent(i)/hnewCuFramemn54M2Sum->GetBinWidth(i));
+    hAdapCuFramepb210M2Sum->SetBinContent(i, hnewCuFramepb210M2Sum->GetBinContent(i)/hnewCuFramepb210M2Sum->GetBinWidth(i));
+    hAdapCuFrameth232M2Sum->SetBinContent(i, hnewCuFrameth232M2Sum->GetBinContent(i)/hnewCuFrameth232M2Sum->GetBinWidth(i));
+    hAdapCuFrameu238M2Sum->SetBinContent(i, hnewCuFrameu238M2Sum->GetBinContent(i)/hnewCuFrameu238M2Sum->GetBinWidth(i));
 
-    hAdapCuBox_CuFrameth232M2Sum_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameth232M2Sum_10->GetBinContent(i)/hnewCuBox_CuFrameth232M2Sum_10->GetBinWidth(i));
-    hAdapCuBox_CuFrameu238M2Sum_10->SetBinContent(i, dBinSize * hnewCuBox_CuFrameu238M2Sum_10->GetBinContent(i)/hnewCuBox_CuFrameu238M2Sum_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2Sum_10->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_10->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_10->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2Sum_1->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_1->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_1->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2Sum_01->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_01->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_01->GetBinWidth(i));
-    hAdapCuBox_CuFramepb210M2Sum_001->SetBinContent(i, dBinSize * hnewCuBox_CuFramepb210M2Sum_001->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_001->GetBinWidth(i));
+    hAdapCuFrameSth232M2Sum_1->SetBinContent(i, hnewCuFrameSth232M2Sum_1->GetBinContent(i)/hnewCuFrameSth232M2Sum_1->GetBinWidth(i));
+    hAdapCuFrameSu238M2Sum_1->SetBinContent(i, hnewCuFrameSu238M2Sum_1->GetBinContent(i)/hnewCuFrameSu238M2Sum_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2Sum_001->SetBinContent(i, hnewCuFrameSxpb210M2Sum_001->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_001->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2Sum_01->SetBinContent(i, hnewCuFrameSxpb210M2Sum_01->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_01->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2Sum_1->SetBinContent(i, hnewCuFrameSxpb210M2Sum_1->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_1->GetBinWidth(i));
+    hAdapCuFrameSxpb210M2Sum_10->SetBinContent(i, hnewCuFrameSxpb210M2Sum_10->GetBinContent(i)/hnewCuFrameSxpb210M2Sum_10->GetBinWidth(i));
+    hAdapCuFrameSxth232M2Sum_001->SetBinContent(i, hnewCuFrameSxth232M2Sum_001->GetBinContent(i)/hnewCuFrameSxth232M2Sum_001->GetBinWidth(i));
+    hAdapCuFrameSxth232M2Sum_01->SetBinContent(i, hnewCuFrameSxth232M2Sum_01->GetBinContent(i)/hnewCuFrameSxth232M2Sum_01->GetBinWidth(i));
+    hAdapCuFrameSxth232M2Sum_1->SetBinContent(i, hnewCuFrameSxth232M2Sum_1->GetBinContent(i)/hnewCuFrameSxth232M2Sum_1->GetBinWidth(i));
+    hAdapCuFrameSxth232M2Sum_10->SetBinContent(i, hnewCuFrameSxth232M2Sum_10->GetBinContent(i)/hnewCuFrameSxth232M2Sum_10->GetBinWidth(i));
+    hAdapCuFrameSxu238M2Sum_001->SetBinContent(i, hnewCuFrameSxu238M2Sum_001->GetBinContent(i)/hnewCuFrameSxu238M2Sum_001->GetBinWidth(i));
+    hAdapCuFrameSxu238M2Sum_01->SetBinContent(i, hnewCuFrameSxu238M2Sum_01->GetBinContent(i)/hnewCuFrameSxu238M2Sum_01->GetBinWidth(i));
+    hAdapCuFrameSxu238M2Sum_1->SetBinContent(i, hnewCuFrameSxu238M2Sum_1->GetBinContent(i)/hnewCuFrameSxu238M2Sum_1->GetBinWidth(i));
+    hAdapCuFrameSxu238M2Sum_10->SetBinContent(i, hnewCuFrameSxu238M2Sum_10->GetBinContent(i)/hnewCuFrameSxu238M2Sum_10->GetBinWidth(i));
 
-    hAdap50mKco58M2Sum->SetBinContent(i, dBinSize * hnew50mKco58M2Sum->GetBinContent(i)/hnew50mKco58M2Sum->GetBinWidth(i));
-    hAdap50mKco60M2Sum->SetBinContent(i, dBinSize * hnew50mKco60M2Sum->GetBinContent(i)/hnew50mKco60M2Sum->GetBinWidth(i));
-    hAdap50mKcs137M2Sum->SetBinContent(i, dBinSize * hnew50mKcs137M2Sum->GetBinContent(i)/hnew50mKcs137M2Sum->GetBinWidth(i));
-    hAdap50mKk40M2Sum->SetBinContent(i, dBinSize * hnew50mKk40M2Sum->GetBinContent(i)/hnew50mKk40M2Sum->GetBinWidth(i));
-    hAdap50mKmn54M2Sum->SetBinContent(i, dBinSize * hnew50mKmn54M2Sum->GetBinContent(i)/hnew50mKmn54M2Sum->GetBinWidth(i));
-    hAdap50mKpb210M2Sum->SetBinContent(i, dBinSize * hnew50mKpb210M2Sum->GetBinContent(i)/hnew50mKpb210M2Sum->GetBinWidth(i));
-    hAdap50mKth232M2Sum->SetBinContent(i, dBinSize * hnew50mKth232M2Sum->GetBinContent(i)/hnew50mKth232M2Sum->GetBinWidth(i));
-    hAdap50mKu238M2Sum->SetBinContent(i, dBinSize * hnew50mKu238M2Sum->GetBinContent(i)/hnew50mKu238M2Sum->GetBinWidth(i));
+    hAdapCuBoxco58M2Sum->SetBinContent(i, hnewCuBoxco58M2Sum->GetBinContent(i)/hnewCuBoxco58M2Sum->GetBinWidth(i));
+    hAdapCuBoxco60M2Sum->SetBinContent(i, hnewCuBoxco60M2Sum->GetBinContent(i)/hnewCuBoxco60M2Sum->GetBinWidth(i));
+    hAdapCuBoxcs137M2Sum->SetBinContent(i, hnewCuBoxcs137M2Sum->GetBinContent(i)/hnewCuBoxcs137M2Sum->GetBinWidth(i));
+    hAdapCuBoxk40M2Sum->SetBinContent(i, hnewCuBoxk40M2Sum->GetBinContent(i)/hnewCuBoxk40M2Sum->GetBinWidth(i));
+    hAdapCuBoxmn54M2Sum->SetBinContent(i, hnewCuBoxmn54M2Sum->GetBinContent(i)/hnewCuBoxmn54M2Sum->GetBinWidth(i));
+    hAdapCuBoxpb210M2Sum->SetBinContent(i, hnewCuBoxpb210M2Sum->GetBinContent(i)/hnewCuBoxpb210M2Sum->GetBinWidth(i));
+    hAdapCuBoxth232M2Sum->SetBinContent(i, hnewCuBoxth232M2Sum->GetBinContent(i)/hnewCuBoxth232M2Sum->GetBinWidth(i));
+    hAdapCuBoxu238M2Sum->SetBinContent(i, hnewCuBoxu238M2Sum->GetBinContent(i)/hnewCuBoxu238M2Sum->GetBinWidth(i));
 
-    hAdap600mKco60M2Sum->SetBinContent(i, dBinSize * hnew600mKco60M2Sum->GetBinContent(i)/hnew600mKco60M2Sum->GetBinWidth(i));
-    hAdap600mKk40M2Sum->SetBinContent(i, dBinSize * hnew600mKk40M2Sum->GetBinContent(i)/hnew600mKk40M2Sum->GetBinWidth(i));
-    hAdap600mKth232M2Sum->SetBinContent(i, dBinSize * hnew600mKth232M2Sum->GetBinContent(i)/hnew600mKth232M2Sum->GetBinWidth(i));
-    hAdap600mKu238M2Sum->SetBinContent(i, dBinSize * hnew600mKu238M2Sum->GetBinContent(i)/hnew600mKu238M2Sum->GetBinWidth(i));
-
-
-    // hAdapPbRombi207M2Sum->SetBinContent(i, dBinSize * hnewPbRombi207M2Sum->GetBinContent(i)/hnewPbRombi207M2Sum->GetBinWidth(i));
-    hAdapPbRomco60M2Sum->SetBinContent(i, dBinSize * hnewPbRomco60M2Sum->GetBinContent(i)/hnewPbRomco60M2Sum->GetBinWidth(i));
-    hAdapPbRomcs137M2Sum->SetBinContent(i, dBinSize * hnewPbRomcs137M2Sum->GetBinContent(i)/hnewPbRomcs137M2Sum->GetBinWidth(i));
-    hAdapPbRomk40M2Sum->SetBinContent(i, dBinSize * hnewPbRomk40M2Sum->GetBinContent(i)/hnewPbRomk40M2Sum->GetBinWidth(i));
-    hAdapPbRompb210M2Sum->SetBinContent(i, dBinSize * hnewPbRompb210M2Sum->GetBinContent(i)/hnewPbRompb210M2Sum->GetBinWidth(i));
-    hAdapPbRomth232M2Sum->SetBinContent(i, dBinSize * hnewPbRomth232M2Sum->GetBinContent(i)/hnewPbRomth232M2Sum->GetBinWidth(i));
-    hAdapPbRomu238M2Sum->SetBinContent(i, dBinSize * hnewPbRomu238M2Sum->GetBinContent(i)/hnewPbRomu238M2Sum->GetBinWidth(i));
-
-    hAdapInternalco60M2Sum->SetBinContent(i, dBinSize * hnewInternalco60M2Sum->GetBinContent(i)/hnewInternalco60M2Sum->GetBinWidth(i));
-    hAdapInternalk40M2Sum->SetBinContent(i, dBinSize * hnewInternalk40M2Sum->GetBinContent(i)/hnewInternalk40M2Sum->GetBinWidth(i));
-    hAdapInternalth232M2Sum->SetBinContent(i, dBinSize * hnewInternalth232M2Sum->GetBinContent(i)/hnewInternalth232M2Sum->GetBinWidth(i));
-    hAdapInternalu238M2Sum->SetBinContent(i, dBinSize * hnewInternalu238M2Sum->GetBinContent(i)/hnewInternalu238M2Sum->GetBinWidth(i));
-
-
-    hAdapMBco60M2Sum->SetBinContent(i, dBinSize * hnewMBco60M2Sum->GetBinContent(i)/hnewMBco60M2Sum->GetBinWidth(i));
-    hAdapMBk40M2Sum->SetBinContent(i, dBinSize * hnewMBk40M2Sum->GetBinContent(i)/hnewMBk40M2Sum->GetBinWidth(i));
-    hAdapMBth232M2Sum->SetBinContent(i, dBinSize * hnewMBth232M2Sum->GetBinContent(i)/hnewMBth232M2Sum->GetBinWidth(i));
-    hAdapMBu238M2Sum->SetBinContent(i, dBinSize * hnewMBu238M2Sum->GetBinContent(i)/hnewMBu238M2Sum->GetBinWidth(i));
-
-    hAdapSIk40M2Sum->SetBinContent(i, dBinSize * hnewSIk40M2Sum->GetBinContent(i)/hnewSIk40M2Sum->GetBinWidth(i));
-    hAdapSIth232M2Sum->SetBinContent(i, dBinSize * hnewSIth232M2Sum->GetBinContent(i)/hnewSIth232M2Sum->GetBinWidth(i));
-    hAdapSIu238M2Sum->SetBinContent(i, dBinSize * hnewSIu238M2Sum->GetBinContent(i)/hnewSIu238M2Sum->GetBinWidth(i));
-
-    hAdapIVCco60M2Sum->SetBinContent(i, dBinSize * hnewIVCco60M2Sum->GetBinContent(i)/hnewIVCco60M2Sum->GetBinWidth(i));
-    hAdapIVCk40M2Sum->SetBinContent(i, dBinSize * hnewIVCk40M2Sum->GetBinContent(i)/hnewIVCk40M2Sum->GetBinWidth(i));
-    hAdapIVCth232M2Sum->SetBinContent(i, dBinSize * hnewIVCth232M2Sum->GetBinContent(i)/hnewIVCth232M2Sum->GetBinWidth(i));
-    hAdapIVCu238M2Sum->SetBinContent(i, dBinSize * hnewIVCu238M2Sum->GetBinContent(i)/hnewIVCu238M2Sum->GetBinWidth(i));
+    hAdapCuBoxSth232M2Sum_1->SetBinContent(i, hnewCuBoxSth232M2Sum_1->GetBinContent(i)/hnewCuBoxSth232M2Sum_1->GetBinWidth(i));
+    hAdapCuBoxSu238M2Sum_1->SetBinContent(i, hnewCuBoxSu238M2Sum_1->GetBinContent(i)/hnewCuBoxSu238M2Sum_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2Sum_001->SetBinContent(i, hnewCuBoxSxpb210M2Sum_001->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_001->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2Sum_01->SetBinContent(i, hnewCuBoxSxpb210M2Sum_01->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_01->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2Sum_1->SetBinContent(i, hnewCuBoxSxpb210M2Sum_1->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_1->GetBinWidth(i));
+    hAdapCuBoxSxpb210M2Sum_10->SetBinContent(i, hnewCuBoxSxpb210M2Sum_10->GetBinContent(i)/hnewCuBoxSxpb210M2Sum_10->GetBinWidth(i));
+    hAdapCuBoxSxth232M2Sum_001->SetBinContent(i, hnewCuBoxSxth232M2Sum_001->GetBinContent(i)/hnewCuBoxSxth232M2Sum_001->GetBinWidth(i));
+    hAdapCuBoxSxth232M2Sum_01->SetBinContent(i, hnewCuBoxSxth232M2Sum_01->GetBinContent(i)/hnewCuBoxSxth232M2Sum_01->GetBinWidth(i));
+    hAdapCuBoxSxth232M2Sum_1->SetBinContent(i, hnewCuBoxSxth232M2Sum_1->GetBinContent(i)/hnewCuBoxSxth232M2Sum_1->GetBinWidth(i));
+    hAdapCuBoxSxth232M2Sum_10->SetBinContent(i, hnewCuBoxSxth232M2Sum_10->GetBinContent(i)/hnewCuBoxSxth232M2Sum_10->GetBinWidth(i));
+    hAdapCuBoxSxu238M2Sum_001->SetBinContent(i, hnewCuBoxSxu238M2Sum_001->GetBinContent(i)/hnewCuBoxSxu238M2Sum_001->GetBinWidth(i));
+    hAdapCuBoxSxu238M2Sum_01->SetBinContent(i, hnewCuBoxSxu238M2Sum_01->GetBinContent(i)/hnewCuBoxSxu238M2Sum_01->GetBinWidth(i));
+    hAdapCuBoxSxu238M2Sum_1->SetBinContent(i, hnewCuBoxSxu238M2Sum_1->GetBinContent(i)/hnewCuBoxSxu238M2Sum_1->GetBinWidth(i));
+    hAdapCuBoxSxu238M2Sum_10->SetBinContent(i, hnewCuBoxSxu238M2Sum_10->GetBinContent(i)/hnewCuBoxSxu238M2Sum_10->GetBinWidth(i));
 
 
-    hAdapOVCco60M2Sum->SetBinContent(i, dBinSize * hnewOVCco60M2Sum->GetBinContent(i)/hnewOVCco60M2Sum->GetBinWidth(i));
-    hAdapOVCk40M2Sum->SetBinContent(i, dBinSize * hnewOVCk40M2Sum->GetBinContent(i)/hnewOVCk40M2Sum->GetBinWidth(i));
-    hAdapOVCth232M2Sum->SetBinContent(i, dBinSize * hnewOVCth232M2Sum->GetBinContent(i)/hnewOVCth232M2Sum->GetBinWidth(i));
-    hAdapOVCu238M2Sum->SetBinContent(i, dBinSize * hnewOVCu238M2Sum->GetBinContent(i)/hnewOVCu238M2Sum->GetBinWidth(i));
+    hAdapCuBox_CuFrameco60M2Sum->SetBinContent(i, hnewCuBox_CuFrameco60M2Sum->GetBinContent(i)/hnewCuBox_CuFrameco60M2Sum->GetBinWidth(i));
+    hAdapCuBox_CuFramek40M2Sum->SetBinContent(i, hnewCuBox_CuFramek40M2Sum->GetBinContent(i)/hnewCuBox_CuFramek40M2Sum->GetBinWidth(i));
+    hAdapCuBox_CuFrameth232M2Sum->SetBinContent(i, hnewCuBox_CuFrameth232M2Sum->GetBinContent(i)/hnewCuBox_CuFrameth232M2Sum->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M2Sum->SetBinContent(i, hnewCuBox_CuFrameu238M2Sum->GetBinContent(i)/hnewCuBox_CuFrameu238M2Sum->GetBinWidth(i));
 
-    hAdapExtPbbi210M2Sum->SetBinContent(i, dBinSize * hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
+    hAdapCuBox_CuFrameth232M2Sum_10->SetBinContent(i, hnewCuBox_CuFrameth232M2Sum_10->GetBinContent(i)/hnewCuBox_CuFrameth232M2Sum_10->GetBinWidth(i));
+    hAdapCuBox_CuFrameu238M2Sum_10->SetBinContent(i, hnewCuBox_CuFrameu238M2Sum_10->GetBinContent(i)/hnewCuBox_CuFrameu238M2Sum_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2Sum_10->SetBinContent(i, hnewCuBox_CuFramepb210M2Sum_10->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_10->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2Sum_1->SetBinContent(i, hnewCuBox_CuFramepb210M2Sum_1->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_1->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2Sum_01->SetBinContent(i, hnewCuBox_CuFramepb210M2Sum_01->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_01->GetBinWidth(i));
+    hAdapCuBox_CuFramepb210M2Sum_001->SetBinContent(i, hnewCuBox_CuFramepb210M2Sum_001->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_001->GetBinWidth(i));
+
+    hAdap50mKco58M2Sum->SetBinContent(i, hnew50mKco58M2Sum->GetBinContent(i)/hnew50mKco58M2Sum->GetBinWidth(i));
+    hAdap50mKco60M2Sum->SetBinContent(i, hnew50mKco60M2Sum->GetBinContent(i)/hnew50mKco60M2Sum->GetBinWidth(i));
+    hAdap50mKcs137M2Sum->SetBinContent(i, hnew50mKcs137M2Sum->GetBinContent(i)/hnew50mKcs137M2Sum->GetBinWidth(i));
+    hAdap50mKk40M2Sum->SetBinContent(i, hnew50mKk40M2Sum->GetBinContent(i)/hnew50mKk40M2Sum->GetBinWidth(i));
+    hAdap50mKmn54M2Sum->SetBinContent(i, hnew50mKmn54M2Sum->GetBinContent(i)/hnew50mKmn54M2Sum->GetBinWidth(i));
+    hAdap50mKpb210M2Sum->SetBinContent(i, hnew50mKpb210M2Sum->GetBinContent(i)/hnew50mKpb210M2Sum->GetBinWidth(i));
+    hAdap50mKth232M2Sum->SetBinContent(i, hnew50mKth232M2Sum->GetBinContent(i)/hnew50mKth232M2Sum->GetBinWidth(i));
+    hAdap50mKu238M2Sum->SetBinContent(i, hnew50mKu238M2Sum->GetBinContent(i)/hnew50mKu238M2Sum->GetBinWidth(i));
+
+    hAdap600mKco60M2Sum->SetBinContent(i, hnew600mKco60M2Sum->GetBinContent(i)/hnew600mKco60M2Sum->GetBinWidth(i));
+    hAdap600mKk40M2Sum->SetBinContent(i, hnew600mKk40M2Sum->GetBinContent(i)/hnew600mKk40M2Sum->GetBinWidth(i));
+    hAdap600mKth232M2Sum->SetBinContent(i, hnew600mKth232M2Sum->GetBinContent(i)/hnew600mKth232M2Sum->GetBinWidth(i));
+    hAdap600mKu238M2Sum->SetBinContent(i, hnew600mKu238M2Sum->GetBinContent(i)/hnew600mKu238M2Sum->GetBinWidth(i));
+
+
+    // hAdapPbRombi207M2Sum->SetBinContent(i, hnewPbRombi207M2Sum->GetBinContent(i)/hnewPbRombi207M2Sum->GetBinWidth(i));
+    hAdapPbRomco60M2Sum->SetBinContent(i, hnewPbRomco60M2Sum->GetBinContent(i)/hnewPbRomco60M2Sum->GetBinWidth(i));
+    hAdapPbRomcs137M2Sum->SetBinContent(i, hnewPbRomcs137M2Sum->GetBinContent(i)/hnewPbRomcs137M2Sum->GetBinWidth(i));
+    hAdapPbRomk40M2Sum->SetBinContent(i, hnewPbRomk40M2Sum->GetBinContent(i)/hnewPbRomk40M2Sum->GetBinWidth(i));
+    hAdapPbRompb210M2Sum->SetBinContent(i, hnewPbRompb210M2Sum->GetBinContent(i)/hnewPbRompb210M2Sum->GetBinWidth(i));
+    hAdapPbRomth232M2Sum->SetBinContent(i, hnewPbRomth232M2Sum->GetBinContent(i)/hnewPbRomth232M2Sum->GetBinWidth(i));
+    hAdapPbRomu238M2Sum->SetBinContent(i, hnewPbRomu238M2Sum->GetBinContent(i)/hnewPbRomu238M2Sum->GetBinWidth(i));
+
+    hAdapInternalco60M2Sum->SetBinContent(i, hnewInternalco60M2Sum->GetBinContent(i)/hnewInternalco60M2Sum->GetBinWidth(i));
+    hAdapInternalk40M2Sum->SetBinContent(i, hnewInternalk40M2Sum->GetBinContent(i)/hnewInternalk40M2Sum->GetBinWidth(i));
+    hAdapInternalth232M2Sum->SetBinContent(i, hnewInternalth232M2Sum->GetBinContent(i)/hnewInternalth232M2Sum->GetBinWidth(i));
+    hAdapInternalu238M2Sum->SetBinContent(i, hnewInternalu238M2Sum->GetBinContent(i)/hnewInternalu238M2Sum->GetBinWidth(i));
+
+
+    hAdapMBco60M2Sum->SetBinContent(i, hnewMBco60M2Sum->GetBinContent(i)/hnewMBco60M2Sum->GetBinWidth(i));
+    hAdapMBk40M2Sum->SetBinContent(i, hnewMBk40M2Sum->GetBinContent(i)/hnewMBk40M2Sum->GetBinWidth(i));
+    hAdapMBth232M2Sum->SetBinContent(i, hnewMBth232M2Sum->GetBinContent(i)/hnewMBth232M2Sum->GetBinWidth(i));
+    hAdapMBu238M2Sum->SetBinContent(i, hnewMBu238M2Sum->GetBinContent(i)/hnewMBu238M2Sum->GetBinWidth(i));
+
+    hAdapSIk40M2Sum->SetBinContent(i, hnewSIk40M2Sum->GetBinContent(i)/hnewSIk40M2Sum->GetBinWidth(i));
+    hAdapSIth232M2Sum->SetBinContent(i, hnewSIth232M2Sum->GetBinContent(i)/hnewSIth232M2Sum->GetBinWidth(i));
+    hAdapSIu238M2Sum->SetBinContent(i, hnewSIu238M2Sum->GetBinContent(i)/hnewSIu238M2Sum->GetBinWidth(i));
+
+    hAdapIVCco60M2Sum->SetBinContent(i, hnewIVCco60M2Sum->GetBinContent(i)/hnewIVCco60M2Sum->GetBinWidth(i));
+    hAdapIVCk40M2Sum->SetBinContent(i, hnewIVCk40M2Sum->GetBinContent(i)/hnewIVCk40M2Sum->GetBinWidth(i));
+    hAdapIVCth232M2Sum->SetBinContent(i, hnewIVCth232M2Sum->GetBinContent(i)/hnewIVCth232M2Sum->GetBinWidth(i));
+    hAdapIVCu238M2Sum->SetBinContent(i, hnewIVCu238M2Sum->GetBinContent(i)/hnewIVCu238M2Sum->GetBinWidth(i));
+
+
+    hAdapOVCco60M2Sum->SetBinContent(i, hnewOVCco60M2Sum->GetBinContent(i)/hnewOVCco60M2Sum->GetBinWidth(i));
+    hAdapOVCk40M2Sum->SetBinContent(i, hnewOVCk40M2Sum->GetBinContent(i)/hnewOVCk40M2Sum->GetBinWidth(i));
+    hAdapOVCth232M2Sum->SetBinContent(i, hnewOVCth232M2Sum->GetBinContent(i)/hnewOVCth232M2Sum->GetBinWidth(i));
+    hAdapOVCu238M2Sum->SetBinContent(i, hnewOVCu238M2Sum->GetBinContent(i)/hnewOVCu238M2Sum->GetBinWidth(i));
+
+    hAdapExtPbbi210M2Sum->SetBinContent(i, hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
 
   }
 */
@@ -4278,6 +4268,8 @@ void TBackgroundModel::Initialize()
 
 void TBackgroundModel::Initialize2()
 {
+  cout << "Loading PDF Histograms from file" << endl;  
+  cout << "Directory " << Form("%s/MCProduction", dMCDir.c_str()) << endl;
 
   fBulkSmeared = new TFile(Form("%s/MCProduction_ReducedBulk.root", dMCDir.c_str()));
   fSurfaceSmeared = new TFile(Form("%s/MCProduction_ReducedSurface.root", dMCDir.c_str()));
@@ -4298,6 +4290,7 @@ void TBackgroundModel::Initialize2()
   hTeO2Sxu238th230M1_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxu238th230M1_001");
   hTeO2Sxth230onlyM1_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxth230onlyM1_001");
   hTeO2Sxra226pb210M1_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxra226pb210M1_001");
+  hTeO2Sxth232M1_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxth232M1_001");
 
   hCuBoxSxpb210M1_01  = (TH1D*)fSurfaceSmeared->Get("hCuBoxSxpb210M1_01");
   hCuBoxSxpb210M1_10  = (TH1D*)fSurfaceSmeared->Get("hCuBoxSxpb210M1_10");
@@ -4341,6 +4334,7 @@ void TBackgroundModel::Initialize2()
   hTeO2Sxu238th230M2_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxu238th230M2_001");
   hTeO2Sxth230onlyM2_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxth230onlyM2_001");
   hTeO2Sxra226pb210M2_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxra226pb210M2_001");
+  hTeO2Sxth232M2_001 = (TH1D*)fSurfaceSmeared->Get("hTeO2Sxth232M2_001");
 
   hCuBoxSxpb210M2_01  = (TH1D*)fSurfaceSmeared->Get("hCuBoxSxpb210M2_01");
   hCuBoxSxpb210M2_10  = (TH1D*)fSurfaceSmeared->Get("hCuBoxSxpb210M2_10");
@@ -4370,94 +4364,96 @@ void TBackgroundModel::Initialize2()
   hExtPbbi210M2 = (TH1D*)fBulkSmeared->Get("hExtPbbi210M2");
 
 
-  hTeO20nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO20nuM1", dAdaptiveArrayM1);
-  hTeO22nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuM1", dAdaptiveArrayM1);
-  hTeO2co60M1->Rebin(dAdaptiveBinsM1, "hnewTeO2co60M1", dAdaptiveArrayM1);
-  hTeO2k40M1->Rebin(dAdaptiveBinsM1, "hnewTeO2k40M1", dAdaptiveArrayM1);
-  hTeO2po210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2po210M1", dAdaptiveArrayM1);
-  hTeO2th232onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232onlyM1", dAdaptiveArrayM1);
-  hTeO2ra228pb208M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra228pb208M1", dAdaptiveArrayM1);
-  hTeO2th230onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th230onlyM1", dAdaptiveArrayM1);
+  hnewTeO20nuM1 = hTeO20nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO20nuM1", dAdaptiveArrayM1);
+  hnewTeO22nuM1 = hTeO22nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuM1", dAdaptiveArrayM1);
+  hnewTeO2co60M1 = hTeO2co60M1->Rebin(dAdaptiveBinsM1, "hnewTeO2co60M1", dAdaptiveArrayM1);
+  hnewTeO2k40M1 = hTeO2k40M1->Rebin(dAdaptiveBinsM1, "hnewTeO2k40M1", dAdaptiveArrayM1);
+  hnewTeO2po210M1 = hTeO2po210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2po210M1", dAdaptiveArrayM1);
+  hnewTeO2th232onlyM1 = hTeO2th232onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232onlyM1", dAdaptiveArrayM1);
+  hnewTeO2ra228pb208M1 = hTeO2ra228pb208M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra228pb208M1", dAdaptiveArrayM1);
+  hnewTeO2th230onlyM1 = hTeO2th230onlyM1->Rebin(dAdaptiveBinsM1, "hnewTeO2th230onlyM1", dAdaptiveArrayM1);
 
-  hTeO2Sxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_001", dAdaptiveArrayM1);
-  hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
-  hTeO2Sxth232onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232onlyM1_001", dAdaptiveArrayM1);
-  hTeO2Sxra228pb208M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra228pb208M1_001", dAdaptiveArrayM1);
-  hTeO2Sxu238th230M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238th230M1_001", dAdaptiveArrayM1);
-  hTeO2Sxth230onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth230onlyM1_001", dAdaptiveArrayM1);
-  hTeO2Sxra226pb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra226pb210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_001 = hTeO2Sxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxpb210M1_1 = hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
+  hnewTeO2Sxth232onlyM1_001 = hTeO2Sxth232onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232onlyM1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxra228pb208M1_001 = hTeO2Sxra228pb208M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra228pb208M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxu238th230M1_001 = hTeO2Sxu238th230M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxu238th230M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxth230onlyM1_001 = hTeO2Sxth230onlyM1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth230onlyM1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxra226pb210M1_001 = hTeO2Sxra226pb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxra226pb210M1_001", dAdaptiveArrayM1);
+  hnewTeO2Sxth232M1_001 = hTeO2Sxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_001", dAdaptiveArrayM1);
 
-  hCuBoxSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_01", dAdaptiveArrayM1);
-  hCuBoxSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_10", dAdaptiveArrayM1);
-  hCuBoxSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_10", dAdaptiveArrayM1);
-  hCuBoxSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_01 = hCuBoxSxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_01", dAdaptiveArrayM1);
+  hnewCuBoxSxpb210M1_10 = hCuBoxSxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxpb210M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSxth232M1_10 = hCuBoxSxth232M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxth232M1_10", dAdaptiveArrayM1);
+  hnewCuBoxSxu238M1_10 = hCuBoxSxu238M1_10->Rebin(dAdaptiveBinsM1, "hnewCuBoxSxu238M1_10", dAdaptiveArrayM1);
 
-  hCuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco60M1", dAdaptiveArrayM1);
-  hCuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuFramek40M1", dAdaptiveArrayM1);
-  hCuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameth232M1", dAdaptiveArrayM1);
-  hCuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameu238M1", dAdaptiveArrayM1);
+  hnewCuFrameco60M1 = hCuFrameco60M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameco60M1", dAdaptiveArrayM1);
+  hnewCuFramek40M1 = hCuFramek40M1->Rebin(dAdaptiveBinsM1, "hnewCuFramek40M1", dAdaptiveArrayM1);
+  hnewCuFrameth232M1 = hCuFrameth232M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameth232M1", dAdaptiveArrayM1);
+  hnewCuFrameu238M1 = hCuFrameu238M1->Rebin(dAdaptiveBinsM1, "hnewCuFrameu238M1", dAdaptiveArrayM1);
 
-  h600mKco60M1->Rebin(dAdaptiveBinsM1, "hnew600mKco60M1", dAdaptiveArrayM1);
-  h600mKk40M1->Rebin(dAdaptiveBinsM1, "hnew600mKk40M1", dAdaptiveArrayM1);
-  h600mKth232M1->Rebin(dAdaptiveBinsM1, "hnew600mKth232M1", dAdaptiveArrayM1);
-  h600mKu238M1->Rebin(dAdaptiveBinsM1, "hnew600mKu238M1", dAdaptiveArrayM1);
+  hnew600mKco60M1 = h600mKco60M1->Rebin(dAdaptiveBinsM1, "hnew600mKco60M1", dAdaptiveArrayM1);
+  hnew600mKk40M1 = h600mKk40M1->Rebin(dAdaptiveBinsM1, "hnew600mKk40M1", dAdaptiveArrayM1);
+  hnew600mKth232M1 = h600mKth232M1->Rebin(dAdaptiveBinsM1, "hnew600mKth232M1", dAdaptiveArrayM1);
+  hnew600mKu238M1 = h600mKu238M1->Rebin(dAdaptiveBinsM1, "hnew600mKu238M1", dAdaptiveArrayM1);
 
-  hPbRomco60M1->Rebin(dAdaptiveBinsM1, "hnewPbRomco60M1", dAdaptiveArrayM1);
-  hPbRomk40M1->Rebin(dAdaptiveBinsM1, "hnewPbRomk40M1", dAdaptiveArrayM1);
-  hPbRomth232M1->Rebin(dAdaptiveBinsM1, "hnewPbRomth232M1", dAdaptiveArrayM1);
-  hPbRomu238M1->Rebin(dAdaptiveBinsM1, "hnewPbRomu238M1", dAdaptiveArrayM1);
+  hnewPbRomco60M1 = hPbRomco60M1->Rebin(dAdaptiveBinsM1, "hnewPbRomco60M1", dAdaptiveArrayM1);
+  hnewPbRomk40M1 = hPbRomk40M1->Rebin(dAdaptiveBinsM1, "hnewPbRomk40M1", dAdaptiveArrayM1);
+  hnewPbRomth232M1 = hPbRomth232M1->Rebin(dAdaptiveBinsM1, "hnewPbRomth232M1", dAdaptiveArrayM1);
+  hnewPbRomu238M1 = hPbRomu238M1->Rebin(dAdaptiveBinsM1, "hnewPbRomu238M1", dAdaptiveArrayM1);
 
-  hOVCco60M1->Rebin(dAdaptiveBinsM1, "hnewOVCco60M1", dAdaptiveArrayM1);
-  hOVCk40M1->Rebin(dAdaptiveBinsM1, "hnewOVCk40M1", dAdaptiveArrayM1);
-  hOVCth232M1->Rebin(dAdaptiveBinsM1, "hnewOVCth232M1", dAdaptiveArrayM1);
-  hOVCu238M1->Rebin(dAdaptiveBinsM1, "hnewOVCu238M1", dAdaptiveArrayM1);
+  hnewOVCco60M1 = hOVCco60M1->Rebin(dAdaptiveBinsM1, "hnewOVCco60M1", dAdaptiveArrayM1);
+  hnewOVCk40M1 = hOVCk40M1->Rebin(dAdaptiveBinsM1, "hnewOVCk40M1", dAdaptiveArrayM1);
+  hnewOVCth232M1 = hOVCth232M1->Rebin(dAdaptiveBinsM1, "hnewOVCth232M1", dAdaptiveArrayM1);
+  hnewOVCu238M1 = hOVCu238M1->Rebin(dAdaptiveBinsM1, "hnewOVCu238M1", dAdaptiveArrayM1);
 
-  hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
+  hnewExtPbbi210M1 = hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
 
 
-  hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
-  hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
-  hTeO2co60M2->Rebin(dAdaptiveBinsM2, "hnewTeO2co60M2", dAdaptiveArrayM2);
-  hTeO2k40M2->Rebin(dAdaptiveBinsM2, "hnewTeO2k40M2", dAdaptiveArrayM2);
-  hTeO2po210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2po210M2", dAdaptiveArrayM2);
-  hTeO2th232onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232onlyM2", dAdaptiveArrayM2);
-  hTeO2ra228pb208M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra228pb208M2", dAdaptiveArrayM2);
-  hTeO2th230onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th230onlyM2", dAdaptiveArrayM2);
+  hnewTeO20nuM2 = hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
+  hnewTeO22nuM2 = hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
+  hnewTeO2co60M2 = hTeO2co60M2->Rebin(dAdaptiveBinsM2, "hnewTeO2co60M2", dAdaptiveArrayM2);
+  hnewTeO2k40M2 = hTeO2k40M2->Rebin(dAdaptiveBinsM2, "hnewTeO2k40M2", dAdaptiveArrayM2);
+  hnewTeO2po210M2 = hTeO2po210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2po210M2", dAdaptiveArrayM2);
+  hnewTeO2th232onlyM2 = hTeO2th232onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232onlyM2", dAdaptiveArrayM2);
+  hnewTeO2ra228pb208M2 = hTeO2ra228pb208M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra228pb208M2", dAdaptiveArrayM2);
+  hnewTeO2th230onlyM2 = hTeO2th230onlyM2->Rebin(dAdaptiveBinsM2, "hnewTeO2th230onlyM2", dAdaptiveArrayM2);
 
-  hTeO2Sxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_001", dAdaptiveArrayM2);
-  hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
-  hTeO2Sxth232onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232onlyM2_001", dAdaptiveArrayM2);
-  hTeO2Sxra228pb208M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra228pb208M2_001", dAdaptiveArrayM2);
-  hTeO2Sxu238th230M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238th230M2_001", dAdaptiveArrayM2);
-  hTeO2Sxth230onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth230onlyM2_001", dAdaptiveArrayM2);
-  hTeO2Sxra226pb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra226pb210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_001 = hTeO2Sxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxpb210M2_1 = hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
+  hnewTeO2Sxth232onlyM2_001 = hTeO2Sxth232onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232onlyM2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxra228pb208M2_001 = hTeO2Sxra228pb208M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra228pb208M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxu238th230M2_001 = hTeO2Sxu238th230M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxu238th230M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxth230onlyM2_001 = hTeO2Sxth230onlyM2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth230onlyM2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxra226pb210M2_001 = hTeO2Sxra226pb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxra226pb210M2_001", dAdaptiveArrayM2);
+  hnewTeO2Sxth232M2_001 = hTeO2Sxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_001", dAdaptiveArrayM2);
 
-  hCuBoxSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_01", dAdaptiveArrayM2);
-  hCuBoxSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_10", dAdaptiveArrayM2);
-  hCuBoxSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_10", dAdaptiveArrayM2);
-  hCuBoxSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_01 = hCuBoxSxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_01", dAdaptiveArrayM2);
+  hnewCuBoxSxpb210M2_10 = hCuBoxSxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxpb210M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSxth232M2_10 = hCuBoxSxth232M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxth232M2_10", dAdaptiveArrayM2);
+  hnewCuBoxSxu238M2_10 = hCuBoxSxu238M2_10->Rebin(dAdaptiveBinsM2, "hnewCuBoxSxu238M2_10", dAdaptiveArrayM2);
 
-  hCuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco60M2", dAdaptiveArrayM2);
-  hCuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuFramek40M2", dAdaptiveArrayM2);
-  hCuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameth232M2", dAdaptiveArrayM2);
-  hCuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameu238M2", dAdaptiveArrayM2);
+  hnewCuFrameco60M2 = hCuFrameco60M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameco60M2", dAdaptiveArrayM2);
+  hnewCuFramek40M2 = hCuFramek40M2->Rebin(dAdaptiveBinsM2, "hnewCuFramek40M2", dAdaptiveArrayM2);
+  hnewCuFrameth232M2 = hCuFrameth232M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameth232M2", dAdaptiveArrayM2);
+  hnewCuFrameu238M2 = hCuFrameu238M2->Rebin(dAdaptiveBinsM2, "hnewCuFrameu238M2", dAdaptiveArrayM2);
 
-  h600mKco60M2->Rebin(dAdaptiveBinsM2, "hnew600mKco60M2", dAdaptiveArrayM2);
-  h600mKk40M2->Rebin(dAdaptiveBinsM2, "hnew600mKk40M2", dAdaptiveArrayM2);
-  h600mKth232M2->Rebin(dAdaptiveBinsM2, "hnew600mKth232M2", dAdaptiveArrayM2);
-  h600mKu238M2->Rebin(dAdaptiveBinsM2, "hnew600mKu238M2", dAdaptiveArrayM2);
+  hnew600mKco60M2 =h600mKco60M2->Rebin(dAdaptiveBinsM2, "hnew600mKco60M2", dAdaptiveArrayM2);
+  hnew600mKk40M2 =h600mKk40M2->Rebin(dAdaptiveBinsM2, "hnew600mKk40M2", dAdaptiveArrayM2);
+  hnew600mKth232M2 =h600mKth232M2->Rebin(dAdaptiveBinsM2, "hnew600mKth232M2", dAdaptiveArrayM2);
+  hnew600mKu238M2 =h600mKu238M2->Rebin(dAdaptiveBinsM2, "hnew600mKu238M2", dAdaptiveArrayM2);
 
-  hPbRomco60M2->Rebin(dAdaptiveBinsM2, "hnewPbRomco60M2", dAdaptiveArrayM2);
-  hPbRomk40M2->Rebin(dAdaptiveBinsM2, "hnewPbRomk40M2", dAdaptiveArrayM2);
-  hPbRomth232M2->Rebin(dAdaptiveBinsM2, "hnewPbRomth232M2", dAdaptiveArrayM2);
-  hPbRomu238M2->Rebin(dAdaptiveBinsM2, "hnewPbRomu238M2", dAdaptiveArrayM2);
+  hnewPbRomco60M2 = hPbRomco60M2->Rebin(dAdaptiveBinsM2, "hnewPbRomco60M2", dAdaptiveArrayM2);
+  hnewPbRomk40M2 = hPbRomk40M2->Rebin(dAdaptiveBinsM2, "hnewPbRomk40M2", dAdaptiveArrayM2);
+  hnewPbRomth232M2 = hPbRomth232M2->Rebin(dAdaptiveBinsM2, "hnewPbRomth232M2", dAdaptiveArrayM2);
+  hnewPbRomu238M2 = hPbRomu238M2->Rebin(dAdaptiveBinsM2, "hnewPbRomu238M2", dAdaptiveArrayM2);
 
-  hOVCco60M2->Rebin(dAdaptiveBinsM2, "hnewOVCco60M2", dAdaptiveArrayM2);
-  hOVCk40M2->Rebin(dAdaptiveBinsM2, "hnewOVCk40M2", dAdaptiveArrayM2);
-  hOVCth232M2->Rebin(dAdaptiveBinsM2, "hnewOVCth232M2", dAdaptiveArrayM2);
-  hOVCu238M2->Rebin(dAdaptiveBinsM2, "hnewOVCu238M2", dAdaptiveArrayM2);
+  hnewOVCco60M2 = hOVCco60M2->Rebin(dAdaptiveBinsM2, "hnewOVCco60M2", dAdaptiveArrayM2);
+  hnewOVCk40M2 = hOVCk40M2->Rebin(dAdaptiveBinsM2, "hnewOVCk40M2", dAdaptiveArrayM2);
+  hnewOVCth232M2 = hOVCth232M2->Rebin(dAdaptiveBinsM2, "hnewOVCth232M2", dAdaptiveArrayM2);
+  hnewOVCu238M2 = hOVCu238M2->Rebin(dAdaptiveBinsM2, "hnewOVCu238M2", dAdaptiveArrayM2);
 
-  hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
+  hnewExtPbbi210M2 = hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
 
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
@@ -4477,6 +4473,7 @@ void TBackgroundModel::Initialize2()
     hAdapTeO2Sxth230onlyM1_001->SetBinContent(i, dBinSize * hnewTeO2Sxth230onlyM1_001->GetBinContent(i)/hnewTeO2Sxth230onlyM1_001->GetBinWidth(i));
     hAdapTeO2Sxra226pb210M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M1_001->GetBinContent(i)/hnewTeO2Sxra226pb210M1_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_001->GetBinContent(i)/hnewTeO2Sxpb210M1_001->GetBinWidth(i));
+    hAdapTeO2Sxth232M1_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232M1_001->GetBinContent(i)/hnewTeO2Sxth232M1_001->GetBinWidth(i));
 
     hAdapTeO2Sxpb210M1_1->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M1_1->GetBinContent(i)/hnewTeO2Sxpb210M1_1->GetBinWidth(i));
     hAdapCuBoxSxpb210M1_01->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M1_01->GetBinContent(i)/hnewCuBoxSxpb210M1_01->GetBinWidth(i));
@@ -4527,6 +4524,7 @@ void TBackgroundModel::Initialize2()
     hAdapTeO2Sxth230onlyM2_001->SetBinContent(i, dBinSize * hnewTeO2Sxth230onlyM2_001->GetBinContent(i)/hnewTeO2Sxth230onlyM2_001->GetBinWidth(i));
     hAdapTeO2Sxra226pb210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxra226pb210M2_001->GetBinContent(i)/hnewTeO2Sxra226pb210M2_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_001->GetBinContent(i)/hnewTeO2Sxpb210M2_001->GetBinWidth(i));
+    hAdapTeO2Sxth232M2_001->SetBinContent(i, dBinSize * hnewTeO2Sxth232M2_001->GetBinContent(i)/hnewTeO2Sxth232M2_001->GetBinWidth(i));
 
     hAdapTeO2Sxpb210M2_1->SetBinContent(i, dBinSize * hnewTeO2Sxpb210M2_1->GetBinContent(i)/hnewTeO2Sxpb210M2_1->GetBinWidth(i));
     hAdapCuBoxSxpb210M2_01->SetBinContent(i, dBinSize * hnewCuBoxSxpb210M2_01->GetBinContent(i)/hnewCuBoxSxpb210M2_01->GetBinWidth(i));
@@ -4567,56 +4565,44 @@ void TBackgroundModel::Initialize2()
 // Loads the background data
 void TBackgroundModel::LoadData()
 {
-	if(fDataHistoTot == NULL) 
-	{
-		cout << "Data Histograms Not Created" << endl;
-		return;
-	}
-	else
-	{
-		cout << "Data Histograms Created" << endl;
-	}
-  
-  // qtree->Add("/Users/brian/macros/CUOREZ/Bkg/Q0_DR2_BackgroundSignalData.root"); 
   switch(dDataSet)
   { 
   case 1:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2049.root", dDataDir.c_str()));   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2061.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2064.root", dDataDir.c_str()));   
-  qtree->Add(Form("%s/ReducedBkgSync-ds2067.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2070.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2073.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2076.root", dDataDir.c_str())); 
-  dLivetime = 6042498; // DR 1 
-  cout << "Using Dataset 1" << endl;
+    qtree->Add(Form("%s/ReducedB-ds2049.root", dDataDir.c_str()));   
+    qtree->Add(Form("%s/ReducedB-ds2061.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2064.root", dDataDir.c_str()));   
+    qtree->Add(Form("%s/ReducedB-ds2067.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2070.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2073.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2076.root", dDataDir.c_str())); 
+    dLivetime = 6042498; // DR 1 
+    cout << "Using Data Release 1" << endl;
   break;
 
   case 2:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2079.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2085.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2088.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2091.root", dDataDir.c_str())); 
-  qtree->Add(Form("%s/ReducedBkgSync-ds2097.root", dDataDir.c_str()));
-  qtree->Add(Form("%s/ReducedBkgSync-ds2100.root", dDataDir.c_str())); 
-  dLivetime = 9387524; // DR 2
-  cout << "Using Dataset 2" << endl;
+    qtree->Add(Form("%s/ReducedB-ds2079.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2085.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2088.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2091.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2097.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2100.root", dDataDir.c_str())); 
+    dLivetime = 9387524; // DR 2
+    cout << "Using Data Release 2" << endl;
   break;
 
   case 3:
-  qtree->Add(Form("%s/ReducedBkgSync-ds2103.root", dDataDir.c_str()));
-  qtree->Add(Form("%s/ReducedBkgSync-ds2109.root", dDataDir.c_str()));
-  qtree->Add(Form("%s/ReducedBkgSync-ds2118.root", dDataDir.c_str()));
-  qtree->Add(Form("%s/ReducedBkgSync-ds2124.root", dDataDir.c_str()));
-  dLivetime = 7647908; // DR 3
-  cout << "Using Dataset 3" << endl;
+    qtree->Add(Form("%s/ReducedB-ds2103.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2109.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2118.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2124.root", dDataDir.c_str()));
+    dLivetime = 7647908; // DR 3
+    cout << "Using Data Release 3" << endl;
   break;
 
   default:   
-  qtree->Add(Form("%s/ReducedBkgSync-ds*.root", dDataDir.c_str())); 
-  dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
-  cout << "Directory " << Form("%s/ReducedBkgSync-ds*.root", dDataDir.c_str()) << endl;
-  cout << "Using Total Dataset" << endl;
+    qtree->Add(Form("%s/ReducedB-ds*.root", dDataDir.c_str())); 
+    dLivetime = 23077930; // seconds of livetime (DR1 to DR3)
+    cout << "Using Total Dataset" << endl;
 
   }
 
@@ -4625,11 +4611,7 @@ void TBackgroundModel::LoadData()
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
   qtree->Project("fDataHistoM2Sum",  "TotalEnergy_Sync", base_cut && "Multiplicity_Sync == 2");
 
-  dLivetimeYr = dLivetime*dSecToYears;
-
-
-  cout << "Loaded Data" << endl;
-  
+  dLivetimeYr = dLivetime*dSecToYears;  
 }
 
 // Prints parameters, needs update 11-06-2014
@@ -4669,6 +4651,7 @@ void TBackgroundModel::SetParameters(int index, double value)
 	else fParameters[index] = value;
 }
 
+// Not done...
 std::map<string, int> TBackgroundModel::SetParMap()
 {
   std::map<string, int> dParMapThing;
@@ -4680,43 +4663,43 @@ std::map<string, int> TBackgroundModel::SetParMap()
 
 void TBackgroundModel::SetParEfficiency()
 {
-fParEfficiencyM1[0] = 0.8897514;
-fParEfficiencyM1[1] = 0.9292826;
-fParEfficiencyM1[2] = 0.4424162;
-fParEfficiencyM1[3] = 0.8584163;
-fParEfficiencyM1[4] = 0.9418009;
-fParEfficiencyM1[5] = 0.941975;
-fParEfficiencyM1[6] = 0.4975102;
-fParEfficiencyM1[7] = 0.9419295;
-fParEfficiencyM1[8] = 0.7376795;
-fParEfficiencyM1[9] = 0.3802244;
-fParEfficiencyM1[10] = 0.7457738;
-fParEfficiencyM1[11] = 0.7379278;
-fParEfficiencyM1[12] = 0.3802244;
-fParEfficiencyM1[13] = 0.4457218;
-fParEfficiencyM1[14] = 0.0510853;
-fParEfficiencyM1[15] = 0.0354736;
-fParEfficiencyM1[16] = 0.2807244;
-fParEfficiencyM1[17] = 0.0369882;
-fParEfficiencyM1[18] = 0.1013459;
-fParEfficiencyM1[19] = 0.0881936;
-fParEfficiencyM1[20] = 0.046961;
-fParEfficiencyM1[21] = 0.0725138;
-fParEfficiencyM1[22] = 0.006387241;
-fParEfficiencyM1[23] = 0.012149995;
-fParEfficiencyM1[24] = 0.05125624;
-fParEfficiencyM1[25] = 0.00937862;
-fParEfficiencyM1[26] = 0.000191901;
-fParEfficiencyM1[27] = 0.07314378;
-fParEfficiencyM1[28] = 0.00484976;
-fParEfficiencyM1[29] = 0.006349752;
-fParEfficiencyM1[30] = 0.004160072;
-fParEfficiencyM1[31] = 0.00715452;
-fParEfficiencyM1[32] = 0.00043995;
-fParEfficiencyM1[33] = 0.000465822;
-fParEfficiencyM1[34] = 0.000293556;
-fParEfficiencyM1[35] = 0.4958653;
-fParEfficiencyM1[36] = 0.0742276;
+  fParEfficiencyM1[0] = 0.8897514;
+  fParEfficiencyM1[1] = 0.9292826;
+  fParEfficiencyM1[2] = 0.4424162;
+  fParEfficiencyM1[3] = 0.8584163;
+  fParEfficiencyM1[4] = 0.9418009;
+  fParEfficiencyM1[5] = 0.941975;
+  fParEfficiencyM1[6] = 0.4975102;
+  fParEfficiencyM1[7] = 0.9419295;
+  fParEfficiencyM1[8] = 0.7376795;
+  fParEfficiencyM1[9] = 0.3802244;
+  fParEfficiencyM1[10] = 0.7457738;
+  fParEfficiencyM1[11] = 0.7379278;
+  fParEfficiencyM1[12] = 0.3802244;
+  fParEfficiencyM1[13] = 0.4457218;
+  fParEfficiencyM1[14] = 0.0510853;
+  fParEfficiencyM1[15] = 0.0354736;
+  fParEfficiencyM1[16] = 0.2807244;
+  fParEfficiencyM1[17] = 0.0369882;
+  fParEfficiencyM1[18] = 0.1013459;
+  fParEfficiencyM1[19] = 0.0881936;
+  fParEfficiencyM1[20] = 0.046961;
+  fParEfficiencyM1[21] = 0.0725138;
+  fParEfficiencyM1[22] = 0.006387241;
+  fParEfficiencyM1[23] = 0.012149995;
+  fParEfficiencyM1[24] = 0.05125624;
+  fParEfficiencyM1[25] = 0.00937862;
+  fParEfficiencyM1[26] = 0.000191901;
+  fParEfficiencyM1[27] = 0.07314378;
+  fParEfficiencyM1[28] = 0.00484976;
+  fParEfficiencyM1[29] = 0.006349752;
+  fParEfficiencyM1[30] = 0.004160072;
+  fParEfficiencyM1[31] = 0.00715452;
+  fParEfficiencyM1[32] = 0.00043995;
+  fParEfficiencyM1[33] = 0.000465822;
+  fParEfficiencyM1[34] = 0.000293556;
+  fParEfficiencyM1[35] = 0.4958653;
+  fParEfficiencyM1[36] = 0.0742276;
 }
 
 // Creates/updates the background model
@@ -4739,101 +4722,7 @@ void TBackgroundModel::UpdateModelAdaptive()
     cout << "Call #: "<< dNumCalls << endl;
   }
 
-///// Create model
-///////////////////////////////////////
-////// Adaptive Binning parameters
-//////////////////////////////////////
-/////// M1
-/*  
-  fModelTotAdapM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
-  fModelTotAdapM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[1]);
-  fModelTotAdapM1->Add( hAdapTeO2co60M1,             dDataIntegralM1*fParameters[2]);
-  fModelTotAdapM1->Add( hAdapTeO2k40M1,              dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM1->Add( hAdapTeO2po210M1,            dDataIntegralM1*fParameters[4]);
-  fModelTotAdapM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[5]);
-  fModelTotAdapM1->Add( hAdapTeO2ra228pb208M1,       dDataIntegralM1*fParameters[6]);
-  fModelTotAdapM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[7]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxth232M1_001,      dDataIntegralM1*fParameters[8]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[9]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[11]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[12]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_001,     dDataIntegralM1*fParameters[13]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_1,     dDataIntegralM1*fParameters[35]);
-
-
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1,     dDataIntegralM1*fParameters[14]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1,      dDataIntegralM1*fParameters[15]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,      dDataIntegralM1*fParameters[16]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFramek40M1,       dDataIntegralM1*fParameters[17]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1_10,  dDataIntegralM1*fParameters[18]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_10,   dDataIntegralM1*fParameters[19]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_10,  dDataIntegralM1*fParameters[20]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_01,  dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_001,   dDataIntegralM1*fParameters[36]);
-
-  fModelTotAdapM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[22]);
-  fModelTotAdapM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[23]);
-  fModelTotAdapM1->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapM1->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[25]);
-  fModelTotAdapM1->Add( hAdapExtPbbi210M1,        dDataIntegralM1*fParameters[26]);
-
-  fModelTotAdapM1->Add( hAdapPbRomco60M1,     dDataIntegralM1*fParameters[27]);
-  fModelTotAdapM1->Add( hAdapPbRomk40M1,      dDataIntegralM1*fParameters[28]);
-  fModelTotAdapM1->Add( hAdapPbRomth232M1,    dDataIntegralM1*fParameters[29]);
-  fModelTotAdapM1->Add( hAdapPbRomu238M1,     dDataIntegralM1*fParameters[30]);
-
-  fModelTotAdapM1->Add( hAdapOVCco60M1,     dDataIntegralM1*fParameters[31]);
-  fModelTotAdapM1->Add( hAdapOVCk40M1,      dDataIntegralM1*fParameters[32]);
-  fModelTotAdapM1->Add( hAdapOVCth232M1,    dDataIntegralM1*fParameters[33]);
-  fModelTotAdapM1->Add( hAdapOVCu238M1,     dDataIntegralM1*fParameters[34]);
-
-
-/////// M2
-  fModelTotAdapM2->Add( hAdapTeO20nuM2,              dDataIntegralM1*fParameters[0]);
-  fModelTotAdapM2->Add( hAdapTeO22nuM2,              dDataIntegralM1*fParameters[1]);
-  fModelTotAdapM2->Add( hAdapTeO2co60M2,             dDataIntegralM1*fParameters[2]);
-  fModelTotAdapM2->Add( hAdapTeO2k40M2,              dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM2->Add( hAdapTeO2po210M2,            dDataIntegralM1*fParameters[4]);
-  fModelTotAdapM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM1*fParameters[5]);
-  fModelTotAdapM2->Add( hAdapTeO2ra228pb208M2,       dDataIntegralM1*fParameters[6]);
-  fModelTotAdapM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM1*fParameters[7]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxth232M2_001,      dDataIntegralM1*fParameters[8]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM1*fParameters[9]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM1*fParameters[11]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM1*fParameters[12]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_001,     dDataIntegralM1*fParameters[13]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_1,     dDataIntegralM1*fParameters[35]);
-
-
-  fModelTotAdapM2->Add( hAdapCuBox_CuFrameth232M2,     dDataIntegralM1*fParameters[14]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2,      dDataIntegralM1*fParameters[15]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFrameco60M2,      dDataIntegralM1*fParameters[16]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFramek40M2,       dDataIntegralM1*fParameters[17]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFrameth232M2_10,  dDataIntegralM1*fParameters[18]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2_10,   dDataIntegralM1*fParameters[19]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_10,  dDataIntegralM1*fParameters[20]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_01,  dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_001,   dDataIntegralM1*fParameters[36]);
-
-  fModelTotAdapM2->Add( hAdapInternalth232M2,     dDataIntegralM1*fParameters[22]);
-  fModelTotAdapM2->Add( hAdapInternalu238M2,      dDataIntegralM1*fParameters[23]);
-  fModelTotAdapM2->Add( hAdapInternalco60M2,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapM2->Add( hAdapInternalk40M2,       dDataIntegralM1*fParameters[25]);
-  fModelTotAdapM2->Add( hAdapExtPbbi210M2,        dDataIntegralM1*fParameters[26]);
-
-  fModelTotAdapM2->Add( hAdapPbRomco60M2,     dDataIntegralM1*fParameters[27]);
-  fModelTotAdapM2->Add( hAdapPbRomk40M2,      dDataIntegralM1*fParameters[28]);
-  fModelTotAdapM2->Add( hAdapPbRomth232M2,    dDataIntegralM1*fParameters[29]);
-  fModelTotAdapM2->Add( hAdapPbRomu238M2,     dDataIntegralM1*fParameters[30]);
-
-  fModelTotAdapM2->Add( hAdapOVCco60M2,     dDataIntegralM1*fParameters[31]);
-  fModelTotAdapM2->Add( hAdapOVCk40M2,      dDataIntegralM1*fParameters[32]);
-  fModelTotAdapM2->Add( hAdapOVCth232M2,    dDataIntegralM1*fParameters[33]);
-  fModelTotAdapM2->Add( hAdapOVCu238M2,     dDataIntegralM1*fParameters[34]);
-*/
-
+/////// Create model
 /////// M1
   fModelTotAdapM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[1]);
@@ -4842,30 +4731,36 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapTeO2po210M1,            dDataIntegralM1*fParameters[4]);
   fModelTotAdapM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[5]);
   fModelTotAdapM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[6]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxth232onlyM1_001,  dDataIntegralM1*fParameters[7]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[8]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[9]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[11]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_1,        dDataIntegralM1*fParameters[12]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_001,      dDataIntegralM1*fParameters[13]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxth232M1_001,      dDataIntegralM1*fParameters[7]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxth232onlyM1_001,  dDataIntegralM1*fParameters[8]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[9]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[10]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[11]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[12]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_1,        dDataIntegralM1*fParameters[13]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxpb210M1_001,      dDataIntegralM1*fParameters[14]);
 
-  fModelTotAdapM1->Add( hAdapCuBoxSxth232M1_10,   dDataIntegralM1*fParameters[14]);
-  fModelTotAdapM1->Add( hAdapCuBoxSxu238M1_10,    dDataIntegralM1*fParameters[15]);
-  fModelTotAdapM1->Add( hAdapCuBoxSxpb210M1_10,   dDataIntegralM1*fParameters[16]);
-  fModelTotAdapM1->Add( hAdapCuBoxSxpb210M1_01,   dDataIntegralM1*fParameters[17]);
-  fModelTotAdapM1->Add( hAdapCuBoxSxpb210M1_001,  dDataIntegralM1*fParameters[18]);
+  fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1_10,   dDataIntegralM1*fParameters[15]);
+  fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_10,    dDataIntegralM1*fParameters[16]);
+  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_10,   dDataIntegralM1*fParameters[17]);
+  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_01,   dDataIntegralM1*fParameters[18]);
+  fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_001,  dDataIntegralM1*fParameters[19]);
 
-  fModelTotAdapM1->Add( hAdapPbRomth232M1,     dDataIntegralM1*fParameters[19]);
-  fModelTotAdapM1->Add( hAdapPbRomu238M1,      dDataIntegralM1*fParameters[20]);
-  fModelTotAdapM1->Add( hAdapPbRomco60M1,      dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM1->Add( hAdapPbRomk40M1,       dDataIntegralM1*fParameters[22]);
+  fModelTotAdapM1->Add( hAdapPbRomth232M1,     dDataIntegralM1*fParameters[20]);
+  fModelTotAdapM1->Add( hAdapPbRomu238M1,      dDataIntegralM1*fParameters[21]);
+  fModelTotAdapM1->Add( hAdapPbRomco60M1,      dDataIntegralM1*fParameters[22]);
+  fModelTotAdapM1->Add( hAdapPbRomk40M1,       dDataIntegralM1*fParameters[23]);
 
-  fModelTotAdapM1->Add( hAdapOVCth232M1,     dDataIntegralM1*fParameters[23]);
-  fModelTotAdapM1->Add( hAdapOVCu238M1,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapM1->Add( hAdapOVCco60M1,      dDataIntegralM1*fParameters[25]);
-  fModelTotAdapM1->Add( hAdapOVCk40M1,       dDataIntegralM1*fParameters[26]);
-  fModelTotAdapM1->Add( hAdapExtPbbi210M1,   dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM1->Add( hAdapOVCth232M1,     dDataIntegralM1*fParameters[24]);
+  fModelTotAdapM1->Add( hAdapOVCu238M1,      dDataIntegralM1*fParameters[25]);
+  fModelTotAdapM1->Add( hAdapOVCco60M1,      dDataIntegralM1*fParameters[26]);
+  fModelTotAdapM1->Add( hAdapOVCk40M1,       dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM1->Add( hAdapExtPbbi210M1,   dDataIntegralM1*fParameters[28]);
+
+  fModelTotAdapM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[29]);
+  fModelTotAdapM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[30]);
+  fModelTotAdapM1->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[31]);
+  fModelTotAdapM1->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[32]);
 
 /////// M2
   fModelTotAdapM2->Add( hAdapTeO20nuM2,              dDataIntegralM1*fParameters[0]);
@@ -4875,34 +4770,40 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapTeO2po210M2,            dDataIntegralM1*fParameters[4]);
   fModelTotAdapM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM1*fParameters[5]);
   fModelTotAdapM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM1*fParameters[6]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxth232onlyM2_001,  dDataIntegralM1*fParameters[7]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM1*fParameters[8]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM1*fParameters[9]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM1*fParameters[11]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_1,        dDataIntegralM1*fParameters[12]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_001,      dDataIntegralM1*fParameters[13]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxth232M2_001,      dDataIntegralM1*fParameters[7]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxth232onlyM2_001,  dDataIntegralM1*fParameters[8]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM1*fParameters[9]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM1*fParameters[10]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM1*fParameters[11]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM1*fParameters[12]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_1,        dDataIntegralM1*fParameters[13]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxpb210M2_001,      dDataIntegralM1*fParameters[14]);
 
-  fModelTotAdapM2->Add( hAdapCuBoxSxth232M2_10,   dDataIntegralM1*fParameters[14]);
-  fModelTotAdapM2->Add( hAdapCuBoxSxu238M2_10,    dDataIntegralM1*fParameters[15]);
-  fModelTotAdapM2->Add( hAdapCuBoxSxpb210M2_10,   dDataIntegralM1*fParameters[16]);
-  fModelTotAdapM2->Add( hAdapCuBoxSxpb210M2_01,   dDataIntegralM1*fParameters[17]);
-  fModelTotAdapM2->Add( hAdapCuBoxSxpb210M2_001,  dDataIntegralM1*fParameters[18]);
+  fModelTotAdapM2->Add( hAdapCuBox_CuFrameth232M2_10,   dDataIntegralM1*fParameters[15]);
+  fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2_10,    dDataIntegralM1*fParameters[16]);
+  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_10,   dDataIntegralM1*fParameters[17]);
+  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_01,   dDataIntegralM1*fParameters[18]);
+  fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_001,  dDataIntegralM1*fParameters[19]);
 
-  fModelTotAdapM2->Add( hAdapPbRomth232M2,     dDataIntegralM1*fParameters[19]);
-  fModelTotAdapM2->Add( hAdapPbRomu238M2,      dDataIntegralM1*fParameters[20]);
-  fModelTotAdapM2->Add( hAdapPbRomco60M2,      dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM2->Add( hAdapPbRomk40M2,       dDataIntegralM1*fParameters[22]);
+  fModelTotAdapM2->Add( hAdapPbRomth232M2,     dDataIntegralM1*fParameters[20]);
+  fModelTotAdapM2->Add( hAdapPbRomu238M2,      dDataIntegralM1*fParameters[21]);
+  fModelTotAdapM2->Add( hAdapPbRomco60M2,      dDataIntegralM1*fParameters[22]);
+  fModelTotAdapM2->Add( hAdapPbRomk40M2,       dDataIntegralM1*fParameters[23]);
 
-  fModelTotAdapM2->Add( hAdapOVCth232M2,     dDataIntegralM1*fParameters[23]);
-  fModelTotAdapM2->Add( hAdapOVCu238M2,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapM2->Add( hAdapOVCco60M2,      dDataIntegralM1*fParameters[25]);
-  fModelTotAdapM2->Add( hAdapOVCk40M2,       dDataIntegralM1*fParameters[26]);
-  fModelTotAdapM2->Add( hAdapExtPbbi210M2,   dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM2->Add( hAdapOVCth232M2,     dDataIntegralM1*fParameters[24]);
+  fModelTotAdapM2->Add( hAdapOVCu238M2,      dDataIntegralM1*fParameters[25]);
+  fModelTotAdapM2->Add( hAdapOVCco60M2,      dDataIntegralM1*fParameters[26]);
+  fModelTotAdapM2->Add( hAdapOVCk40M2,       dDataIntegralM1*fParameters[27]);
+  fModelTotAdapM2->Add( hAdapExtPbbi210M2,   dDataIntegralM1*fParameters[28]);
 
+  fModelTotAdapM2->Add( hAdapInternalth232M2,     dDataIntegralM1*fParameters[29]);
+  fModelTotAdapM2->Add( hAdapInternalu238M2,      dDataIntegralM1*fParameters[30]);
+  fModelTotAdapM2->Add( hAdapInternalco60M2,      dDataIntegralM1*fParameters[31]);
+  fModelTotAdapM2->Add( hAdapInternalk40M2,       dDataIntegralM1*fParameters[32]);
 
 }
   
+// This method sets up minuit and does the fit
 bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 { 
   // Reset initial parameter/error values
@@ -4910,151 +4811,101 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   gStyle->SetOptStat(0);
   gStyle->SetOptFit();
-   // This method actually sets up minuit and does the fit
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
 
-  // Set Initial Parameters
-  // define the parameters and set the ranges and initial guesses see ROOTs TMinuit documentation
-  /*
+  // No initial Parameters
+  // minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0., 1.0);
+  // minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(5, "TeO2 th232 only", 0., 1E-7, 0, 1.0 );
+  // minuit->DefineParameter(6, "TeO2 th230 only", 0., 1E-7, 0, 1.0 );
+  // minuit->DefineParameter(7, "TeO2 Sx th232 0.01", 0, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(13, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(14, "TeO2 Sx pb210 0.01", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(15, "CuBoxSx th232 10", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(16, "CuBoxSx u238 10 ", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(17, "CuBoxSx pb210 10", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(18, "CuBoxSx pb210 0.1", 0., 1E-7, 0, 1.);
+  // minuit->DefineParameter(19, "CuBoxSx pb210 0.01", 0., 1E-7, 0, 1.0);
+
+  // minuit->DefineParameter(20, "PbRom th232",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(21, "PbRom u238",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(22, "PbRom co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(23, "PbRom k40",  0., 1E-7, 0., 1.0);
+
+  // minuit->DefineParameter(24, "OVC th232",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(25, "OVC u238",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(26, "OVC co60",  0., 1E-7, 0., 1.0);    
+  // minuit->DefineParameter(27, "OVC k40",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(28, "External Lead bi210", 0., 1E-7, 0, 1.);
+
+  // minuit->DefineParameter(29, "600mK th232",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(30, "600mK u238",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(31, "600mK co60",  0., 1E-7, 0., 1.0);
+  // minuit->DefineParameter(32, "600mK k40",  0., 1E-7, 0., 1.0);
+
+
+  // With Initial Values
   minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0., 1.0);
   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0., 1.0);
   minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0., 1.0);
   minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0., 1.0);
   minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(5, "TeO2 th232 only", 0., 1E-7, 0, 1.0 );
-  minuit->DefineParameter(6, "TeO2 ra228 to pb208", 0., 1E-7, 0, 1.0 );
-  minuit->DefineParameter(7, "TeO2 th230 only", 0., 1E-7, 0, 1.0 );
+  minuit->DefineParameter(5, "TeO2 th232 only", 0.00034788, 1E-7, 0, 1.0 );
+  minuit->DefineParameter(6, "TeO2 th230 only", 0.00035562, 1E-7, 0, 1.0 );
+  minuit->DefineParameter(7, "TeO2 Sx th232 0.01", 0.00205386, 1E-7, 0, 1.0);
   minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(13, "TeO2 Sx pb210 0.01", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0.00305308, 1E-7, 0, 1.0);
+  minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0.00205106, 1E-7, 0, 1.0);
+  minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0.00094459, 1E-7, 0, 1.0);
+  minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0.00367568, 1E-7, 0, 1.0);
+  minuit->DefineParameter(13, "TeO2 Sx pb210 1", 0.00654398, 1E-7, 0, 1.0);
+  minuit->DefineParameter(14, "TeO2 Sx pb210 0.01", 0.05048648, 1E-7, 0, 1.0);
+  minuit->DefineParameter(15, "CuBox + CuFrame Sx th232 10", 0.01754123, 1E-7, 0, 1.);
+  minuit->DefineParameter(16, "CuBox + CuFrame Sx u238 10 ", 0.00105235, 1E-7, 0, 1.);
+  minuit->DefineParameter(17, "CuBox + CuFrame Sx pb210 10", 0.00586391, 1E-7, 0, 1.);
+  minuit->DefineParameter(18, "CuBox + CuFrame Sx pb210 0.1", 0.00490848, 1E-7, 0, 1.);
+  minuit->DefineParameter(19, "CuBox + CuFrame Sx pb210 0.01", 0.02207615, 1E-7, 0, 1.0);
 
+  minuit->DefineParameter(20, "PbRom th232",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(21, "PbRom u238",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(22, "PbRom co60",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(23, "PbRom k40",  0., 1E-7, 0., 1.0);
 
-  minuit->DefineParameter(14, "CuBox + CuFrame th232", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(15, "CuBox + CuFrame u238", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(16, "CuBox + CuFrame co60", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(17, "CuBox + CuFrame k40", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(18, "CuBox + CuFrame Sx th232 10", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(19, "CuBox + CuFrame Sx u238 10 ", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(20, "CuBox + CuFrame Sx pb210 10", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(21, "CuBox + CuFrame Sx pb210 0.1", 0., 1E-7, 0, 1.);
+  minuit->DefineParameter(24, "OVC th232",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(25, "OVC u238",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(26, "OVC co60",  0., 1E-7, 0., 1.0);    
+  minuit->DefineParameter(27, "OVC k40",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(28, "External Lead bi210", 0., 1E-7, 0, 1.);
 
-  minuit->DefineParameter(22, "Internal Shields th232", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(23, "Internal Shields u238", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(24, "Internal Shields co60", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(25, "Internal Shields k40", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(26, "External Lead bi210", 0., 1E-7, 0, 1.0);
-
-  minuit->DefineParameter(27, "PbRom co60",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(28, "PbRom k40",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(29, "PbRom th232",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(30, "PbRom u238",  0., 1E-7, 0., 1.0);
-
-  minuit->DefineParameter(31, "OVC co60",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(32, "OVC k40",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(33, "OVC th232",  0., 1E-7, 0., 1.0);    
-  minuit->DefineParameter(34, "OVC u238",  0., 1E-7, 0., 1.0);
-
-  minuit->DefineParameter(35, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(36, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.);
-*/
+  minuit->DefineParameter(29, "Internal Shields th232",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(30, "Internal Shields u238",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(31, "Internal Shields co60",  0., 1E-7, 0., 1.0);
+  minuit->DefineParameter(32, "Internal Shields k40",  0., 1E-7, 0., 1.0);
 
 //////////////////////////////////////
 
-   // Fix parameters here
+   // Uncommend to fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
    // minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
    // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
    // minuit->FixParameter(5); // TeO2 th232 only
-   // minuit->FixParameter(6); // TeO2 ra228 to pb208
-   // minuit->FixParameter(7); // TeO2 th230 only
-   // minuit->FixParameter(8); // TeO2 Sx th232 only 0.01
-   // minuit->FixParameter(9); // TeO2 Sx ra228 to pb208 0.01
-   // minuit->FixParameter(10); // TeO2 Sx u238 to th230 0.01
-   // minuit->FixParameter(11); // TeO2 Sx th230 only 0.01
-   // minuit->FixParameter(12); // TeO2 Sx ra226 to pb210 0.01
-   // minuit->FixParameter(13); // TeO2 Sx pb210 0.001
-
-   // minuit->FixParameter(14); // CuBox + CuFrame th232
-   // minuit->FixParameter(15); // CuBox + CuFrame u238
-   // minuit->FixParameter(16); // CuBox + CuFrame co60
-   // minuit->FixParameter(17); // CuBox + CuFrame k40
-   // minuit->FixParameter(18); // CuBox + CuFrame Sx th232 10
-   // minuit->FixParameter(19); // CuBox + CuFrame Sx u238 10
-   // minuit->FixParameter(20); // CuBox + CuFrame Sx pb210 10
-   // minuit->FixParameter(21); // CuBox + CuFrame Sx pb210 0.1
-
-   // minuit->FixParameter(22); // Internal Shields th232
-   // minuit->FixParameter(23); // Internal Shields u238
-   // minuit->FixParameter(24); // Internal Shields co60
-   // minuit->FixParameter(25); // Internal Shields k40
-   // minuit->FixParameter(26); // External Lead bi210 
-
-   // minuit->FixParameter(27); // RLead co60
-   // minuit->FixParameter(28); // RLead k40
-   // minuit->FixParameter(29); // RLead th232
-   // minuit->FixParameter(30); // RLead u238
-  
-   // minuit->FixParameter(31); // OVC co60
-   // minuit->FixParameter(32); // OVC k40
-   // minuit->FixParameter(33); // OVC th232
-   // minuit->FixParameter(34); // OVC u238
-  // minuit->FixParameter(35); // TeO2 Sx pb210 1
-  // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 0.01
-    // 
-
-
-  // Other (with smeared)
-  minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0., 1.0);
-  minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(5, "TeO2 th232 only", 0., 1E-7, 0, 1.0 );
-  minuit->DefineParameter(6, "TeO2 th230 only", 0., 1E-7, 0, 1.0 );
-  minuit->DefineParameter(7, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(8, "TeO2 Sx ra228 to pb208 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(9, "TeO2 Sx u238 to th230 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(10, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(11, "TeO2 Sx ra226 to pb210 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(12, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(13, "TeO2 Sx pb210 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(14, "CuBoxSx th232 10", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(15, "CuBoxSx u238 10 ", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(16, "CuBoxSx pb210 10", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(17, "CuBoxSx pb210 0.1", 0., 1E-7, 0, 1.);
-  minuit->DefineParameter(18, "CuBoxSx pb210 0.01", 0., 1E-7, 0, 1.0);
-
-  minuit->DefineParameter(19, "PbRom th232",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(20, "PbRom u238",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(21, "PbRom co60",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(22, "PbRom k40",  0., 1E-7, 0., 1.0);
-
-  minuit->DefineParameter(23, "OVC th232",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(24, "OVC u238",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(25, "OVC co60",  0., 1E-7, 0., 1.0);    
-  minuit->DefineParameter(26, "OVC k40",  0., 1E-7, 0., 1.0);
-  minuit->DefineParameter(27, "External Lead bi210", 0., 1E-7, 0, 1.);
-
-//////////////////////////////////////
-
-   // Fix parameters here
-   // minuit->FixParameter(0); // TeO2 0nu
-   // minuit->FixParameter(1); // TeO2 2nu
-   // minuit->FixParameter(2); // TeO2 co60
-   // minuit->FixParameter(3); // TeO2 k40
-   // minuit->FixParameter(4); // TeO2 po210
-   // minuit->FixParameter(5); // TeO2 th232 only
-   // minuit->FixParameter(7); // TeO2 th230 only
+   // minuit->FixParameter(6); // TeO2 th230 only
+   // minuit->FixParameter(7); // TeO2 Sx th232 0.01  
    // minuit->FixParameter(8); // TeO2 Sx th232 only 0.01
    // minuit->FixParameter(9); // TeO2 Sx ra228 to pb208 0.01
    // minuit->FixParameter(10); // TeO2 Sx u238 to th230 0.01
@@ -5067,22 +4918,27 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    // minuit->FixParameter(16); // CuBox Sx u238 10
    // minuit->FixParameter(17); // CuBox Sx pb210 10
    // minuit->FixParameter(18); // CuBox Sx pb210 0.1
+   // minuit->FixParameter(19); // CuBox Sx pb210 0.01
 
-   // minuit->FixParameter(19); // PbRom th232
-   // minuit->FixParameter(20); // PbRom u238
-   // minuit->FixParameter(21); // PbRom co60
-   // minuit->FixParameter(22); // PbRom k40
+   // minuit->FixParameter(20); // PbRom th232
+   // minuit->FixParameter(21); // PbRom u238
+   // minuit->FixParameter(22); // PbRom co60
+   // minuit->FixParameter(23); // PbRom k40
 
-   // minuit->FixParameter(23); // OVC th232
-   // minuit->FixParameter(24); // OVC u238
-   // minuit->FixParameter(25); // OVC co60
-   // minuit->FixParameter(26); // OVC k40
-   // minuit->FixParameter(27); // External Lead bi210 
+   // minuit->FixParameter(24); // OVC th232
+   // minuit->FixParameter(25); // OVC u238
+   // minuit->FixParameter(26); // OVC co60
+   // minuit->FixParameter(27); // OVC k40
+   // minuit->FixParameter(28); // External Lead bi210 
 
+   // minuit->FixParameter(29); // 600mK th232
+   // minuit->FixParameter(30); // 600mK u238
+   // minuit->FixParameter(31); // 600mK co60
+   // minuit->FixParameter(32); // 600mK k40
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
    dNumFreeParameters = minuit->GetNumPars() - minuit->GetNumFixedPars();
-   //Tell minuit what external function to use 
+   // Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
    int status = minuit->Command("MINImize 500000 0.1"); // Command that actually does the minimization
    
@@ -5100,101 +4956,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
   cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
 
-
-  // 
-  // M1 Parameters
-/*
-  fModelTotAdapNDBDM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
-  fModelTotAdap2NDBDM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[1]);
-  fModelTotAdapcoM1->Add( hAdapTeO2co60M1,             dDataIntegralM1*fParameters[2]);
-  fModelTotAdapkM1->Add( hAdapTeO2k40M1,              dDataIntegralM1*fParameters[3]);
-  fModelTotAdapSpoM1->Add( hAdapTeO2po210M1,            dDataIntegralM1*fParameters[4]);
-  fModelTotAdapthM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[5]);
-  fModelTotAdapthM1->Add( hAdapTeO2ra228pb208M1,       dDataIntegralM1*fParameters[6]);
-  fModelTotAdapuM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[7]);
-  fModelTotAdapthM1->Add( hAdapTeO2Sxth232M1_001,      dDataIntegralM1*fParameters[8]);
-  fModelTotAdapthM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[9]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[11]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[12]);
-  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_001,     dDataIntegralM1*fParameters[13]);
-  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_1,     dDataIntegralM1*fParameters[35]);
-
-
-  fModelTotAdapthM1->Add( hAdapCuBox_CuFrameth232M1,     dDataIntegralM1*fParameters[14]);
-  fModelTotAdapuM1->Add( hAdapCuBox_CuFrameu238M1,      dDataIntegralM1*fParameters[15]);
-  fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,      dDataIntegralM1*fParameters[16]);
-  fModelTotAdapkM1->Add( hAdapCuBox_CuFramek40M1,       dDataIntegralM1*fParameters[17]);
-  fModelTotAdapthM1->Add( hAdapCuBox_CuFrameth232M1_10,  dDataIntegralM1*fParameters[18]);
-  fModelTotAdapuM1->Add( hAdapCuBox_CuFrameu238M1_10,   dDataIntegralM1*fParameters[19]);
-  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_10,  dDataIntegralM1*fParameters[20]);
-  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_01,  dDataIntegralM1*fParameters[21]);
-  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_001,  dDataIntegralM1*fParameters[36]);
-
-  fModelTotAdapthM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[22]);
-  fModelTotAdapuM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[23]);
-  fModelTotAdapcoM1->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[24]);
-  fModelTotAdapkM1->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[25]);
-  fModelTotAdapbiM1->Add( hAdapExtPbbi210M1,        dDataIntegralM1*fParameters[26]);
-
-  fModelTotAdapcoM1->Add( hAdapPbRomco60M1,     dDataIntegralM1*fParameters[27]);
-  fModelTotAdapkM1->Add( hAdapPbRomk40M1,      dDataIntegralM1*fParameters[28]);
-  fModelTotAdapthM1->Add( hAdapPbRomth232M1,    dDataIntegralM1*fParameters[29]);
-  fModelTotAdapuM1->Add( hAdapPbRomu238M1,     dDataIntegralM1*fParameters[30]);
-
-  fModelTotAdapcoM1->Add( hAdapOVCco60M1,     dDataIntegralM1*fParameters[31]);
-  fModelTotAdapkM1->Add( hAdapOVCk40M1,      dDataIntegralM1*fParameters[32]);
-  fModelTotAdapthM1->Add( hAdapOVCth232M1,    dDataIntegralM1*fParameters[33]);
-  fModelTotAdapuM1->Add( hAdapOVCu238M1,     dDataIntegralM1*fParameters[34]);
-
-
-  // M2 Parameters
-  fModelTotAdapNDBDM2->Add( hAdapTeO20nuM2,              dDataIntegralM2*fParameters[0]);
-  fModelTotAdap2NDBDM2->Add( hAdapTeO22nuM2,              dDataIntegralM2*fParameters[1]);
-  fModelTotAdapcoM2->Add( hAdapTeO2co60M2,             dDataIntegralM2*fParameters[2]);
-  fModelTotAdapkM2->Add( hAdapTeO2k40M2,              dDataIntegralM2*fParameters[3]);
-  fModelTotAdapSpoM2->Add( hAdapTeO2po210M2,            dDataIntegralM2*fParameters[4]);
-  fModelTotAdapthM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM2*fParameters[5]);
-  fModelTotAdapthM2->Add( hAdapTeO2ra228pb208M2,       dDataIntegralM2*fParameters[6]);
-  fModelTotAdapuM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM2*fParameters[7]);
-  fModelTotAdapthM2->Add( hAdapTeO2Sxth232M2_001,      dDataIntegralM2*fParameters[8]);
-  fModelTotAdapthM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM2*fParameters[9]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM2*fParameters[10]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM2*fParameters[11]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM2*fParameters[12]);
-  // fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_0001,     dDataIntegralM2*fParameters[13]);
-  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_001,     dDataIntegralM2*fParameters[13]);
-  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_1,     dDataIntegralM2*fParameters[35]);
-
-  fModelTotAdapthM2->Add( hAdapCuBox_CuFrameth232M2,     dDataIntegralM2*fParameters[14]);
-  fModelTotAdapuM2->Add( hAdapCuBox_CuFrameu238M2,      dDataIntegralM2*fParameters[15]);
-  fModelTotAdapcoM2->Add( hAdapCuBox_CuFrameco60M2,      dDataIntegralM2*fParameters[16]);
-  fModelTotAdapkM2->Add( hAdapCuBox_CuFramek40M2,       dDataIntegralM2*fParameters[17]);
-  fModelTotAdapthM2->Add( hAdapCuBox_CuFrameth232M2_10,  dDataIntegralM2*fParameters[18]);
-  fModelTotAdapuM2->Add( hAdapCuBox_CuFrameu238M2_10,   dDataIntegralM2*fParameters[19]);
-  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_10,  dDataIntegralM2*fParameters[20]);
-  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_01,  dDataIntegralM2*fParameters[21]);
-  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_001,  dDataIntegralM2*fParameters[36]);
-  // fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_001,  dDataIntegralM2*fParameters[37]);
-
-  fModelTotAdapthM2->Add( hAdapInternalth232M2,     dDataIntegralM2*fParameters[22]);
-  fModelTotAdapuM2->Add( hAdapInternalu238M2,      dDataIntegralM2*fParameters[23]);
-  fModelTotAdapcoM2->Add( hAdapInternalco60M2,      dDataIntegralM2*fParameters[24]);
-  fModelTotAdapkM2->Add( hAdapInternalk40M2,       dDataIntegralM2*fParameters[25]);
-  fModelTotAdapbiM2->Add( hAdapExtPbbi210M2,        dDataIntegralM2*fParameters[26]);
-
-  fModelTotAdapcoM2->Add( hAdapPbRomco60M2,     dDataIntegralM2*fParameters[27]);
-  fModelTotAdapkM2->Add( hAdapPbRomk40M2,      dDataIntegralM2*fParameters[28]);
-  fModelTotAdapthM2->Add( hAdapPbRomth232M2,    dDataIntegralM2*fParameters[29]);
-  fModelTotAdapuM2->Add( hAdapPbRomu238M2,     dDataIntegralM2*fParameters[30]);
-
-  fModelTotAdapcoM2->Add( hAdapOVCco60M2,     dDataIntegralM2*fParameters[31]);
-  fModelTotAdapkM2->Add( hAdapOVCk40M2,      dDataIntegralM2*fParameters[32]);
-  fModelTotAdapthM2->Add( hAdapOVCth232M2,    dDataIntegralM2*fParameters[33]);
-  fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[34]);
-*/
-
-
 // M1
   fModelTotAdapNDBDM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
   fModelTotAdap2NDBDM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[1]);
@@ -5203,30 +4964,36 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapSpoM1->Add( hAdapTeO2po210M1,            dDataIntegralM1*fParameters[4]);
   fModelTotAdapthM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[5]);
   fModelTotAdapuM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[6]);
-  fModelTotAdapthM1->Add( hAdapTeO2Sxth232onlyM1_001,   dDataIntegralM1*fParameters[7]);
-  fModelTotAdapthM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[8]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[9]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[10]);
-  fModelTotAdapuM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[11]);
-  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_1,     dDataIntegralM1*fParameters[12]);
-  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_001,     dDataIntegralM1*fParameters[13]);
+  fModelTotAdapthM1->Add( hAdapTeO2Sxth232M1_001,   dDataIntegralM1*fParameters[7]);
+  fModelTotAdapthM1->Add( hAdapTeO2Sxth232onlyM1_001,   dDataIntegralM1*fParameters[8]);
+  fModelTotAdapthM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[9]);
+  fModelTotAdapuM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[10]);
+  fModelTotAdapuM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[11]);
+  fModelTotAdapuM1->Add( hAdapTeO2Sxra226pb210M1_001, dDataIntegralM1*fParameters[12]);
+  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_1,     dDataIntegralM1*fParameters[13]);
+  fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_001,     dDataIntegralM1*fParameters[14]);
 
-  fModelTotAdapthM1->Add( hAdapCuBoxSxth232M1_10,  dDataIntegralM1*fParameters[14]);
-  fModelTotAdapuM1->Add( hAdapCuBoxSxu238M1_10,   dDataIntegralM1*fParameters[15]);
-  fModelTotAdapSpbM1->Add( hAdapCuBoxSxpb210M1_10,  dDataIntegralM1*fParameters[16]);
-  fModelTotAdapSpbM1->Add( hAdapCuBoxSxpb210M1_01,  dDataIntegralM1*fParameters[17]);
-  fModelTotAdapSpbM1->Add( hAdapCuBoxSxpb210M1_001,  dDataIntegralM1*fParameters[18]);
+  fModelTotAdapthM1->Add( hAdapCuBox_CuFrameth232M1_10,  dDataIntegralM1*fParameters[15]);
+  fModelTotAdapuM1->Add( hAdapCuBox_CuFrameu238M1_10,   dDataIntegralM1*fParameters[16]);
+  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_10,  dDataIntegralM1*fParameters[17]);
+  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_01,  dDataIntegralM1*fParameters[18]);
+  fModelTotAdapSpbM1->Add( hAdapCuBox_CuFramepb210M1_001,  dDataIntegralM1*fParameters[19]);
 
-  fModelTotAdapthM1->Add( hAdapPbRomth232M1,    dDataIntegralM1*fParameters[19]);
-  fModelTotAdapuM1->Add( hAdapPbRomu238M1,     dDataIntegralM1*fParameters[20]);
-  fModelTotAdapcoM1->Add( hAdapPbRomco60M1,     dDataIntegralM1*fParameters[21]);
-  fModelTotAdapkM1->Add( hAdapPbRomk40M1,      dDataIntegralM1*fParameters[22]);
+  fModelTotAdapthM1->Add( hAdapPbRomth232M1,    dDataIntegralM1*fParameters[20]);
+  fModelTotAdapuM1->Add( hAdapPbRomu238M1,     dDataIntegralM1*fParameters[21]);
+  fModelTotAdapcoM1->Add( hAdapPbRomco60M1,     dDataIntegralM1*fParameters[22]);
+  fModelTotAdapkM1->Add( hAdapPbRomk40M1,      dDataIntegralM1*fParameters[23]);
 
-  fModelTotAdapthM1->Add( hAdapOVCth232M1,    dDataIntegralM1*fParameters[23]);
-  fModelTotAdapuM1->Add( hAdapOVCu238M1,     dDataIntegralM1*fParameters[24]);
-  fModelTotAdapcoM1->Add( hAdapOVCco60M1,     dDataIntegralM1*fParameters[25]);
-  fModelTotAdapkM1->Add( hAdapOVCk40M1,      dDataIntegralM1*fParameters[26]);
-  fModelTotAdapbiM1->Add( hAdapExtPbbi210M1,        dDataIntegralM1*fParameters[27]);
+  fModelTotAdapthM1->Add( hAdapOVCth232M1,    dDataIntegralM1*fParameters[24]);
+  fModelTotAdapuM1->Add( hAdapOVCu238M1,     dDataIntegralM1*fParameters[25]);
+  fModelTotAdapcoM1->Add( hAdapOVCco60M1,     dDataIntegralM1*fParameters[26]);
+  fModelTotAdapkM1->Add( hAdapOVCk40M1,      dDataIntegralM1*fParameters[27]);
+  fModelTotAdapbiM1->Add( hAdapExtPbbi210M1,        dDataIntegralM1*fParameters[28]);
+
+  fModelTotAdapthM1->Add( hAdapInternalth232M1,    dDataIntegralM1*fParameters[29]);
+  fModelTotAdapuM1->Add( hAdapInternalu238M1,     dDataIntegralM1*fParameters[30]);
+  fModelTotAdapcoM1->Add( hAdapInternalco60M1,     dDataIntegralM1*fParameters[31]);
+  fModelTotAdapkM1->Add( hAdapInternalk40M1,      dDataIntegralM1*fParameters[32]);
 
 
 // M2
@@ -5237,30 +5004,36 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapSpoM2->Add( hAdapTeO2po210M2,            dDataIntegralM2*fParameters[4]);
   fModelTotAdapthM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM2*fParameters[5]);
   fModelTotAdapuM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM2*fParameters[6]);
-  fModelTotAdapthM2->Add( hAdapTeO2Sxth232onlyM2_001,   dDataIntegralM2*fParameters[7]);
-  fModelTotAdapthM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM2*fParameters[8]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM2*fParameters[9]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM2*fParameters[10]);
-  fModelTotAdapuM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM2*fParameters[11]);
-  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_1,     dDataIntegralM2*fParameters[12]);
-  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_001,     dDataIntegralM2*fParameters[13]);
+  fModelTotAdapthM2->Add( hAdapTeO2Sxth232M2_001,   dDataIntegralM2*fParameters[7]);
+  fModelTotAdapthM2->Add( hAdapTeO2Sxth232onlyM2_001,   dDataIntegralM2*fParameters[8]);
+  fModelTotAdapthM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM2*fParameters[9]);
+  fModelTotAdapuM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM2*fParameters[10]);
+  fModelTotAdapuM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM2*fParameters[11]);
+  fModelTotAdapuM2->Add( hAdapTeO2Sxra226pb210M2_001, dDataIntegralM2*fParameters[12]);
+  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_1,     dDataIntegralM2*fParameters[13]);
+  fModelTotAdapSpbM2->Add( hAdapTeO2Sxpb210M2_001,     dDataIntegralM2*fParameters[14]);
 
-  fModelTotAdapthM2->Add( hAdapCuBoxSxth232M2_10,  dDataIntegralM2*fParameters[14]);
-  fModelTotAdapuM2->Add( hAdapCuBoxSxu238M2_10,   dDataIntegralM2*fParameters[15]);
-  fModelTotAdapSpbM2->Add( hAdapCuBoxSxpb210M2_10,  dDataIntegralM2*fParameters[16]);
-  fModelTotAdapSpbM2->Add( hAdapCuBoxSxpb210M2_01,  dDataIntegralM2*fParameters[17]);
-  fModelTotAdapSpbM2->Add( hAdapCuBoxSxpb210M2_001,  dDataIntegralM2*fParameters[18]);
+  fModelTotAdapthM2->Add( hAdapCuBox_CuFrameth232M2_10,  dDataIntegralM2*fParameters[15]);
+  fModelTotAdapuM2->Add( hAdapCuBox_CuFrameu238M2_10,   dDataIntegralM2*fParameters[16]);
+  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_10,  dDataIntegralM2*fParameters[17]);
+  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_01,  dDataIntegralM2*fParameters[18]);
+  fModelTotAdapSpbM2->Add( hAdapCuBox_CuFramepb210M2_001,  dDataIntegralM2*fParameters[19]);
 
-  fModelTotAdapthM2->Add( hAdapPbRomth232M2,    dDataIntegralM2*fParameters[19]);
-  fModelTotAdapuM2->Add( hAdapPbRomu238M2,     dDataIntegralM2*fParameters[20]);
-  fModelTotAdapcoM2->Add( hAdapPbRomco60M2,     dDataIntegralM2*fParameters[21]);
-  fModelTotAdapkM2->Add( hAdapPbRomk40M2,      dDataIntegralM2*fParameters[22]);
+  fModelTotAdapthM2->Add( hAdapPbRomth232M2,    dDataIntegralM2*fParameters[20]);
+  fModelTotAdapuM2->Add( hAdapPbRomu238M2,     dDataIntegralM2*fParameters[21]);
+  fModelTotAdapcoM2->Add( hAdapPbRomco60M2,     dDataIntegralM2*fParameters[22]);
+  fModelTotAdapkM2->Add( hAdapPbRomk40M2,      dDataIntegralM2*fParameters[23]);
 
-  fModelTotAdapthM2->Add( hAdapOVCth232M2,    dDataIntegralM2*fParameters[23]);
-  fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[24]);
-  fModelTotAdapcoM2->Add( hAdapOVCco60M2,     dDataIntegralM2*fParameters[25]);
-  fModelTotAdapkM2->Add( hAdapOVCk40M2,      dDataIntegralM2*fParameters[26]);
-  fModelTotAdapbiM2->Add( hAdapExtPbbi210M2,        dDataIntegralM2*fParameters[27]);
+  fModelTotAdapthM2->Add( hAdapOVCth232M2,    dDataIntegralM2*fParameters[24]);
+  fModelTotAdapuM2->Add( hAdapOVCu238M2,     dDataIntegralM2*fParameters[25]);
+  fModelTotAdapcoM2->Add( hAdapOVCco60M2,     dDataIntegralM2*fParameters[26]);
+  fModelTotAdapkM2->Add( hAdapOVCk40M2,      dDataIntegralM2*fParameters[27]);
+  fModelTotAdapbiM2->Add( hAdapExtPbbi210M2,        dDataIntegralM2*fParameters[28]);
+
+  fModelTotAdapthM2->Add( hAdapInternalth232M2,    dDataIntegralM2*fParameters[29]);
+  fModelTotAdapuM2->Add( hAdapInternalu238M2,     dDataIntegralM2*fParameters[30]);
+  fModelTotAdapcoM2->Add( hAdapInternalco60M2,     dDataIntegralM2*fParameters[31]);
+  fModelTotAdapkM2->Add( hAdapInternalk40M2,      dDataIntegralM2*fParameters[32]);
 
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
@@ -5414,85 +5187,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   legfit2->Draw();
 
-
-
-/*
-  TCanvas *cadap2sum = new TCanvas("cadap2sum", "cadap2sum", 1200, 800);
-  cadap2sum->SetLogy();
-
-  ///// Draw Data M2Sum
-  fAdapDataHistoM2Sum->SetLineColor(1);
-  fAdapDataHistoM2Sum->SetLineWidth(2);
-  fAdapDataHistoM2Sum->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM2Sum->GetYaxis()->SetTitle("Counts/Bin");
-  // fAdapDataHistoM2Sum->SetMaximum(9000);
-  // fAdapDataHistoM2Sum->GetXaxis()->SetRange(1, fAdapDataHistoM2Sum->FindBin(3000));
-  fAdapDataHistoM2Sum->Draw("E");
-
-  
-  fModelTotAdapM2Sum->SetLineColor(2);
-  fModelTotAdapM2Sum->SetLineWidth(1);
-  fModelTotAdapM2Sum->Draw("SAME");
-
-  fModelTotAdapthM2Sum->SetLineColor(3);
-  fModelTotAdapthM2Sum->SetLineStyle(2);
-  fModelTotAdapuM2Sum->SetLineColor(4);
-  fModelTotAdapuM2Sum->SetLineStyle(2);
-  fModelTotAdapkM2Sum->SetLineColor(6);
-  fModelTotAdapkM2Sum->SetLineStyle(2);
-  fModelTotAdapcoM2Sum->SetLineColor(7);
-  fModelTotAdapcoM2Sum->SetLineStyle(2);
-  fModelTotAdapNDBDM2Sum->SetLineColor(42);
-  fModelTotAdapNDBDM2Sum->SetLineStyle(2);
-  fModelTotAdap2NDBDM2Sum->SetLineColor(46);
-  fModelTotAdap2NDBDM2Sum->SetLineStyle(2);
-  fModelTotAdapbiM2Sum->SetLineColor(5);
-  fModelTotAdapbiM2Sum->SetLineStyle(2);
-  fModelTotAdapmnM2Sum->SetLineColor(40);
-  fModelTotAdapmnM2Sum->SetLineStyle(2);
-
-  // fTotCorrection->SetLineStyle(2);
-  // fTotCorrection->SetLineColor(38);
-
-
-  fModelTotAdapSpoM2Sum->SetLineStyle(2);
-  fModelTotAdapSpoM2Sum->SetLineColor(44);
-
-  fModelTotAdapSpbM2Sum->SetLineStyle(2);
-  fModelTotAdapSpbM2Sum->SetLineColor(8);
-
-  // fModelTotAdapteo2M2Sum->SetLineStyle(2);
-  // fModelTotAdapteo2M2Sum->SetLineColor(41);
-
-  fModelTotAdapthM2Sum->Draw("SAME");
-  fModelTotAdapuM2Sum->Draw("SAME");
-  fModelTotAdapkM2Sum->Draw("SAME");
-  fModelTotAdapcoM2Sum->Draw("SAME");
-  fModelTotAdapNDBDM2Sum->Draw("SAME");
-  fModelTotAdap2NDBDM2Sum->Draw("SAME");
-  fModelTotAdapbiM2Sum->Draw("SAME");    
-  // fModelTotAdapmnM2Sum->Draw("SAME"); 
-  fModelTotAdapSpbM2Sum->Draw("SAME");
-  fModelTotAdapSpoM2Sum->Draw("SAME");
-  fModelTotAdappbM2Sum->Draw("SAME");
-  // fModelTotAdapteo2M2Sum->Draw("SAME");
-
-  TLegend *legfit2sum = new TLegend(0.8,0.8,0.97,0.97);
-  legfit2sum->AddEntry(fModelTotAdapM2Sum, "Total PDF", "l");
-  legfit2sum->AddEntry(fModelTotAdapthM2Sum, "Total th-232", "l");
-  legfit2sum->AddEntry(fModelTotAdapuM2Sum, "Total u-238", "l");
-  legfit2sum->AddEntry(fModelTotAdapkM2Sum, "Total k-40", "l");
-  legfit2sum->AddEntry(fModelTotAdapcoM2Sum, "Total co-60", "l");
-  legfit2sum->AddEntry(fModelTotAdapNDBDM2Sum, "NDBD", "l");
-  legfit2sum->AddEntry(fModelTotAdap2NDBDM2Sum, "2NDBD", "l");
-  legfit2sum->AddEntry(fModelTotAdapSpoM2Sum, "Total po-210", "l");
-  legfit2sum->AddEntry(fModelTotAdapSpbM2Sum, "Surface pb-210", "l");
-  legfit2sum->AddEntry(fModelTotAdapbiM2Sum, "Total External bi-210", "l");  
-  // legfit2->AddEntry(fModelTotAdapteo2M2, "Other Crystal Bulk", "l");
-
-  legfit2sum->Draw();
-*/
-
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
   hResidualGausM1 = new TH1D("hResidualGausM1", "M1", 100, -50, 50);
@@ -5527,24 +5221,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   hResidualDistM2->Draw();
 
-/*
-  TCanvas *cResidual2sum = new TCanvas("cResidual2sum", "cResidual2sum", 1200, 800);
-  hResidualGausM2Sum = new TH1D("hResidualGausM2Sum", "M2Sum", 100, -50, 50);  
-  hResidualDistM2Sum = CalculateResidualsAdaptive(fAdapDataHistoM2Sum, fModelTotAdapM2Sum, hResidualGausM2Sum, dFitMinBinM2Sum, dFitMaxBinM2Sum, 3);
-  hResidualDistM2Sum->SetLineColor(kBlack);
-  hResidualDistM2Sum->SetName("Residuals");
-  hResidualDistM2Sum->SetTitle("");
-  hResidualDistM2Sum->SetMarkerStyle(25);
-  hResidualDistM2Sum->GetXaxis()->SetTitle("Energy (keV)");
-  // hResidualDistM2Sum->GetXaxis()->SetTitleSize(0.04);
-  // hResidualDistM2Sum->GetXaxis()->SetLabelSize(0.05);
-  // hResidualDistM2Sum->GetYaxis()->SetLabelSize(0.05);
-  // hResidualDistM2Sum->GetYaxis()->SetTitleSize(0.04); 
-  // hResidualDistM2Sum->GetXaxis()->SetRange(1, fAdapDataHistoM2Sum->FindBin(3000));
-  hResidualDistM2Sum->GetYaxis()->SetTitle("Residuals (#sigma)");
-
-  hResidualDistM2Sum->Draw();
-*/
   TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
   cres1->Divide(2,1);
   cres1->cd(1);
@@ -5552,36 +5228,39 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   hResidualGausM1->Draw();
   cres1->cd(2);
   hResidualGausM2->Fit("gaus");
-  // TCanvas *cres2 = new TCanvas("cres2", "cres2", 800, 600);
   hResidualGausM2->Draw();
-  // cres1->cd(3);
-  // hResidualGausM2Sum->Draw();
-  // hResidualGausM2Sum->Fit("gaus");
 
+  // Ratio = Data/Model
+  TCanvas *cRatio1 = new TCanvas("cRatio1", "cRatio1", 1200, 1200);
+  cRatio1->Divide(1, 2);
 
-/*
-  TCanvas *cGraphM1 = new TCanvas("cGraphM1", "cGraphM1", 1200, 800);
-
+  cRatio1->cd(1);
   TH1D *hRatioM1 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1");
   hRatioM1->Divide(fModelTotAdapM1);
-  hRatioM1->SetMarkerStyle(21);
-  hRatioM1->GetYaxis()->SetTitle("Ratio (Data/Model)");
-  hRatioM1->Draw("e1p");
+  hRatioM1->SetMaximum(2);
+  hRatioM1->SetMinimum(-0.5);
+  // hRatioM1->Rebin(3);
+  for(int i = 1; i <= hRatioM1->GetNbinsX(); i++)
+  {
+    hRatioM1->SetBinError(i,0);
+  }
+  hRatioM1->SetMarkerStyle(4);
+  hRatioM1->Draw("p");
 
-  TCanvas *cGraphM2 = new TCanvas("cGraphM2", "cGraphM2", 1200, 800);
+
+  cRatio1->cd(2);
   TH1D *hRatioM2 = (TH1D*)fAdapDataHistoM2->Clone("hRatioM2");
   hRatioM2->Divide(fModelTotAdapM2);
-  hRatioM2->SetMarkerStyle(21);
-  hRatioM2->GetYaxis()->SetTitle("Ratio (Data/Model)");
-  hRatioM2->Draw("e1p");
+  for(int i = 1; i <= hRatioM2->GetNbinsX(); i++)
+  {
+    hRatioM2->SetBinError(i, 0);
+  }
+  hRatioM2->SetMarkerStyle(4);
+  hRatioM2->SetMaximum(2);
+  hRatioM2->SetMinimum(-0.5);
+  // hRatioM2->Rebin(3);
+  hRatioM2->Draw("p");
 
-  TCanvas *cGraphM2Sum = new TCanvas("cGraphM2Sum", "cGraphM2Sum", 1200, 800);
-  TH1D *hRatioM2Sum = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum");
-  hRatioM2Sum->Divide(fModelTotAdapM2Sum);
-  hRatioM2Sum->SetMarkerStyle(21);
-  hRatioM2Sum->GetYaxis()->SetTitle("Ratio (Data/Model)");
-  hRatioM2Sum->Draw("e1p");
-*/
 
   for (int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
   {
@@ -5598,7 +5277,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/hResidualDistM1->GetNbinsX());
   dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/hResidualDistM2->GetNbinsX());
-  // dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/hResidualDistM2Sum->GetNbinsX());
 
 
   double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)); 
@@ -5611,7 +5289,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
   cout << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
   cout << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;  
-  // cout << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
   cout << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
   cout << endl;
   cout << "Integral Data in ROI (counts/keV): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
@@ -5621,13 +5298,13 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total Co PDF in ROI (counts/keV): " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total Pb-210 PDF in ROI (counts/keV): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
-  // cout << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << (fParError[1]/fParameters[1]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
-  cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/4 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/4) << endl;
+  cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
 
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
+
 /*
     2nbb calculation:
      - TeO2 molar mass: 159.6 g/mol
@@ -5636,9 +5313,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
      - Moles = 750g * 49 crystals * 0.3408 abundance/159.6 g/mol = 78.474 mol total
      - N_TeO2 = 78.474 * N_A = 4.726*10^25 nuclei of Te130
      - N_2nbb = N_TeO2 * rate * livetime = 1.551*10^4 events
-
      - half life = rate * ln(2) = ln(2) * N_TeO2 * livetime / N_2nbb
-
 */
 
 
@@ -5648,16 +5323,19 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
     fParActivity[i] = fParameters[i]*dDataIntegralM1/fParEfficiencyM1[i];
   }
 
-  // Saving stuff
-  // cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // Saving plots
+  // cadap1->SaveAs(Form("%s/FitResults/Test2/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("%s/FitResults/Test2/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("%s/FitResults/Test2/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/Test2/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/Test2/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
+  // Kernal Convolution
+  TH1D *hKernalConvM1 = new TH1D("hKernalConvM1", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  Kernal(fModelTotAdapM1, hKernalConvM1);
 
-  // cResidual2sum->SaveAs(Form("%s/FitResults/Test/FitM2SumResidual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2sum->SaveAs(Form("%s/FitResults/Test/FitM2Sum_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  TCanvas *cKernal1 = new TCanvas("cKernal1", "cKernal1", 1200, 1200);
+  hKernalConvM1->Draw();
 
 
   return true;
@@ -6250,14 +5928,11 @@ void TBackgroundModel::DrawMC()
 }
 
 
-
-// Only use after fit
-// Need maybe an array with all of the names of the variables
+// Txt file with useful stuff
 void TBackgroundModel::LatexResultTable(double fValue)
 {
 
-  OutFile.open(Form("%s/FitResults/Test/FitOutputTable_%d_%d_%d.txt", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop ));
-  // OutFile.open(Form("/Users/brian/Dropbox/code/Fitting/FitResults/ProfileNLL/FitOutputTable_%f.txt", fValue));
+  OutFile.open(Form("%s/FitResults/Test2/FitOutputTable_%d_%d_%d.txt", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop ));
   OutFile << "Initial Value of 2nbb: " << fValue << endl;
   OutFile << "Fit Range: " << dFitMin << " to " << dFitMax << endl;
   OutFile << "Base binning: " << dBinBase << endl;
@@ -6268,11 +5943,6 @@ void TBackgroundModel::LatexResultTable(double fValue)
   OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
   OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
   OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
-  // OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl; // for M1 and M2
-  // OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) << endl;
-  // OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2+dFitMaxBinM2Sum-dFitMinBinM1-dFitMinBinM2-dFitMinBinM2Sum-dNumFreeParameters) ) << endl;
-
-
 
   OutFile << endl;
   OutFile << endl;
@@ -6280,27 +5950,27 @@ void TBackgroundModel::LatexResultTable(double fValue)
   double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)); 
   // Output integrals of stuff for limits
   OutFile << "ROI range: " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2486)) << " " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) << " keV" << endl; // 2486 to 2572
-  OutFile << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width")/2 << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total Th-232 PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total U-238 PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
-  OutFile << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;  
+  OutFile << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total PDF in ROI: " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width") << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total Th-232 PDF in ROI: " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total U-238 PDF in ROI: " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total Co PDF in ROI: " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total Pb-210 PDF in ROI: " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
+  OutFile << "Integral Total Po-210 PDF in ROI: " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;  
   // OutFile << "Integral Total 2NDBD PDF in ROI: " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
-  OutFile << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2 << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2) << endl;
+  OutFile << "Integral Total 0NDBD PDF in ROI: " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
   OutFile << endl;
-  OutFile << "Integral Data in ROI (counts/keV): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total PDF in ROI (counts/keV): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total Th-232 PDF in ROI (counts/keV): " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total U-238 PDF in ROI (counts/keV): " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total Co PDF in ROI (counts/keV): " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total Pb-210 PDF in ROI (counts/keV): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
-  OutFile << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;  
+  OutFile << "Integral Data in ROI (counts/keV): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total PDF in ROI (counts/keV): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total Th-232 PDF in ROI (counts/keV): " << fModelTotAdapthM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt( fModelTotAdapthM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total U-238 PDF in ROI (counts/keV): " << fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapuM1->Integral( fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total Co PDF in ROI (counts/keV): " << fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapcoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total Pb-210 PDF in ROI (counts/keV): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
+  OutFile << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   // OutFile << "Integral Total 2NDBD PDF in ROI (counts/keV): " << fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdap2NDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  OutFile << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange/2 << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/2)/dROIRange << endl;
+  OutFile << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   OutFile << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << fParError[1]/fParameters[1] * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
-  OutFile << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/4 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")/2 + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/4) << endl;
+  OutFile << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
   
   OutFile << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   OutFile << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
@@ -6309,21 +5979,22 @@ void TBackgroundModel::LatexResultTable(double fValue)
 
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
-    OutFile << minuit->fCpnam[i] << Form(" & %.8f$\\pm$%.8f \\\\ ", fParameters[i], fParError[i] ) << endl;
+    OutFile << minuit->fCpnam[i] << Form(" & %.10f$\\pm$%.10f \\\\ ", fParameters[i], fParError[i] ) << endl;
   }
 
   OutFile << endl;
   OutFile << endl;
 
-  for(int i = 0; i < TBackgroundModel::dNParam; i++)
-  {
-    OutFile << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
-  }
+  // for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  // {
+  //   OutFile << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
+  // }
   OutFile.close();
 
 
 }
 
+// Adds a random percentage of events of 2nbb into spectrum
 void TBackgroundModel::SanityCheck()
 {
   double dM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
@@ -6337,14 +6008,13 @@ void TBackgroundModel::SanityCheck()
   // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
 }
 
-// Make sure to run in batch mode and make sure to have the 2nbb normalization FIXED
+// Only run in batch mode and make sure to have the 2nbb normalization FIXED
 // Probably best to run Minuit in quiet mode as well
 void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
 {
   dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // 100 loops enough?  
   for(int i = -15; i < 15; i++)
   {
     fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
@@ -6363,31 +6033,6 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     // LatexResultTable(*iter);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
-
-    // Reset histograms if drawing
-    // fModelTotAdapthM1->Reset();
-    // fModelTotAdapuM1->Reset();
-    // fModelTotAdapkM1->Reset();
-    // fModelTotAdapcoM1->Reset();
-    // fModelTotAdapNDBDM1->Reset();
-    // fModelTotAdap2NDBDM1->Reset();
-    // fModelTotAdapbiM1->Reset();
-    // fModelTotAdapmnM1->Reset();
-    // fModelTotAdapSpbM1->Reset();
-    // fModelTotAdapSpoM1->Reset();
-    // fModelTotAdappbM1->Reset(); 
-
-    // fModelTotAdapthM2->Reset();
-    // fModelTotAdapuM2->Reset();
-    // fModelTotAdapkM2->Reset();
-    // fModelTotAdapcoM2->Reset();
-    // fModelTotAdapNDBDM2->Reset();
-    // fModelTotAdap2NDBDM2->Reset();
-    // fModelTotAdapbiM2->Reset();
-    // fModelTotAdapmnM2->Reset();
-    // fModelTotAdapSpbM2->Reset();
-    // fModelTotAdapSpoM2->Reset();
-    // fModelTotAdappbM2->Reset(); 
 
     dNumCalls = 0; // Resets number of calls (for saving purposes)
     nLoop++; // This is purely for file names and to keep track of number of loops
@@ -6408,4 +6053,39 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
 
   OutPNLL.close();
 }
+
+
+TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
+{
+  hSMC->Reset();
+  cout << "Smearing: " << hMC->GetName() << endl;
+
+  double dResolution = 1.998;
+
+  double dNorm;
+  double dSmearedValue;
+
+  gaus = new TF1("gaus","gaus(0)", dMinEnergy, dMaxEnergy);
+
+
+  for(int i = 1; i <= hMC->GetNbinsX(); i++)
+  {
+    for(int j = 1; j <= hMC->GetNbinsX(); j++)
+    {
+      // Area of gaussian
+      dNorm = dBaseBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dResolution);
+
+      // Set parameters of gaussian
+      gaus->SetParameters(dNorm, hMC->GetBinCenter(j), dResolution);
+
+      // Smeared contribution from 2nd derivative of gaussian centered at bin j for bin i 
+      dSmearedValue = gaus->Derivative2( hSMC->GetBinCenter(i) );
+
+      // Fill bin i with contribution from gaussian centered at bin j
+      // cout << "Filling Bin: " << i << " with " << dSmearedValue << endl;
+      hSMC->Fill(hSMC->GetBinCenter(i), dSmearedValue);
+    }
+  }
   
+  return hSMC;
+}

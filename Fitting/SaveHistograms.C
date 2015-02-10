@@ -25,7 +25,7 @@ TH1D *SmearMC(TH1D *hMC, TH1D *hSMC)
   	double dNorm2;
 	double dSmearedValue;
 
-	double dBinSize = 2;
+	double dBinSize = 1;
 
 	TF1 *gaus = new TF1("gaus","gaus(0)", 0, 10000);
   	TF1 *gaus2 = new TF1("gaus2","gaus(0)", 0, 10000);
@@ -63,7 +63,7 @@ void NormalizePDF(TH1D *h1, int minE, int maxE)
 {
 
   double dIntegral = 0;
-  int dBinSize = 2;
+  int dBinSize = 1;
 
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
   dIntegral = h1->Integral(minE/dBinSize, maxE/dBinSize);
@@ -91,7 +91,7 @@ void NormalizePDFs(TH1D *h1, TH1D *h2, TH1D *h3, int minE, int maxE)
   double dIntegral2 = 0;
   double dIntegral3 = 0;
 
-  int dBinSize = 2;
+  int dBinSize = 1;
 
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
   dIntegral1 = h1->Integral(minE/dBinSize, maxE/dBinSize);
@@ -123,7 +123,7 @@ void NormalizePDFPair(TH1D *h1, TH1D *h2, int minE, int maxE)
 {
   double dIntegral1 = 0;
   double dIntegral2 = 0;
-  int dBinSize = 2;
+  int dBinSize = 1;
 
   // bin 0 = underflow, bin dNBins = last bin with upper-edge xup Excluded
   dIntegral1 = h1->Integral(minE/dBinSize, maxE/dBinSize);
@@ -156,7 +156,7 @@ void SaveHistogramsReducedBulk()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	// Unsmeared
@@ -544,7 +544,7 @@ void SaveHistogramsReducedSurface()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	// Unsmeared
@@ -555,6 +555,7 @@ void SaveHistogramsReducedSurface()
 	TH1D *uTeO2Sxra228pb208M1_001 = new TH1D("uTeO2Sxra228pb208M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uTeO2Sxu238th230M1_001 = new TH1D("uTeO2Sxu238th230M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uTeO2Sxra226pb210M1_001 = new TH1D("uTeO2Sxra226pb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth232M1_001 = new TH1D("uTeO2Sxth232M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *uCuBoxSxpb210M1_01 = new TH1D("uCuBoxSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uCuBoxSxpb210M1_10 = new TH1D("uCuBoxSxpb210M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -568,6 +569,7 @@ void SaveHistogramsReducedSurface()
 	TH1D *uTeO2Sxra228pb208M2_001 = new TH1D("uTeO2Sxra228pb208M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uTeO2Sxu238th230M2_001 = new TH1D("uTeO2Sxu238th230M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uTeO2Sxra226pb210M2_001 = new TH1D("uTeO2Sxra226pb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *uTeO2Sxth232M2_001 = new TH1D("uTeO2Sxth232M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *uCuBoxSxpb210M2_01 = new TH1D("uCuBoxSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *uCuBoxSxpb210M2_10 = new TH1D("uCuBoxSxpb210M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -583,6 +585,8 @@ void SaveHistogramsReducedSurface()
 	TH1D *hTeO2Sxra228pb208M1_001 = new TH1D("hTeO2Sxra228pb208M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238th230M1_001 = new TH1D("hTeO2Sxu238th230M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra226pb210M1_001 = new TH1D("hTeO2Sxra226pb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232M1_001 = new TH1D("hTeO2Sxth232M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	TH1D *hCuBoxSxpb210M1_01 = new TH1D("hCuBoxSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxpb210M1_10 = new TH1D("hCuBoxSxpb210M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -596,6 +600,8 @@ void SaveHistogramsReducedSurface()
 	TH1D *hTeO2Sxra228pb208M2_001 = new TH1D("hTeO2Sxra228pb208M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238th230M2_001 = new TH1D("hTeO2Sxu238th230M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra226pb210M2_001 = new TH1D("hTeO2Sxra226pb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232M2_001 = new TH1D("hTeO2Sxth232M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	TH1D *hCuBoxSxpb210M2_01 = new TH1D("hCuBoxSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxpb210M2_10 = new TH1D("hCuBoxSxpb210M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -610,6 +616,7 @@ void SaveHistogramsReducedSurface()
 	TChain *tTeO2Sxu238th230_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-th230-.01");
 	TChain *tTeO2Sxth230only_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th230_only-.01");
 	TChain *tTeO2Sxra226pb210_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra226-pb210-.01");
+	TChain *tTeO2Sxth232_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232-.01");
 
 	TChain *tCuBoxSxpb210_01 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-.1");
 	TChain *tCuBoxSxpb210_10 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-10");
@@ -623,6 +630,7 @@ void SaveHistogramsReducedSurface()
 	tTeO2Sxu238th230_001->Project("uTeO2Sxu238th230M1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxth230only_001->Project("uTeO2Sxth230onlyM1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxra226pb210_001->Project("uTeO2Sxra226pb210M1_001", "Ener2", "Multiplicity==1");
+	tTeO2Sxth232_001->Project("uTeO2Sxth232M1_001", "Ener2", "Multiplicity==1");
 
 	tCuBoxSxpb210_01->Project("uCuBoxSxpb210M1_01", "Ener2", "Multiplicity==1");
 	tCuBoxSxpb210_10->Project("uCuBoxSxpb210M1_10", "Ener2", "Multiplicity==1");
@@ -637,6 +645,7 @@ void SaveHistogramsReducedSurface()
 	tTeO2Sxu238th230_001->Project("uTeO2Sxu238th230M2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxth230only_001->Project("uTeO2Sxth230onlyM2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxra226pb210_001->Project("uTeO2Sxra226pb210M2_001", "Ener2", "Multiplicity==2");
+	tTeO2Sxth232_001->Project("uTeO2Sxth232M2_001", "Ener2", "Multiplicity==2");
 
 	tCuBoxSxpb210_01->Project("uCuBoxSxpb210M2_01", "Ener2", "Multiplicity==2");
 	tCuBoxSxpb210_10->Project("uCuBoxSxpb210M2_10", "Ener2", "Multiplicity==2");
@@ -653,6 +662,7 @@ void SaveHistogramsReducedSurface()
 	SmearMC(uTeO2Sxu238th230M1_001, hTeO2Sxu238th230M1_001);
 	SmearMC(uTeO2Sxth230onlyM1_001, hTeO2Sxth230onlyM1_001);
 	SmearMC(uTeO2Sxra226pb210M1_001, hTeO2Sxra226pb210M1_001);
+	SmearMC(uTeO2Sxth232M1_001, hTeO2Sxth232M1_001);
 
 	SmearMC(uCuBoxSxpb210M1_01, hCuBoxSxpb210M1_01);
 	SmearMC(uCuBoxSxpb210M1_10, hCuBoxSxpb210M1_10);
@@ -666,6 +676,7 @@ void SaveHistogramsReducedSurface()
 	SmearMC(uTeO2Sxu238th230M2_001, hTeO2Sxu238th230M2_001);
 	SmearMC(uTeO2Sxth230onlyM2_001, hTeO2Sxth230onlyM2_001);
 	SmearMC(uTeO2Sxra226pb210M2_001, hTeO2Sxra226pb210M2_001);
+	SmearMC(uTeO2Sxth232M2_001, hTeO2Sxth232M2_001);
 
 	SmearMC(uCuBoxSxpb210M2_01, hCuBoxSxpb210M2_01);
 	SmearMC(uCuBoxSxpb210M2_10, hCuBoxSxpb210M2_10);
@@ -680,6 +691,7 @@ void SaveHistogramsReducedSurface()
 	NormalizePDFPair(hTeO2Sxu238th230M1_001, hTeO2Sxu238th230M2_001, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair(hTeO2Sxth230onlyM1_001, hTeO2Sxth230onlyM2_001, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair(hTeO2Sxra226pb210M1_001, hTeO2Sxra226pb210M2_001, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair(hTeO2Sxth232M1_001, hTeO2Sxth232M2_001, dMinEnergy, dMaxEnergy);
 
 	NormalizePDFPair(hCuBoxSxpb210M1_01, hCuBoxSxpb210M2_01, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair(hCuBoxSxpb210M1_10, hCuBoxSxpb210M2_10, dMinEnergy, dMaxEnergy);
@@ -696,6 +708,7 @@ void SaveHistogramsReducedSurface()
 	hTeO2Sxu238th230M1_001->Write();
 	hTeO2Sxth230onlyM1_001->Write();
 	hTeO2Sxra226pb210M1_001->Write();
+	hTeO2Sxth232M1_001->Write();
 
 	hCuBoxSxpb210M1_01->Write();
 	hCuBoxSxpb210M1_10->Write();
@@ -709,6 +722,7 @@ void SaveHistogramsReducedSurface()
 	hTeO2Sxu238th230M2_001->Write();
 	hTeO2Sxth230onlyM2_001->Write();
 	hTeO2Sxra226pb210M2_001->Write();
+	hTeO2Sxth232M2_001->Write();
 
 	hCuBoxSxpb210M2_01->Write();
 	hCuBoxSxpb210M2_10->Write();
@@ -725,7 +739,7 @@ void SaveHistogramsBulkInner()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	TH1D *hCuBoxco58M1 = new TH1D("hCuBoxco58M1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -1097,7 +1111,7 @@ void SaveHistogramsBulkInner()
 	NormalizePDFPair( hTeO2u238u234M1,  hTeO2u238u234M2,   dMinEnergy, dMaxEnergy);
 
 
-	TFile *file1 = new TFile("MCProduction_BulkInner.root", "RECREATE");
+	TFile *file1 = new TFile("MCProduction_BulkInner_1keV.root", "RECREATE");
 
 	hCuBoxco58M1->Write();
 	hCuBoxco60M1->Write();
@@ -1229,7 +1243,7 @@ void SaveHistogramsBulkOuter()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 
@@ -1355,7 +1369,7 @@ void SaveHistogramsBulkOuter()
 	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "n7_600mK", "th232");
 	TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
 
-	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "772.4G");
+	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
 
 	TChain *tIVCco60 = LoadMC(sDataDir.c_str(), "IVC", "co60");
 	TChain *tIVCk40 = LoadMC(sDataDir.c_str(), "IVC", "k40");
@@ -1555,7 +1569,7 @@ void SaveHistogramsBulkOuter()
 
 
 
-	TFile *file1 = new TFile("MCProduction_BulkOuter.root", "RECREATE");
+	TFile *file1 = new TFile("MCProduction_BulkOuter_1keV.root", "RECREATE");
 
 	h50mKco58M1->Write();
 	h50mKco60M1->Write();
@@ -1673,7 +1687,7 @@ void SaveHistogramsBulkM2SumInner()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	TH1D *hCuBoxco58M1 = new TH1D("hCuBoxco58M1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2045,7 +2059,7 @@ void SaveHistogramsBulkM2SumInner()
 	NormalizePDFPair( hTeO2u238u234M1,  hTeO2u238u234M2Sum,   dMinEnergy, dMaxEnergy);
 
 
-	TFile *file1 = new TFile("MCProduction_BulkInnerM2Sum.root", "RECREATE");
+	TFile *file1 = new TFile("MCProduction_BulkInnerM2Sum_1keV.root", "RECREATE");
 
 //////////////////////////////
 
@@ -2119,7 +2133,7 @@ void SaveHistogramsBulkM2SumOuter()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 
@@ -2245,7 +2259,7 @@ void SaveHistogramsBulkM2SumOuter()
 	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "n7_600mK", "th232");
 	TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
 
-	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "772.4G");
+	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
 
 	TChain *tIVCco60 = LoadMC(sDataDir.c_str(), "IVC", "co60");
 	TChain *tIVCk40 = LoadMC(sDataDir.c_str(), "IVC", "k40");
@@ -2445,7 +2459,7 @@ void SaveHistogramsBulkM2SumOuter()
 
 
 
-	TFile *file1 = new TFile("MCProduction_BulkOuterM2Sum.root", "RECREATE");
+	TFile *file1 = new TFile("MCProduction_BulkOuterM2Sum_1keV.root", "RECREATE");
 
 //////////////////////////////
 
@@ -2515,7 +2529,7 @@ void SaveHistogramsSurfaceCrystal()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	TH1D *hTeO2Spb210M1_01 = new TH1D("hTeO2Spb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2774,7 +2788,7 @@ void SaveHistogramsSurfaceCrystal()
 	NormalizePDFs(hTeO2Sxpb210M1_0001, hTeO2Sxpb210M2_0001, hTeO2Sxpb210M2Sum_0001, 0, 10000);
 
 
-	TFile *file2 = new TFile("MCProduction_SurfaceCrystal.root", "RECREATE");
+	TFile *file2 = new TFile("MCProduction_SurfaceCrystal_1keV.root", "RECREATE");
 
 
 	hTeO2Spb210M1_01->Write();
@@ -2888,7 +2902,7 @@ void SaveHistogramsSurfaceOther()
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
-	int dBinSize = 2;
+	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
 	TH1D *hCuBoxSth232M1_1 = new TH1D("hCuBoxSth232M1_1", "", dNBins, dMinEnergy, dMaxEnergy);	
@@ -3262,7 +3276,7 @@ void SaveHistogramsSurfaceOther()
 	NormalizePDFs(hCuBox_CuFrameu238M1_1 , hCuBox_CuFrameu238M2_1 , hCuBox_CuFrameu238M2Sum_1, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFrameu238M1_10 , hCuBox_CuFrameu238M2_10 , hCuBox_CuFrameu238M2Sum_10, 0, 10000); 
 
-	TFile *file2 = new TFile("MCProduction_SurfaceOther.root", "RECREATE");
+	TFile *file2 = new TFile("MCProduction_SurfaceOther_1keV.root", "RECREATE");
 
 	hCuBoxSth232M1_1->Write();
 	hCuBoxSu238M1_1->Write();
