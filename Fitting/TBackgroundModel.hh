@@ -66,8 +66,6 @@ public:
 
 	void SetParameters(int index, double value);
 
-	std::map<std::string, int> SetParMap(); 
-
 	void SetParEfficiency();
 	
 	void Test();
