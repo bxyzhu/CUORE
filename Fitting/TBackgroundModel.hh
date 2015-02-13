@@ -10,8 +10,15 @@
 #include "TCut.h"
 #include "TGraphErrors.h"
 #include "TMinuit.h"
+#include "TPad.h"
+#include "TString.h"
 #include "TRandom3.h"
 #include "TDatime.h"
+#include <TMinuitMinimizer.h>
+
+#include "Math/Minimizer.h"
+#include "Math/Factory.h"
+#include "Math/Functor.h"
 #include <vector>
 #include <map>
 // #include <iostream>
@@ -1770,6 +1777,12 @@ private:
 
 	// Smearing
 	TF1				*gaus;
+
+	// Cut Efficiency
+	TF1 			*fEfficiency;
+	TH1 			*hEfficiencyM1;
+	TH1 			*hEfficiencyM2;
+	// TH1 			*hEfficiencyM1;
 
 	ofstream 		OutFile;
 	ofstream 	 	OutPNLL;
