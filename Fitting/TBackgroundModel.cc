@@ -2441,7 +2441,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   for(int i = h1->FindBin(50); i < h1->GetNbinsX(); i++)
   {
     // Added per each peak
-
+/*
     // K40
     if(i >= h1->FindBin(1440) && i < h1->FindBin(1480))
     {
@@ -2462,8 +2462,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
      dDummy = 0;
      i = i+(2630-2600)/dBaseBinSize;
     }
-
-
+*/
     // Pt peak 3150 - 3400
     if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
     {
@@ -4878,42 +4877,42 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   minuit->SetObjectFit(this); //see the external FCN  above
 
   // With Initial Values
-  minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-6, 0, 1.0);
-  minuit->DefineParameter(2, "TeO2 co60",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(3, "TeO2 k40",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(4, "TeO2 po210",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(5, "TeO2 th232 only", 0.0002930441, 1E-6, 0, 1.0);
-  minuit->DefineParameter(6, "TeO2 th230 only", 0.0002989944, 1E-6, 0, 1.0);
-  minuit->DefineParameter(7, "TeO2 Sx th232 0.01", 0.0016914715, 1E-6, 0, 1.0);
-  minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0.0025632619, 1E-6, 0, 1.0);
-  minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0.0017130443, 1E-6, 0, 1.0);
-  minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0.0007863532, 1E-6, 0, 1.0);
-  minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0.0030621785, 1E-6, 0, 1.0);
-  minuit->DefineParameter(13, "TeO2 Sx pb210 1", 0.0054316348, 1E-6, 0, 1.0);
-  minuit->DefineParameter(14, "TeO2 Sx pb210 0.01", 0.0420245450, 1E-6, 0, 1.0);
-  minuit->DefineParameter(15, "CuBox + CuFrame Sx th232 10", 0.0143126175, 1E-6, 0, 1.0);
-  minuit->DefineParameter(16, "CuBox + CuFrame Sx u238 10 ", 0.0012999801, 1E-6, 0, 1.0);
-  minuit->DefineParameter(17, "CuBox + CuFrame Sx pb210 10", 0.0043297445, 1E-6, 0, 1.0);
-  minuit->DefineParameter(18, "CuBox + CuFrame Sx pb210 0.1", 0.0044209233, 1E-6, 0, 1.0);
-  minuit->DefineParameter(19, "CuBox + CuFrame Sx pb210 0.01", 0.0181031801, 1E-6, 0, 1.0);
+  minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
+  minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(5, "TeO2 th232 only", 0.0002930441, 1E-7, 0, 1.0);
+  minuit->DefineParameter(6, "TeO2 th230 only", 0.0002989944, 1E-7, 0, 1.0);
+  minuit->DefineParameter(7, "TeO2 Sx th232 0.01", 0.0016914715, 1E-7, 0, 1.0);
+  minuit->DefineParameter(8, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(9, "TeO2 Sx ra228 to pb208 0.01", 0.0025632619, 1E-7, 0, 1.0);
+  minuit->DefineParameter(10, "TeO2 Sx u238 to th230 0.01", 0.0017130443, 1E-7, 0, 1.0);
+  minuit->DefineParameter(11, "TeO2 Sx th230 only 0.01", 0.0007863532, 1E-7, 0, 1.0);
+  minuit->DefineParameter(12, "TeO2 Sx ra226 to pb210 0.01", 0.0030621785, 1E-7, 0, 1.0);
+  minuit->DefineParameter(13, "TeO2 Sx pb210 1", 0.0054316348, 1E-7, 0, 1.0);
+  minuit->DefineParameter(14, "TeO2 Sx pb210 0.01", 0.0420245450, 1E-7, 0, 1.0);
+  minuit->DefineParameter(15, "CuBox + CuFrame Sx th232 10", 0.0143126175, 1E-7, 0, 1.0);
+  minuit->DefineParameter(16, "CuBox + CuFrame Sx u238 10 ", 0.0012999801, 1E-7, 0, 1.0);
+  minuit->DefineParameter(17, "CuBox + CuFrame Sx pb210 10", 0.0043297445, 1E-7, 0, 1.0);
+  minuit->DefineParameter(18, "CuBox + CuFrame Sx pb210 0.1", 0.0044209233, 1E-7, 0, 1.0);
+  minuit->DefineParameter(19, "CuBox + CuFrame Sx pb210 0.01", 0.0181031801, 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(20, "PbRom th232",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(21, "PbRom u238",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(22, "PbRom co60",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(23, "PbRom k40",  0., 1E-6, 0, 1.0);
+  minuit->DefineParameter(20, "PbRom th232",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(21, "PbRom u238",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(22, "PbRom co60",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(23, "PbRom k40",  0., 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(24, "OVC th232",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(25, "OVC u238",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(26, "OVC co60",  0., 1E-6, 0, 1.0);    
-  minuit->DefineParameter(27, "OVC k40",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(28, "External Lead bi210", 0., 1E-6, 0, 1.0);
+  minuit->DefineParameter(24, "OVC th232",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(25, "OVC u238",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(26, "OVC co60",  0., 1E-7, 0, 1.0);    
+  minuit->DefineParameter(27, "OVC k40",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(28, "External Lead bi210", 0., 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(29, "Internal Shields th232",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(30, "Internal Shields u238",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(31, "Internal Shields co60",  0., 1E-6, 0, 1.0);
-  minuit->DefineParameter(32, "Internal Shields k40",  0., 1E-6, 0, 1.0);
+  minuit->DefineParameter(29, "Internal Shields th232",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(30, "Internal Shields u238",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(31, "Internal Shields co60",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(32, "Internal Shields k40",  0., 1E-7, 0, 1.0);
 
 //////////////////////////////////////
 
