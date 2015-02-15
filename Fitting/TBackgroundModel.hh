@@ -14,6 +14,8 @@
 #include "TString.h"
 #include "TRandom3.h"
 #include "TDatime.h"
+#include "TMatrixT.h"
+#include "TPaveText.h"
 #include <TMinuitMinimizer.h>
 
 #include "Math/Minimizer.h"
@@ -1807,10 +1809,13 @@ private:
 	TH1D *fCorrectionM2Tot;
 	TH1D *fTotCorrection;
 
-
 	std::string		dDataDir;
 	std::string 	dMCDir;
 	std::string 	dSaveDir;
+
+	// Error Matrix
+	TMatrixT<double> 	*mCorrMatrix;
+	TPaveText 			*pPave; // Text for matrix
 	
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;

@@ -6,9 +6,10 @@
 #include "TBackgroundModel.hh"
 #include "TApplication.h"
 #include "TRandom3.h"
-#include "TPaveText.h"
 #include "TAxis.h"
 #include "TLine.h"
+#include "TPaveText.h"
+#include "TPave.h"
 #include "TMath.h"
 #include <cmath>
 #include <string>
@@ -76,6 +77,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dDataSet = fDataSet;
 
   dChiSquare = 0;
+
+  // Covariance Matrix
+  mCorrMatrix = new TMatrixT<double>();
 
   if(fFitMin >= fFitMax)
   {
@@ -4683,23 +4687,23 @@ void TBackgroundModel::LoadData()
 }
 
 // Prints parameters, needs update 11-06-2014
-// void TBackgroundModel::PrintParameters()
-// {
-//   for(int i = 0; i < TBackgroundModel::dNParam; i++)
-//   {
-//     cout << minuit->fCpnam[i] << ": " << fParameters[i] << " +/- " << fParError[i] << endl;
-//   }
-// }
+void TBackgroundModel::PrintParameters()
+{
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+    cout << i << " " << minuit->fCpnam[i] << ": " << fParameters[i] << " +/- " << fParError[i] << endl;
+  }
+}
 
-// void TBackgroundModel::PrintParActivity()
-// { 
-//   // This only gets the number of counts corrected for detector efficiency
-//   for(int i = 0; i < TBackgroundModel::dNParam; i++)
-//   {
-//   cout << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
-//   }
-// 
-// }
+void TBackgroundModel::PrintParActivity()
+{ 
+  // This only gets the number of counts corrected for detector efficiency
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+  cout << i << " " << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
+  }
+
+}
 
 // Resets all parameters to 0
 void TBackgroundModel::ResetParameters()
@@ -4961,7 +4965,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
    minuit->SetFCN(myExternal_FCNAdap);
    int status = minuit->Command("MINImize 500000 0.1"); // Command that actually does the minimization
 
-  minuit->Command("SHOw COVariance");
+  // minuit->Command("SHOw COVariance");
 
   // Get final parameters from fit
   for(int i = 0; i < dNParam; i++)
@@ -5413,8 +5417,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   cout << "Integral Total Pb-210 PDF in ROI (counts/keV): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
   cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;  
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" )/dROIRange << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2486),fAdapDataHistoM1->FindBin(2570), "width" ))/dROIRange << endl;
-  cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << (fParError[1]/fParameters[1]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
-  cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
+  // cout << "Number of 2nbb: " << fParameters[1]*dDataIntegralM1 << " +/- " << fParError[1]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << " +/- " << (fParError[1]/fParameters[1]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) << endl;
+  // cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(3000), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(3000) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
 
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
@@ -5431,11 +5435,51 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 */
 
 
-  // This only gets the number of counts corrected for detector efficiency
+  // This gets the number of counts corrected for detector efficiency
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
     fParActivity[i] = fParameters[i]*dDataIntegralM1/fParEfficiencyM1[i];
   }
+
+
+  // Correlation Matrix section
+  mCorrMatrix->ResizeTo(dNumFreeParameters, dNumFreeParameters);
+  minuit->mnemat(mCorrMatrix->GetMatrixArray(), dNumFreeParameters);
+
+  TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
+  TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
+  pM1->SetTopMargin(0.05);
+  pM1->SetBottomMargin(0.05);
+  pM1->SetLeftMargin(0.05);
+  pM1->SetRightMargin(0.15);
+  pM1->SetFillColor(0);
+  pM1->SetBorderMode(0);
+  pM1->SetBorderSize(0);
+  pM1->Draw();
+
+  TPad* pM2 = new TPad("pM2","pM2",width2*0.75,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
+  pM2->SetTopMargin(0.05);
+  pM2->SetBottomMargin(0.05);
+  pM2->SetLeftMargin(0.1);
+  pM2->SetRightMargin(0.05);
+  pM2->SetFillColor(0);
+  pM2->SetBorderMode(0);
+  pM2->SetBorderSize(0);
+  pM2->Draw();
+
+  pM1->cd();
+  mCorrMatrix->Draw("colz");
+
+  pM2->cd();
+  TPaveText *pPave = new TPaveText(0,0,1,1, "NB"); // Text for matrix
+  pPave->SetTextSize(0.04);
+  pPave->SetFillColor(0);
+  pPave->SetBorderSize(0);
+  for(int i=0; i < TBackgroundModel::dNParam; i++)
+  {
+    pPave->AddText(Form("%d: %s", i, minuit->fCpnam[i].Data() ) );
+  }
+  pPave->Draw();
 
   // Saving plots
   // cadap1->SaveAs(Form("%s/FitResults/EffCorr/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
@@ -5443,12 +5487,15 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   // cResidual1->SaveAs(Form("%s/FitResults/EffCorr/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/EffCorr/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cres1->SaveAs(Form("%s/FitResults/EffCorr/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cMatrix->SaveAs(Form("%s/FitResults/EffCorr/FitCorrMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+
 /*
   cadap1->SaveAs(Form("%s/FitResults/EffCorr/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cadap2->SaveAs(Form("%s/FitResults/EffCorr/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cResidual1->SaveAs(Form("%s/FitResults/EffCorr/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cResidual2->SaveAs(Form("%s/FitResults/EffCorr/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cres1->SaveAs(Form("%s/FitResults/EffCorr/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cMatrix->SaveAs(Form("%s/FitResults/EffCorr/FitCorrMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 */
 
   // Kernal Convolution
