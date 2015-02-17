@@ -12,42 +12,60 @@ TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource)
 
 }
 
-TH1D *SmearMC(TH1D *hMC, TH1D *hSMC)
+TH1D *CombineAndSmear(TChain *inputChain, TH1D *hMC, TH1D *hSMC, int dMult, double *dSigma)
+{
+	TH1D *hDummy;
+	TH1D *hSmearDummy;
+	for(int Channel = 0; Channel < 52; Channel++)
+	{	
+		if(Channel == 0 || Channel == 9 || Channel == 47)continue;
+		hDummy = new TH1D(Form("h-Ch%d-M%d", Channel+1, dMult), "", 10000, 0, 10000);
+		hSmearDummy = new TH1D(Form("hSmear-Ch%d-M%d", Channel+1, dMult), "", 10000, 0, 10000);
+		inputChain->Project(Form("h-Ch%d-M%d", Channel+1, dMult), "Ener2", Form("Multiplicity==%d", dMult) );
+		hMC->Add(SmearMC(hDummy, hSmearDummy, dSigma[Channel]) );
+	}
+	return hMC;
+}
+
+
+TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double dSigma)
 {
 	// Reset previously Modeled histogram
 	hSMC->Reset();
 	cout << "Smearing: " << hMC->GetName() << endl;
 
-	double dRes1 = 1.998;
-	double dRes2 = 5.59;
-
 	double dNorm;
-  	double dNorm2;
+  	// double dNorm2;
 	double dSmearedValue;
 
 	double dBinSize = 1;
 
 	TF1 *gaus = new TF1("gaus","gaus(0)", 0, 10000);
-  	TF1 *gaus2 = new TF1("gaus2","gaus(0)", 0, 10000);
+  	// TF1 *gaus2 = new TF1("gaus2","gaus(0)", 0, 10000);
 
 
-	for(int i = 0; i < hMC->GetNbinsX(); i++)
+	for(int i = 499; i < hMC->GetNbinsX(); i++)
 	{
-		for(int j = 0; j < hMC->GetNbinsX(); j++)
+		// cout << "bin " << i << endl;
+		for(int j = 499; j < hMC->GetNbinsX(); j++)
 		{
 			// Normalization of gaussian = (bsin size * Area of bin j in MC) / Sigma of bin j (fit function evaluated at bin center)
 			// dNorm = (853.3/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes1);
       		// dNorm2 = (362.5/1215.8)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes2);
 
-			dNorm = (304.5/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes1);
-      		dNorm2 = (34.24/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes2);
+			// dNorm = (304.5/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes1);
+   //    		dNorm2 = (34.24/338.74)*dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dRes2);
+
+			dNorm = dBinSize*hMC->GetBinContent(j)/(sqrt(2*TMath::Pi())*dSigma);
+
 
 			// Set parameters of gaussian ... 2nd gaussian *slightly* shifted... not sure if this works
-			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), dRes1);
-      		gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, dRes2);
+			gaus->SetParameters(dNorm, hMC->GetBinCenter(j), dSigma);
+      		// gaus2->SetParameters(dNorm2, hMC->GetBinCenter(j)-1, dRes2);
 
 			// Smeared contribution from gaussian centered at bin j for bin i 
-			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
+			// dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i)) + gaus2->Eval(hSMC->GetBinCenter(i));
+			dSmearedValue = gaus->Eval(hSMC->GetBinCenter(i));
 
 			// Fill bin i with contribution from gaussian centered at bin j
 			// cout << "Filling Bin: " << i << " with " << dSmearedValue << endl;
@@ -158,6 +176,10 @@ void SaveHistogramsReducedBulk()
 	double dMaxEnergy = 10000;
 	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
+
+	//2614.53
+	// double dB = 0.53
+	double dSigma[52] = {3.6309, 2.23914, 1.85379, 2.12793, 4.41549, 1.74575, 2.34558, 2.37479, 1.94436, 8.20342, 2.17113, 2.10644, 2.2757, 2.7982, 4.02611, 2.87497, 1.78139, 1.92231, 1.87181, 2.95697, 1.9673, 4.89725, 2.06469, 2.33388, 2.18577, 2.36421, 7.53857, 2.03118, 2.86947, 2.57709, 2.43256, 2.01672, 3.1208, 2.67247, 5.11125, 2.20974, 3.177, 2.43366, 2.55086, 2.23907, 1.94238, 2.14217, 2.74023, 2.05892, 1.97427, 2.4128, 2.48429, 3.50036, 3, 3.12728, 2.50535, 3.07077};
 
 	// Unsmeared
 
@@ -294,181 +316,181 @@ void SaveHistogramsReducedBulk()
 
 	TChain *tTeO20nu = LoadMC(sDataDir.c_str(), "TeO2", "0nu_1um");
 	TChain *tTeO22nu = LoadMC(sDataDir.c_str(), "TeO2", "2nu");
-	TChain *tTeO2co60 = LoadMC(sDataDir.c_str(), "TeO2", "co60");
-	TChain *tTeO2k40 = LoadMC(sDataDir.c_str(), "TeO2", "k40");
-	TChain *tTeO2po210 = LoadMC(sDataDir.c_str(), "TeO2", "po210");
-	TChain *tTeO2ra228pb208 = LoadMC(sDataDir.c_str(), "TeO2", "ra228-pb208");
-	TChain *tTeO2th230only = LoadMC(sDataDir.c_str(), "TeO2", "th230_only");
-	TChain *tTeO2th232only = LoadMC(sDataDir.c_str(), "TeO2", "th232_only");
+	// TChain *tTeO2co60 = LoadMC(sDataDir.c_str(), "TeO2", "co60");
+	// TChain *tTeO2k40 = LoadMC(sDataDir.c_str(), "TeO2", "k40");
+	// TChain *tTeO2po210 = LoadMC(sDataDir.c_str(), "TeO2", "po210");
+	// TChain *tTeO2ra228pb208 = LoadMC(sDataDir.c_str(), "TeO2", "ra228-pb208");
+	// TChain *tTeO2th230only = LoadMC(sDataDir.c_str(), "TeO2", "th230_only");
+	// TChain *tTeO2th232only = LoadMC(sDataDir.c_str(), "TeO2", "th232_only");
 
-	TChain *tCuFrameco60 = LoadMC(sDataDir.c_str(), "CuFrame", "co60");
-	TChain *tCuFramek40 = LoadMC(sDataDir.c_str(), "CuFrame", "k40");
-	TChain *tCuFrameth232 = LoadMC(sDataDir.c_str(), "CuFrame", "th232");
-	TChain *tCuFrameu238 = LoadMC(sDataDir.c_str(), "CuFrame", "u238");
+	// TChain *tCuFrameco60 = LoadMC(sDataDir.c_str(), "CuFrame", "co60");
+	// TChain *tCuFramek40 = LoadMC(sDataDir.c_str(), "CuFrame", "k40");
+	// TChain *tCuFrameth232 = LoadMC(sDataDir.c_str(), "CuFrame", "th232");
+	// TChain *tCuFrameu238 = LoadMC(sDataDir.c_str(), "CuFrame", "u238");
 
-	TChain *t600mKco60 = LoadMC(sDataDir.c_str(), "600mK", "co60");
-	TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
-	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "600mK", "th232");
-	TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
+	// TChain *t600mKco60 = LoadMC(sDataDir.c_str(), "600mK", "co60");
+	// TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
+	// TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "600mK", "th232");
+	// TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
 
-	TChain *tOVCco60 = LoadMC(sDataDir.c_str(), "OVC", "co60");
-	TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
-	TChain *tOVCth232 = LoadMC(sDataDir.c_str(), "OVC", "th232");
-	TChain *tOVCu238 = LoadMC(sDataDir.c_str(), "OVC", "u238");
+	// TChain *tOVCco60 = LoadMC(sDataDir.c_str(), "OVC", "co60");
+	// TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
+	// TChain *tOVCth232 = LoadMC(sDataDir.c_str(), "OVC", "th232");
+	// TChain *tOVCu238 = LoadMC(sDataDir.c_str(), "OVC", "u238");
 
-	TChain *tPbRomco60 = LoadMC(sDataDir.c_str(), "PbRom", "co60");
-	TChain *tPbRomk40 = LoadMC(sDataDir.c_str(), "PbRom", "k40");
-	TChain *tPbRomth232 = LoadMC(sDataDir.c_str(), "PbRom", "th232");
-	TChain *tPbRomu238 = LoadMC(sDataDir.c_str(), "PbRom", "u238");	
+	// TChain *tPbRomco60 = LoadMC(sDataDir.c_str(), "PbRom", "co60");
+	// TChain *tPbRomk40 = LoadMC(sDataDir.c_str(), "PbRom", "k40");
+	// TChain *tPbRomth232 = LoadMC(sDataDir.c_str(), "PbRom", "th232");
+	// TChain *tPbRomu238 = LoadMC(sDataDir.c_str(), "PbRom", "u238");	
 
-	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
-
-
-	tTeO20nu->Project("uTeO20nuM1", "Ener2", "Multiplicity==1");
-	tTeO22nu->Project("uTeO22nuM1", "Ener2", "Multiplicity==1");
-	tTeO2co60->Project("uTeO2co60M1", "Ener2", "Multiplicity==1");
-	tTeO2k40->Project("uTeO2k40M1", "Ener2", "Multiplicity==1");
-	tTeO2po210->Project("uTeO2po210M1", "Ener2", "Multiplicity==1");
-	tTeO2ra228pb208->Project("uTeO2ra228pb208M1", "Ener2", "Multiplicity==1");
-	tTeO2th230only->Project("uTeO2th230onlyM1", "Ener2", "Multiplicity==1");
-	tTeO2th232only->Project("uTeO2th232onlyM1", "Ener2", "Multiplicity==1");
-
-	tCuFrameco60->Project("uCuFrameco60M1", "Ener2", "Multiplicity==1");
-	tCuFramek40->Project("uCuFramek40M1", "Ener2", "Multiplicity==1");
-	tCuFrameth232->Project("uCuFrameth232M1", "Ener2", "Multiplicity==1");
-	tCuFrameu238->Project("uCuFrameu238M1", "Ener2", "Multiplicity==1");
-
-	t600mKco60->Project("u600mKco60M1", "Ener2", "Multiplicity==1");
-	t600mKk40->Project("u600mKk40M1", "Ener2", "Multiplicity==1");
-	t600mKth232->Project("u600mKth232M1", "Ener2", "Multiplicity==1");
-	t600mKu238->Project("u600mKu238M1", "Ener2", "Multiplicity==1");
-
-	tOVCco60->Project("uOVCco60M1", "Ener2", "Multiplicity==1");
-	tOVCk40->Project("uOVCk40M1", "Ener2", "Multiplicity==1");
-	tOVCth232->Project("uOVCth232M1", "Ener2", "Multiplicity==1");
-	tOVCu238->Project("uOVCu238M1", "Ener2", "Multiplicity==1");
-
-	tPbRomco60->Project("uPbRomco60M1", "Ener2", "Multiplicity==1");
-	tPbRomk40->Project("uPbRomk40M1", "Ener2", "Multiplicity==1");
-	tPbRomth232->Project("uPbRomth232M1", "Ener2", "Multiplicity==1");
-	tPbRomu238->Project("uPbRomu238M1", "Ener2", "Multiplicity==1");
-
-	tExtPbbi210->Project("uExtPbbi210M1", "Ener2", "Multiplicity==1");
+	// TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
 
 
-	tTeO20nu->Project("uTeO20nuM2", "Ener2", "Multiplicity==2");
-	tTeO22nu->Project("uTeO22nuM2", "Ener2", "Multiplicity==2");
-	tTeO2co60->Project("uTeO2co60M2", "Ener2", "Multiplicity==2");
-	tTeO2k40->Project("uTeO2k40M2", "Ener2", "Multiplicity==2");
-	tTeO2po210->Project("uTeO2po210M2", "Ener2", "Multiplicity==2");
-	tTeO2ra228pb208->Project("uTeO2ra228pb208M2", "Ener2", "Multiplicity==2");
-	tTeO2th230only->Project("uTeO2th230onlyM2", "Ener2", "Multiplicity==2");
-	tTeO2th232only->Project("uTeO2th232onlyM2", "Ener2", "Multiplicity==2");
+	// tTeO20nu->Project("uTeO20nuM1", "Ener2", "Multiplicity==1");
+	// tTeO22nu->Project("uTeO22nuM1", "Ener2", "Multiplicity==1");
+	// tTeO2co60->Project("uTeO2co60M1", "Ener2", "Multiplicity==1");
+	// tTeO2k40->Project("uTeO2k40M1", "Ener2", "Multiplicity==1");
+	// tTeO2po210->Project("uTeO2po210M1", "Ener2", "Multiplicity==1");
+	// tTeO2ra228pb208->Project("uTeO2ra228pb208M1", "Ener2", "Multiplicity==1");
+	// tTeO2th230only->Project("uTeO2th230onlyM1", "Ener2", "Multiplicity==1");
+	// tTeO2th232only->Project("uTeO2th232onlyM1", "Ener2", "Multiplicity==1");
 
-	tCuFrameco60->Project("uCuFrameco60M2", "Ener2", "Multiplicity==2");
-	tCuFramek40->Project("uCuFramek40M2", "Ener2", "Multiplicity==2");
-	tCuFrameth232->Project("uCuFrameth232M2", "Ener2", "Multiplicity==2");
-	tCuFrameu238->Project("uCuFrameu238M2", "Ener2", "Multiplicity==2");
+	// tCuFrameco60->Project("uCuFrameco60M1", "Ener2", "Multiplicity==1");
+	// tCuFramek40->Project("uCuFramek40M1", "Ener2", "Multiplicity==1");
+	// tCuFrameth232->Project("uCuFrameth232M1", "Ener2", "Multiplicity==1");
+	// tCuFrameu238->Project("uCuFrameu238M1", "Ener2", "Multiplicity==1");
 
-	t600mKco60->Project("u600mKco60M2", "Ener2", "Multiplicity==2");
-	t600mKk40->Project("u600mKk40M2", "Ener2", "Multiplicity==2");
-	t600mKth232->Project("u600mKth232M2", "Ener2", "Multiplicity==2");
-	t600mKu238->Project("u600mKu238M2", "Ener2", "Multiplicity==2");
+	// t600mKco60->Project("u600mKco60M1", "Ener2", "Multiplicity==1");
+	// t600mKk40->Project("u600mKk40M1", "Ener2", "Multiplicity==1");
+	// t600mKth232->Project("u600mKth232M1", "Ener2", "Multiplicity==1");
+	// t600mKu238->Project("u600mKu238M1", "Ener2", "Multiplicity==1");
 
-	tOVCco60->Project("uOVCco60M2", "Ener2", "Multiplicity==2");
-	tOVCk40->Project("uOVCk40M2", "Ener2", "Multiplicity==2");
-	tOVCth232->Project("uOVCth232M2", "Ener2", "Multiplicity==2");
-	tOVCu238->Project("uOVCu238M2", "Ener2", "Multiplicity==2");
+	// tOVCco60->Project("uOVCco60M1", "Ener2", "Multiplicity==1");
+	// tOVCk40->Project("uOVCk40M1", "Ener2", "Multiplicity==1");
+	// tOVCth232->Project("uOVCth232M1", "Ener2", "Multiplicity==1");
+	// tOVCu238->Project("uOVCu238M1", "Ener2", "Multiplicity==1");
 
-	tPbRomco60->Project("uPbRomco60M2", "Ener2", "Multiplicity==2");
-	tPbRomk40->Project("uPbRomk40M2", "Ener2", "Multiplicity==2");
-	tPbRomth232->Project("uPbRomth232M2", "Ener2", "Multiplicity==2");
-	tPbRomu238->Project("uPbRomu238M2", "Ener2", "Multiplicity==2");
+	// tPbRomco60->Project("uPbRomco60M1", "Ener2", "Multiplicity==1");
+	// tPbRomk40->Project("uPbRomk40M1", "Ener2", "Multiplicity==1");
+	// tPbRomth232->Project("uPbRomth232M1", "Ener2", "Multiplicity==1");
+	// tPbRomu238->Project("uPbRomu238M1", "Ener2", "Multiplicity==1");
 
-	tExtPbbi210->Project("uExtPbbi210M2", "Ener2", "Multiplicity==2");
-
-	SmearMC(uTeO20nuM1, hTeO20nuM1);
-	SmearMC(uTeO22nuM1, hTeO22nuM1);
-	SmearMC(uTeO2co60M1, hTeO2co60M1);
-	SmearMC(uTeO2k40M1, hTeO2k40M1);
-	SmearMC(uTeO2po210M1, hTeO2po210M1);
-	SmearMC(uTeO2ra228pb208M1, hTeO2ra228pb208M1);
-	SmearMC(uTeO2th230onlyM1, hTeO2th230onlyM1);
-	SmearMC(uTeO2th232onlyM1, hTeO2th232onlyM1);
-	SmearMC(uCuFrameco60M1, hCuFrameco60M1);
-	SmearMC(uCuFrameth232M1, hCuFrameth232M1);
-	SmearMC(uCuFrameu238M1, hCuFrameu238M1);
-	SmearMC(uCuFramek40M1, hCuFramek40M1);
-	SmearMC(u600mKco60M1, h600mKco60M1);
-	SmearMC(u600mKth232M1, h600mKth232M1);
-	SmearMC(u600mKu238M1, h600mKu238M1);
-	SmearMC(u600mKk40M1, h600mKk40M1);
-	SmearMC(uOVCco60M1, hOVCco60M1);
-	SmearMC(uOVCth232M1, hOVCth232M1);
-	SmearMC(uOVCu238M1, hOVCu238M1);
-	SmearMC(uOVCk40M1, hOVCk40M1);
-	SmearMC(uPbRomco60M1, hPbRomco60M1);
-	SmearMC(uPbRomth232M1, hPbRomth232M1);
-	SmearMC(uPbRomu238M1, hPbRomu238M1);
-	SmearMC(uPbRomk40M1, hPbRomk40M1);
-	SmearMC(uExtPbbi210M1, hExtPbbi210M1);
+	// tExtPbbi210->Project("uExtPbbi210M1", "Ener2", "Multiplicity==1");
 
 
-	SmearMC(uTeO20nuM2, hTeO20nuM2);
-	SmearMC(uTeO22nuM2, hTeO22nuM2);
-	SmearMC(uTeO2co60M2, hTeO2co60M2);
-	SmearMC(uTeO2k40M2, hTeO2k40M2);
-	SmearMC(uTeO2po210M2, hTeO2po210M2);
-	SmearMC(uTeO2ra228pb208M2, hTeO2ra228pb208M2);
-	SmearMC(uTeO2th230onlyM2, hTeO2th230onlyM2);
-	SmearMC(uTeO2th232onlyM2, hTeO2th232onlyM2);
-	SmearMC(uCuFrameco60M2, hCuFrameco60M2);
-	SmearMC(uCuFrameth232M2, hCuFrameth232M2);
-	SmearMC(uCuFrameu238M2, hCuFrameu238M2);
-	SmearMC(uCuFramek40M2, hCuFramek40M2);
-	SmearMC(u600mKco60M2, h600mKco60M2);
-	SmearMC(u600mKth232M2, h600mKth232M2);
-	SmearMC(u600mKu238M2, h600mKu238M2);
-	SmearMC(u600mKk40M2, h600mKk40M2);
-	SmearMC(uOVCco60M2, hOVCco60M2);
-	SmearMC(uOVCth232M2, hOVCth232M2);
-	SmearMC(uOVCu238M2, hOVCu238M2);
-	SmearMC(uOVCk40M2, hOVCk40M2);
-	SmearMC(uPbRomco60M2, hPbRomco60M2);
-	SmearMC(uPbRomth232M2, hPbRomth232M2);
-	SmearMC(uPbRomu238M2, hPbRomu238M2);
-	SmearMC(uPbRomk40M2, hPbRomk40M2);
-	SmearMC(uExtPbbi210M2, hExtPbbi210M2);
+	// tTeO20nu->Project("uTeO20nuM2", "Ener2", "Multiplicity==2");
+	// tTeO22nu->Project("uTeO22nuM2", "Ener2", "Multiplicity==2");
+	// tTeO2co60->Project("uTeO2co60M2", "Ener2", "Multiplicity==2");
+	// tTeO2k40->Project("uTeO2k40M2", "Ener2", "Multiplicity==2");
+	// tTeO2po210->Project("uTeO2po210M2", "Ener2", "Multiplicity==2");
+	// tTeO2ra228pb208->Project("uTeO2ra228pb208M2", "Ener2", "Multiplicity==2");
+	// tTeO2th230only->Project("uTeO2th230onlyM2", "Ener2", "Multiplicity==2");
+	// tTeO2th232only->Project("uTeO2th232onlyM2", "Ener2", "Multiplicity==2");
+
+	// tCuFrameco60->Project("uCuFrameco60M2", "Ener2", "Multiplicity==2");
+	// tCuFramek40->Project("uCuFramek40M2", "Ener2", "Multiplicity==2");
+	// tCuFrameth232->Project("uCuFrameth232M2", "Ener2", "Multiplicity==2");
+	// tCuFrameu238->Project("uCuFrameu238M2", "Ener2", "Multiplicity==2");
+
+	// t600mKco60->Project("u600mKco60M2", "Ener2", "Multiplicity==2");
+	// t600mKk40->Project("u600mKk40M2", "Ener2", "Multiplicity==2");
+	// t600mKth232->Project("u600mKth232M2", "Ener2", "Multiplicity==2");
+	// t600mKu238->Project("u600mKu238M2", "Ener2", "Multiplicity==2");
+
+	// tOVCco60->Project("uOVCco60M2", "Ener2", "Multiplicity==2");
+	// tOVCk40->Project("uOVCk40M2", "Ener2", "Multiplicity==2");
+	// tOVCth232->Project("uOVCth232M2", "Ener2", "Multiplicity==2");
+	// tOVCu238->Project("uOVCu238M2", "Ener2", "Multiplicity==2");
+
+	// tPbRomco60->Project("uPbRomco60M2", "Ener2", "Multiplicity==2");
+	// tPbRomk40->Project("uPbRomk40M2", "Ener2", "Multiplicity==2");
+	// tPbRomth232->Project("uPbRomth232M2", "Ener2", "Multiplicity==2");
+	// tPbRomu238->Project("uPbRomu238M2", "Ener2", "Multiplicity==2");
+
+	// tExtPbbi210->Project("uExtPbbi210M2", "Ener2", "Multiplicity==2");
+
+	CombineAndSmear(tTeO20nu, uTeO20nuM1, hTeO20nuM1, 1, dSigma);
+	CombineAndSmear(tTeO22nu, uTeO22nuM1, hTeO22nuM1, 1, dSigma);
+	// CombineAndSmear(tTeO2co60, uTeO2co60M1, hTeO2co60M1, 1, dSigma);
+	// CombineAndSmear(tTeO2k40, uTeO2k40M1, hTeO2k40M1, 1, dSigma);
+	// CombineAndSmear(tTeO2po210, uTeO2po210M1, hTeO2po210M1, 1, dSigma);
+	// CombineAndSmear(tTeO2ra228pb208, uTeO2ra228pb208M1, hTeO2ra228pb208M1, 1, dSigma);
+	// CombineAndSmear(tTeO2th230only, uTeO2th230onlyM1, hTeO2th230onlyM1, 1, dSigma);
+	// CombineAndSmear(tTeO2th232only, uTeO2th232onlyM1, hTeO2th232onlyM1, 1, dSigma);
+	// CombineAndSmear(tCuFrameco60, uCuFrameco60M1, hCuFrameco60M1, 1, dSigma);
+	// CombineAndSmear(tCuFrameth232, uCuFrameth232M1, hCuFrameth232M1, 1, dSigma);
+	// CombineAndSmear(tCuFrameu238, uCuFrameu238M1, hCuFrameu238M1, 1, dSigma);
+	// CombineAndSmear(tCuFramek40, uCuFramek40M1, hCuFramek40M1, 1, dSigma);
+	// CombineAndSmear(t600mKco60, u600mKco60M1, h600mKco60M1, 1, dSigma);
+	// CombineAndSmear(t600mKth232, u600mKth232M1, h600mKth232M1, 1, dSigma);
+	// CombineAndSmear(t600mKu238, u600mKu238M1, h600mKu238M1, 1, dSigma);
+	// CombineAndSmear(t600mKk40, u600mKk40M1, h600mKk40M1, 1, dSigma);
+	// CombineAndSmear(tOVCco60, uOVCco60M1, hOVCco60M1, 1, dSigma);
+	// CombineAndSmear(tOVCth232, uOVCth232M1, hOVCth232M1, 1, dSigma);
+	// CombineAndSmear(tOVCu238, uOVCu238M1, hOVCu238M1, 1, dSigma);
+	// CombineAndSmear(tOVCk40, uOVCk40M1, hOVCk40M1, 1, dSigma);
+	// CombineAndSmear(tPbRomco60, uPbRomco60M1, hPbRomco60M1, 1, dSigma);
+	// CombineAndSmear(tPbRomth232, uPbRomth232M1, hPbRomth232M1, 1, dSigma);
+	// CombineAndSmear(tPbRomu238, uPbRomu238M1, hPbRomu238M1, 1, dSigma);
+	// CombineAndSmear(tPbRomk40, uPbRomk40M1, hPbRomk40M1, 1, dSigma);
+	// CombineAndSmear(tExtPbbi210, uExtPbbi210M1, hExtPbbi210M1, 1, dSigma);
+
+
+	CombineAndSmear(tTeO20nu, uTeO20nuM2, hTeO20nuM2, 2, dSigma);
+	CombineAndSmear(tTeO22nu, uTeO22nuM2, hTeO22nuM2, 2, dSigma);
+	// CombineAndSmear(tTeO2co60, uTeO2co60M2, hTeO2co60M2, 2, dSigma);
+	// CombineAndSmear(tTeO2k40, uTeO2k40M2, hTeO2k40M2, 2, dSigma);
+	// CombineAndSmear(tTeO2po210, uTeO2po210M2, hTeO2po210M2, 2, dSigma);
+	// CombineAndSmear(tTeO2ra228pb208, uTeO2ra228pb208M2, hTeO2ra228pb208M2, 2, dSigma);
+	// CombineAndSmear(tTeO2th230only, uTeO2th230onlyM2, hTeO2th230onlyM2, 2, dSigma);
+	// CombineAndSmear(tTeO2th232only, uTeO2th232onlyM2, hTeO2th232onlyM2, 2, dSigma);
+	// CombineAndSmear(tCuFrameco60, uCuFrameco60M2, hCuFrameco60M2, 2, dSigma);
+	// CombineAndSmear(tCuFrameth232, uCuFrameth232M2, hCuFrameth232M2, 2, dSigma);
+	// CombineAndSmear(tCuFrameu238, uCuFrameu238M2, hCuFrameu238M2, 2, dSigma);
+	// CombineAndSmear(tCuFramek40, uCuFramek40M2, hCuFramek40M2, 2, dSigma);
+	// CombineAndSmear(t600mKco60, u600mKco60M2, h600mKco60M2, 2, dSigma);
+	// CombineAndSmear(t600mKth232, u600mKth232M2, h600mKth232M2, 2, dSigma);
+	// CombineAndSmear(t600mKu238, u600mKu238M2, h600mKu238M2, 2, dSigma);
+	// CombineAndSmear(t600mKk40, u600mKk40M2, h600mKk40M2, 2, dSigma);
+	// CombineAndSmear(tOVCco60, uOVCco60M2, hOVCco60M2, 2, dSigma);
+	// CombineAndSmear(tOVCth232, uOVCth232M2, hOVCth232M2, 2, dSigma);
+	// CombineAndSmear(tOVCu238, uOVCu238M2, hOVCu238M2, 2, dSigma);
+	// CombineAndSmear(tOVCk40, uOVCk40M2, hOVCk40M2, 2, dSigma);
+	// CombineAndSmear(tPbRomco60, uPbRomco60M2, hPbRomco60M2, 2, dSigma);
+	// CombineAndSmear(tPbRomth232, uPbRomth232M2, hPbRomth232M2, 2, dSigma);
+	// CombineAndSmear(tPbRomu238, uPbRomu238M2, hPbRomu238M2, 2, dSigma);
+	// CombineAndSmear(tPbRomk40, uPbRomk40M2, hPbRomk40M2, 2, dSigma);
+	// CombineAndSmear(tExtPbbi210, uExtPbbi210M2, hExtPbbi210M2, 2, dSigma);
 
 
 	NormalizePDFPair( hTeO20nuM1, hTeO20nuM2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hTeO22nuM1, hTeO22nuM2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2co60M1, hTeO2co60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2k40M1, hTeO2k40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2po210M1, hTeO2po210M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2ra228pb208M1, hTeO2ra228pb208M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2th230onlyM1, hTeO2th230onlyM2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hTeO2th232onlyM1, hTeO2th232onlyM2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2co60M1, hTeO2co60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2k40M1, hTeO2k40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2po210M1, hTeO2po210M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2ra228pb208M1, hTeO2ra228pb208M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2th230onlyM1, hTeO2th230onlyM2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hTeO2th232onlyM1, hTeO2th232onlyM2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hCuFrameco60M1, hCuFrameco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hCuFramek40M1, hCuFramek40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hCuFrameth232M1, hCuFrameth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hCuFrameu238M1, hCuFrameu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hCuFrameco60M1, hCuFrameco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hCuFramek40M1, hCuFramek40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hCuFrameth232M1, hCuFrameth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hCuFrameu238M1, hCuFrameu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( h600mKco60M1, h600mKco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( h600mKk40M1, h600mKk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( h600mKth232M1, h600mKth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( h600mKu238M1, h600mKu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( h600mKco60M1, h600mKco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( h600mKk40M1, h600mKk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( h600mKth232M1, h600mKth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( h600mKu238M1, h600mKu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hOVCco60M1, hOVCco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hOVCk40M1, hOVCk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hOVCth232M1, hOVCth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hOVCu238M1, hOVCu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hOVCco60M1, hOVCco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hOVCk40M1, hOVCk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hOVCth232M1, hOVCth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hOVCu238M1, hOVCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hPbRomco60M1, hPbRomco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hPbRomk40M1, hPbRomk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hPbRomth232M1, hPbRomth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hPbRomu238M1, hPbRomu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hPbRomco60M1, hPbRomco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hPbRomk40M1, hPbRomk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hPbRomth232M1, hPbRomth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hPbRomu238M1, hPbRomu238M2, dMinEnergy, dMaxEnergy);
 
 	TFile *file1 = new TFile("MCProduction_ReducedBulk.root", "RECREATE");
 	hTeO20nuM1->Write();
@@ -735,7 +757,7 @@ void SaveHistogramsReducedSurface()
 
 void SaveHistogramsBulkInner()
 {
-	std::string sDataDir = "/cuore/data/simulation/CUORE0/t14.08/production_g2root-r363/ntp/Bulk/";
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Production/";
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
@@ -767,13 +789,8 @@ void SaveHistogramsBulkInner()
 	TH1D *hCuBox_CuFrameth232M1 = new TH1D("hCuBox_CuFrameth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M1 = new TH1D("hCuBox_CuFrameu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TH1D *hInternalco60M1 = new TH1D("hInternalco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalk40M1 = new TH1D("hInternalk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalth232M1 = new TH1D("hInternalth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalu238M1 = new TH1D("hInternalu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
-
-	TH1D *hPTFEth232M1 = new TH1D("hPTFEth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hPTFEu238M1 = new TH1D("hPTFEu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hPTFEth232M1 = new TH1D("hPTFEth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hPTFEu238M1 = new TH1D("hPTFEu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hTeO20nuM1 = new TH1D("hTeO20nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO22nuM1 = new TH1D("hTeO22nuM1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -829,13 +846,8 @@ void SaveHistogramsBulkInner()
 	TH1D *hCuBox_CuFrameth232M2 = new TH1D("hCuBox_CuFrameth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2 = new TH1D("hCuBox_CuFrameu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TH1D *hInternalco60M2 = new TH1D("hInternalco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalk40M2 = new TH1D("hInternalk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalth232M2 = new TH1D("hInternalth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hInternalu238M2 = new TH1D("hInternalu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
-
-	TH1D *hPTFEth232M2 = new TH1D("hPTFEth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hPTFEu238M2 = new TH1D("hPTFEu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hPTFEth232M2 = new TH1D("hPTFEth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hPTFEu238M2 = new TH1D("hPTFEu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hTeO20nuM2 = new TH1D("hTeO20nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO22nuM2 = new TH1D("hTeO22nuM2", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -874,8 +886,8 @@ void SaveHistogramsBulkInner()
 	TChain *tCuBoxpb210 = LoadMC(sDataDir.c_str(), "CuBox", "pb210");
 	TChain *tCuBoxth232 = LoadMC(sDataDir.c_str(), "CuBox", "th232");
 	TChain *tCuBoxu238 = LoadMC(sDataDir.c_str(), "CuBox", "u238");
-	TChain *tCuBoxeu152 = LoadMC(sDataDir.c_str(), "n7_CuBox", "eu152");
-	TChain *tCuBoxeu154 = LoadMC(sDataDir.c_str(), "n7_CuBox", "eu154");
+	TChain *tCuBoxeu152 = LoadMC(sDataDir.c_str(), "CuBox", "eu152");
+	TChain *tCuBoxeu154 = LoadMC(sDataDir.c_str(), "CuBox", "eu154");
 
 	TChain *tCuFrameco58 = LoadMC(sDataDir.c_str(), "CuFrame", "co58");
 	TChain *tCuFrameco60 = LoadMC(sDataDir.c_str(), "CuFrame", "co60");
@@ -886,18 +898,18 @@ void SaveHistogramsBulkInner()
 	TChain *tCuFrameth232 = LoadMC(sDataDir.c_str(), "CuFrame", "th232");
 	TChain *tCuFrameu238 = LoadMC(sDataDir.c_str(), "CuFrame", "u238");
 
-	TChain *tCuBox_CuFrameco60 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "co60");
-	TChain *tCuBox_CuFramek40 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "k40");
-	TChain *tCuBox_CuFrameth232 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232");
-	TChain *tCuBox_CuFrameu238 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238");
+	// TChain *tCuBox_CuFrameco60 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "co60");
+	// TChain *tCuBox_CuFramek40 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "k40");
+	// TChain *tCuBox_CuFrameth232 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232");
+	// TChain *tCuBox_CuFrameu238 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238");
 
-	TChain *tInternalco60 = LoadMC(sDataDir.c_str(), "InternalShields", "co60");
-	TChain *tInternalk40 = LoadMC(sDataDir.c_str(), "InternalShields", "k40");
-	TChain *tInternalth232 = LoadMC(sDataDir.c_str(), "InternalShields", "th232");
-	TChain *tInternalu238 = LoadMC(sDataDir.c_str(), "InternalShields", "u238");
+	// TChain *tInternalco60 = LoadMC(sDataDir.c_str(), "InternalShields", "co60");
+	// TChain *tInternalk40 = LoadMC(sDataDir.c_str(), "InternalShields", "k40");
+	// TChain *tInternalth232 = LoadMC(sDataDir.c_str(), "InternalShields", "th232");
+	// TChain *tInternalu238 = LoadMC(sDataDir.c_str(), "InternalShields", "u238");
 
-	TChain *tPTFEth232 = LoadMC(sDataDir.c_str(), "PTFE", "th232");
-	TChain *tPTFEu238 = LoadMC(sDataDir.c_str(), "PTFE", "u238");
+	// TChain *tPTFEth232 = LoadMC(sDataDir.c_str(), "PTFE", "th232");
+	// TChain *tPTFEu238 = LoadMC(sDataDir.c_str(), "PTFE", "u238");
 
 	TChain *tTeO20nu = LoadMC(sDataDir.c_str(), "TeO2", "0nu_1um");
 	TChain *tTeO22nu = LoadMC(sDataDir.c_str(), "TeO2", "2nu");
@@ -947,18 +959,18 @@ void SaveHistogramsBulkInner()
 	tCuFrameth232->Project("hCuFrameth232M1", "Ener2", "Multiplicity==1");
 	tCuFrameu238->Project("hCuFrameu238M1", "Ener2", "Multiplicity==1");
 
-	tCuBox_CuFrameco60->Project("hCuBox_CuFrameco60M1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFramek40->Project("hCuBox_CuFramek40M1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameth232->Project("hCuBox_CuFrameth232M1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameu238->Project("hCuBox_CuFrameu238M1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameco60->Project("hCuBox_CuFrameco60M1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFramek40->Project("hCuBox_CuFramek40M1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameth232->Project("hCuBox_CuFrameth232M1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameu238->Project("hCuBox_CuFrameu238M1", "Ener2", "Multiplicity==1");
 
-	tInternalco60->Project("hInternalco60M1", "Ener2", "Multiplicity==1");
-	tInternalk40->Project("hInternalk40M1", "Ener2", "Multiplicity==1");
-	tInternalth232->Project("hInternalth232M1", "Ener2", "Multiplicity==1");
-	tInternalu238->Project("hInternalu238M1", "Ener2", "Multiplicity==1");
+	// tInternalco60->Project("hInternalco60M1", "Ener2", "Multiplicity==1");
+	// tInternalk40->Project("hInternalk40M1", "Ener2", "Multiplicity==1");
+	// tInternalth232->Project("hInternalth232M1", "Ener2", "Multiplicity==1");
+	// tInternalu238->Project("hInternalu238M1", "Ener2", "Multiplicity==1");
 
-	tPTFEth232->Project("hPTFEth232M1", "Ener2", "Multiplicity==1");
-	tPTFEu238->Project("hPTFEu238M1", "Ener2", "Multiplicity==1");
+	// tPTFEth232->Project("hPTFEth232M1", "Ener2", "Multiplicity==1");
+	// tPTFEu238->Project("hPTFEu238M1", "Ener2", "Multiplicity==1");
 
 
 	tTeO20nu->Project("hTeO20nuM1", "Ener2", "Multiplicity==1");
@@ -1009,18 +1021,18 @@ void SaveHistogramsBulkInner()
 	tCuFrameth232->Project("hCuFrameth232M2", "Ener2", "Multiplicity==2");
 	tCuFrameu238->Project("hCuFrameu238M2", "Ener2", "Multiplicity==2");
 
-	tCuBox_CuFrameco60->Project("hCuBox_CuFrameco60M2", "Ener2", "Multiplicity==2");
-	tCuBox_CuFramek40->Project("hCuBox_CuFramek40M2", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameth232->Project("hCuBox_CuFrameth232M2", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameu238->Project("hCuBox_CuFrameu238M2", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameco60->Project("hCuBox_CuFrameco60M2", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFramek40->Project("hCuBox_CuFramek40M2", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameth232->Project("hCuBox_CuFrameth232M2", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameu238->Project("hCuBox_CuFrameu238M2", "Ener2", "Multiplicity==2");
 
-	tInternalco60->Project("hInternalco60M2", "Ener2", "Multiplicity==2");
-	tInternalk40->Project("hInternalk40M2", "Ener2", "Multiplicity==2");
-	tInternalth232->Project("hInternalth232M2", "Ener2", "Multiplicity==2");
-	tInternalu238->Project("hInternalu238M2", "Ener2", "Multiplicity==2");
+	// tInternalco60->Project("hInternalco60M2", "Ener2", "Multiplicity==2");
+	// tInternalk40->Project("hInternalk40M2", "Ener2", "Multiplicity==2");
+	// tInternalth232->Project("hInternalth232M2", "Ener2", "Multiplicity==2");
+	// tInternalu238->Project("hInternalu238M2", "Ener2", "Multiplicity==2");
 
-	tPTFEth232->Project("hPTFEth232M2", "Ener2", "Multiplicity==2");
-	tPTFEu238->Project("hPTFEu238M2", "Ener2", "Multiplicity==2");
+	// tPTFEth232->Project("hPTFEth232M2", "Ener2", "Multiplicity==2");
+	// tPTFEu238->Project("hPTFEu238M2", "Ener2", "Multiplicity==2");
 
 	tTeO20nu->Project("hTeO20nuM2", "Ener2", "Multiplicity==2");
 	tTeO22nu->Project("hTeO22nuM2", "Ener2", "Multiplicity==2");
@@ -1049,7 +1061,19 @@ void SaveHistogramsBulkInner()
 
 
 	//////////////////////////////////
+	// CuBox+CuFrame here
+	// Total = CuBox + 0.2444254783*CuFrame
+	hCuBox_CuFrameco60M1->Add(hCuBoxco60M1, hCuFrameco60M1, 1.0, 0.2444254783);
+	hCuBox_CuFramek40M1->Add(hCuBoxk40M1, hCuFramek40M1, 1.0, 0.2444254783);
+	hCuBox_CuFrameth232M1->Add(hCuBoxth232M1, hCuFrameth232M1, 1.0, 0.2444254783);
+	hCuBox_CuFrameu238M1->Add(hCuBoxu238M1, hCuFrameu238M1, 1.0, 0.2444254783);
 
+	hCuBox_CuFrameco60M2->Add(hCuBoxco60M2, hCuFrameco60M2, 1.0, 0.2444254783);
+	hCuBox_CuFramek40M2->Add(hCuBoxk40M2, hCuFramek40M2, 1.0, 0.2444254783);
+	hCuBox_CuFrameth232M2->Add(hCuBoxth232M2, hCuFrameth232M2, 1.0, 0.2444254783);
+	hCuBox_CuFrameu238M2->Add(hCuBoxu238M2, hCuFrameu238M2, 1.0, 0.2444254783);
+
+	//////////////////////////////////
 
 	NormalizePDFPair( hCuBoxco58M1, hCuBoxco58M2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hCuBoxco60M1, hCuBoxco60M2, dMinEnergy, dMaxEnergy);
@@ -1077,13 +1101,8 @@ void SaveHistogramsBulkInner()
 	NormalizePDFPair( hCuBox_CuFrameth232M1, hCuBox_CuFrameth232M2,  dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hCuBox_CuFrameu238M1, hCuBox_CuFrameu238M2,  dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hInternalco60M1, hInternalco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hInternalk40M1, hInternalk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hInternalth232M1, hInternalth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hInternalu238M1, hInternalu238M2, dMinEnergy, dMaxEnergy);
-
-	NormalizePDFPair( hPTFEth232M1, hPTFEth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hPTFEu238M1, hPTFEu238M2, dMinEnergy, dMaxEnergy);	
+	// NormalizePDFPair( hPTFEth232M1, hPTFEth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hPTFEu238M1, hPTFEu238M2, dMinEnergy, dMaxEnergy);	
 
 	NormalizePDFPair( hTeO20nuM1, hTeO20nuM2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hTeO22nuM1, hTeO22nuM2, dMinEnergy, dMaxEnergy);
@@ -1138,13 +1157,8 @@ void SaveHistogramsBulkInner()
 	hCuBox_CuFrameth232M1->Write();
 	hCuBox_CuFrameu238M1->Write();
 
-	hInternalco60M1->Write();
-	hInternalk40M1->Write();
-	hInternalth232M1->Write();
-	hInternalu238M1->Write();	
-
-	hPTFEth232M1->Write();
-	hPTFEu238M1->Write();
+	// hPTFEth232M1->Write();
+	// hPTFEu238M1->Write();
 
 	hTeO20nuM1->Write();
 	hTeO22nuM1->Write();
@@ -1198,13 +1212,8 @@ void SaveHistogramsBulkInner()
 	hCuBox_CuFrameth232M2->Write();
 	hCuBox_CuFrameu238M2->Write();
 
-	hInternalco60M2->Write();
-	hInternalk40M2->Write();
-	hInternalth232M2->Write();
-	hInternalu238M2->Write();	
-
-	hPTFEth232M2->Write();
-	hPTFEu238M2->Write();
+	// hPTFEth232M2->Write();
+	// hPTFEu238M2->Write();
 
 	hTeO20nuM2->Write();
 	hTeO22nuM2->Write();
@@ -1239,7 +1248,7 @@ void SaveHistogramsBulkInner()
 void SaveHistogramsBulkOuter()
 {
 
-	std::string sDataDir = "/cuore/data/simulation/CUORE0/t14.08/production_g2root-r363/ntp/Bulk/";
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Production/";
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
@@ -1272,6 +1281,11 @@ void SaveHistogramsBulkOuter()
 	TH1D *hMBk40M1 = new TH1D("hMBk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hMBth232M1 = new TH1D("hMBth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hMBu238M1 = new TH1D("hMBu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hInternalco60M1 = new TH1D("hInternalco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalk40M1 = new TH1D("hInternalk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalth232M1 = new TH1D("hInternalth232M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalu238M1 = new TH1D("hInternalu238M1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hMCco60M1 = new TH1D("hMCco60M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hMCk40M1 = new TH1D("hMCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -1321,6 +1335,11 @@ void SaveHistogramsBulkOuter()
 	TH1D *hIVCth232M2 = new TH1D("hIVCth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hIVCu238M2 = new TH1D("hIVCu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
 
+	TH1D *hInternalco60M2 = new TH1D("hInternalco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalk40M2 = new TH1D("hInternalk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalth232M2 = new TH1D("hInternalth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalu238M2 = new TH1D("hInternalu238M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
 	TH1D *hMBco60M2 = new TH1D("hMBco60M2", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hMBk40M2 = new TH1D("hMBk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hMBth232M2 = new TH1D("hMBth232M2", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -1364,9 +1383,9 @@ void SaveHistogramsBulkOuter()
 	TChain *t50mKth232 = LoadMC(sDataDir.c_str(), "50mK", "th232");
 	TChain *t50mKu238 = LoadMC(sDataDir.c_str(), "50mK", "u238");
 
-	TChain *t600mKco60 = LoadMC(sDataDir.c_str(), "n7_600mK", "co60");
+	TChain *t600mKco60 = LoadMC(sDataDir.c_str(), "600mK", "co60");
 	TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
-	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "n7_600mK", "th232");
+	TChain *t600mKth232 = LoadMC(sDataDir.c_str(), "600mK", "th232");
 	TChain *t600mKu238 = LoadMC(sDataDir.c_str(), "600mK", "u238");
 
 	TChain *tExtPbbi210 = LoadMC(sDataDir.c_str(), "ExtPb4cm_210BiBStot", "1.23T");
@@ -1376,25 +1395,25 @@ void SaveHistogramsBulkOuter()
 	TChain *tIVCth232 = LoadMC(sDataDir.c_str(), "IVC", "th232");
 	TChain *tIVCu238 = LoadMC(sDataDir.c_str(), "IVC", "u238");
 
-	TChain *tOVCbi207 = LoadMC(sDataDir.c_str(), "OVC", "bi207");
+	// TChain *tOVCbi207 = LoadMC(sDataDir.c_str(), "OVC", "bi207");
 	TChain *tOVCco60 = LoadMC(sDataDir.c_str(), "OVC", "co60");
 	TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
 	TChain *tOVCth232 = LoadMC(sDataDir.c_str(), "OVC", "th232");
 	TChain *tOVCu238 = LoadMC(sDataDir.c_str(), "OVC", "u238");
 
-	TChain *tSIk40 = LoadMC(sDataDir.c_str(), "SI", "k40");
-	TChain *tSIth232 = LoadMC(sDataDir.c_str(), "SI", "th232");
-	TChain *tSIu238 = LoadMC(sDataDir.c_str(), "SI", "u238");
+	// TChain *tSIk40 = LoadMC(sDataDir.c_str(), "SI", "k40");
+	// TChain *tSIth232 = LoadMC(sDataDir.c_str(), "SI", "th232");
+	// TChain *tSIu238 = LoadMC(sDataDir.c_str(), "SI", "u238");
 
-	TChain *tMBco60 = LoadMC(sDataDir.c_str(), "MB", "co60");
-	TChain *tMBk40 = LoadMC(sDataDir.c_str(), "MB", "k40");
-	TChain *tMBth232 = LoadMC(sDataDir.c_str(), "MB", "th232");
-	TChain *tMBu238 = LoadMC(sDataDir.c_str(), "MB", "u238");
+	// TChain *tMBco60 = LoadMC(sDataDir.c_str(), "MB", "co60");
+	// TChain *tMBk40 = LoadMC(sDataDir.c_str(), "MB", "k40");
+	// TChain *tMBth232 = LoadMC(sDataDir.c_str(), "MB", "th232");
+	// TChain *tMBu238 = LoadMC(sDataDir.c_str(), "MB", "u238");
 
-	TChain *tMCco60 = LoadMC(sDataDir.c_str(), "MC", "co60");
-	TChain *tMCk40 = LoadMC(sDataDir.c_str(), "MC", "k40");
-	TChain *tMCth232 = LoadMC(sDataDir.c_str(), "MC", "th232");
-	TChain *tMCu238 = LoadMC(sDataDir.c_str(), "MC", "u238");
+	// TChain *tMCco60 = LoadMC(sDataDir.c_str(), "MC", "co60");
+	// TChain *tMCk40 = LoadMC(sDataDir.c_str(), "MC", "k40");
+	// TChain *tMCth232 = LoadMC(sDataDir.c_str(), "MC", "th232");
+	// TChain *tMCu238 = LoadMC(sDataDir.c_str(), "MC", "u238");
 
 	// TChain *tPbRombi207 = LoadMC(sDataDir.c_str(), "PbRom", "bi207");
 	TChain *tPbRomco60 = LoadMC(sDataDir.c_str(), "PbRom", "co60");
@@ -1429,25 +1448,25 @@ void SaveHistogramsBulkOuter()
 	tIVCth232->Project("hIVCth232M1", "Ener2", "Multiplicity==1");
 	tIVCu238->Project("hIVCu238M1", "Ener2", "Multiplicity==1");
 
-	tOVCbi207->Project("hOVCbi207M1", "Ener2", "Multiplicity==1");
+	// tOVCbi207->Project("hOVCbi207M1", "Ener2", "Multiplicity==1");
 	tOVCco60->Project("hOVCco60M1", "Ener2", "Multiplicity==1");
 	tOVCk40->Project("hOVCk40M1", "Ener2", "Multiplicity==1");
 	tOVCth232->Project("hOVCth232M1", "Ener2", "Multiplicity==1");
 	tOVCu238->Project("hOVCu238M1", "Ener2", "Multiplicity==1");
 
-	tMBco60->Project("hMBco60M1", "Ener2", "Multiplicity==1");
-	tMBk40->Project("hMBk40M1", "Ener2", "Multiplicity==1");
-	tMBth232->Project("hMBth232M1", "Ener2", "Multiplicity==1");
-	tMBu238->Project("hMBu238M1", "Ener2", "Multiplicity==1");
+	// tMBco60->Project("hMBco60M1", "Ener2", "Multiplicity==1");
+	// tMBk40->Project("hMBk40M1", "Ener2", "Multiplicity==1");
+	// tMBth232->Project("hMBth232M1", "Ener2", "Multiplicity==1");
+	// tMBu238->Project("hMBu238M1", "Ener2", "Multiplicity==1");
 
-	tMCco60->Project("hMCco60M1", "Ener2", "Multiplicity==1");
-	tMCk40->Project("hMCk40M1", "Ener2", "Multiplicity==1");
-	tMCth232->Project("hMCth232M1", "Ener2", "Multiplicity==1");
-	tMCu238->Project("hMCu238M1", "Ener2", "Multiplicity==1");
+	// tMCco60->Project("hMCco60M1", "Ener2", "Multiplicity==1");
+	// tMCk40->Project("hMCk40M1", "Ener2", "Multiplicity==1");
+	// tMCth232->Project("hMCth232M1", "Ener2", "Multiplicity==1");
+	// tMCu238->Project("hMCu238M1", "Ener2", "Multiplicity==1");
 
-	tSIk40->Project("hSIk40M1", "Ener2", "Multiplicity==1");
-	tSIth232->Project("hSIth232M1", "Ener2", "Multiplicity==1");
-	tSIu238->Project("hSIu238M1", "Ener2", "Multiplicity==1");
+	// tSIk40->Project("hSIk40M1", "Ener2", "Multiplicity==1");
+	// tSIth232->Project("hSIth232M1", "Ener2", "Multiplicity==1");
+	// tSIu238->Project("hSIu238M1", "Ener2", "Multiplicity==1");
 
 	// tPbRombi207->Project("hPbRombi207M1", "Ener2", "Multiplicity==1");
 	tPbRomco60->Project("hPbRomco60M1", "Ener2", "Multiplicity==1");
@@ -1483,25 +1502,25 @@ void SaveHistogramsBulkOuter()
 	tIVCth232->Project("hIVCth232M2", "Ener2", "Multiplicity==2");
 	tIVCu238->Project("hIVCu238M2", "Ener2", "Multiplicity==2");
 
-	tOVCbi207->Project("hOVCbi207M2", "Ener2", "Multiplicity==2");
+	// tOVCbi207->Project("hOVCbi207M2", "Ener2", "Multiplicity==2");
 	tOVCco60->Project("hOVCco60M2", "Ener2", "Multiplicity==2");
 	tOVCk40->Project("hOVCk40M2", "Ener2", "Multiplicity==2");
 	tOVCth232->Project("hOVCth232M2", "Ener2", "Multiplicity==2");
 	tOVCu238->Project("hOVCu238M2", "Ener2", "Multiplicity==2");
 
-	tMBco60->Project("hMBco60M2", "Ener2", "Multiplicity==2");
-	tMBk40->Project("hMBk40M2", "Ener2", "Multiplicity==2");
-	tMBth232->Project("hMBth232M2", "Ener2", "Multiplicity==2");
-	tMBu238->Project("hMBu238M2", "Ener2", "Multiplicity==2");
+	// tMBco60->Project("hMBco60M2", "Ener2", "Multiplicity==2");
+	// tMBk40->Project("hMBk40M2", "Ener2", "Multiplicity==2");
+	// tMBth232->Project("hMBth232M2", "Ener2", "Multiplicity==2");
+	// tMBu238->Project("hMBu238M2", "Ener2", "Multiplicity==2");
 
-	tMCco60->Project("hMCco60M2", "Ener2", "Multiplicity==2");
-	tMCk40->Project("hMCk40M2", "Ener2", "Multiplicity==2");
-	tMCth232->Project("hMCth232M2", "Ener2", "Multiplicity==2");
-	tMCu238->Project("hMCu238M2", "Ener2", "Multiplicity==2");
+	// tMCco60->Project("hMCco60M2", "Ener2", "Multiplicity==2");
+	// tMCk40->Project("hMCk40M2", "Ener2", "Multiplicity==2");
+	// tMCth232->Project("hMCth232M2", "Ener2", "Multiplicity==2");
+	// tMCu238->Project("hMCu238M2", "Ener2", "Multiplicity==2");
 
-	tSIk40->Project("hSIk40M2", "Ener2", "Multiplicity==2");
-	tSIth232->Project("hSIth232M2", "Ener2", "Multiplicity==2");
-	tSIu238->Project("hSIu238M2", "Ener2", "Multiplicity==2");
+	// tSIk40->Project("hSIk40M2", "Ener2", "Multiplicity==2");
+	// tSIth232->Project("hSIth232M2", "Ener2", "Multiplicity==2");
+	// tSIu238->Project("hSIu238M2", "Ener2", "Multiplicity==2");
 
 	// tPbRombi207->Project("hPbRombi207M2", "Ener2", "Multiplicity==2");
 	tPbRomco60->Project("hPbRomco60M2", "Ener2", "Multiplicity==2");
@@ -1513,6 +1532,40 @@ void SaveHistogramsBulkOuter()
 	tPbRomth232->Project("hPbRomth232M2", "Ener2", "Multiplicity==2");
 	tPbRomu238->Project("hPbRomu238M2", "Ener2", "Multiplicity==2");
 
+	//////////////////////////////////
+	// Internal Shielding here:
+	// Total = 600mK + 0.8625620249*50mK + 2.3168024764*IVC
+	hInternalco60M1->Add(h600mKco60M1);
+	hInternalco60M1->Add(h50mKco60M1, 0.8625620249);
+	hInternalco60M1->Add(hIVCco60M1, 2.3168024764);
+
+	hInternalk40M1->Add(h600mKk40M1);
+	hInternalk40M1->Add(h50mKk40M1, 0.8625620249);
+	hInternalk40M1->Add(hIVCk40M1, 2.3168024764);
+
+	hInternalth232M1->Add(h600mKth232M1);
+	hInternalth232M1->Add(h50mKth232M1, 0.8625620249);
+	hInternalth232M1->Add(hIVCth232M1, 2.3168024764);
+
+	hInternalu238M1->Add(h600mKu238M1);
+	hInternalu238M1->Add(h50mKu238M1, 0.8625620249);
+	hInternalu238M1->Add(hIVCu238M1, 2.3168024764);
+
+	hInternalco60M2->Add(h600mKco60M2);
+	hInternalco60M2->Add(h50mKco60M2, 0.8625620249);
+	hInternalco60M2->Add(hIVCco60M2, 2.3168024764);
+
+	hInternalk40M2->Add(h600mKk40M2);
+	hInternalk40M2->Add(h50mKk40M2, 0.8625620249);
+	hInternalk40M2->Add(hIVCk40M2, 2.3168024764);
+
+	hInternalth232M2->Add(h600mKth232M2);
+	hInternalth232M2->Add(h50mKth232M2, 0.8625620249);
+	hInternalth232M2->Add(hIVCth232M2, 2.3168024764);
+
+	hInternalu238M2->Add(h600mKu238M2);
+	hInternalu238M2->Add(h50mKu238M2, 0.8625620249);
+	hInternalu238M2->Add(hIVCu238M2, 2.3168024764);
 
 	//////////////////////////////////
 
@@ -1536,25 +1589,31 @@ void SaveHistogramsBulkOuter()
 	NormalizePDFPair( hIVCth232M1, hIVCth232M2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hIVCu238M1, hIVCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hOVCbi207M1, hOVCbi207M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hInternalco60M1, hInternalco60M2,  dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hInternalk40M1, hInternalk40M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hInternalth232M1, hInternalth232M2, dMinEnergy, dMaxEnergy);
+	NormalizePDFPair( hInternalu238M1, hInternalu238M2, dMinEnergy, dMaxEnergy);
+
+
+	// NormalizePDFPair( hOVCbi207M1, hOVCbi207M2,  dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hOVCco60M1, hOVCco60M2,  dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hOVCk40M1, hOVCk40M2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hOVCth232M1, hOVCth232M2, dMinEnergy, dMaxEnergy);
 	NormalizePDFPair( hOVCu238M1, hOVCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hMBco60M1, hMBco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMBk40M1, hMBk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMBth232M1, hMBth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMBu238M1, hMBu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMBco60M1, hMBco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMBk40M1, hMBk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMBth232M1, hMBth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMBu238M1, hMBu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hMCco60M1, hMCco60M2,  dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMCk40M1, hMCk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMCth232M1, hMCth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hMCu238M1, hMCu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMCco60M1, hMCco60M2,  dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMCk40M1, hMCk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMCth232M1, hMCth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hMCu238M1, hMCu238M2, dMinEnergy, dMaxEnergy);
 
-	NormalizePDFPair( hSIk40M1, hSIk40M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hSIth232M1, hSIth232M2, dMinEnergy, dMaxEnergy);
-	NormalizePDFPair( hSIu238M1, hSIu238M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hSIk40M1, hSIk40M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hSIth232M1, hSIth232M2, dMinEnergy, dMaxEnergy);
+	// NormalizePDFPair( hSIu238M1, hSIu238M2, dMinEnergy, dMaxEnergy);
 
 
 	// NormalizePDFPair( hPbRombi207M1, hPbRombi207M2, dMinEnergy, dMaxEnergy);
@@ -1585,32 +1644,38 @@ void SaveHistogramsBulkOuter()
 	h600mKth232M1->Write();
 	h600mKu238M1->Write();
 
+	hInternalco60M1->Write();
+	hInternalk40M1->Write();
+	hInternalth232M1->Write();
+	hInternalu238M1->Write();	
+
 	hExtPbbi210M1->Write();
+
 
 	hIVCco60M1->Write();
 	hIVCk40M1->Write();
 	hIVCth232M1->Write();
 	hIVCu238M1->Write();
 
-	hOVCbi207M1->Write();
+	// hOVCbi207M1->Write();
 	hOVCco60M1->Write();
 	hOVCk40M1->Write();
 	hOVCth232M1->Write();
 	hOVCu238M1->Write();
 
-	hMBco60M1->Write();
-	hMBk40M1->Write();
-	hMBth232M1->Write();
-	hMBu238M1->Write();
+	// hMBco60M1->Write();
+	// hMBk40M1->Write();
+	// hMBth232M1->Write();
+	// hMBu238M1->Write();
 
-	hMCco60M1->Write();
-	hMCk40M1->Write();
-	hMCth232M1->Write();
-	hMCu238M1->Write();
+	// hMCco60M1->Write();
+	// hMCk40M1->Write();
+	// hMCth232M1->Write();
+	// hMCu238M1->Write();
 
-	hSIk40M1->Write();
-	hSIth232M1->Write();
-	hSIu238M1->Write();
+	// hSIk40M1->Write();
+	// hSIth232M1->Write();
+	// hSIu238M1->Write();
 
 	// hPbRombi207M1->Write();
 	hPbRomco60M1->Write();
@@ -1645,25 +1710,30 @@ void SaveHistogramsBulkOuter()
 	hIVCth232M2->Write();
 	hIVCu238M2->Write();
 
-	hOVCbi207M2->Write();
+	// hOVCbi207M2->Write();
 	hOVCco60M2->Write();
 	hOVCk40M2->Write();
 	hOVCth232M2->Write();
 	hOVCu238M2->Write();
 
-	hMBco60M2->Write();
-	hMBk40M2->Write();
-	hMBth232M2->Write();
-	hMBu238M2->Write();
+	hInternalco60M2->Write();
+	hInternalk40M2->Write();
+	hInternalth232M2->Write();
+	hInternalu238M2->Write();	
 
-	hMCco60M2->Write();
-	hMCk40M2->Write();
-	hMCth232M2->Write();
-	hMCu238M2->Write();
+	// hMBco60M2->Write();
+	// hMBk40M2->Write();
+	// hMBth232M2->Write();
+	// hMBu238M2->Write();
 
-	hSIk40M2->Write();
-	hSIth232M2->Write();
-	hSIu238M2->Write();
+	// hMCco60M2->Write();
+	// hMCk40M2->Write();
+	// hMCth232M2->Write();
+	// hMCu238M2->Write();
+
+	// hSIk40M2->Write();
+	// hSIth232M2->Write();
+	// hSIu238M2->Write();
 
 	// hPbRombi207M2->Write();
 	hPbRomco60M2->Write();
@@ -1683,7 +1753,7 @@ void SaveHistogramsBulkOuter()
 
 void SaveHistogramsBulkM2SumInner()
 {
-	std::string sDataDir = "/cuore/data/simulation/CUORE0/t14.08/production_g2root-r363/ntp/Bulk/";
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Production/";
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
@@ -2129,7 +2199,7 @@ void SaveHistogramsBulkM2SumInner()
 
 void SaveHistogramsBulkM2SumOuter()
 {
-	std::string sDataDir = "/cuore/data/simulation/CUORE0/t14.08/production_g2root-r363/ntp/Bulk/";
+	std::string sDataDir = "/cuore/user/zhubrian/MC/Bkg/Production/";
 
 	double dMinEnergy = 0;
 	double dMaxEnergy = 10000;
@@ -2532,11 +2602,11 @@ void SaveHistogramsSurfaceCrystal()
 	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
-	TH1D *hTeO2Spb210M1_01 = new TH1D("hTeO2Spb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M1_001 = new TH1D("hTeO2Spo210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M1_01 = new TH1D("hTeO2Spo210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Sth232M1_01 = new TH1D("hTeO2Sth232M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Su238M1_01 = new TH1D("hTeO2Su238M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spb210M1_01 = new TH1D("hTeO2Spb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M1_001 = new TH1D("hTeO2Spo210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M1_01 = new TH1D("hTeO2Spo210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Sth232M1_01 = new TH1D("hTeO2Sth232M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Su238M1_01 = new TH1D("hTeO2Su238M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
 
 
 	TH1D *hTeO2Sxpb210M1_001 = new TH1D("hTeO2Sxpb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2565,11 +2635,11 @@ void SaveHistogramsSurfaceCrystal()
 
 //////////////////////////////
 
-	TH1D *hTeO2Spb210M2_01 = new TH1D("hTeO2Spb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M2_001 = new TH1D("hTeO2Spo210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M2_01 = new TH1D("hTeO2Spo210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Sth232M2_01 = new TH1D("hTeO2Sth232M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Su238M2_01 = new TH1D("hTeO2Su238M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spb210M2_01 = new TH1D("hTeO2Spb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M2_001 = new TH1D("hTeO2Spo210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M2_01 = new TH1D("hTeO2Spo210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Sth232M2_01 = new TH1D("hTeO2Sth232M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Su238M2_01 = new TH1D("hTeO2Su238M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hTeO2Sxpb210M2_001 = new TH1D("hTeO2Sxpb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M2_01 = new TH1D("hTeO2Sxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2597,11 +2667,11 @@ void SaveHistogramsSurfaceCrystal()
 
 //////////////////////////////
 
-	TH1D *hTeO2Spb210M2Sum_01 = new TH1D("hTeO2Spb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M2Sum_001 = new TH1D("hTeO2Spo210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Spo210M2Sum_01 = new TH1D("hTeO2Spo210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Sth232M2Sum_01 = new TH1D("hTeO2Sth232M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hTeO2Su238M2Sum_01 = new TH1D("hTeO2Su238M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spb210M2Sum_01 = new TH1D("hTeO2Spb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M2Sum_001 = new TH1D("hTeO2Spo210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Spo210M2Sum_01 = new TH1D("hTeO2Spo210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Sth232M2Sum_01 = new TH1D("hTeO2Sth232M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hTeO2Su238M2Sum_01 = new TH1D("hTeO2Su238M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hTeO2Sxpb210M2Sum_001 = new TH1D("hTeO2Sxpb210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M2Sum_01 = new TH1D("hTeO2Sxpb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2627,11 +2697,11 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxra226pb210M2Sum_001 = new TH1D("hTeO2Sxra226pb210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M2Sum_0001 = new TH1D("hTeO2Sxpb210M2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TChain *tTeO2Spb210_01 = LoadMC(sDataDir.c_str(), "TeO2S", "pb210-.1");
-	TChain *tTeO2Spo210_001 = LoadMC(sDataDir.c_str(), "TeO2S", "po210-.01");
-	TChain *tTeO2Spo210_01 = LoadMC(sDataDir.c_str(), "TeO2S", "po210-.1");
-	TChain *tTeO2Sth232_01 = LoadMC(sDataDir.c_str(), "TeO2S", "th232-.1");
-	TChain *tTeO2Su238_01 = LoadMC(sDataDir.c_str(), "TeO2S", "u238-.1");
+	// TChain *tTeO2Spb210_01 = LoadMC(sDataDir.c_str(), "TeO2S", "pb210-.1");
+	// TChain *tTeO2Spo210_001 = LoadMC(sDataDir.c_str(), "TeO2S", "po210-.01");
+	// TChain *tTeO2Spo210_01 = LoadMC(sDataDir.c_str(), "TeO2S", "po210-.1");
+	// TChain *tTeO2Sth232_01 = LoadMC(sDataDir.c_str(), "TeO2S", "th232-.1");
+	// TChain *tTeO2Su238_01 = LoadMC(sDataDir.c_str(), "TeO2S", "u238-.1");
 
 
 	TChain *tTeO2Sxpb210_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "pb210-.01");
@@ -2661,11 +2731,11 @@ void SaveHistogramsSurfaceCrystal()
 
 ///////////////////
 
-	tTeO2Spb210_01->Project("hTeO2Spb210M1_01", "Ener2", "Multiplicity==1");
-	tTeO2Spo210_001->Project("hTeO2Spo210M1_001", "Ener2", "Multiplicity==1");
-	tTeO2Spo210_01->Project("hTeO2Spo210M1_01", "Ener2", "Multiplicity==1");
-	tTeO2Sth232_01->Project("hTeO2Sth232M1_01", "Ener2", "Multiplicity==1");
-	tTeO2Su238_01->Project("hTeO2Su238M1_01", "Ener2", "Multiplicity==1");
+	// tTeO2Spb210_01->Project("hTeO2Spb210M1_01", "Ener2", "Multiplicity==1");
+	// tTeO2Spo210_001->Project("hTeO2Spo210M1_001", "Ener2", "Multiplicity==1");
+	// tTeO2Spo210_01->Project("hTeO2Spo210M1_01", "Ener2", "Multiplicity==1");
+	// tTeO2Sth232_01->Project("hTeO2Sth232M1_01", "Ener2", "Multiplicity==1");
+	// tTeO2Su238_01->Project("hTeO2Su238M1_01", "Ener2", "Multiplicity==1");
 
 	tTeO2Sxpb210_001->Project("hTeO2Sxpb210M1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxpb210_01->Project("hTeO2Sxpb210M1_01", "Ener2", "Multiplicity==1");
@@ -2693,11 +2763,11 @@ void SaveHistogramsSurfaceCrystal()
 
 //////////////////////////////////
 
-	tTeO2Spb210_01->Project("hTeO2Spb210M2_01", "Ener2", "Multiplicity==2");
-	tTeO2Spo210_001->Project("hTeO2Spo210M2_001", "Ener2", "Multiplicity==2");
-	tTeO2Spo210_01->Project("hTeO2Spo210M2_01", "Ener2", "Multiplicity==2");
-	tTeO2Sth232_01->Project("hTeO2Sth232M2_01", "Ener2", "Multiplicity==2");
-	tTeO2Su238_01->Project("hTeO2Su238M2_01", "Ener2", "Multiplicity==2");
+	// tTeO2Spb210_01->Project("hTeO2Spb210M2_01", "Ener2", "Multiplicity==2");
+	// tTeO2Spo210_001->Project("hTeO2Spo210M2_001", "Ener2", "Multiplicity==2");
+	// tTeO2Spo210_01->Project("hTeO2Spo210M2_01", "Ener2", "Multiplicity==2");
+	// tTeO2Sth232_01->Project("hTeO2Sth232M2_01", "Ener2", "Multiplicity==2");
+	// tTeO2Su238_01->Project("hTeO2Su238M2_01", "Ener2", "Multiplicity==2");
 
 	tTeO2Sxpb210_001->Project("hTeO2Sxpb210M2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxpb210_01->Project("hTeO2Sxpb210M2_01", "Ener2", "Multiplicity==2");
@@ -2725,43 +2795,44 @@ void SaveHistogramsSurfaceCrystal()
 
 //////////////////////////////////
 
-	tTeO2Spb210_01->Project("hTeO2Spb210M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Spo210_001->Project("hTeO2Spo210M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Spo210_01->Project("hTeO2Spo210M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Sth232_01->Project("hTeO2Sth232M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Su238_01->Project("hTeO2Su238M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Spb210_01->Project("hTeO2Spb210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Spo210_001->Project("hTeO2Spo210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Spo210_01->Project("hTeO2Spo210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Sth232_01->Project("hTeO2Sth232M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Su238_01->Project("hTeO2Su238M2Sum_01", "Esum2", "Multiplicity==2");
 
-	tTeO2Sxpb210_001->Project("hTeO2Sxpb210M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxpb210_01->Project("hTeO2Sxpb210M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Sxpb210_1->Project("hTeO2Sxpb210M2Sum_1", "Esum2", "Multiplicity==2");
-	tTeO2Sxpb210_10->Project("hTeO2Sxpb210M2Sum_10", "Esum2", "Multiplicity==2");
-	tTeO2Sxpo210_001->Project("hTeO2Sxpo210M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxpo210_01->Project("hTeO2Sxpo210M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Sxpo210_1->Project("hTeO2Sxpo210M2Sum_1", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpo210_10->Project("hTeO2Sxpo210M2Sum_10", "Esum2", "Multiplicity==2");
-	tTeO2Sxth232_001->Project("hTeO2Sxth232M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxth232_01->Project("hTeO2Sxth232M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Sxth232_1->Project("hTeO2Sxth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tTeO2Sxth232_10->Project("hTeO2Sxth232M2Sum_10", "Esum2", "Multiplicity==2");
-	tTeO2Sxu238_001->Project("hTeO2Sxu238M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxu238_01->Project("hTeO2Sxu238M2Sum_01", "Esum2", "Multiplicity==2");
-	tTeO2Sxu238_1->Project("hTeO2Sxu238M2Sum_1", "Esum2", "Multiplicity==2");
-	tTeO2Sxu238_10->Project("hTeO2Sxu238M2Sum_10", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpb210_001->Project("hTeO2Sxpb210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpb210_01->Project("hTeO2Sxpb210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpb210_1->Project("hTeO2Sxpb210M2Sum_1", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpb210_10->Project("hTeO2Sxpb210M2Sum_10", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpo210_001->Project("hTeO2Sxpo210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpo210_01->Project("hTeO2Sxpo210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpo210_1->Project("hTeO2Sxpo210M2Sum_1", "Esum2", "Multiplicity==2");
+	// // tTeO2Sxpo210_10->Project("hTeO2Sxpo210M2Sum_10", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth232_001->Project("hTeO2Sxth232M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth232_01->Project("hTeO2Sxth232M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth232_1->Project("hTeO2Sxth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth232_10->Project("hTeO2Sxth232M2Sum_10", "Esum2", "Multiplicity==2");
+	// tTeO2Sxu238_001->Project("hTeO2Sxu238M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxu238_01->Project("hTeO2Sxu238M2Sum_01", "Esum2", "Multiplicity==2");
+	// tTeO2Sxu238_1->Project("hTeO2Sxu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tTeO2Sxu238_10->Project("hTeO2Sxu238M2Sum_10", "Esum2", "Multiplicity==2");
 
-	tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxu238th230_001->Project("hTeO2Sxu238th230M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M2Sum_001", "Esum2", "Multiplicity==2");
-	tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M2Sum_0001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxu238th230_001->Project("hTeO2Sxu238th230M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M2Sum_0001", "Esum2", "Multiplicity==2");
+
 
 ////////////////////////////
 
-	NormalizePDFs(hTeO2Spb210M1_01, hTeO2Spb210M2_01, hTeO2Spb210M2Sum_01, 0, 10000);
-	NormalizePDFs(hTeO2Spo210M1_001, hTeO2Spo210M2_001, hTeO2Spo210M2Sum_001, 0, 10000);
-	NormalizePDFs(hTeO2Spo210M1_01, hTeO2Spo210M2_01, hTeO2Spo210M2Sum_01, 0, 10000);
-	NormalizePDFs(hTeO2Sth232M1_01, hTeO2Sth232M2_01, hTeO2Sth232M2Sum_01, 0, 10000);
-	NormalizePDFs(hTeO2Su238M1_01, hTeO2Su238M2_01, hTeO2Su238M2Sum_01, 0, 10000);
+	// NormalizePDFs(hTeO2Spb210M1_01, hTeO2Spb210M2_01, hTeO2Spb210M2Sum_01, 0, 10000);
+	// NormalizePDFs(hTeO2Spo210M1_001, hTeO2Spo210M2_001, hTeO2Spo210M2Sum_001, 0, 10000);
+	// NormalizePDFs(hTeO2Spo210M1_01, hTeO2Spo210M2_01, hTeO2Spo210M2Sum_01, 0, 10000);
+	// NormalizePDFs(hTeO2Sth232M1_01, hTeO2Sth232M2_01, hTeO2Sth232M2Sum_01, 0, 10000);
+	// NormalizePDFs(hTeO2Su238M1_01, hTeO2Su238M2_01, hTeO2Su238M2Sum_01, 0, 10000);
 
 	NormalizePDFs(hTeO2Sxpb210M1_001, hTeO2Sxpb210M2_001, hTeO2Sxpb210M2Sum_001, 0, 10000);
 	NormalizePDFs(hTeO2Sxpb210M1_01, hTeO2Sxpb210M2_01, hTeO2Sxpb210M2Sum_01, 0, 10000);
@@ -2791,11 +2862,11 @@ void SaveHistogramsSurfaceCrystal()
 	TFile *file2 = new TFile("MCProduction_SurfaceCrystal_1keV.root", "RECREATE");
 
 
-	hTeO2Spb210M1_01->Write();
-	hTeO2Spo210M1_001->Write();
-	hTeO2Spo210M1_01->Write();
-	hTeO2Sth232M1_01->Write();
-	hTeO2Su238M1_01->Write();
+	// hTeO2Spb210M1_01->Write();
+	// hTeO2Spo210M1_001->Write();
+	// hTeO2Spo210M1_01->Write();
+	// hTeO2Sth232M1_01->Write();
+	// hTeO2Su238M1_01->Write();
 
 
 	hTeO2Sxpb210M1_001->Write();
@@ -2824,11 +2895,11 @@ void SaveHistogramsSurfaceCrystal()
 
 ///////////////////////////////
 
-	hTeO2Spb210M2_01->Write();
-	hTeO2Spo210M2_001->Write();
-	hTeO2Spo210M2_01->Write();
-	hTeO2Sth232M2_01->Write();
-	hTeO2Su238M2_01->Write();
+	// hTeO2Spb210M2_01->Write();
+	// hTeO2Spo210M2_001->Write();
+	// hTeO2Spo210M2_01->Write();
+	// hTeO2Sth232M2_01->Write();
+	// hTeO2Su238M2_01->Write();
 
 
 	hTeO2Sxpb210M2_001->Write();
@@ -2858,36 +2929,36 @@ void SaveHistogramsSurfaceCrystal()
 
 ///////////////////////////////
 
-	hTeO2Spb210M2Sum_01->Write();
-	hTeO2Spo210M2Sum_001->Write();
-	hTeO2Spo210M2Sum_01->Write();
-	hTeO2Sth232M2Sum_01->Write();
-	hTeO2Su238M2Sum_01->Write();
+	// hTeO2Spb210M2Sum_01->Write();
+	// hTeO2Spo210M2Sum_001->Write();
+	// hTeO2Spo210M2Sum_01->Write();
+	// hTeO2Sth232M2Sum_01->Write();
+	// hTeO2Su238M2Sum_01->Write();
 
 
-	hTeO2Sxpb210M2Sum_001->Write();
-	hTeO2Sxpb210M2Sum_01->Write();
-	hTeO2Sxpb210M2Sum_1->Write();
-	hTeO2Sxpb210M2Sum_10->Write();
-	hTeO2Sxpo210M2Sum_001->Write();
-	hTeO2Sxpo210M2Sum_01->Write();
-	hTeO2Sxpo210M2Sum_1->Write();
-	// hTeO2Sxpo210M2Sum_10->Write();	
-	hTeO2Sxth232M2Sum_001->Write();
-	hTeO2Sxth232M2Sum_01->Write();
-	hTeO2Sxth232M2Sum_1->Write();
-	hTeO2Sxth232M2Sum_10->Write();	
-	hTeO2Sxu238M2Sum_001->Write();
-	hTeO2Sxu238M2Sum_01->Write();
-	hTeO2Sxu238M2Sum_1->Write();
-	hTeO2Sxu238M2Sum_10->Write();
+	// hTeO2Sxpb210M2Sum_001->Write();
+	// hTeO2Sxpb210M2Sum_01->Write();
+	// hTeO2Sxpb210M2Sum_1->Write();
+	// hTeO2Sxpb210M2Sum_10->Write();
+	// hTeO2Sxpo210M2Sum_001->Write();
+	// hTeO2Sxpo210M2Sum_01->Write();
+	// hTeO2Sxpo210M2Sum_1->Write();
+	// // hTeO2Sxpo210M2Sum_10->Write();	
+	// hTeO2Sxth232M2Sum_001->Write();
+	// hTeO2Sxth232M2Sum_01->Write();
+	// hTeO2Sxth232M2Sum_1->Write();
+	// hTeO2Sxth232M2Sum_10->Write();	
+	// hTeO2Sxu238M2Sum_001->Write();
+	// hTeO2Sxu238M2Sum_01->Write();
+	// hTeO2Sxu238M2Sum_1->Write();
+	// hTeO2Sxu238M2Sum_10->Write();
 
-	hTeO2Sxth232onlyM2Sum_001->Write();
-	hTeO2Sxra228pb208M2Sum_001->Write();
-	hTeO2Sxu238th230M2Sum_001->Write();
-	hTeO2Sxth230onlyM2Sum_001->Write();
-	hTeO2Sxra226pb210M2Sum_001->Write();
-	hTeO2Sxpb210M2Sum_0001->Write();
+	// hTeO2Sxth232onlyM2Sum_001->Write();
+	// hTeO2Sxra228pb208M2Sum_001->Write();
+	// hTeO2Sxu238th230M2Sum_001->Write();
+	// hTeO2Sxth230onlyM2Sum_001->Write();
+	// hTeO2Sxra226pb210M2Sum_001->Write();
+	// hTeO2Sxpb210M2Sum_0001->Write();
 
 	file2->Write();
 
@@ -2905,8 +2976,8 @@ void SaveHistogramsSurfaceOther()
 	int dBinSize = 1;
 	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
 
-	TH1D *hCuBoxSth232M1_1 = new TH1D("hCuBoxSth232M1_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuBoxSu238M1_1 = new TH1D("hCuBoxSu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuBoxSth232M1_1 = new TH1D("hCuBoxSth232M1_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuBoxSu238M1_1 = new TH1D("hCuBoxSu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuBoxSxpb210M1_001 = new TH1D("hCuBoxSxpb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxpb210M1_01 = new TH1D("hCuBoxSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2921,8 +2992,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBoxSxu238M1_1 = new TH1D("hCuBoxSxu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxu238M1_10 = new TH1D("hCuBoxSxu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TH1D *hCuFrameSth232M1_1 = new TH1D("hCuFrameSth232M1_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuFrameSu238M1_1 = new TH1D("hCuFrameSu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuFrameSth232M1_1 = new TH1D("hCuFrameSth232M1_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuFrameSu238M1_1 = new TH1D("hCuFrameSu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuFrameSxpb210M1_001 = new TH1D("hCuFrameSxpb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuFrameSxpb210M1_01 = new TH1D("hCuFrameSxpb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2951,8 +3022,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M1_10 = new TH1D("hCuBox_CuFrameu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
 //////////////////////////////
-	TH1D *hCuBoxSth232M2_1 = new TH1D("hCuBoxSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuBoxSu238M2_1 = new TH1D("hCuBoxSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuBoxSth232M2_1 = new TH1D("hCuBoxSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuBoxSu238M2_1 = new TH1D("hCuBoxSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuBoxSxpb210M2_001 = new TH1D("hCuBoxSxpb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxpb210M2_01 = new TH1D("hCuBoxSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2967,8 +3038,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBoxSxu238M2_1 = new TH1D("hCuBoxSxu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxu238M2_10 = new TH1D("hCuBoxSxu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TH1D *hCuFrameSth232M2_1 = new TH1D("hCuFrameSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuFrameSu238M2_1 = new TH1D("hCuFrameSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuFrameSth232M2_1 = new TH1D("hCuFrameSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuFrameSu238M2_1 = new TH1D("hCuFrameSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuFrameSxpb210M2_001 = new TH1D("hCuFrameSxpb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuFrameSxpb210M2_01 = new TH1D("hCuFrameSxpb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2996,8 +3067,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M2_1 = new TH1D("hCuBox_CuFrameu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2_10 = new TH1D("hCuBox_CuFrameu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
 //////////////////////////////
-	TH1D *hCuBoxSth232M2Sum_1 = new TH1D("hCuBoxSth232M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuBoxSu238M2Sum_1 = new TH1D("hCuBoxSu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuBoxSth232M2Sum_1 = new TH1D("hCuBoxSth232M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuBoxSu238M2Sum_1 = new TH1D("hCuBoxSu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuBoxSxpb210M2Sum_001 = new TH1D("hCuBoxSxpb210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxpb210M2Sum_01 = new TH1D("hCuBoxSxpb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -3012,8 +3083,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBoxSxu238M2Sum_1 = new TH1D("hCuBoxSxu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxu238M2Sum_10 = new TH1D("hCuBoxSxu238M2Sum_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TH1D *hCuFrameSth232M2Sum_1 = new TH1D("hCuFrameSth232M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);	
-	TH1D *hCuFrameSu238M2Sum_1 = new TH1D("hCuFrameSu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
+	// TH1D *hCuFrameSth232M2Sum_1 = new TH1D("hCuFrameSth232M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);	
+	// TH1D *hCuFrameSu238M2Sum_1 = new TH1D("hCuFrameSu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hCuFrameSxpb210M2Sum_001 = new TH1D("hCuFrameSxpb210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuFrameSxpb210M2Sum_01 = new TH1D("hCuFrameSxpb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -3041,8 +3112,8 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M2Sum_1 = new TH1D("hCuBox_CuFrameu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2Sum_10 = new TH1D("hCuBox_CuFrameu238M2Sum_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
-	TChain *tCuBoxSth232_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "th232-1");
-	TChain *tCuBoxSu238_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "u238-1");
+	// TChain *tCuBoxSth232_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "th232-1");
+	// TChain *tCuBoxSu238_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "u238-1");
 
 	TChain *tCuBoxSxpb210_001 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-.01");
 	TChain *tCuBoxSxpb210_01 = LoadMC(sDataDir.c_str(), "CuBoxSx", "pb210-.1");
@@ -3057,8 +3128,8 @@ void SaveHistogramsSurfaceOther()
 	TChain *tCuBoxSxu238_1 = LoadMC(sDataDir.c_str(), "CuBoxSx", "u238-1");
 	TChain *tCuBoxSxu238_10 = LoadMC(sDataDir.c_str(), "CuBoxSx", "u238-10");
 
-	TChain *tCuFrameSth232_1 = LoadMC(sDataDir.c_str(), "CuFrameS", "th232-1");
-	TChain *tCuFrameSu238_1 = LoadMC(sDataDir.c_str(), "CuFrameS", "u238-1");
+	// TChain *tCuFrameSth232_1 = LoadMC(sDataDir.c_str(), "CuFrameS", "th232-1");
+	// TChain *tCuFrameSu238_1 = LoadMC(sDataDir.c_str(), "CuFrameS", "u238-1");
 
 	TChain *tCuFrameSxpb210_001 = LoadMC(sDataDir.c_str(), "CuFrameSx", "pb210-.01");
 	TChain *tCuFrameSxpb210_01 = LoadMC(sDataDir.c_str(), "CuFrameSx", "pb210-.1");
@@ -3073,22 +3144,22 @@ void SaveHistogramsSurfaceOther()
 	TChain *tCuFrameSxu238_1 = LoadMC(sDataDir.c_str(), "CuFrameSx", "u238-1");
 	TChain *tCuFrameSxu238_10 = LoadMC(sDataDir.c_str(), "CuFrameSx", "u238-10");
 
-	TChain *tCuBox_CuFramepb210_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-.01");
-	TChain *tCuBox_CuFramepb210_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-.1");
-	TChain *tCuBox_CuFramepb210_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-1");
-	TChain *tCuBox_CuFramepb210_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-10");
-	TChain *tCuBox_CuFrameth232_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-.01");
-	TChain *tCuBox_CuFrameth232_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-.1");
-	TChain *tCuBox_CuFrameth232_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-1");
-	TChain *tCuBox_CuFrameth232_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-10");
-	TChain *tCuBox_CuFrameu238_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-.01");
-	TChain *tCuBox_CuFrameu238_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-.1");
-	TChain *tCuBox_CuFrameu238_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-1");
-	TChain *tCuBox_CuFrameu238_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-10");
+	// TChain *tCuBox_CuFramepb210_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-.01");
+	// TChain *tCuBox_CuFramepb210_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-.1");
+	// TChain *tCuBox_CuFramepb210_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-1");
+	// TChain *tCuBox_CuFramepb210_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-10");
+	// TChain *tCuBox_CuFrameth232_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-.01");
+	// TChain *tCuBox_CuFrameth232_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-.1");
+	// TChain *tCuBox_CuFrameth232_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-1");
+	// TChain *tCuBox_CuFrameth232_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-10");
+	// TChain *tCuBox_CuFrameu238_001 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-.01");
+	// TChain *tCuBox_CuFrameu238_01 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-.1");
+	// TChain *tCuBox_CuFrameu238_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-1");
+	// TChain *tCuBox_CuFrameu238_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-10");
 
 ///////////////////
-	tCuBoxSth232_1->Project("hCuBoxSth232M1_1", "Ener2", "Multiplicity==1");
-	tCuBoxSu238_1->Project("hCuBoxSu238M1_1", "Ener2", "Multiplicity==1");
+	// tCuBoxSth232_1->Project("hCuBoxSth232M1_1", "Ener2", "Multiplicity==1");
+	// tCuBoxSu238_1->Project("hCuBoxSu238M1_1", "Ener2", "Multiplicity==1");
 
 	tCuBoxSxpb210_001->Project("hCuBoxSxpb210M1_001", "Ener2", "Multiplicity==1");
 	tCuBoxSxpb210_01->Project("hCuBoxSxpb210M1_01", "Ener2", "Multiplicity==1");
@@ -3103,8 +3174,8 @@ void SaveHistogramsSurfaceOther()
 	tCuBoxSxu238_1->Project("hCuBoxSxu238M1_1", "Ener2", "Multiplicity==1");
 	tCuBoxSxu238_10->Project("hCuBoxSxu238M1_10", "Ener2", "Multiplicity==1");
 
-	tCuFrameSth232_1->Project("hCuFrameSth232M1_1", "Ener2", "Multiplicity==1");
-	tCuFrameSu238_1->Project("hCuFrameSu238M1_1", "Ener2", "Multiplicity==1");
+	// tCuFrameSth232_1->Project("hCuFrameSth232M1_1", "Ener2", "Multiplicity==1");
+	// tCuFrameSu238_1->Project("hCuFrameSu238M1_1", "Ener2", "Multiplicity==1");
 
 	tCuFrameSxpb210_001->Project("hCuFrameSxpb210M1_001", "Ener2", "Multiplicity==1");
 	tCuFrameSxpb210_01->Project("hCuFrameSxpb210M1_01", "Ener2", "Multiplicity==1");
@@ -3119,23 +3190,23 @@ void SaveHistogramsSurfaceOther()
 	tCuFrameSxu238_1->Project("hCuFrameSxu238M1_1", "Ener2", "Multiplicity==1");
 	tCuFrameSxu238_10->Project("hCuFrameSxu238M1_10", "Ener2", "Multiplicity==1");
 
-	tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M1_001", "Ener2", "Multiplicity==1");
-	tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M1_01", "Ener2", "Multiplicity==1");
-	tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M1_1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M1_10", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M1_001", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M1_01", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M1_1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M1_10", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M1_001", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M1_01", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M1_1", "Ener2", "Multiplicity==1");
-	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M1_10", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M1_001", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M1_01", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M1_1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M1_10", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M1_001", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M1_01", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M1_1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M1_10", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M1_001", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M1_01", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M1_1", "Ener2", "Multiplicity==1");
+	// tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M1_10", "Ener2", "Multiplicity==1");
 
 
 //////////////////////////////////
-	tCuBoxSth232_1->Project("hCuBoxSth232M2_1", "Ener2", "Multiplicity==2");
-	tCuBoxSu238_1->Project("hCuBoxSu238M2_1", "Ener2", "Multiplicity==2");
+	// tCuBoxSth232_1->Project("hCuBoxSth232M2_1", "Ener2", "Multiplicity==2");
+	// tCuBoxSu238_1->Project("hCuBoxSu238M2_1", "Ener2", "Multiplicity==2");
 
 	tCuBoxSxpb210_001->Project("hCuBoxSxpb210M2_001", "Ener2", "Multiplicity==2");
 	tCuBoxSxpb210_01->Project("hCuBoxSxpb210M2_01", "Ener2", "Multiplicity==2");
@@ -3151,8 +3222,8 @@ void SaveHistogramsSurfaceOther()
 	tCuBoxSxu238_10->Project("hCuBoxSxu238M2_10", "Ener2", "Multiplicity==2");
 
 
-	tCuFrameSth232_1->Project("hCuFrameSth232M2_1", "Ener2", "Multiplicity==2");
-	tCuFrameSu238_1->Project("hCuFrameSu238M2_1", "Ener2", "Multiplicity==2");
+	// tCuFrameSth232_1->Project("hCuFrameSth232M2_1", "Ener2", "Multiplicity==2");
+	// tCuFrameSu238_1->Project("hCuFrameSu238M2_1", "Ener2", "Multiplicity==2");
 
 	tCuFrameSxpb210_001->Project("hCuFrameSxpb210M2_001", "Ener2", "Multiplicity==2");
 	tCuFrameSxpb210_01->Project("hCuFrameSxpb210M2_01", "Ener2", "Multiplicity==2");
@@ -3167,72 +3238,92 @@ void SaveHistogramsSurfaceOther()
 	tCuFrameSxu238_1->Project("hCuFrameSxu238M2_1", "Ener2", "Multiplicity==2");
 	tCuFrameSxu238_10->Project("hCuFrameSxu238M2_10", "Ener2", "Multiplicity==2");
 
-	tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M2_001", "Ener2", "Multiplicity==2");
-	tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M2_01", "Ener2", "Multiplicity==2");
-	tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M2_1", "Ener2", "Multiplicity==2");
-	tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M2_10", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M2_001", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M2_01", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M2_1", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M2_10", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M2_001", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M2_01", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2_1", "Ener2", "Multiplicity==2");
-	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2_10", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M2_001", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M2_01", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M2_1", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M2_10", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M2_001", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M2_01", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M2_1", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M2_10", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M2_001", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M2_01", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2_1", "Ener2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2_10", "Ener2", "Multiplicity==2");
 
 
 //////////////////////////////////
-	tCuBoxSth232_1->Project("hCuBoxSth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBoxSu238_1->Project("hCuBoxSu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBoxSth232_1->Project("hCuBoxSth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBoxSu238_1->Project("hCuBoxSu238M2Sum_1", "Esum2", "Multiplicity==2");
 
-	tCuBoxSxpb210_001->Project("hCuBoxSxpb210M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBoxSxpb210_01->Project("hCuBoxSxpb210M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBoxSxpb210_1->Project("hCuBoxSxpb210M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBoxSxpb210_10->Project("hCuBoxSxpb210M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuBoxSxth232_001->Project("hCuBoxSxth232M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBoxSxth232_01->Project("hCuBoxSxth232M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBoxSxth232_1->Project("hCuBoxSxth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBoxSxth232_10->Project("hCuBoxSxth232M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuBoxSxu238_001->Project("hCuBoxSxu238M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBoxSxu238_01->Project("hCuBoxSxu238M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBoxSxu238_1->Project("hCuBoxSxu238M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBoxSxu238_10->Project("hCuBoxSxu238M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBoxSxpb210_001->Project("hCuBoxSxpb210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBoxSxpb210_01->Project("hCuBoxSxpb210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBoxSxpb210_1->Project("hCuBoxSxpb210M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBoxSxpb210_10->Project("hCuBoxSxpb210M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBoxSxth232_001->Project("hCuBoxSxth232M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBoxSxth232_01->Project("hCuBoxSxth232M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBoxSxth232_1->Project("hCuBoxSxth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBoxSxth232_10->Project("hCuBoxSxth232M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBoxSxu238_001->Project("hCuBoxSxu238M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBoxSxu238_01->Project("hCuBoxSxu238M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBoxSxu238_1->Project("hCuBoxSxu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBoxSxu238_10->Project("hCuBoxSxu238M2Sum_10", "Esum2", "Multiplicity==2");
 
 
-	tCuFrameSth232_1->Project("hCuFrameSth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuFrameSu238_1->Project("hCuFrameSu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuFrameSth232_1->Project("hCuFrameSth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuFrameSu238_1->Project("hCuFrameSu238M2Sum_1", "Esum2", "Multiplicity==2");
 
-	tCuFrameSxpb210_001->Project("hCuFrameSxpb210M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuFrameSxpb210_01->Project("hCuFrameSxpb210M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuFrameSxpb210_1->Project("hCuFrameSxpb210M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuFrameSxpb210_10->Project("hCuFrameSxpb210M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuFrameSxth232_001->Project("hCuFrameSxth232M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuFrameSxth232_01->Project("hCuFrameSxth232M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuFrameSxth232_1->Project("hCuFrameSxth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuFrameSxth232_10->Project("hCuFrameSxth232M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuFrameSxu238_001->Project("hCuFrameSxu238M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuFrameSxu238_01->Project("hCuFrameSxu238M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuFrameSxu238_1->Project("hCuFrameSxu238M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuFrameSxu238_10->Project("hCuFrameSxu238M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuFrameSxpb210_001->Project("hCuFrameSxpb210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuFrameSxpb210_01->Project("hCuFrameSxpb210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuFrameSxpb210_1->Project("hCuFrameSxpb210M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuFrameSxpb210_10->Project("hCuFrameSxpb210M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuFrameSxth232_001->Project("hCuFrameSxth232M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuFrameSxth232_01->Project("hCuFrameSxth232M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuFrameSxth232_1->Project("hCuFrameSxth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuFrameSxth232_10->Project("hCuFrameSxth232M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuFrameSxu238_001->Project("hCuFrameSxu238M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuFrameSxu238_01->Project("hCuFrameSxu238M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuFrameSxu238_1->Project("hCuFrameSxu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuFrameSxu238_10->Project("hCuFrameSxu238M2Sum_10", "Esum2", "Multiplicity==2");
 
-	tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M2Sum_10", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M2Sum_001", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M2Sum_01", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2Sum_1", "Esum2", "Multiplicity==2");
-	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_001->Project("hCuBox_CuFramepb210M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_01->Project("hCuBox_CuFramepb210M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_1->Project("hCuBox_CuFramepb210M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFramepb210_10->Project("hCuBox_CuFramepb210M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_001->Project("hCuBox_CuFrameth232M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_01->Project("hCuBox_CuFrameth232M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_1->Project("hCuBox_CuFrameth232M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameth232_10->Project("hCuBox_CuFrameth232M2Sum_10", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_001->Project("hCuBox_CuFrameu238M2Sum_001", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M2Sum_01", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2Sum_1", "Esum2", "Multiplicity==2");
+	// tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2Sum_10", "Esum2", "Multiplicity==2");
 
+	//////////////////////////////////
+	// CuBox+CuFrame here
+	// Total = CuBox + 0.2444254783*CuFrame
+	hCuBox_CuFramepb210M1_10->Add(hCuBoxSxpb210M1_10, hCuFrameSxpb210M1_10, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M1_1->Add(hCuBoxSxpb210M1_1, hCuFrameSxpb210M1_1, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M1_01->Add(hCuBoxSxpb210M1_01, hCuFrameSxpb210M1_01, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M1_001->Add(hCuBoxSxpb210M1_001, hCuFrameSxpb210M1_001, 1.0, 0.2444254783);
+
+	hCuBox_CuFrameth232M1_10->Add(hCuBoxSxth232M1_10, hCuFrameSxth232M1_10, 1.0, 0.2444254783);
+	hCuBox_CuFrameu238M1_10->Add(hCuBoxSxu238M1_10, hCuFrameSxu238M1_10, 1.0, 0.2444254783);
+
+	hCuBox_CuFramepb210M2_10->Add(hCuBoxSxpb210M2_10, hCuFrameSxpb210M2_10, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M2_1->Add(hCuBoxSxpb210M2_1, hCuFrameSxpb210M2_1, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M2_01->Add(hCuBoxSxpb210M2_01, hCuFrameSxpb210M2_01, 1.0, 0.2444254783);
+	hCuBox_CuFramepb210M2_001->Add(hCuBoxSxpb210M2_001, hCuFrameSxpb210M2_001, 1.0, 0.2444254783);
+
+	hCuBox_CuFrameth232M2_10->Add(hCuBoxSxth232M2_10, hCuFrameSxth232M2_10, 1.0, 0.2444254783);
+	hCuBox_CuFrameu238M2_10->Add(hCuBoxSxu238M2_10, hCuFrameSxu238M2_10, 1.0, 0.2444254783);
 
 ////////////////////////////
 
-	NormalizePDFs(hCuBoxSth232M1_1, hCuBoxSth232M2_1, hCuBoxSth232M2Sum_1, 0, 10000);
-	NormalizePDFs(hCuBoxSu238M1_1, hCuBoxSu238M2_1, hCuBoxSu238M2Sum_1, 0, 10000);
+
+
+	// NormalizePDFs(hCuBoxSth232M1_1, hCuBoxSth232M2_1, hCuBoxSth232M2Sum_1, 0, 10000);
+	// NormalizePDFs(hCuBoxSu238M1_1, hCuBoxSu238M2_1, hCuBoxSu238M2Sum_1, 0, 10000);
 
 	NormalizePDFs(hCuBoxSxpb210M1_001, hCuBoxSxpb210M2_001, hCuBoxSxpb210M2Sum_001, 0, 10000);
 	NormalizePDFs(hCuBoxSxpb210M1_01, hCuBoxSxpb210M2_01, hCuBoxSxpb210M2Sum_01, 0, 10000);
@@ -3247,8 +3338,8 @@ void SaveHistogramsSurfaceOther()
 	NormalizePDFs(hCuBoxSxu238M1_1, hCuBoxSxu238M2_1, hCuBoxSxu238M2Sum_1, 0, 10000);
 	NormalizePDFs(hCuBoxSxu238M1_10, hCuBoxSxu238M2_10, hCuBoxSxu238M2Sum_10, 0, 10000);
 
-	NormalizePDFs(hCuFrameSth232M1_1, hCuFrameSth232M2_1, hCuFrameSth232M2Sum_1, 0, 10000);
-	NormalizePDFs(hCuFrameSu238M1_1, hCuFrameSu238M2_1, hCuFrameSu238M2Sum_1, 0, 10000);
+	// NormalizePDFs(hCuFrameSth232M1_1, hCuFrameSth232M2_1, hCuFrameSth232M2Sum_1, 0, 10000);
+	// NormalizePDFs(hCuFrameSu238M1_1, hCuFrameSu238M2_1, hCuFrameSu238M2Sum_1, 0, 10000);
 
 	NormalizePDFs(hCuFrameSxpb210M1_001, hCuFrameSxpb210M2_001, hCuFrameSxpb210M2Sum_001, 0, 10000);
 	NormalizePDFs(hCuFrameSxpb210M1_01, hCuFrameSxpb210M2_01, hCuFrameSxpb210M2Sum_01, 0, 10000);
@@ -3267,19 +3358,19 @@ void SaveHistogramsSurfaceOther()
 	NormalizePDFs(hCuBox_CuFramepb210M1_01 , hCuBox_CuFramepb210M2_01 , hCuBox_CuFramepb210M2Sum_01, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFramepb210M1_1 , hCuBox_CuFramepb210M2_1 , hCuBox_CuFramepb210M2Sum_1, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFramepb210M1_10 , hCuBox_CuFramepb210M2_10 , hCuBox_CuFramepb210M2Sum_10, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameth232M1_001 , hCuBox_CuFrameth232M2_001 , hCuBox_CuFrameth232M2Sum_001, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameth232M1_01 , hCuBox_CuFrameth232M2_01 , hCuBox_CuFrameth232M2Sum_01, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameth232M1_1 , hCuBox_CuFrameth232M2_1 , hCuBox_CuFrameth232M2Sum_1, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameth232M1_001 , hCuBox_CuFrameth232M2_001 , hCuBox_CuFrameth232M2Sum_001, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameth232M1_01 , hCuBox_CuFrameth232M2_01 , hCuBox_CuFrameth232M2Sum_01, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameth232M1_1 , hCuBox_CuFrameth232M2_1 , hCuBox_CuFrameth232M2Sum_1, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFrameth232M1_10 , hCuBox_CuFrameth232M2_10 , hCuBox_CuFrameth232M2Sum_10, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameu238M1_001 , hCuBox_CuFrameu238M2_001 , hCuBox_CuFrameu238M2Sum_001, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameu238M1_01 , hCuBox_CuFrameu238M2_01 , hCuBox_CuFrameu238M2Sum_01, 0, 10000); 
-	NormalizePDFs(hCuBox_CuFrameu238M1_1 , hCuBox_CuFrameu238M2_1 , hCuBox_CuFrameu238M2Sum_1, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameu238M1_001 , hCuBox_CuFrameu238M2_001 , hCuBox_CuFrameu238M2Sum_001, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameu238M1_01 , hCuBox_CuFrameu238M2_01 , hCuBox_CuFrameu238M2Sum_01, 0, 10000); 
+	// NormalizePDFs(hCuBox_CuFrameu238M1_1 , hCuBox_CuFrameu238M2_1 , hCuBox_CuFrameu238M2Sum_1, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFrameu238M1_10 , hCuBox_CuFrameu238M2_10 , hCuBox_CuFrameu238M2Sum_10, 0, 10000); 
 
 	TFile *file2 = new TFile("MCProduction_SurfaceOther_1keV.root", "RECREATE");
 
-	hCuBoxSth232M1_1->Write();
-	hCuBoxSu238M1_1->Write();
+	// hCuBoxSth232M1_1->Write();
+	// hCuBoxSu238M1_1->Write();
 
 	hCuBoxSxpb210M1_001->Write();
 	hCuBoxSxpb210M1_01->Write();
@@ -3294,8 +3385,8 @@ void SaveHistogramsSurfaceOther()
 	hCuBoxSxu238M1_1->Write();
 	hCuBoxSxu238M1_10->Write();
 
-	hCuFrameSth232M1_1->Write();
-	hCuFrameSu238M1_1->Write();
+	// hCuFrameSth232M1_1->Write();
+	// hCuFrameSu238M1_1->Write();
 
 	hCuFrameSxpb210M1_001->Write();
 	hCuFrameSxpb210M1_01->Write();
@@ -3315,18 +3406,18 @@ void SaveHistogramsSurfaceOther()
 	hCuBox_CuFramepb210M1_01->Write();
 	hCuBox_CuFramepb210M1_1->Write();
 	hCuBox_CuFramepb210M1_10->Write();
-	hCuBox_CuFrameth232M1_001->Write();
-	hCuBox_CuFrameth232M1_01->Write();
-	hCuBox_CuFrameth232M1_1->Write();
+	// hCuBox_CuFrameth232M1_001->Write();
+	// hCuBox_CuFrameth232M1_01->Write();
+	// hCuBox_CuFrameth232M1_1->Write();
 	hCuBox_CuFrameth232M1_10->Write();
-	hCuBox_CuFrameu238M1_001->Write();
-	hCuBox_CuFrameu238M1_01->Write();
-	hCuBox_CuFrameu238M1_1->Write();
+	// hCuBox_CuFrameu238M1_001->Write();
+	// hCuBox_CuFrameu238M1_01->Write();
+	// hCuBox_CuFrameu238M1_1->Write();
 	hCuBox_CuFrameu238M1_10->Write();
 
 ///////////////////////////////
-	hCuBoxSth232M2_1->Write();
-	hCuBoxSu238M2_1->Write();
+	// hCuBoxSth232M2_1->Write();
+	// hCuBoxSu238M2_1->Write();
 
 	hCuBoxSxpb210M2_001->Write();
 	hCuBoxSxpb210M2_01->Write();
@@ -3341,8 +3432,8 @@ void SaveHistogramsSurfaceOther()
 	hCuBoxSxu238M2_1->Write();
 	hCuBoxSxu238M2_10->Write();
 
-	hCuFrameSth232M2_1->Write();
-	hCuFrameSu238M2_1->Write();
+	// hCuFrameSth232M2_1->Write();
+	// hCuFrameSu238M2_1->Write();
 
 	hCuFrameSxpb210M2_001->Write();
 	hCuFrameSxpb210M2_01->Write();
@@ -3361,60 +3452,60 @@ void SaveHistogramsSurfaceOther()
 	hCuBox_CuFramepb210M2_01->Write();
 	hCuBox_CuFramepb210M2_1->Write();
 	hCuBox_CuFramepb210M2_10->Write();
-	hCuBox_CuFrameth232M2_001->Write();
-	hCuBox_CuFrameth232M2_01->Write();
-	hCuBox_CuFrameth232M2_1->Write();
+	// hCuBox_CuFrameth232M2_001->Write();
+	// hCuBox_CuFrameth232M2_01->Write();
+	// hCuBox_CuFrameth232M2_1->Write();
 	hCuBox_CuFrameth232M2_10->Write();
-	hCuBox_CuFrameu238M2_001->Write();
-	hCuBox_CuFrameu238M2_01->Write();
-	hCuBox_CuFrameu238M2_1->Write();
+	// hCuBox_CuFrameu238M2_001->Write();
+	// hCuBox_CuFrameu238M2_01->Write();
+	// hCuBox_CuFrameu238M2_1->Write();
 	hCuBox_CuFrameu238M2_10->Write();
 
 ///////////////////////////////
-	hCuBoxSth232M2Sum_1->Write();
-	hCuBoxSu238M2Sum_1->Write();
+	// hCuBoxSth232M2Sum_1->Write();
+	// hCuBoxSu238M2Sum_1->Write();
 
-	hCuBoxSxpb210M2Sum_001->Write();
-	hCuBoxSxpb210M2Sum_01->Write();
-	hCuBoxSxpb210M2Sum_1->Write();
-	hCuBoxSxpb210M2Sum_10->Write();
-	hCuBoxSxth232M2Sum_001->Write();
-	hCuBoxSxth232M2Sum_01->Write();
-	hCuBoxSxth232M2Sum_1->Write();
-	hCuBoxSxth232M2Sum_10->Write();	
-	hCuBoxSxu238M2Sum_001->Write();
-	hCuBoxSxu238M2Sum_01->Write();
-	hCuBoxSxu238M2Sum_1->Write();
-	hCuBoxSxu238M2Sum_10->Write();
+	// hCuBoxSxpb210M2Sum_001->Write();
+	// hCuBoxSxpb210M2Sum_01->Write();
+	// hCuBoxSxpb210M2Sum_1->Write();
+	// hCuBoxSxpb210M2Sum_10->Write();
+	// hCuBoxSxth232M2Sum_001->Write();
+	// hCuBoxSxth232M2Sum_01->Write();
+	// hCuBoxSxth232M2Sum_1->Write();
+	// hCuBoxSxth232M2Sum_10->Write();	
+	// hCuBoxSxu238M2Sum_001->Write();
+	// hCuBoxSxu238M2Sum_01->Write();
+	// hCuBoxSxu238M2Sum_1->Write();
+	// hCuBoxSxu238M2Sum_10->Write();
 
-	hCuFrameSth232M2Sum_1->Write();
-	hCuFrameSu238M2Sum_1->Write();
+	// hCuFrameSth232M2Sum_1->Write();
+	// hCuFrameSu238M2Sum_1->Write();
 
-	hCuFrameSxpb210M2Sum_001->Write();
-	hCuFrameSxpb210M2Sum_01->Write();
-	hCuFrameSxpb210M2Sum_1->Write();
-	hCuFrameSxpb210M2Sum_10->Write();
-	hCuFrameSxth232M2Sum_001->Write();
-	hCuFrameSxth232M2Sum_01->Write();
-	hCuFrameSxth232M2Sum_1->Write();
-	hCuFrameSxth232M2Sum_10->Write();	
-	hCuFrameSxu238M2Sum_001->Write();
-	hCuFrameSxu238M2Sum_01->Write();
-	hCuFrameSxu238M2Sum_1->Write();
-	hCuFrameSxu238M2Sum_10->Write();
+	// hCuFrameSxpb210M2Sum_001->Write();
+	// hCuFrameSxpb210M2Sum_01->Write();
+	// hCuFrameSxpb210M2Sum_1->Write();
+	// hCuFrameSxpb210M2Sum_10->Write();
+	// hCuFrameSxth232M2Sum_001->Write();
+	// hCuFrameSxth232M2Sum_01->Write();
+	// hCuFrameSxth232M2Sum_1->Write();
+	// hCuFrameSxth232M2Sum_10->Write();	
+	// hCuFrameSxu238M2Sum_001->Write();
+	// hCuFrameSxu238M2Sum_01->Write();
+	// hCuFrameSxu238M2Sum_1->Write();
+	// hCuFrameSxu238M2Sum_10->Write();
 
-	hCuBox_CuFramepb210M2Sum_001->Write();
-	hCuBox_CuFramepb210M2Sum_01->Write();
-	hCuBox_CuFramepb210M2Sum_1->Write();
-	hCuBox_CuFramepb210M2Sum_10->Write();
-	hCuBox_CuFrameth232M2Sum_001->Write();
-	hCuBox_CuFrameth232M2Sum_01->Write();
-	hCuBox_CuFrameth232M2Sum_1->Write();
-	hCuBox_CuFrameth232M2Sum_10->Write();
-	hCuBox_CuFrameu238M2Sum_001->Write();
-	hCuBox_CuFrameu238M2Sum_01->Write();
-	hCuBox_CuFrameu238M2Sum_1->Write();
-	hCuBox_CuFrameu238M2Sum_10->Write();
+	// hCuBox_CuFramepb210M2Sum_001->Write();
+	// hCuBox_CuFramepb210M2Sum_01->Write();
+	// hCuBox_CuFramepb210M2Sum_1->Write();
+	// hCuBox_CuFramepb210M2Sum_10->Write();
+	// hCuBox_CuFrameth232M2Sum_001->Write();
+	// hCuBox_CuFrameth232M2Sum_01->Write();
+	// hCuBox_CuFrameth232M2Sum_1->Write();
+	// hCuBox_CuFrameth232M2Sum_10->Write();
+	// hCuBox_CuFrameu238M2Sum_001->Write();
+	// hCuBox_CuFrameu238M2Sum_01->Write();
+	// hCuBox_CuFrameu238M2Sum_1->Write();
+	// hCuBox_CuFrameu238M2Sum_10->Write();
 
 	file2->Write();
 
