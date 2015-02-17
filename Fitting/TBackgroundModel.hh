@@ -1792,11 +1792,15 @@ private:
 	std::vector<double> 	fInitValues;
 
 	TFile *fBulkInner;
+	TFile *fBulkInnerOld;
 	TFile *fBulkInnerM2Sum;
 	TFile *fBulkOuter;
+	TFile *fBulkOuterOld;
 	TFile *fBulkOuterM2Sum;
 	TFile *fSurfaceCrystal;
+	TFile *fSurfaceCrystalOld;
 	TFile *fSurfaceOther;
+	TFile *fSurfaceOtherOld;
 
 	TFile *fBulkSmeared;
 	TFile *fSurfaceSmeared;
