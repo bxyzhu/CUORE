@@ -202,6 +202,8 @@ private:
 	TH1D			*fModelTotAdapAlphaHighM1;
 	TH1D			*fModelTotAdapAlphaLowM1;
 
+	TH1D 			*fModelTotAdapFudgeM1;
+
 	// Total PDFs M2
 	TH1D			*fModelTotM2;
 	TH1D			*fModelTotthM2;
@@ -300,6 +302,8 @@ private:
 	TH1D			*fModelTotAdapAlphaM2Sum;
 	TH1D			*fModelTotAdapAlphaHighM2Sum;
 	TH1D			*fModelTotAdapAlphaLowM2Sum;
+
+	TH1D 			*fModelTotAdapFudgeM2;
 
 
 //////////// Residual distributions
@@ -797,6 +801,15 @@ private:
 	TH1D			*hOVCth232M2Sum;
 	TH1D			*hOVCu238M2Sum;	
 
+////////// Fudge Factors
+	TH1D 		*hFudge661M1;
+	TH1D 		*hFudge803M1;
+	TH1D 		*hFudge1063M1;
+
+	TH1D 		*hFudge661M1;
+	TH1D 		*hFudge803M1;
+	TH1D 		*hFudge1063M1;
+
 ///////////////// Adaptive binned histograms
 /////////// Crystal M1 and M2
 	TH1D			*hAdapTeO20nuM1;
@@ -1278,12 +1291,19 @@ private:
 	
 	TH1D			*hAdapExtPbbi210M2Sum;
 
-	//
+////////// Fudge Factors
+	TH1D 		*hAdapFudge661M1;
+	TH1D 		*hAdapFudge803M1;
+	TH1D 		*hAdapFudge1063M1;
+
+	TH1 		*hnewFudge661M1;
+	TH1 		*hnewFudge803M1;
+	TH1 		*hnewFudge1063M1;
+
 
 	TH1D			*hEnergyScaleDummyM1;
 	TH1D			*hEnergyScaleDummyM2;
 	TH1D			*hEnergyScaleDummyM2Sum;
-
 
 
 ////////////// Dummy histograms
@@ -1771,6 +1791,17 @@ private:
 	TH1			*hnewOVCth232M2Sum;
 	TH1			*hnewOVCu238M2Sum;	
 
+
+////////// Fudge Factors
+	TH1 		*hnewFudge661M1;
+	TH1 		*hnewFudge803M1;
+	TH1 		*hnewFudge1063M1;
+
+	TH1 		*hnewFudge661M1;
+	TH1 		*hnewFudge803M1;
+	TH1 		*hnewFudge1063M1;
+
+
 	TH1D 			*hOut;
 
 
@@ -1802,6 +1833,8 @@ private:
 	TFile *fSurfaceOther;
 	TFile *fSurfaceOtherOld;
 
+	TFile *fFudge;
+
 	TFile *fBulkSmeared;
 	TFile *fSurfaceSmeared;
 
@@ -1820,7 +1853,7 @@ private:
 
 
 	// Error Matrix
-	TMatrixT<double> 	*mCorrMatrix;
+	// TMatrixT<double> 	*mCorrMatrix;
 
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;

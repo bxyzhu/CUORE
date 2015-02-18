@@ -12,21 +12,6 @@ TChain *LoadMC(std::string dDir, std::string dLocation, std::string dSource)
 
 }
 
-TH1D *CombineAndSmear(TChain *inputChain, TH1D *hMC, TH1D *hSMC, int dMult, double *dSigma)
-{
-	TH1D *hDummy;
-	TH1D *hSmearDummy;
-	for(int Channel = 0; Channel < 52; Channel++)
-	{	
-		if(Channel == 0 || Channel == 9 || Channel == 47)continue;
-		hDummy = new TH1D(Form("h-Ch%d-M%d", Channel+1, dMult), "", 10000, 0, 10000);
-		hSmearDummy = new TH1D(Form("hSmear-Ch%d-M%d", Channel+1, dMult), "", 10000, 0, 10000);
-		inputChain->Project(Form("h-Ch%d-M%d", Channel+1, dMult), "Ener2", Form("Multiplicity==%d", dMult) );
-		hMC->Add(SmearMC(hDummy, hSmearDummy, dSigma[Channel]) );
-	}
-	return hMC;
-}
-
 
 TH1D *SmearMC(TH1D *hMC, TH1D *hSMC, double dSigma)
 {
@@ -753,6 +738,104 @@ void SaveHistogramsReducedSurface()
 
 }
 
+
+void SaveHistogramsFudge()
+{
+	std::string sDataDir = "/cuore/data/simulation/CUORE0/t14.08/production_g2root-r363/ntp/Bulk/";
+
+	double dMinEnergy = 0;
+	double dMaxEnergy = 10000;
+	int dBinSize = 1;
+	int dNBins = (dMaxEnergy - dMinEnergy)/dBinSize;
+
+	TH1D *h50mKk40M1 = new TH1D("h50mKk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKk40M1 = new TH1D("h600mKk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hIVCk40M1 = new TH1D("hIVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalk40M1 = new TH1D("hInternalk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCk40M1 = new TH1D("hOVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hPbRomk40M1 = new TH1D("hPbRomk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hFudge661M1 = new TH1D("hFudge661M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hFudge803M1 = new TH1D("hFudge803M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hFudge1063M1 = new TH1D("hFudge1063M1", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *h50mKk40M2 = new TH1D("h50mKk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *h600mKk40M2 = new TH1D("h600mKk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hIVCk40M2 = new TH1D("hIVCk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hInternalk40M2 = new TH1D("hInternalk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hOVCk40M2 = new TH1D("hOVCk40M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hFudge661M2 = new TH1D("hFudge661M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hFudge803M2 = new TH1D("hFudge803M2", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hFudge1063M2 = new TH1D("hFudge1063M2", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TChain *t50mKk40 = LoadMC(sDataDir.c_str(), "50mK", "k40");
+	TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
+	TChain *tIVCk40 = LoadMC(sDataDir.c_str(), "IVC", "k40");
+	TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
+	TChain *tPbRomk40 = LoadMC(sDataDir.c_str(), "PbRom", "k40");
+
+	t50mKk40->Project("h50mKk40M1", "Ener2", "Multiplicity==1");
+	t600mKk40->Project("h600mKk40M1", "Ener2", "Multiplicity==1");
+	tIVCk40->Project("hIVCk40M1", "Ener2", "Multiplicity==1");
+	tOVCk40->Project("hOVCk40M1", "Ener2", "Multiplicity==1");
+	tPbRomk40->Project("hPbRomk40M1", "Ener2", "Multiplicity==1");
+
+	t50mKk40->Project("h50mKk40M2", "Ener2", "Multiplicity==2");
+	t600mKk40->Project("h600mKk40M2", "Ener2", "Multiplicity==2");
+	tIVCk40->Project("hIVCk40M2", "Ener2", "Multiplicity==2");
+	tOVCk40->Project("hOVCk40M2", "Ener2", "Multiplicity==2");
+	tPbRomk40->Project("hPbRomk40M2", "Ener2", "Multiplicity==2");
+
+	hInternalk40M1->Add(h600mKk40M1);
+	hInternalk40M1->Add(h50mKk40M1, 0.8625620249);
+	hInternalk40M1->Add(hIVCk40M1, 2.3168024764);	
+
+	hInternalk40M2->Add(h600mKk40M2);
+	hInternalk40M2->Add(h50mKk40M2, 0.8625620249);
+	hInternalk40M2->Add(hIVCk40M2, 2.3168024764);		
+
+	// for (int i = 1; i <= dNBins; i++)
+	// {
+	// 	// hFudge661M1->SetBinContent(i, hInternalk40M1->GetBinContent(0.4527397*i) );
+
+	// }
+	for (int i = 1; i < 10000000; i++)
+	{
+		hFudge661M1->Fill(hInternalk40M1->GetRandom()*0.4527397);
+		hFudge803M1->Fill(hInternalk40M1->GetRandom()*0.55);
+		hFudge1063M1->Fill(hInternalk40M1->GetRandom()*0.72808);
+
+		hFudge661M2->Fill(hInternalk40M2->GetRandom()*0.4527397);
+		hFudge803M2->Fill(hInternalk40M2->GetRandom()*0.55);
+		hFudge1063M2->Fill(hInternalk40M2->GetRandom()*0.72808);
+	}
+
+	double dIntegral1 = hInternalk40M1->Integral(1, dNBins);
+	double dEntries1 = hInternalk40M1->GetEntries();
+	double dIntegral2 = hInternalk40M2->Integral(1, dNBins);
+	double dEntries2 = hInternalk40M2->GetEntries();
+
+	hFudge661M1->Scale(1/hFudge661M1->Integral(1, dNBins));
+	hFudge661M2->Scale(1/hFudge661M2->Integral(1, dNBins) * dIntegral2/dIntegral1);
+
+	hFudge803M1->Scale(1/hFudge803M1->Integral(1, dNBins));
+	hFudge803M2->Scale(1/hFudge803M2->Integral(1, dNBins) * dIntegral2/dIntegral1);
+
+	hFudge1063M1->Scale(1/hFudge1063M1->Integral(1, dNBins));
+	hFudge1063M2->Scale(1/hFudge1063M2->Integral(1, dNBins) * dIntegral2/dIntegral1);
+
+	TFile *file1 = new TFile("MCProduction_FudgeFactor_1keV.root", "RECREATE");
+	hFudge661M1->Write();
+	hFudge661M2->Write();
+
+	hFudge803M1->Write();
+	hFudge803M2->Write();
+
+	hFudge1063M1->Write();
+	hFudge1063M2->Write();
+	file1->Write();
+}
 
 
 void SaveHistogramsBulkInner()

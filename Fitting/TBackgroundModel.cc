@@ -36,7 +36,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 37; i++ )
+  for(int i = 0; i < 40; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -54,7 +54,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 {
 
   tTime = new TDatime();
-  dNParam = 37; // number of fitting parameters
+  dNParam = 40; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -79,7 +79,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dChiSquare = 0;
 
   // Covariance Matrix
-  mCorrMatrix = new TMatrixT<double>();
+  // mCorrMatrix = new TMatrixT<double>();
 
   if(fFitMin >= fFitMax)
   {
@@ -685,11 +685,20 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hExtPbbi210M2Sum = new TH1D("hExtPbbi210M2Sum", "hExtPbbi210M2Sum", dNBins, dMinEnergy, dMaxEnergy);
 
 
+/////////// Fudge Factors
+  hFudge661M1 = new TH1D("hFudge661M1", "hFudge661M1", dNBins, dMinEnergy, dMaxEnergy);
+  hFudge803M1 = new TH1D("hFudge803M1", "hFudge803M1", dNBins, dMinEnergy, dMaxEnergy);
+  hFudge1063M1 = new TH1D("hFudge1063M1", "hFudge1063M1", dNBins, dMinEnergy, dMaxEnergy);
+
+  hFudge661M2 = new TH1D("hFudge661M2", "hFudge661M2", dNBins, dMinEnergy, dMaxEnergy);
+  hFudge803M2 = new TH1D("hFudge803M2", "hFudge803M2", dNBins, dMinEnergy, dMaxEnergy);
+  hFudge1063M2 = new TH1D("hFudge1063M2", "hFudge1063M2", dNBins, dMinEnergy, dMaxEnergy);
+
 
 // Mess with rebinning here 
-  // fDataHistoM1->Rebin(20);
-  // fDataHistoM2->Rebin(20);
-  // fDataHistoM2Sum->Rebin(20);
+  // fDataHistoM1->Rebin(10);
+  // fDataHistoM2->Rebin(10);
+  // fDataHistoM2Sum->Rebin(10);
   dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
@@ -772,6 +781,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   fModelTotAdapExtM1   = new TH1D("fModelTotAdapExtM1", "Total External", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
+  fModelTotAdapFudgeM1 = new TH1D("fModelTotAdapFudgeM1", "Total Fudge Factors", dAdaptiveBinsM1, dAdaptiveArrayM1);
+
 /////////// Total Adaptive binning histograms M2
   fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
   fModelTotAdapthM2    = new TH1D("fModelTotAdapthM2",    "Total th232",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -796,6 +807,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fModelTotAdapSpoM2   = new TH1D("fModelTotAdapSpoM2",   "Total S po210",  dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   fModelTotAdapExtM2   = new TH1D("fModelTotAdapExtM2", "Total External", dAdaptiveBinsM2, dAdaptiveArrayM2);
+
+  fModelTotAdapFudgeM2 = new TH1D("fModelTotAdapFudgeM2", "Total Fudge Factors", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
 /////////// Total Adaptive binning histograms M2Sum
   fModelTotAdapM2Sum      = new TH1D("fModelTotAdapM2Sum",      "Total PDF M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
@@ -1305,10 +1318,19 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hAdapExtPbbi210M2 = new TH1D("hAdapExtPbbi210M2", "hAdapExtPbbi210M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapExtPbbi210M2Sum = new TH1D("hAdapExtPbbi210M2Sum", "hAdapExtPbbi210M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
+/////////// Fudge Factors
+  hAdapFudge661M1 = new TH1D("hAdapFudge661M1", "hAdapFudge661M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapFudge803M1 = new TH1D("hAdapFudge803M1", "hAdapFudge803M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapFudge1063M1 = new TH1D("hAdapFudge1063M1", "hAdapFudge1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+
+  hAdapFudge661M2 = new TH1D("hAdapFudge661M2", "hAdapFudge661M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapFudge803M2 = new TH1D("hAdapFudge803M2", "hAdapFudge803M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapFudge1063M2 = new TH1D("hAdapFudge1063M2", "hAdapFudge1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   hEnergyScaleDummyM2Sum = new TH1D("hEnergyScaleDummyM2Sum",   "Energy Scale M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+
 
 
   // Loads all of the PDFs from file
@@ -1350,10 +1372,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // Do the fit now if no other tests are needed 
   nLoop = 0;
   DoTheFitAdaptive(0);
-  LatexResultTable(0);
+  // LatexResultTable(0);
   // ProfileNLL(0.0685222152, 3968.95); 
 }
-  
+
 // Probably needs updating  
 TBackgroundModel::~TBackgroundModel()
 {
@@ -2652,7 +2674,7 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
     
     // Re-multiply bin content by bin width (for # of counts)
     
-    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j) /
+    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j)) * hCloneBkg->GetBinWidth(j) /
               (TMath::Sqrt((hCloneBkg->GetBinContent(j))*hCloneBkg->GetBinWidth(j)) ); // Sqrt(MC + data) = sigma for poisson distribution
     
     // dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j) /
@@ -2887,6 +2909,8 @@ void TBackgroundModel::Initialize()
   fSurfaceOther = new TFile(Form("%s/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
   fSurfaceOtherOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
 
+  fFudge = new TFile(Form("%s/OldProd/MCProduction_FudgeFactor_1keV.root", dMCDir.c_str()));
+
 ///////////// Bulk Histograms
 /////// Crystal M1 and M2
   hTeO20nuM1     = (TH1D*)fBulkInnerOld->Get("hTeO20nuM1");
@@ -3118,15 +3142,15 @@ void TBackgroundModel::Initialize()
   hInternalu238M2 = (TH1D*)fBulkInnerOld->Get("hInternalu238M2");
 
   // Old Production
-  // hInternalco60M1 = (TH1D*)fBulkInner->Get("hInternalco60M1");
-  // hInternalk40M1 = (TH1D*)fBulkInner->Get("hInternalk40M1");
-  // hInternalth232M1 = (TH1D*)fBulkInner->Get("hInternalth232M1");
-  // hInternalu238M1 = (TH1D*)fBulkInner->Get("hInternalu238M1");
+  // hInternalco60M1 = (TH1D*)fBulkInnerOld->Get("hInternalco60M1");
+  // hInternalk40M1 = (TH1D*)fBulkInnerOld->Get("hInternalk40M1");
+  // hInternalth232M1 = (TH1D*)fBulkInnerOld->Get("hInternalth232M1");
+  // hInternalu238M1 = (TH1D*)fBulkInnerOld->Get("hInternalu238M1");
 
-  // hInternalco60M2 = (TH1D*)fBulkInner->Get("hInternalco60M2");
-  // hInternalk40M2 = (TH1D*)fBulkInner->Get("hInternalk40M2");
-  // hInternalth232M2 = (TH1D*)fBulkInner->Get("hInternalth232M2");
-  // hInternalu238M2 = (TH1D*)fBulkInner->Get("hInternalu238M2");
+  // hInternalco60M2 = (TH1D*)fBulkInnerOld->Get("hInternalco60M2");
+  // hInternalk40M2 = (TH1D*)fBulkInnerOld->Get("hInternalk40M2");
+  // hInternalth232M2 = (TH1D*)fBulkInnerOld->Get("hInternalth232M2");
+  // hInternalu238M2 = (TH1D*)fBulkInnerOld->Get("hInternalu238M2");
 
   // hInternalco60M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalco60M2Sum");
   // hInternalk40M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalk40M2Sum");
@@ -3185,6 +3209,15 @@ void TBackgroundModel::Initialize()
   hExtPbbi210M2 = (TH1D*)fBulkOuterOld->Get("hExtPbbi210M2");
 
   // hExtPbbi210M2Sum = (TH1D*)fBulkOuterM2Sum->Get("hExtPbbi210M2Sum");
+
+////////// Fudge Factors
+  hFudge661M1 = (TH1D*)fFudge->Get("hFudge661M1");
+  hFudge803M1 = (TH1D*)fFudge->Get("hFudge803M1");
+  hFudge1063M1 = (TH1D*)fFudge->Get("hFudge1063M1");
+
+  hFudge661M2 = (TH1D*)fFudge->Get("hFudge661M2");
+  hFudge803M2 = (TH1D*)fFudge->Get("hFudge803M2");
+  hFudge1063M2 = (TH1D*)fFudge->Get("hFudge1063M2");
 
 //////////// Surface PDFs
 ///// Crystal M1 and M2
@@ -4498,6 +4531,10 @@ void TBackgroundModel::Initialize2()
 
   hnewExtPbbi210M1 = hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
 
+  hnewFudge661M1 = hFudge661M1->Rebin(dAdaptiveBinsM1, "hnewFudge661M1", dAdaptiveBinsM1);
+  hnewFudge803M1 = hFudge803M1->Rebin(dAdaptiveBinsM1, "hnewFudge803M1", dAdaptiveBinsM1);
+  hnewFudge1063M1 = hFudge1063M1->Rebin(dAdaptiveBinsM1, "hnewFudge1063M1", dAdaptiveBinsM1);
+
 
   hnewTeO20nuM2 = hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
   hnewTeO22nuM2 = hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
@@ -4544,6 +4581,9 @@ void TBackgroundModel::Initialize2()
 
   hnewExtPbbi210M2 = hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
 
+  hnewFudge661M2 = hFudge661M2->Rebin(dAdaptiveBinsM2, "hnewFudge661M2", dAdaptiveBinsM2);
+  hnewFudge803M2 = hFudge803M2->Rebin(dAdaptiveBinsM2, "hnewFudge803M2", dAdaptiveBinsM2);
+  hnewFudge1063M2 = hFudge1063M2->Rebin(dAdaptiveBinsM2, "hnewFudge1063M2", dAdaptiveBinsM2);
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
@@ -4593,6 +4633,9 @@ void TBackgroundModel::Initialize2()
 
     hAdapExtPbbi210M1->SetBinContent(i, dBinSize * hnewExtPbbi210M1->GetBinContent(i)/hnewExtPbbi210M1->GetBinWidth(i));
 
+    hAdapFudge661M1->SetBinContent(i, dBinSize * hnewFudge661M1->GetBinContent(i)/hnewFudge661M1->GetBinWidth(i));
+    hAdapFudge803M1->SetBinContent(i, dBinSize * hnewFudge803M1->GetBinContent(i)/hnewFudge803M1->GetBinWidth(i));
+    hAdapFudge1063M1->SetBinContent(i, dBinSize * hnewFudge1063M1->GetBinContent(i)/hnewFudge1063M1->GetBinWidth(i));
 
   }
 
@@ -4643,6 +4686,9 @@ void TBackgroundModel::Initialize2()
 
     hAdapExtPbbi210M2->SetBinContent(i, dBinSize * hnewExtPbbi210M2->GetBinContent(i)/hnewExtPbbi210M2->GetBinWidth(i));
 
+    hAdapFudge661M2->SetBinContent(i, dBinSize * hnewFudge661M2->GetBinContent(i)/hnewFudge661M2->GetBinWidth(i));
+    hAdapFudge803M2->SetBinContent(i, dBinSize * hnewFudge803M2->GetBinContent(i)/hnewFudge803M2->GetBinWidth(i));
+    hAdapFudge1063M2->SetBinContent(i, dBinSize * hnewFudge1063M2->GetBinContent(i)/hnewFudge1063M2->GetBinWidth(i));
   }
 
 
@@ -4845,6 +4891,11 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,      dDataIntegralM1*fParameters[35]);
   fModelTotAdapM1->Add( hAdapCuBox_CuFramek40M1,       dDataIntegralM1*fParameters[36]);
 
+  fModelTotAdapM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[38]);
+  fModelTotAdapM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[39]);
+
+
 /////// M2
   fModelTotAdapM2->Add( hAdapTeO20nuM2,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM2->Add( hAdapTeO22nuM2,              dDataIntegralM1*fParameters[1]);
@@ -4888,6 +4939,11 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2,      dDataIntegralM1*fParameters[34]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFrameco60M2,      dDataIntegralM1*fParameters[35]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFramek40M2,       dDataIntegralM1*fParameters[36]);
+
+  fModelTotAdapM2->Add( hAdapFudge661M2,           dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM2->Add( hAdapFudge803M2,           dDataIntegralM1*fParameters[38]);
+  fModelTotAdapM2->Add( hAdapFudge1063M2,           dDataIntegralM1*fParameters[39]);
+
 }
   
 // This method sets up minuit and does the fit
@@ -4947,6 +5003,11 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   minuit->DefineParameter(34, "CuBox + CuFrame u238",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(35, "CuBox + CuFrame co60",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(36, "CuBox + CuFrame k40",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(37, "Fudge Factor (661 keV)",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(38, "Fudge Factor (803 keV)",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(39, "Fudge Factor (1063 keV)",  0., 1E-7, 0, 1.0);
+
+
 
 //////////////////////////////////////
 
@@ -5058,6 +5119,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapuM1->Add( hAdapCuBox_CuFrameu238M1,     dDataIntegralM1*fParameters[34]);
   fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,     dDataIntegralM1*fParameters[35]);
   fModelTotAdapkM1->Add( hAdapCuBox_CuFramek40M1,      dDataIntegralM1*fParameters[36]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[37]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[38]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[39]);
 
 // M2
   fModelTotAdapNDBDM2->Add( hAdapTeO20nuM2,              dDataIntegralM2*fParameters[0]);
@@ -5103,6 +5167,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapcoM2->Add( hAdapCuBox_CuFrameco60M2,     dDataIntegralM2*fParameters[35]);
   fModelTotAdapkM2->Add( hAdapCuBox_CuFramek40M2,      dDataIntegralM2*fParameters[36]);
 
+  fModelTotAdapFudgeM2->Add( hAdapFudge661M2,           dDataIntegralM2*fParameters[37]);
+  fModelTotAdapFudgeM2->Add( hAdapFudge803M2,           dDataIntegralM2*fParameters[38]);
+  fModelTotAdapFudgeM2->Add( hAdapFudge1063M2,           dDataIntegralM2*fParameters[39]);
+
   ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
   fAdapDataHistoM1->SetLineWidth(2);
@@ -5142,6 +5210,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   // fModelTotAdapteo2M1->Draw("SAME");
   // fModelTotAdapPbM1->Draw("SAME");
+  fModelTotAdapFudgeM1->SetLineStyle(2);
+  fModelTotAdapFudgeM1->SetLineColor(kRed+1);
+
 
   TLegend *legfit1 = new TLegend(0.7,0.7,0.95,0.95);
   legfit1->SetFillColor(0);
@@ -5156,7 +5227,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   legfit1->AddEntry(fModelTotAdapSpoM1, "Total po-210", "l");
   legfit1->AddEntry(fModelTotAdapSpbM1, "Surface pb-210", "l");
   legfit1->AddEntry(fModelTotAdapbiM1, "Total External bi-210", "l");  
-
+  legfit1->AddEntry(fModelTotAdapFudgeM1, "Total Fudge Factors", "l");
 
   int nHisto = 2;  
   double width1 = 0.02;
@@ -5241,6 +5312,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapSpbM1->Draw("SAME");
   fModelTotAdapSpoM1->Draw("SAME");
   fModelTotAdappbM1->Draw("SAME");
+  fModelTotAdapFudgeM1->Draw("SAME");
   legfit1->Draw();
 
 
@@ -5282,6 +5354,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapSpbM2->SetLineStyle(2);
   fModelTotAdapSpbM2->SetLineColor(8);
 
+  fModelTotAdapFudgeM2->SetLineStyle(2);
+  fModelTotAdapFudgeM2->SetLineColor(kRed+1);
+
   // fModelTotAdapteo2M2->SetLineStyle(2);
   // fModelTotAdapteo2M2->SetLineColor(41);
 
@@ -5298,7 +5373,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   legfit2->AddEntry(fModelTotAdapSpoM2, "Total po-210", "l");
   legfit2->AddEntry(fModelTotAdapSpbM2, "Surface pb-210", "l");
   legfit2->AddEntry(fModelTotAdapbiM2, "Total External bi-210", "l");  
-
+  legfit2->AddEntry(fModelTotAdapFudgeM2, "Total Fudge Factors", "l");
 
   TCanvas *cadap2 = new TCanvas("cadap2", "cadap2", 1200, 800);  
   TPad* p1m2 = new TPad("p1m2","p1m2",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
@@ -5373,6 +5448,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   fModelTotAdapSpbM2->Draw("SAME");
   fModelTotAdapSpoM2->Draw("SAME");
   fModelTotAdappbM2->Draw("SAME");
+  fModelTotAdapFudgeM2->Draw("SAME");
   legfit2->Draw();
 
 
@@ -5485,8 +5561,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
 
   // Correlation Matrix section
-  mCorrMatrix->ResizeTo(dNumFreeParameters, dNumFreeParameters);
-  minuit->mnemat(mCorrMatrix->GetMatrixArray(), dNumFreeParameters);
+  TMatrixT<double> mCorrMatrix;
+  mCorrMatrix.ResizeTo(dNumFreeParameters, dNumFreeParameters);
+  minuit->mnemat(mCorrMatrix.GetMatrixArray(), dNumFreeParameters);
 
   TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
   TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
@@ -5497,6 +5574,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   pM1->SetFillColor(0);
   pM1->SetBorderMode(0);
   pM1->SetBorderSize(0);
+  pM1->SetLogz();
   pM1->Draw();
 
   TPad* pM2 = new TPad("pM2","pM2",width2*0.75,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
@@ -5512,7 +5590,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   pM2->Draw();
 
   pM1->cd();
-  mCorrMatrix->Draw("colz");
+  mCorrMatrix += 1;
+  mCorrMatrix.Draw("colz");
 
   pM2->cd();
   TPaveText *pPave = new TPaveText(0,0,1,1, "NB"); // Text for matrix
@@ -5526,14 +5605,14 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   pPave->Draw();
 
 
-  // Saving plots
-  // cadap1->SaveAs(Form("%s/FitResults/EffCorr/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2->SaveAs(Form("%s/FitResults/EffCorr/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual1->SaveAs(Form("%s/FitResults/EffCorr/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2->SaveAs(Form("%s/FitResults/EffCorr/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cres1->SaveAs(Form("%s/FitResults/EffCorr/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cMatrix->SaveAs(Form("%s/FitResults/EffCorr/FitCorrMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  fSaveResult = new TFile(Form("%s/FitResults/EffCorr/FitResult_%d_%d.root", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime()), "RECREATE");
+  // // Saving plots
+  // cadap1->SaveAs(Form("%s/FitResults/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("%s/FitResults/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cMatrix->SaveAs(Form("%s/FitResults/FitCorrMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d_%d.root", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime()), "RECREATE");
   fSaveResult->Add(fAdapDataHistoM1);
   fSaveResult->Add(fAdapDataHistoM2);
   fSaveResult->Add(fModelTotAdapM1);
@@ -5541,14 +5620,14 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   // fSaveResult->Add()
   fSaveResult->Write();
 
-/*
-  cadap1->SaveAs(Form("%s/FitResults/EffCorr/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cadap2->SaveAs(Form("%s/FitResults/EffCorr/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual1->SaveAs(Form("%s/FitResults/EffCorr/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual2->SaveAs(Form("%s/FitResults/EffCorr/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cres1->SaveAs(Form("%s/FitResults/EffCorr/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cMatrix->SaveAs(Form("%s/FitResults/EffCorr/FitCorrMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-*/
+
+  // cadap1->SaveAs(Form("%s/FitResults/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("%s/FitResults/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cMatrix->SaveAs(Form("%s/FitResults/FitCorrMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+
 
   // Kernal Convolution
   // TH1D *hKernalConvM1 = new TH1D("hKernalConvM1", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -6197,17 +6276,17 @@ void TBackgroundModel::LatexResultTable(double fValue)
   OutFile << endl;
   OutFile << endl;
 
-  // for(int i = 0; i < TBackgroundModel::dNParam; i++)
-  // {
-  //   OutFile << minuit->fCpnam[i] << Form(" & %.10f$\\pm$%.10f \\\\ ", fParameters[i], fParError[i] ) << endl;
-  // }
+  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  {
+    OutFile << minuit->fCpnam[i] << Form(" & %.10f$\\pm$%.10f \\\\ ", fParameters[i], fParError[i] ) << endl;
+  }
 
   OutFile << endl;
   OutFile << endl;
 
   // for(int i = 0; i < TBackgroundModel::dNParam; i++)
   // {
-  //   OutFile << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
+    // OutFile << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
   // }
   OutFile.close();
 
