@@ -802,19 +802,19 @@ void SaveHistogramsFudge()
 	// }
 	for (int i = 1; i < 10000000; i++)
 	{
-		hFudge661M1->Fill(hInternalk40M1->GetRandom()*0.4527397);
-		hFudge803M1->Fill(hInternalk40M1->GetRandom()*0.55);
-		hFudge1063M1->Fill(hInternalk40M1->GetRandom()*0.72808);
+		hFudge661M1->Fill(hOVCk40M1->GetRandom()*0.4527397);
+		hFudge803M1->Fill(hOVCk40M1->GetRandom()*0.55);
+		hFudge1063M1->Fill(hOVCk40M1->GetRandom()*0.72808);
 
-		hFudge661M2->Fill(hInternalk40M2->GetRandom()*0.4527397);
-		hFudge803M2->Fill(hInternalk40M2->GetRandom()*0.55);
-		hFudge1063M2->Fill(hInternalk40M2->GetRandom()*0.72808);
+		hFudge661M2->Fill(hOVCk40M2->GetRandom()*0.4527397);
+		hFudge803M2->Fill(hOVCk40M2->GetRandom()*0.55);
+		hFudge1063M2->Fill(hOVCk40M2->GetRandom()*0.72808);
 	}
 
-	double dIntegral1 = hInternalk40M1->Integral(1, dNBins);
-	double dEntries1 = hInternalk40M1->GetEntries();
-	double dIntegral2 = hInternalk40M2->Integral(1, dNBins);
-	double dEntries2 = hInternalk40M2->GetEntries();
+	double dIntegral1 = hOVCk40M1->Integral(1, dNBins);
+	double dEntries1 = hOVCk40M1->GetEntries();
+	double dIntegral2 = hOVCk40M2->Integral(1, dNBins);
+	double dEntries2 = hOVCk40M2->GetEntries();
 
 	hFudge661M1->Scale(1/hFudge661M1->Integral(1, dNBins));
 	hFudge661M2->Scale(1/hFudge661M2->Integral(1, dNBins) * dIntegral2/dIntegral1);

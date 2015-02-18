@@ -1296,9 +1296,9 @@ private:
 	TH1D 		*hAdapFudge803M1;
 	TH1D 		*hAdapFudge1063M1;
 
-	TH1 		*AdapFudge661M2;
-	TH1 		*AdapFudge803M2;
-	TH1 		*AdapFudge1063M2;
+	TH1 		*hAdapFudge661M2;
+	TH1 		*hAdapFudge803M2;
+	TH1 		*hAdapFudge1063M2;
 
 
 	TH1D			*hEnergyScaleDummyM1;

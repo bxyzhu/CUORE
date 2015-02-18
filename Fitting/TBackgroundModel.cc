@@ -5003,9 +5003,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   minuit->DefineParameter(34, "CuBox + CuFrame u238",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(35, "CuBox + CuFrame co60",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(36, "CuBox + CuFrame k40",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(37, "Fudge Factor (661 keV)",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(38, "Fudge Factor (803 keV)",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(39, "Fudge Factor (1063 keV)",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(37, "Fudge Factor (661 keV)",  1E-7, 1E-7, 0, 1.0);
+  minuit->DefineParameter(38, "Fudge Factor (803 keV)",  1E-7, 1E-7, 0, 1.0);
+  minuit->DefineParameter(39, "Fudge Factor (1063 keV)",  1E-7, 1E-7, 0, 1.0);
 
 
 
