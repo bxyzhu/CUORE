@@ -1,3 +1,4 @@
+/// g++ TBackgroundModel.cc -c `root-config --libs --cflags`
 #include "TMinuit.h"
 #include "TLine.h"
 #include "TCanvas.h"
@@ -36,7 +37,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 25; i++ )
+  for(int i = 0; i < 28; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -55,7 +56,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bSave = fSave;
 
   tTime = new TDatime();
-  dNParam = 25; // number of fitting parameters
+  dNParam = 28; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -122,14 +123,14 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   LoadData();
 
-  fEfficiency = new TF1("fEfficiency", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
-  fEfficiency->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
+  TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
+  fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
 
   hEfficiency = new TH1D("hEfficiency", "", dNBins, dMinEnergy, dMaxEnergy);
 
   for(int i = 1; i <= hEfficiency->GetNbinsX(); i++)
   {
-    hEfficiency->SetBinContent(i, fEfficiency->Eval(hEfficiency->GetBinCenter(i)));
+    hEfficiency->SetBinContent(i, fEff->Eval(hEfficiency->GetBinCenter(i)));
   }
 
   fDataHistoM1->Divide( hEfficiency );
@@ -1373,7 +1374,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0);
+  DoTheFitAdaptive(0, 0);
   if(bSave)LatexResultTable(0);
   
   // ProfileNLL(0.0685222152, 3968.95); 
@@ -4534,9 +4535,9 @@ void TBackgroundModel::Initialize2()
 
   hnewExtPbbi210M1 = hExtPbbi210M1->Rebin(dAdaptiveBinsM1, "hnewExtPbbi210M1", dAdaptiveArrayM1);
 
-  hnewFudge661M1 = hFudge661M1->Rebin(dAdaptiveBinsM1, "hnewFudge661M1", dAdaptiveBinsM1);
-  hnewFudge803M1 = hFudge803M1->Rebin(dAdaptiveBinsM1, "hnewFudge803M1", dAdaptiveBinsM1);
-  hnewFudge1063M1 = hFudge1063M1->Rebin(dAdaptiveBinsM1, "hnewFudge1063M1", dAdaptiveBinsM1);
+  hnewFudge661M1 = hFudge661M1->Rebin(dAdaptiveBinsM1, "hnewFudge661M1", dAdaptiveArrayM1);
+  hnewFudge803M1 = hFudge803M1->Rebin(dAdaptiveBinsM1, "hnewFudge803M1", dAdaptiveArrayM1);
+  hnewFudge1063M1 = hFudge1063M1->Rebin(dAdaptiveBinsM1, "hnewFudge1063M1", dAdaptiveArrayM1);
 
 
   hnewTeO20nuM2 = hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
@@ -4584,9 +4585,9 @@ void TBackgroundModel::Initialize2()
 
   hnewExtPbbi210M2 = hExtPbbi210M2->Rebin(dAdaptiveBinsM2, "hnewExtPbbi210M2", dAdaptiveArrayM2);
 
-  hnewFudge661M2 = hFudge661M2->Rebin(dAdaptiveBinsM2, "hnewFudge661M2", dAdaptiveBinsM2);
-  hnewFudge803M2 = hFudge803M2->Rebin(dAdaptiveBinsM2, "hnewFudge803M2", dAdaptiveBinsM2);
-  hnewFudge1063M2 = hFudge1063M2->Rebin(dAdaptiveBinsM2, "hnewFudge1063M2", dAdaptiveBinsM2);
+  hnewFudge661M2 = hFudge661M2->Rebin(dAdaptiveBinsM2, "hnewFudge661M2", dAdaptiveArrayM2);
+  hnewFudge803M2 = hFudge803M2->Rebin(dAdaptiveBinsM2, "hnewFudge803M2", dAdaptiveArrayM2);
+  hnewFudge1063M2 = hFudge1063M2->Rebin(dAdaptiveBinsM2, "hnewFudge1063M2", dAdaptiveArrayM2);
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
@@ -4896,9 +4897,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,      dDataIntegralM1*fParameters[35]);
   // fModelTotAdapM1->Add( hAdapCuBox_CuFramek40M1,       dDataIntegralM1*fParameters[36]);
 
-  // fModelTotAdapM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[38]);
-  // fModelTotAdapM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[25]);
+  fModelTotAdapM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[26]);
+  fModelTotAdapM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[27]);
 
 
 /////// M2
@@ -4945,9 +4946,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM2->Add( hAdapCuBox_CuFrameco60M2,      dDataIntegralM1*fParameters[35]);
   // fModelTotAdapM2->Add( hAdapCuBox_CuFramek40M2,       dDataIntegralM1*fParameters[36]);
 
-  // fModelTotAdapM2->Add( hAdapFudge661M2,           dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM2->Add( hAdapFudge803M2,           dDataIntegralM1*fParameters[38]);
-  // fModelTotAdapM2->Add( hAdapFudge1063M2,           dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM2->Add( hAdapFudge661M2,           dDataIntegralM1*fParameters[25]);
+  fModelTotAdapM2->Add( hAdapFudge803M2,           dDataIntegralM1*fParameters[26]);
+  fModelTotAdapM2->Add( hAdapFudge1063M2,           dDataIntegralM1*fParameters[27]);
 
 }
   
@@ -5010,9 +5011,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   minuit->DefineParameter(24, "CuBox + CuFrame u238",  0., 1E-7, 0, 1.0);
   // minuit->DefineParameter(35, "CuBox + CuFrame co60",  0., 1E-7, 0, 1.0);
   // minuit->DefineParameter(36, "CuBox + CuFrame k40",  0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(37, "Fudge Factor (661 keV)",  1E-5, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(38, "Fudge Factor (803 keV)",  1E-5, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(39, "Fudge Factor (1063 keV)",  1E-5, 1E-7, 0, 1.0);
+  minuit->DefineParameter(25, "Fudge Factor (661 keV)",  1E-6, 1E-7, 0, 1.0);
+  minuit->DefineParameter(26, "Fudge Factor (803 keV)",  1E-6, 1E-7, 0, 1.0);
+  minuit->DefineParameter(27, "Fudge Factor (1063 keV)",  1E-6, 1E-7, 0, 1.0);
 
 
 
@@ -5127,9 +5128,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   // fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,     dDataIntegralM1*fParameters[35]);
   // fModelTotAdapkM1->Add( hAdapCuBox_CuFramek40M1,      dDataIntegralM1*fParameters[36]);
 
-  // fModelTotAdapFudgeM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapFudgeM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[38]);
-  // fModelTotAdapFudgeM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[39]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge661M1,           dDataIntegralM1*fParameters[25]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge803M1,           dDataIntegralM1*fParameters[26]);
+  fModelTotAdapFudgeM1->Add( hAdapFudge1063M1,           dDataIntegralM1*fParameters[27]);
 
 // M2
   fModelTotAdapNDBDM2->Add( hAdapTeO20nuM2,              dDataIntegralM2*fParameters[0]);
@@ -5175,9 +5176,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   // fModelTotAdapcoM2->Add( hAdapCuBox_CuFrameco60M2,     dDataIntegralM2*fParameters[35]);
   // fModelTotAdapkM2->Add( hAdapCuBox_CuFramek40M2,      dDataIntegralM2*fParameters[36]);
 
-  // fModelTotAdapFudgeM2->Add( hAdapFudge661M2,           dDataIntegralM2*fParameters[37]);
-  // fModelTotAdapFudgeM2->Add( hAdapFudge803M2,           dDataIntegralM2*fParameters[38]);
-  // fModelTotAdapFudgeM2->Add( hAdapFudge1063M2,           dDataIntegralM2*fParameters[39]);
+  fModelTotAdapFudgeM2->Add( hAdapFudge661M2,           dDataIntegralM2*fParameters[25]);
+  fModelTotAdapFudgeM2->Add( hAdapFudge803M2,           dDataIntegralM2*fParameters[26]);
+  fModelTotAdapFudgeM2->Add( hAdapFudge1063M2,           dDataIntegralM2*fParameters[27]);
 
   ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
@@ -6393,7 +6394,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
     // cout << "Loop: " << nLoop << endl;
-    DoTheFitAdaptive(*iter);
+    DoTheFitAdaptive(*iter, 0);
     // LatexResultTable(*iter);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;

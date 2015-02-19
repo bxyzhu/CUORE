@@ -18,13 +18,15 @@
 #include "TMatrixDEigen.h"
 #include "TGaxis.h"
 #include <TMinuitMinimizer.h>
+#include "TROOT.h"
+#include "TStyle.h"
 
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
 #include <vector>
 #include <map>
-// #include <iostream>
+#include <iostream>
 #include <fstream>
 
 class TBackgroundModel : public TObject {
@@ -32,7 +34,7 @@ class TBackgroundModel : public TObject {
 public:
 	TBackgroundModel();
 
-	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset);
+	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
 	virtual ~TBackgroundModel();
 
 	std::vector<double> AdaptiveBinning(TH1D *h1, int dBinBase);
@@ -810,9 +812,9 @@ private:
 	TH1D 		*hFudge803M1;
 	TH1D 		*hFudge1063M1;
 
-	TH1D 		*hFudge661M1;
-	TH1D 		*hFudge803M1;
-	TH1D 		*hFudge1063M1;
+	TH1D 		*hFudge661M2;
+	TH1D 		*hFudge803M2;
+	TH1D 		*hFudge1063M2;
 
 ///////////////// Adaptive binned histograms
 /////////// Crystal M1 and M2
@@ -1815,9 +1817,9 @@ private:
 	TF1				*gaus;
 
 	// Cut Efficiency
-	TF1 			*fEfficiency;
-	TH1 			*hEfficiencyM1;
-	TH1 			*hEfficiencyM2;
+	// TF1 			*fEfficiency;
+	TH1D 			*hEfficiency;
+	TH1D 			*hEfficiencyM2;
 	// TH1 			*hEfficiencyM1;
 
 	ofstream 		OutFile;
