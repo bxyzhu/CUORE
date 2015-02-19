@@ -39,7 +39,7 @@ public:
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	bool DoTheFitAdaptive(double f2nuValue);
+	bool DoTheFitAdaptive(double f2nuValue, double fk40Value);
 
 	void DrawBkg();
 
@@ -67,6 +67,8 @@ public:
 	void PrintParActivity();
 
 	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
+
+	void ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq);
 
 	void ReadMC();
 
@@ -1823,6 +1825,7 @@ private:
 
 	int 			nLoop;
 	std::vector<double> 	fInitValues;
+	std::vector<double> 	fInitValues2;
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerOld;

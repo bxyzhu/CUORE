@@ -4952,7 +4952,7 @@ void TBackgroundModel::UpdateModelAdaptive()
 }
   
 // This method sets up minuit and does the fit
-bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
+bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
 { 
   // Reset initial parameter/error values
   ResetParameters();
@@ -4970,7 +4970,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
   minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(3, "TeO2 k40",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(3, "TeO2 k40",  fk40Value, 1E-7, 0, 1.0);
   // minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(4, "TeO2 th232 only", 0.0002930441, 1E-7, 0, 1.0);
   minuit->DefineParameter(5, "TeO2 th230 only", 0.0002989944, 1E-7, 0, 1.0);
@@ -4985,8 +4985,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   minuit->DefineParameter(13, "CuBox + CuFrame Sx th232 10", 0.0143126175, 1E-7, 0, 1.0);
   minuit->DefineParameter(14, "CuBox + CuFrame Sx u238 10 ", 0.0012999801, 1E-7, 0, 1.0);
   // minuit->DefineParameter(17, "CuBox + CuFrame Sx pb210 10", 0.0043297445, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(15, "CuBox + CuFrame Sx pb210 0.1", 0, 1E-7, 0, 1.0);
   minuit->DefineParameter(15, "CuBox + CuFrame Sx pb210 0.1", 0.0044209233, 1E-7, 0, 1.0);
   minuit->DefineParameter(16, "CuBox + CuFrame Sx pb210 0.01", 0.0181031801, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(16, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(20, "PbRom th232",  0., 1E-7, 0, 1.0);
   // minuit->DefineParameter(21, "PbRom u238",  0., 1E-7, 0, 1.0);
@@ -5569,9 +5571,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   // Correlation Matrix section
   TMatrixT<double> mCorrMatrix;
   TMatrixT<double> mCorrMatrixInverse;
-  mCorrMatrix.ResizeTo(dNumFreeParameters, dNumFreeParameters);
-  mCorrMatrixInverse.ResizeTo(dNumFreeParameters, dNumFreeParameters);
-  minuit->mnemat(mCorrMatrix.GetMatrixArray(), dNumFreeParameters);
+  mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
+  mCorrMatrixInverse.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
+  minuit->mnemat(mCorrMatrix.GetMatrixArray(), TBackgroundModel::dNParam);
 
   for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
     for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
@@ -5579,7 +5581,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
 
   for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
     for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
-      mCorrMatrixInverse(i,j) = mCorrMatrix(dNumFreeParameters-i-1, j); 
+      mCorrMatrixInverse(i,j) = mCorrMatrix(TBackgroundModel::dNParam-i-1, j); 
 
   TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
   TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
@@ -5610,7 +5612,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue)
   mCorrMatrix.Draw("colzSAME");
 
   // If want inverted y-axis for matrix
-  // TH2D *h2Dummy = new TH2D("h2Dummy","", dNumFreeParameters, mCorrMatrix.GetRowLwb()+1, mCorrMatrix.GetRowUpb()+1, dNumFreeParameters, mCorrMatrix.GetRowLwb(), mCorrMatrix.GetRowUpb());
+  // TH2D *h2Dummy = new TH2D("h2Dummy","", TBackgroundModel::dNParam, mCorrMatrix.GetRowLwb()+1, mCorrMatrix.GetRowUpb()+1, TBackgroundModel::dNParam, mCorrMatrix.GetRowLwb(), mCorrMatrix.GetRowUpb());
   // h2Dummy->Draw();
   // mCorrMatrixInverse.Draw("colzSAME");
   // Setting axis (inverted axis for matrix)
@@ -6416,6 +6418,57 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   OutPNLL.close();
 }
 
+void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq)
+{
+  dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
+  // Do the fit now if no other tests are needed 
+  nLoop = 0;
+  for(int i = -10; i < 10; i++)
+  {
+    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+  }
+  for(int i = -10; i < 10; i++)
+  {
+    fInitValues2.push_back(fBestFitInit2 + fBestFitInit2/100*i);
+  }
+
+
+  OutPNLL.open(Form("%s/FitResults/ProfileNLL/ProfileNLL2D_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+  OutPNLL << "{" << endl;
+  OutPNLL << "vector<double> dX;" << endl;
+  OutPNLL << "vector<double> dY;" << endl;
+  OutPNLL << "vector<double> dT;" << endl;
+
+  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
+  {
+    for(std::vector<double>::const_iterator iter2 = fInitValues.begin(); iter2!=fInitValues.end(); iter2++)
+    {    
+    DoTheFitAdaptive(*iter, *iter2);
+    cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
+    OutPNLL << Form("dX.push_back(%f); dY.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2*dDataIntegralM1, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+
+    dNumCalls = 0; // Resets number of calls (for saving purposes)
+    nLoop++; // This is purely for file names and to keep track of number of loops
+    }
+  }
+
+  OutPNLL << "int n = dX.size();" << endl;
+  OutPNLL << "double *z = &dX[0];" << endl;
+  OutPNLL << "double *y = &dY[0];" << endl;
+  OutPNLL << "double *x = &dT[0];" << endl;
+  OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
+  OutPNLL << "TGraph2D *g1 = new TGraph2D(n, x, y, z);" << endl;
+  OutPNLL << "g1->SetLineColor(kBlue);" << endl;
+  OutPNLL << "g1->SetLineWidth(2);" << endl;
+  OutPNLL << "g1->SetTitle(\"2#nu#beta#beta 2D Profile Negative Log-Likelihood\");" << endl;
+  OutPNLL << "g1->GetZaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"K-40\");" << endl;
+  OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
+  OutPNLL << "g1->Draw(\"surf1\");" << endl;
+  OutPNLL << "}" << endl;
+
+  OutPNLL.close();
+}
 
 
 TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
