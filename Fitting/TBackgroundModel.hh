@@ -15,6 +15,8 @@
 #include "TRandom3.h"
 #include "TDatime.h"
 #include "TMatrixT.h"
+#include "TMatrixDEigen.h"
+#include "TGaxis.h"
 #include <TMinuitMinimizer.h>
 
 #include "Math/Minimizer.h"
@@ -1857,7 +1859,8 @@ private:
 
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;
-	
+	bool 			bSave;
+
 	int 			dNumCalls;
 	int 			dMult;
 	double			dBestChiSq;

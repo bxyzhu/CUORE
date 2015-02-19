@@ -753,7 +753,7 @@ void SaveHistogramsFudge()
 	TH1D *hIVCk40M1 = new TH1D("hIVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hInternalk40M1 = new TH1D("hInternalk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hOVCk40M1 = new TH1D("hOVCk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
-	TH1D *hPbRomk40M1 = new TH1D("hPbRomk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBoxk40M1 = new TH1D("hCuBoxk40M1", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hFudge661M1 = new TH1D("hFudge661M1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hFudge803M1 = new TH1D("hFudge803M1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -773,19 +773,19 @@ void SaveHistogramsFudge()
 	TChain *t600mKk40 = LoadMC(sDataDir.c_str(), "600mK", "k40");
 	TChain *tIVCk40 = LoadMC(sDataDir.c_str(), "IVC", "k40");
 	TChain *tOVCk40 = LoadMC(sDataDir.c_str(), "OVC", "k40");
-	TChain *tPbRomk40 = LoadMC(sDataDir.c_str(), "PbRom", "k40");
+	TChain *tCuBoxk40 = LoadMC(sDataDir.c_str(), "CuBox", "k40");
 
 	t50mKk40->Project("h50mKk40M1", "Ener2", "Multiplicity==1");
 	t600mKk40->Project("h600mKk40M1", "Ener2", "Multiplicity==1");
 	tIVCk40->Project("hIVCk40M1", "Ener2", "Multiplicity==1");
 	tOVCk40->Project("hOVCk40M1", "Ener2", "Multiplicity==1");
-	tPbRomk40->Project("hPbRomk40M1", "Ener2", "Multiplicity==1");
+	tCuBoxk40->Project("hCuBoxk40M1", "Ener2", "Multiplicity==1");
 
 	t50mKk40->Project("h50mKk40M2", "Ener2", "Multiplicity==2");
 	t600mKk40->Project("h600mKk40M2", "Ener2", "Multiplicity==2");
 	tIVCk40->Project("hIVCk40M2", "Ener2", "Multiplicity==2");
 	tOVCk40->Project("hOVCk40M2", "Ener2", "Multiplicity==2");
-	tPbRomk40->Project("hPbRomk40M2", "Ener2", "Multiplicity==2");
+	tCuBoxk40->Project("hCuBoxk40M2", "Ener2", "Multiplicity==2");
 
 	hInternalk40M1->Add(h600mKk40M1);
 	hInternalk40M1->Add(h50mKk40M1, 0.8625620249);
@@ -802,19 +802,19 @@ void SaveHistogramsFudge()
 	// }
 	for (int i = 1; i < 10000000; i++)
 	{
-		hFudge661M1->Fill(hOVCk40M1->GetRandom()*0.4527397);
-		hFudge803M1->Fill(hOVCk40M1->GetRandom()*0.55);
-		hFudge1063M1->Fill(hOVCk40M1->GetRandom()*0.72808);
+		hFudge661M1->Fill(hCuBoxk40M1->GetRandom()*0.4527397);
+		hFudge803M1->Fill(hCuBoxk40M1->GetRandom()*0.55);
+		hFudge1063M1->Fill(hCuBoxk40M1->GetRandom()*0.72808);
 
-		hFudge661M2->Fill(hOVCk40M2->GetRandom()*0.4527397);
-		hFudge803M2->Fill(hOVCk40M2->GetRandom()*0.55);
-		hFudge1063M2->Fill(hOVCk40M2->GetRandom()*0.72808);
+		hFudge661M2->Fill(hCuBoxk40M2->GetRandom()*0.4527397);
+		hFudge803M2->Fill(hCuBoxk40M2->GetRandom()*0.55);
+		hFudge1063M2->Fill(hCuBoxk40M2->GetRandom()*0.72808);
 	}
 
-	double dIntegral1 = hOVCk40M1->Integral(1, dNBins);
-	double dEntries1 = hOVCk40M1->GetEntries();
-	double dIntegral2 = hOVCk40M2->Integral(1, dNBins);
-	double dEntries2 = hOVCk40M2->GetEntries();
+	double dIntegral1 = hCuBoxk40M1->Integral(1, dNBins);
+	double dEntries1 = hCuBoxk40M1->GetEntries();
+	double dIntegral2 = hCuBoxk40M2->Integral(1, dNBins);
+	double dEntries2 = hCuBoxk40M2->GetEntries();
 
 	hFudge661M1->Scale(1/hFudge661M1->Integral(1, dNBins));
 	hFudge661M2->Scale(1/hFudge661M2->Integral(1, dNBins) * dIntegral2/dIntegral1);
