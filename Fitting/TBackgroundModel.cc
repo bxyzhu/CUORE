@@ -64,9 +64,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // Data directories depending on QCC/local
   // dDataDir =  "/Users/brian/macros/Simulations/Production/";
   dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
-   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/Sync";
+   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/v2.30";
   dMCDir = "/Users/brian/macros/Simulations/Production";
-   // dMCDir = "/cuore/user/zhubrian/MC/scratch/OldProd";
+   // dMCDir = "/cuore/user/zhubrian/MC/Bkg";
   dSaveDir = "/Users/brian/Dropbox/code/Fitting";
    // dSaveDir = "/cuore/user/zhubrian/code/Fitting";
   dDataIntegral = 0;
@@ -1374,10 +1374,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0, 0);
+  // DoTheFitAdaptive(0,0);
+  DoTheFitAdaptive(0.0674202742, 0.0263278758);
   if(bSave)LatexResultTable(0);
   
   // ProfileNLL(0.0685222152, 3968.95); 
+  // ProfileNLL2D();
 }
 
 // Probably needs updating  
@@ -5021,9 +5023,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
 
    // Uncommend to fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   // minuit->FixParameter(1); // TeO2 2nu
+   minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
-   // minuit->FixParameter(3); // TeO2 k40
+   minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
    // minuit->FixParameter(5); // TeO2 th232 only
    // minuit->FixParameter(6); // TeO2 th230 only
@@ -6428,7 +6430,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   {
     fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
   }
-  for(int i = -10; i < 10; i++)
+  for(int j = -10; j < 10; j++)
   {
     fInitValues2.push_back(fBestFitInit2 + fBestFitInit2/100*i);
   }
@@ -6442,7 +6444,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
-    for(std::vector<double>::const_iterator iter2 = fInitValues.begin(); iter2!=fInitValues.end(); iter2++)
+    for(std::vector<double>::const_iterator iter2 = fInitValues2.begin(); iter2!=fInitValues2.end(); iter2++)
     {    
     DoTheFitAdaptive(*iter, *iter2);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
