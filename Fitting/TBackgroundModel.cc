@@ -1375,11 +1375,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // Do the fit now if no other tests are needed 
   nLoop = 0;
   // DoTheFitAdaptive(0,0);
-  DoTheFitAdaptive(0.0674202742, 0.0263278758);
+  // DoTheFitAdaptive(0.0674202742, 0.0263278758);
   if(bSave)LatexResultTable(0);
   
   // ProfileNLL(0.0685222152, 3968.95); 
-  // ProfileNLL2D();
+  ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
+
 }
 
 // Probably needs updating  
@@ -4955,7 +4956,7 @@ void TBackgroundModel::UpdateModelAdaptive()
 }
   
 // This method sets up minuit and does the fit
-bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
+bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 { 
   // Reset initial parameter/error values
   ResetParameters();
@@ -4964,7 +4965,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   gStyle->SetOptFit();
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -4973,7 +4974,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
   minuit->DefineParameter(2, "TeO2 co60",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(3, "TeO2 k40",  fk40Value, 1E-7, 0, 1.0);
+  minuit->DefineParameter(3, "TeO2 k40",  0, 1E-7, 0, 1.0);
   // minuit->DefineParameter(4, "TeO2 po210",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(4, "TeO2 th232 only", 0.0002930441, 1E-7, 0, 1.0);
   minuit->DefineParameter(5, "TeO2 th230 only", 0.0002989944, 1E-7, 0, 1.0);
@@ -5002,7 +5003,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
   minuit->DefineParameter(19, "OVC u238",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(20, "OVC co60",  0., 1E-7, 0, 1.0);    
   minuit->DefineParameter(21, "OVC k40",  0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(22, "External Lead bi210", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(22, "External Lead bi210", fVariableValue, 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(29, "Internal Shields th232",  0., 1E-7, 0, 1.0);
   // minuit->DefineParameter(30, "Internal Shields u238",  0., 1E-7, 0, 1.0);
@@ -5025,7 +5026,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
    // minuit->FixParameter(0); // TeO2 0nu
    minuit->FixParameter(1); // TeO2 2nu
    // minuit->FixParameter(2); // TeO2 co60
-   minuit->FixParameter(3); // TeO2 k40
+   // minuit->FixParameter(3); // TeO2 k40
    // minuit->FixParameter(4); // TeO2 po210
    // minuit->FixParameter(5); // TeO2 th232 only
    // minuit->FixParameter(6); // TeO2 th230 only
@@ -5046,7 +5047,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fk40Value)
 
    // minuit->FixParameter(20); // PbRom th232
    // minuit->FixParameter(21); // PbRom u238
-   // minuit->FixParameter(22); // PbRom co60
+   minuit->FixParameter(22); // PbRom co60
    // minuit->FixParameter(23); // PbRom k40
 
    // minuit->FixParameter(24); // OVC th232
@@ -6426,13 +6427,13 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  for(int i = -10; i < 10; i++)
+  for(int i = -5; i < 5; i++)
   {
     fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
   }
-  for(int j = -10; j < 10; j++)
+  for(int j = -5; j < 5; j++)
   {
-    fInitValues2.push_back(fBestFitInit2 + fBestFitInit2/100*i);
+    fInitValues2.push_back(fBestFitInit2 + fBestFitInit2/100*j);
   }
 
 
@@ -6442,13 +6443,14 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   OutPNLL << "vector<double> dY;" << endl;
   OutPNLL << "vector<double> dT;" << endl;
 
-  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
+  for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter != fInitValues.end(); iter++)
   {
-    for(std::vector<double>::const_iterator iter2 = fInitValues2.begin(); iter2!=fInitValues2.end(); iter2++)
-    {    
+    for(std::vector<double>::const_iterator iter2 = fInitValues2.begin(); iter2 != fInitValues2.end(); iter2++)
+    {
+    cout << "Step: " << *iter << " " << *iter2 << endl;    
     DoTheFitAdaptive(*iter, *iter2);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dY.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
 
     dNumCalls = 0; // Resets number of calls (for saving purposes)
     nLoop++; // This is purely for file names and to keep track of number of loops
@@ -6465,10 +6467,22 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   OutPNLL << "g1->SetLineWidth(2);" << endl;
   OutPNLL << "g1->SetTitle(\"2#nu#beta#beta 2D Profile Negative Log-Likelihood\");" << endl;
   OutPNLL << "g1->GetZaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"K-40\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"External Bi-207\");" << endl;
   OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
-  OutPNLL << "g1->Draw(\"surf1\");" << endl;
+  // OutPNLL << "g1->Draw(\"surf1\");" << endl;
+  OutPNLL << endl;
+  OutPNLL << endl;
+
+  OutPNLL << "TH2D *h1;" << endl;
+  OutPNLL << "h1 = g1->GetHistogram();" << endl;
+  OutPNLL << "double levels[] = {1, 4, 9};" << endl;
+  OutPNLL << "h1->SetContour(3, levels);" << endl;
+  OutPNLL << "int colors[] = {kGreen, kYellow, kRed};" << endl;
+  OutPNLL << "gStyle->SetPalette((sizeof(colors)/sizeof(Int_t)), colors);" << endl;
+  OutPNLL << "h1->SetLineWidth(2);" << endl;
+  OutPNLL << "h1->Draw(\"cont1\");" << endl;
   OutPNLL << "}" << endl;
+  OutPNLL << endl;
 
   OutPNLL.close();
 }

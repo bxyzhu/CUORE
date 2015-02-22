@@ -41,7 +41,7 @@ public:
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	bool DoTheFitAdaptive(double f2nuValue, double fk40Value);
+	bool DoTheFitAdaptive(double f2nuValue, double fVariableValue);
 
 	void DrawBkg();
 
