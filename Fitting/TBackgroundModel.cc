@@ -984,350 +984,350 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 
 ////////// Frame M1 and M2
-  hAdapCuFrameco58M1      = new TH1D("hAdapCuFrameco58M1",   "hAdapCuFrameco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameco60M1      = new TH1D("hAdapCuFrameco60M1",   "hAdapCuFrameco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFramecs137M1     = new TH1D("hAdapCuFramecs137M1",  "hAdapCuFramecs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFramek40M1       = new TH1D("hAdapCuFramek40M1",    "hAdapCuFramek40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFramemn54M1      = new TH1D("hAdapCuFramemn54M1",   "hAdapCuFramemn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFramepb210M1     = new TH1D("hAdapCuFramepb210M1",  "hAdapCuFramepb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameth232M1     = new TH1D("hAdapCuFrameth232M1",  "hAdapCuFrameth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapCuFrameu238M1      = new TH1D("hAdapCuFrameu238M1",   "hAdapCuFrameu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameco58M1      = new TH1D("hAdapCuFrameco58M1",   "CuFrame Bulk co58 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameco60M1      = new TH1D("hAdapCuFrameco60M1",   "CuFrame Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramecs137M1     = new TH1D("hAdapCuFramecs137M1",  "CuFrame Bulk cs137 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramek40M1       = new TH1D("hAdapCuFramek40M1",    "CuFrame Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramemn54M1      = new TH1D("hAdapCuFramemn54M1",   "CuFrame Bulk mn54 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFramepb210M1     = new TH1D("hAdapCuFramepb210M1",  "CuFrame Bulk pb210 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameth232M1     = new TH1D("hAdapCuFrameth232M1",  "CuFrame Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapCuFrameu238M1      = new TH1D("hAdapCuFrameu238M1",   "CuFrame Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuFrameSth232M1_1     = new TH1D("hAdapCuFrameSth232M1_1",    "hAdapCuFrameSth232M1_1",     dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSu238M1_1      = new TH1D("hAdapCuFrameSu238M1_1",     "hAdapCuFrameSu238M1_1",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxpb210M1_001  = new TH1D("hAdapCuFrameSxpb210M1_001", "hAdapCuFrameSxpb210M1_001",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxpb210M1_01   = new TH1D("hAdapCuFrameSxpb210M1_01",  "hAdapCuFrameSxpb210M1_01",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxpb210M1_1    = new TH1D("hAdapCuFrameSxpb210M1_1",   "hAdapCuFrameSxpb210M1_1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxpb210M1_10   = new TH1D("hAdapCuFrameSxpb210M1_10",  "hAdapCuFrameSxpb210M1_10",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxth232M1_001  = new TH1D("hAdapCuFrameSxth232M1_001", "hAdapCuFrameSxth232M1_001",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxth232M1_01   = new TH1D("hAdapCuFrameSxth232M1_01",  "hAdapCuFrameSxth232M1_01",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxth232M1_1    = new TH1D("hAdapCuFrameSxth232M1_1",   "hAdapCuFrameSxth232M1_1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxth232M1_10   = new TH1D("hAdapCuFrameSxth232M1_10",  "hAdapCuFrameSxth232M1_10",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxu238M1_001   = new TH1D("hAdapCuFrameSxu238M1_001",  "hAdapCuFrameSxu238M1_001",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxu238M1_01    = new TH1D("hAdapCuFrameSxu238M1_01",   "hAdapCuFrameSxu238M1_01",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxu238M1_1     = new TH1D("hAdapCuFrameSxu238M1_1",    "hAdapCuFrameSxu238M1_1",     dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuFrameSxu238M1_10    = new TH1D("hAdapCuFrameSxu238M1_10",   "hAdapCuFrameSxu238M1_10",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSth232M1_1     = new TH1D("hAdapCuFrameSth232M1_1",    "CuFrame S th232 M1 1 #mum",     dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSu238M1_1      = new TH1D("hAdapCuFrameSu238M1_1",     "CuFrame S u238 M1 1 #mum",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxpb210M1_001  = new TH1D("hAdapCuFrameSxpb210M1_001", "CuFrame Sx pb210 M1 0.01 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxpb210M1_01   = new TH1D("hAdapCuFrameSxpb210M1_01",  "CuFrame Sx pb210 M1 0.1 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxpb210M1_1    = new TH1D("hAdapCuFrameSxpb210M1_1",   "CuFrame Sx pb210 M1 1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxpb210M1_10   = new TH1D("hAdapCuFrameSxpb210M1_10",  "CuFrame Sx pb210 M1 10 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxth232M1_001  = new TH1D("hAdapCuFrameSxth232M1_001", "CuFrame Sx th232 M1 0.01 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxth232M1_01   = new TH1D("hAdapCuFrameSxth232M1_01",  "CuFrame Sx th232 M1 0.1 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxth232M1_1    = new TH1D("hAdapCuFrameSxth232M1_1",   "CuFrame Sx th232 M1 1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxth232M1_10   = new TH1D("hAdapCuFrameSxth232M1_10",  "CuFrame Sx th232 M1 10 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxu238M1_001   = new TH1D("hAdapCuFrameSxu238M1_001",  "CuFrame Sx u238 M1 0.01 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxu238M1_01    = new TH1D("hAdapCuFrameSxu238M1_01",   "CuFrame Sx u238 M1 0.1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxu238M1_1     = new TH1D("hAdapCuFrameSxu238M1_1",    "CuFrame Sx u238 M1 1 #mum",     dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuFrameSxu238M1_10    = new TH1D("hAdapCuFrameSxu238M1_10",   "CuFrame Sx u238 M1 10 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuFrameco58M2      = new TH1D("hAdapCuFrameco58M2",   "hAdapCuFrameco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameco60M2      = new TH1D("hAdapCuFrameco60M2",   "hAdapCuFrameco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFramecs137M2     = new TH1D("hAdapCuFramecs137M2",  "hAdapCuFramecs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFramek40M2       = new TH1D("hAdapCuFramek40M2",    "hAdapCuFramek40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFramemn54M2      = new TH1D("hAdapCuFramemn54M2",   "hAdapCuFramemn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFramepb210M2     = new TH1D("hAdapCuFramepb210M2",  "hAdapCuFramepb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameth232M2     = new TH1D("hAdapCuFrameth232M2",  "hAdapCuFrameth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapCuFrameu238M2      = new TH1D("hAdapCuFrameu238M2",   "hAdapCuFrameu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameco58M2      = new TH1D("hAdapCuFrameco58M2",   "CuFrame Bulk co58 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameco60M2      = new TH1D("hAdapCuFrameco60M2",   "CuFrame Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramecs137M2     = new TH1D("hAdapCuFramecs137M2",  "CuFrame Bulk cs137 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramek40M2       = new TH1D("hAdapCuFramek40M2",    "CuFrame Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramemn54M2      = new TH1D("hAdapCuFramemn54M2",   "CuFrame Bulk mn54 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFramepb210M2     = new TH1D("hAdapCuFramepb210M2",  "CuFrame Bulk pb210 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameth232M2     = new TH1D("hAdapCuFrameth232M2",  "CuFrame Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapCuFrameu238M2      = new TH1D("hAdapCuFrameu238M2",   "CuFrame Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuFrameSth232M2_1     = new TH1D("hAdapCuFrameSth232M2_1",    "hAdapCuFrameSth232M2_1",     dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSu238M2_1      = new TH1D("hAdapCuFrameSu238M2_1",     "hAdapCuFrameSu238M2_1",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxpb210M2_001  = new TH1D("hAdapCuFrameSxpb210M2_001", "hAdapCuFrameSxpb210M2_001",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxpb210M2_01   = new TH1D("hAdapCuFrameSxpb210M2_01",  "hAdapCuFrameSxpb210M2_01",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxpb210M2_1    = new TH1D("hAdapCuFrameSxpb210M2_1",   "hAdapCuFrameSxpb210M2_1",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxpb210M2_10   = new TH1D("hAdapCuFrameSxpb210M2_10",  "hAdapCuFrameSxpb210M2_10",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxth232M2_001  = new TH1D("hAdapCuFrameSxth232M2_001", "hAdapCuFrameSxth232M2_001",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxth232M2_01   = new TH1D("hAdapCuFrameSxth232M2_01",  "hAdapCuFrameSxth232M2_01",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxth232M2_1    = new TH1D("hAdapCuFrameSxth232M2_1",   "hAdapCuFrameSxth232M2_1",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxth232M2_10   = new TH1D("hAdapCuFrameSxth232M2_10",  "hAdapCuFrameSxth232M2_10",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxu238M2_001   = new TH1D("hAdapCuFrameSxu238M2_001",  "hAdapCuFrameSxu238M2_001",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxu238M2_01    = new TH1D("hAdapCuFrameSxu238M2_01",   "hAdapCuFrameSxu238M2_01",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxu238M2_1     = new TH1D("hAdapCuFrameSxu238M2_1",    "hAdapCuFrameSxu238M2_1",     dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuFrameSxu238M2_10    = new TH1D("hAdapCuFrameSxu238M2_10",   "hAdapCuFrameSxu238M2_10",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSth232M2_1     = new TH1D("hAdapCuFrameSth232M2_1",    "CuFrame S th232 M2 1 #mum",     dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSu238M2_1      = new TH1D("hAdapCuFrameSu238M2_1",     "CuFrame S u238 M2 1 #mum",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxpb210M2_001  = new TH1D("hAdapCuFrameSxpb210M2_001", "CuFrame Sx pb210 M2 0.01 #mum",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxpb210M2_01   = new TH1D("hAdapCuFrameSxpb210M2_01",  "CuFrame Sx pb210 M2 0.1 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxpb210M2_1    = new TH1D("hAdapCuFrameSxpb210M2_1",   "CuFrame Sx pb210 M2 1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxpb210M2_10   = new TH1D("hAdapCuFrameSxpb210M2_10",  "CuFrame Sx pb210 M2 10 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxth232M2_001  = new TH1D("hAdapCuFrameSxth232M2_001", "CuFrame Sx th232 M2 0.01 #mum",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxth232M2_01   = new TH1D("hAdapCuFrameSxth232M2_01",  "CuFrame Sx th232 M2 0.1 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxth232M2_1    = new TH1D("hAdapCuFrameSxth232M2_1",   "CuFrame Sx th232 M2 1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxth232M2_10   = new TH1D("hAdapCuFrameSxth232M2_10",  "CuFrame Sx th232 M2 10 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxu238M2_001   = new TH1D("hAdapCuFrameSxu238M2_001",  "CuFrame Sx u238 M2 0.01 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxu238M2_01    = new TH1D("hAdapCuFrameSxu238M2_01",   "CuFrame Sx u238 M2 0.1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxu238M2_1     = new TH1D("hAdapCuFrameSxu238M2_1",    "CuFrame Sx u238 M2 1 #mum",     dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuFrameSxu238M2_10    = new TH1D("hAdapCuFrameSxu238M2_10",   "CuFrame Sx u238 M2 10 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuFrameco58M2Sum      = new TH1D("hAdapCuFrameco58M2Sum",   "hAdapCuFrameco58M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameco60M2Sum      = new TH1D("hAdapCuFrameco60M2Sum",   "hAdapCuFrameco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFramecs137M2Sum     = new TH1D("hAdapCuFramecs137M2Sum",  "hAdapCuFramecs137M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFramek40M2Sum       = new TH1D("hAdapCuFramek40M2Sum",    "hAdapCuFramek40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFramemn54M2Sum      = new TH1D("hAdapCuFramemn54M2Sum",   "hAdapCuFramemn54M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFramepb210M2Sum     = new TH1D("hAdapCuFramepb210M2Sum",  "hAdapCuFramepb210M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameth232M2Sum     = new TH1D("hAdapCuFrameth232M2Sum",  "hAdapCuFrameth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapCuFrameu238M2Sum      = new TH1D("hAdapCuFrameu238M2Sum",   "hAdapCuFrameu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameco58M2Sum      = new TH1D("hAdapCuFrameco58M2Sum",   "CuFrame Bulk co58 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameco60M2Sum      = new TH1D("hAdapCuFrameco60M2Sum",   "CuFrame Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFramecs137M2Sum     = new TH1D("hAdapCuFramecs137M2Sum",  "CuFrame Bulk cs137 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFramek40M2Sum       = new TH1D("hAdapCuFramek40M2Sum",    "CuFrame Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFramemn54M2Sum      = new TH1D("hAdapCuFramemn54M2Sum",   "CuFrame Bulk mn54 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFramepb210M2Sum     = new TH1D("hAdapCuFramepb210M2Sum",  "CuFrame Bulk pb210 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameth232M2Sum     = new TH1D("hAdapCuFrameth232M2Sum",  "CuFrame Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapCuFrameu238M2Sum      = new TH1D("hAdapCuFrameu238M2Sum",   "CuFrame Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
-  hAdapCuFrameSth232M2Sum_1     = new TH1D("hAdapCuFrameSth232M2Sum_1",    "hAdapCuFrameSth232M2Sum_1",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSu238M2Sum_1      = new TH1D("hAdapCuFrameSu238M2Sum_1",     "hAdapCuFrameSu238M2Sum_1",      dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxpb210M2Sum_001  = new TH1D("hAdapCuFrameSxpb210M2Sum_001", "hAdapCuFrameSxpb210M2Sum_001",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxpb210M2Sum_01   = new TH1D("hAdapCuFrameSxpb210M2Sum_01",  "hAdapCuFrameSxpb210M2Sum_01",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxpb210M2Sum_1    = new TH1D("hAdapCuFrameSxpb210M2Sum_1",   "hAdapCuFrameSxpb210M2Sum_1",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxpb210M2Sum_10   = new TH1D("hAdapCuFrameSxpb210M2Sum_10",  "hAdapCuFrameSxpb210M2Sum_10",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxth232M2Sum_001  = new TH1D("hAdapCuFrameSxth232M2Sum_001", "hAdapCuFrameSxth232M2Sum_001",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxth232M2Sum_01   = new TH1D("hAdapCuFrameSxth232M2Sum_01",  "hAdapCuFrameSxth232M2Sum_01",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxth232M2Sum_1    = new TH1D("hAdapCuFrameSxth232M2Sum_1",   "hAdapCuFrameSxth232M2Sum_1",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxth232M2Sum_10   = new TH1D("hAdapCuFrameSxth232M2Sum_10",  "hAdapCuFrameSxth232M2Sum_10",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxu238M2Sum_001   = new TH1D("hAdapCuFrameSxu238M2Sum_001",  "hAdapCuFrameSxu238M2Sum_001",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxu238M2Sum_01    = new TH1D("hAdapCuFrameSxu238M2Sum_01",   "hAdapCuFrameSxu238M2Sum_01",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxu238M2Sum_1     = new TH1D("hAdapCuFrameSxu238M2Sum_1",    "hAdapCuFrameSxu238M2Sum_1",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuFrameSxu238M2Sum_10    = new TH1D("hAdapCuFrameSxu238M2Sum_10",   "hAdapCuFrameSxu238M2Sum_10",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSth232M2Sum_1     = new TH1D("hAdapCuFrameSth232M2Sum_1",    "CuFrame S th232 M2Sum 1 #mum",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSu238M2Sum_1      = new TH1D("hAdapCuFrameSu238M2Sum_1",     "CuFrame S u238 M2Sum 1 #mum",      dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxpb210M2Sum_001  = new TH1D("hAdapCuFrameSxpb210M2Sum_001", "CuFrame Sx pb210 M2Sum 0.01 #mum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxpb210M2Sum_01   = new TH1D("hAdapCuFrameSxpb210M2Sum_01",  "CuFrame Sx pb210 M2Sum 0.1 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxpb210M2Sum_1    = new TH1D("hAdapCuFrameSxpb210M2Sum_1",   "CuFrame Sx pb210 M2Sum 1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxpb210M2Sum_10   = new TH1D("hAdapCuFrameSxpb210M2Sum_10",  "CuFrame Sx pb210 M2Sum 10 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxth232M2Sum_001  = new TH1D("hAdapCuFrameSxth232M2Sum_001", "CuFrame Sx th232 M2Sum 0.01 #mum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxth232M2Sum_01   = new TH1D("hAdapCuFrameSxth232M2Sum_01",  "CuFrame Sx th232 M2Sum 0.1 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxth232M2Sum_1    = new TH1D("hAdapCuFrameSxth232M2Sum_1",   "CuFrame Sx th232 M2Sum 1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxth232M2Sum_10   = new TH1D("hAdapCuFrameSxth232M2Sum_10",  "CuFrame Sx th232 M2Sum 10 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxu238M2Sum_001   = new TH1D("hAdapCuFrameSxu238M2Sum_001",  "CuFrame Sx u238 M2Sum 0.01 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxu238M2Sum_01    = new TH1D("hAdapCuFrameSxu238M2Sum_01",   "CuFrame Sx u238 M2Sum 0.1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxu238M2Sum_1     = new TH1D("hAdapCuFrameSxu238M2Sum_1",    "CuFrame Sx u238 M2Sum 1 #mum",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuFrameSxu238M2Sum_10    = new TH1D("hAdapCuFrameSxu238M2Sum_10",   "CuFrame Sx u238 M2Sum 10 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 ////////// CuBox (TShield) M1 and M2
-  hAdapCuBoxco58M1      = new TH1D("hAdapCuBoxco58M1",   "hAdapCuBoxco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxco60M1      = new TH1D("hAdapCuBoxco60M1",   "hAdapCuBoxco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxcs137M1     = new TH1D("hAdapCuBoxcs137M1",  "hAdapCuBoxcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxk40M1       = new TH1D("hAdapCuBoxk40M1",    "hAdapCuBoxk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxmn54M1      = new TH1D("hAdapCuBoxmn54M1",   "hAdapCuBoxmn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxpb210M1     = new TH1D("hAdapCuBoxpb210M1",  "hAdapCuBoxpb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxth232M1     = new TH1D("hAdapCuBoxth232M1",  "hAdapCuBoxth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapCuBoxu238M1      = new TH1D("hAdapCuBoxu238M1",   "hAdapCuBoxu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxco58M1      = new TH1D("hAdapCuBoxco58M1",   "CuBox Bulk co58 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxco60M1      = new TH1D("hAdapCuBoxco60M1",   "CuBox Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxcs137M1     = new TH1D("hAdapCuBoxcs137M1",  "CuBox Bulk cs137 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxk40M1       = new TH1D("hAdapCuBoxk40M1",    "CuBox Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxmn54M1      = new TH1D("hAdapCuBoxmn54M1",   "CuBox Bulk mn54 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxpb210M1     = new TH1D("hAdapCuBoxpb210M1",  "CuBox Bulk pb210 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxth232M1     = new TH1D("hAdapCuBoxth232M1",  "CuBox Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapCuBoxu238M1      = new TH1D("hAdapCuBoxu238M1",   "CuBox Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuBoxSth232M1_1     = new TH1D("hAdapCuBoxSth232M1_1",    "hAdapCuBoxSth232M1_1",     dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSu238M1_1      = new TH1D("hAdapCuBoxSu238M1_1",     "hAdapCuBoxSu238M1_1",      dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxpb210M1_001  = new TH1D("hAdapCuBoxSxpb210M1_001", "hAdapCuBoxSxpb210M1_001",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxpb210M1_01   = new TH1D("hAdapCuBoxSxpb210M1_01",  "hAdapCuBoxSxpb210M1_01",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxpb210M1_1    = new TH1D("hAdapCuBoxSxpb210M1_1",   "hAdapCuBoxSxpb210M1_1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxpb210M1_10   = new TH1D("hAdapCuBoxSxpb210M1_10",  "hAdapCuBoxSxpb210M1_10",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxth232M1_001  = new TH1D("hAdapCuBoxSxth232M1_001", "hAdapCuBoxSxth232M1_001",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxth232M1_01   = new TH1D("hAdapCuBoxSxth232M1_01",  "hAdapCuBoxSxth232M1_01",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxth232M1_1    = new TH1D("hAdapCuBoxSxth232M1_1",   "hAdapCuBoxSxth232M1_1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxth232M1_10   = new TH1D("hAdapCuBoxSxth232M1_10",  "hAdapCuBoxSxth232M1_10",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxu238M1_001   = new TH1D("hAdapCuBoxSxu238M1_001",  "hAdapCuBoxSxu238M1_001",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxu238M1_01    = new TH1D("hAdapCuBoxSxu238M1_01",   "hAdapCuBoxSxu238M1_01",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxu238M1_1     = new TH1D("hAdapCuBoxSxu238M1_1",    "hAdapCuBoxSxu238M1_1",     dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBoxSxu238M1_10    = new TH1D("hAdapCuBoxSxu238M1_10",   "hAdapCuBoxSxu238M1_10",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSth232M1_1     = new TH1D("hAdapCuBoxSth232M1_1",    "CuBox S th232 M1 1 #mum",     dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSu238M1_1      = new TH1D("hAdapCuBoxSu238M1_1",     "CuBox S u238 M1 1 #mum",      dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxpb210M1_001  = new TH1D("hAdapCuBoxSxpb210M1_001", "CuBox Sx pb210 M1 0.01 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxpb210M1_01   = new TH1D("hAdapCuBoxSxpb210M1_01",  "CuBox Sx pb210 M1 0.1 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxpb210M1_1    = new TH1D("hAdapCuBoxSxpb210M1_1",   "CuBox Sx pb210 M1 1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxpb210M1_10   = new TH1D("hAdapCuBoxSxpb210M1_10",  "CuBox Sx pb210 M1 10 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxth232M1_001  = new TH1D("hAdapCuBoxSxth232M1_001", "CuBox Sx th232 M1 0.01 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxth232M1_01   = new TH1D("hAdapCuBoxSxth232M1_01",  "CuBox Sx th232 M1 0.1 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxth232M1_1    = new TH1D("hAdapCuBoxSxth232M1_1",   "CuBox Sx th232 M1 1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxth232M1_10   = new TH1D("hAdapCuBoxSxth232M1_10",  "CuBox Sx th232 M1 10 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxu238M1_001   = new TH1D("hAdapCuBoxSxu238M1_001",  "CuBox Sx u238 M1 0.01 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxu238M1_01    = new TH1D("hAdapCuBoxSxu238M1_01",   "CuBox Sx u238 M1 0.1 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxu238M1_1     = new TH1D("hAdapCuBoxSxu238M1_1",    "CuBox Sx u238 M1 1 #mum",     dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBoxSxu238M1_10    = new TH1D("hAdapCuBoxSxu238M1_10",   "CuBox Sx u238 M1 10 #mum",    dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuBoxco58M2      = new TH1D("hAdapCuBoxco58M2",   "hAdapCuBoxco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxco60M2      = new TH1D("hAdapCuBoxco60M2",   "hAdapCuBoxco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxcs137M2     = new TH1D("hAdapCuBoxcs137M2",  "hAdapCuBoxcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxk40M2       = new TH1D("hAdapCuBoxk40M2",    "hAdapCuBoxk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxmn54M2      = new TH1D("hAdapCuBoxmn54M2",   "hAdapCuBoxmn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxpb210M2     = new TH1D("hAdapCuBoxpb210M2",  "hAdapCuBoxpb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxth232M2     = new TH1D("hAdapCuBoxth232M2",  "hAdapCuBoxth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapCuBoxu238M2      = new TH1D("hAdapCuBoxu238M2",   "hAdapCuBoxu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxco58M2      = new TH1D("hAdapCuBoxco58M2",   "CuBox Bulk co58 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxco60M2      = new TH1D("hAdapCuBoxco60M2",   "CuBox Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxcs137M2     = new TH1D("hAdapCuBoxcs137M2",  "CuBox Bulk cs137 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxk40M2       = new TH1D("hAdapCuBoxk40M2",    "CuBox Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxmn54M2      = new TH1D("hAdapCuBoxmn54M2",   "CuBox Bulk mn54 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxpb210M2     = new TH1D("hAdapCuBoxpb210M2",  "CuBox Bulk pb210 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxth232M2     = new TH1D("hAdapCuBoxth232M2",  "CuBox Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapCuBoxu238M2      = new TH1D("hAdapCuBoxu238M2",   "CuBox Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuBoxSth232M2_1     = new TH1D("hAdapCuBoxSth232M2_1",    "hAdapCuBoxSth232M2_1",     dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSu238M2_1      = new TH1D("hAdapCuBoxSu238M2_1",     "hAdapCuBoxSu238M2_1",      dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxpb210M2_001  = new TH1D("hAdapCuBoxSxpb210M2_001", "hAdapCuBoxSxpb210M2_001",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxpb210M2_01   = new TH1D("hAdapCuBoxSxpb210M2_01",  "hAdapCuBoxSxpb210M2_01",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxpb210M2_1    = new TH1D("hAdapCuBoxSxpb210M2_1",   "hAdapCuBoxSxpb210M2_1",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxpb210M2_10   = new TH1D("hAdapCuBoxSxpb210M2_10",  "hAdapCuBoxSxpb210M2_10",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxth232M2_001  = new TH1D("hAdapCuBoxSxth232M2_001", "hAdapCuBoxSxth232M2_001",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxth232M2_01   = new TH1D("hAdapCuBoxSxth232M2_01",  "hAdapCuBoxSxth232M2_01",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxth232M2_1    = new TH1D("hAdapCuBoxSxth232M2_1",   "hAdapCuBoxSxth232M2_1",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxth232M2_10   = new TH1D("hAdapCuBoxSxth232M2_10",  "hAdapCuBoxSxth232M2_10",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxu238M2_001   = new TH1D("hAdapCuBoxSxu238M2_001",  "hAdapCuBoxSxu238M2_001",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxu238M2_01    = new TH1D("hAdapCuBoxSxu238M2_01",   "hAdapCuBoxSxu238M2_01",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxu238M2_1     = new TH1D("hAdapCuBoxSxu238M2_1",    "hAdapCuBoxSxu238M2_1",     dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBoxSxu238M2_10    = new TH1D("hAdapCuBoxSxu238M2_10",   "hAdapCuBoxSxu238M2_10",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSth232M2_1     = new TH1D("hAdapCuBoxSth232M2_1",    "CuBox S th232 M2 1 #mum",     dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSu238M2_1      = new TH1D("hAdapCuBoxSu238M2_1",     "CuBox S u238 M2 1 #mum",      dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxpb210M2_001  = new TH1D("hAdapCuBoxSxpb210M2_001", "CuBox Sx pb210 M2 0.01 #mum",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxpb210M2_01   = new TH1D("hAdapCuBoxSxpb210M2_01",  "CuBox Sx pb210 M2 0.1 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxpb210M2_1    = new TH1D("hAdapCuBoxSxpb210M2_1",   "CuBox Sx pb210 M2 1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxpb210M2_10   = new TH1D("hAdapCuBoxSxpb210M2_10",  "CuBox Sx pb210 M2 10 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxth232M2_001  = new TH1D("hAdapCuBoxSxth232M2_001", "CuBox Sx th232 M2 0.01 #mum",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxth232M2_01   = new TH1D("hAdapCuBoxSxth232M2_01",  "CuBox Sx th232 M2 0.1 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxth232M2_1    = new TH1D("hAdapCuBoxSxth232M2_1",   "CuBox Sx th232 M2 1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxth232M2_10   = new TH1D("hAdapCuBoxSxth232M2_10",  "CuBox Sx th232 M2 10 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxu238M2_001   = new TH1D("hAdapCuBoxSxu238M2_001",  "CuBox Sx u238 M2 0.01 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxu238M2_01    = new TH1D("hAdapCuBoxSxu238M2_01",   "CuBox Sx u238 M2 0.1 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxu238M2_1     = new TH1D("hAdapCuBoxSxu238M2_1",    "CuBox Sx u238 M2 1 #mum",     dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBoxSxu238M2_10    = new TH1D("hAdapCuBoxSxu238M2_10",   "CuBox Sx u238 M2 10 #mum",    dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuBoxco58M2Sum      = new TH1D("hAdapCuBoxco58M2Sum",   "hAdapCuBoxco58M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxco60M2Sum      = new TH1D("hAdapCuBoxco60M2Sum",   "hAdapCuBoxco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxcs137M2Sum     = new TH1D("hAdapCuBoxcs137M2Sum",  "hAdapCuBoxcs137M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxk40M2Sum       = new TH1D("hAdapCuBoxk40M2Sum",    "hAdapCuBoxk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxmn54M2Sum      = new TH1D("hAdapCuBoxmn54M2Sum",   "hAdapCuBoxmn54M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxpb210M2Sum     = new TH1D("hAdapCuBoxpb210M2Sum",  "hAdapCuBoxpb210M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxth232M2Sum     = new TH1D("hAdapCuBoxth232M2Sum",  "hAdapCuBoxth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapCuBoxu238M2Sum      = new TH1D("hAdapCuBoxu238M2Sum",   "hAdapCuBoxu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxco58M2Sum      = new TH1D("hAdapCuBoxco58M2Sum",   "CuBox Bulk co58 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxco60M2Sum      = new TH1D("hAdapCuBoxco60M2Sum",   "CuBox Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxcs137M2Sum     = new TH1D("hAdapCuBoxcs137M2Sum",  "CuBox Bulk cs137 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxk40M2Sum       = new TH1D("hAdapCuBoxk40M2Sum",    "CuBox Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxmn54M2Sum      = new TH1D("hAdapCuBoxmn54M2Sum",   "CuBox Bulk mn54 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxpb210M2Sum     = new TH1D("hAdapCuBoxpb210M2Sum",  "CuBox Bulk pb210 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxth232M2Sum     = new TH1D("hAdapCuBoxth232M2Sum",  "CuBox Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapCuBoxu238M2Sum      = new TH1D("hAdapCuBoxu238M2Sum",   "CuBox Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
-  hAdapCuBoxSth232M2Sum_1     = new TH1D("hAdapCuBoxSth232M2Sum_1",    "hAdapCuBoxSth232M2Sum_1",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSu238M2Sum_1      = new TH1D("hAdapCuBoxSu238M2Sum_1",     "hAdapCuBoxSu238M2Sum_1",      dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxpb210M2Sum_001  = new TH1D("hAdapCuBoxSxpb210M2Sum_001", "hAdapCuBoxSxpb210M2Sum_001",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxpb210M2Sum_01   = new TH1D("hAdapCuBoxSxpb210M2Sum_01",  "hAdapCuBoxSxpb210M2Sum_01",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxpb210M2Sum_1    = new TH1D("hAdapCuBoxSxpb210M2Sum_1",   "hAdapCuBoxSxpb210M2Sum_1",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxpb210M2Sum_10   = new TH1D("hAdapCuBoxSxpb210M2Sum_10",  "hAdapCuBoxSxpb210M2Sum_10",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxth232M2Sum_001  = new TH1D("hAdapCuBoxSxth232M2Sum_001", "hAdapCuBoxSxth232M2Sum_001",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxth232M2Sum_01   = new TH1D("hAdapCuBoxSxth232M2Sum_01",  "hAdapCuBoxSxth232M2Sum_01",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxth232M2Sum_1    = new TH1D("hAdapCuBoxSxth232M2Sum_1",   "hAdapCuBoxSxth232M2Sum_1",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxth232M2Sum_10   = new TH1D("hAdapCuBoxSxth232M2Sum_10",  "hAdapCuBoxSxth232M2Sum_10",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxu238M2Sum_001   = new TH1D("hAdapCuBoxSxu238M2Sum_001",  "hAdapCuBoxSxu238M2Sum_001",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxu238M2Sum_01    = new TH1D("hAdapCuBoxSxu238M2Sum_01",   "hAdapCuBoxSxu238M2Sum_01",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxu238M2Sum_1     = new TH1D("hAdapCuBoxSxu238M2Sum_1",    "hAdapCuBoxSxu238M2Sum_1",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBoxSxu238M2Sum_10    = new TH1D("hAdapCuBoxSxu238M2Sum_10",   "hAdapCuBoxSxu238M2Sum_10",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSth232M2Sum_1     = new TH1D("hAdapCuBoxSth232M2Sum_1",    "CuBox S th232 M2Sum 1 #mum",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSu238M2Sum_1      = new TH1D("hAdapCuBoxSu238M2Sum_1",     "CuBox S u238 M2Sum 1 #mum",      dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxpb210M2Sum_001  = new TH1D("hAdapCuBoxSxpb210M2Sum_001", "CuBox Sx pb210 M2Sum 0.01 #mum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxpb210M2Sum_01   = new TH1D("hAdapCuBoxSxpb210M2Sum_01",  "CuBox Sx pb210 M2Sum 0.1 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxpb210M2Sum_1    = new TH1D("hAdapCuBoxSxpb210M2Sum_1",   "CuBox Sx pb210 M2Sum 1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxpb210M2Sum_10   = new TH1D("hAdapCuBoxSxpb210M2Sum_10",  "CuBox Sx pb210 M2Sum 10 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxth232M2Sum_001  = new TH1D("hAdapCuBoxSxth232M2Sum_001", "CuBox Sx th232 M2Sum 0.01 #mum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxth232M2Sum_01   = new TH1D("hAdapCuBoxSxth232M2Sum_01",  "CuBox Sx th232 M2Sum 0.1 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxth232M2Sum_1    = new TH1D("hAdapCuBoxSxth232M2Sum_1",   "CuBox Sx th232 M2Sum 1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxth232M2Sum_10   = new TH1D("hAdapCuBoxSxth232M2Sum_10",  "CuBox Sx th232 M2Sum 10 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxu238M2Sum_001   = new TH1D("hAdapCuBoxSxu238M2Sum_001",  "CuBox Sx u238 M2Sum 0.01 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxu238M2Sum_01    = new TH1D("hAdapCuBoxSxu238M2Sum_01",   "CuBox Sx u238 M2Sum 0.1 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxu238M2Sum_1     = new TH1D("hAdapCuBoxSxu238M2Sum_1",    "CuBox Sx u238 M2Sum 1 #mum",     dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBoxSxu238M2Sum_10    = new TH1D("hAdapCuBoxSxu238M2Sum_10",   "CuBox Sx u238 M2Sum 10 #mum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 //////////// CuBox + CuFrame M1 and M2
 
-  hAdapCuBox_CuFrameco60M1 = new TH1D("hAdapCuBox_CuFrameco60M1", "hAdapCuBox_CuFrameco60M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFramek40M1 = new TH1D("hAdapCuBox_CuFramek40M1", "hAdapCuBox_CuFramek40M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFrameth232M1 = new TH1D("hAdapCuBox_CuFrameth232M1", "hAdapCuBox_CuFrameth232M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFrameu238M1 = new TH1D("hAdapCuBox_CuFrameu238M1", "hAdapCuBox_CuFrameu238M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFrameco60M1 = new TH1D("hAdapCuBox_CuFrameco60M1", "CuBox+CuFrame Bulk co60 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFramek40M1 = new TH1D("hAdapCuBox_CuFramek40M1", "CuBox+CuFrame Bulk k40 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFrameth232M1 = new TH1D("hAdapCuBox_CuFrameth232M1", "CuBox+CuFrame Bulk th232 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFrameu238M1 = new TH1D("hAdapCuBox_CuFrameu238M1", "CuBox+CuFrame Bulk u238 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuBox_CuFrameth232M1_10 = new TH1D("hAdapCuBox_CuFrameth232M1_10", "hAdapCuBox_CuFrameth232M1_10", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFrameu238M1_10 = new TH1D("hAdapCuBox_CuFrameu238M1_10", "hAdapCuBox_CuFrameu238M1_10", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFramepb210M1_10 = new TH1D("hAdapCuBox_CuFramepb210M1_10", "hAdapCuBox_CuFramepb210M1_10", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFramepb210M1_1 = new TH1D("hAdapCuBox_CuFramepb210M1_1", "hAdapCuBox_CuFramepb210M1_1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFramepb210M1_01 = new TH1D("hAdapCuBox_CuFramepb210M1_01", "hAdapCuBox_CuFramepb210M1_01", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapCuBox_CuFramepb210M1_001 = new TH1D("hAdapCuBox_CuFramepb210M1_001", "hAdapCuBox_CuFramepb210M1_001", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFrameth232M1_10 = new TH1D("hAdapCuBox_CuFrameth232M1_10", "CuBox+CuFrame Sx th232 M1 10 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFrameu238M1_10 = new TH1D("hAdapCuBox_CuFrameu238M1_10", "CuBox+CuFrame Sx u238 M1 10 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFramepb210M1_10 = new TH1D("hAdapCuBox_CuFramepb210M1_10", "CuBox+CuFrame Sx pb210 M1 10 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFramepb210M1_1 = new TH1D("hAdapCuBox_CuFramepb210M1_1", "CuBox+CuFrame Sx pb210 M1 1 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFramepb210M1_01 = new TH1D("hAdapCuBox_CuFramepb210M1_01", "CuBox+CuFrame Sx pb210 M1 0.1 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapCuBox_CuFramepb210M1_001 = new TH1D("hAdapCuBox_CuFramepb210M1_001", "CuBox+CuFrame Sx pb210 M1 0.01 #mum", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapCuBox_CuFrameco60M2 = new TH1D("hAdapCuBox_CuFrameco60M2", "hAdapCuBox_CuFrameco60M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFramek40M2 = new TH1D("hAdapCuBox_CuFramek40M2", "hAdapCuBox_CuFramek40M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFrameth232M2 = new TH1D("hAdapCuBox_CuFrameth232M2", "hAdapCuBox_CuFrameth232M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFrameu238M2 = new TH1D("hAdapCuBox_CuFrameu238M2", "hAdapCuBox_CuFrameu238M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFrameco60M2 = new TH1D("hAdapCuBox_CuFrameco60M2", "CuBox+CuFrame Bulk co60 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFramek40M2 = new TH1D("hAdapCuBox_CuFramek40M2", "CuBox+CuFrame Bulk k40 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFrameth232M2 = new TH1D("hAdapCuBox_CuFrameth232M2", "CuBox+CuFrame Bulk th232 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFrameu238M2 = new TH1D("hAdapCuBox_CuFrameu238M2", "CuBox+CuFrame Bulk u238 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuBox_CuFrameth232M2_10 = new TH1D("hAdapCuBox_CuFrameth232M2_10", "hAdapCuBox_CuFrameth232M2_10", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFrameu238M2_10 = new TH1D("hAdapCuBox_CuFrameu238M2_10", "hAdapCuBox_CuFrameu238M2_10", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFramepb210M2_10 = new TH1D("hAdapCuBox_CuFramepb210M2_10", "hAdapCuBox_CuFramepb210M2_10", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFramepb210M2_1 = new TH1D("hAdapCuBox_CuFramepb210M2_1", "hAdapCuBox_CuFramepb210M2_1", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFramepb210M2_01 = new TH1D("hAdapCuBox_CuFramepb210M2_01", "hAdapCuBox_CuFramepb210M2_01", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapCuBox_CuFramepb210M2_001 = new TH1D("hAdapCuBox_CuFramepb210M2_001", "hAdapCuBox_CuFramepb210M2_001", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFrameth232M2_10 = new TH1D("hAdapCuBox_CuFrameth232M2_10", "CuBox+CuFrame Sx th232 M2 10 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFrameu238M2_10 = new TH1D("hAdapCuBox_CuFrameu238M2_10", "CuBox+CuFrame Sx u238 M2 10 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFramepb210M2_10 = new TH1D("hAdapCuBox_CuFramepb210M2_10", "CuBox+CuFrame Sx pb210 M2 10 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFramepb210M2_1 = new TH1D("hAdapCuBox_CuFramepb210M2_1", "CuBox+CuFrame Sx pb210 M2 1 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFramepb210M2_01 = new TH1D("hAdapCuBox_CuFramepb210M2_01", "CuBox+CuFrame Sx pb210 M2 0.1 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapCuBox_CuFramepb210M2_001 = new TH1D("hAdapCuBox_CuFramepb210M2_001", "CuBox+CuFrame Sx pb210 M2 0.01 #mum", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapCuBox_CuFrameco60M2Sum = new TH1D("hAdapCuBox_CuFrameco60M2Sum", "hAdapCuBox_CuFrameco60M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFramek40M2Sum = new TH1D("hAdapCuBox_CuFramek40M2Sum", "hAdapCuBox_CuFramek40M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFrameth232M2Sum = new TH1D("hAdapCuBox_CuFrameth232M2Sum", "hAdapCuBox_CuFrameth232M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFrameu238M2Sum = new TH1D("hAdapCuBox_CuFrameu238M2Sum", "hAdapCuBox_CuFrameu238M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFrameco60M2Sum = new TH1D("hAdapCuBox_CuFrameco60M2Sum", "CuBox+CuFrame Bulk co60 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFramek40M2Sum = new TH1D("hAdapCuBox_CuFramek40M2Sum", "CuBox+CuFrame Bulk k40 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFrameth232M2Sum = new TH1D("hAdapCuBox_CuFrameth232M2Sum", "CuBox+CuFrame Bulk th232 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFrameu238M2Sum = new TH1D("hAdapCuBox_CuFrameu238M2Sum", "CuBox+CuFrame Bulk u238 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
-  hAdapCuBox_CuFrameth232M2Sum_10 = new TH1D("hAdapCuBox_CuFrameth232M2Sum_10", "hAdapCuBox_CuFrameth232M2Sum_10", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFrameu238M2Sum_10 = new TH1D("hAdapCuBox_CuFrameu238M2Sum_10", "hAdapCuBox_CuFrameu238M2Sum_10", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFramepb210M2Sum_10 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_10", "hAdapCuBox_CuFramepb210M2Sum_10", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFramepb210M2Sum_1 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_1", "hAdapCuBox_CuFramepb210M2Sum_1", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFramepb210M2Sum_01 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_01", "hAdapCuBox_CuFramepb210M2Sum_01", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapCuBox_CuFramepb210M2Sum_001 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_001", "hAdapCuBox_CuFramepb210M2Sum_001", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFrameth232M2Sum_10 = new TH1D("hAdapCuBox_CuFrameth232M2Sum_10", "CuBox+CuFrame Sx th232 M2Sum 10 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFrameu238M2Sum_10 = new TH1D("hAdapCuBox_CuFrameu238M2Sum_10", "CuBox+CuFrame Sx u238 M2Sum 10 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFramepb210M2Sum_10 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_10", "CuBox+CuFrame Sx pb210 M2Sum 10 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFramepb210M2Sum_1 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_1", "CuBox+CuFrame Sx pb210 M2Sum 1 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFramepb210M2Sum_01 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_01", "CuBox+CuFrame Sx pb210 M2Sum 0.1 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapCuBox_CuFramepb210M2Sum_001 = new TH1D("hAdapCuBox_CuFramepb210M2Sum_001", "CuBox+CuFrame Sx pb210 M2Sum 0.01 #mum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 
 ////////// 50mK M1 and M2
-  hAdap50mKco58M1      = new TH1D("hAdap50mKco58M1",   "hAdap50mKco58M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKco60M1      = new TH1D("hAdap50mKco60M1",   "hAdap50mKco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKcs137M1     = new TH1D("hAdap50mKcs137M1",  "hAdap50mKcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKk40M1       = new TH1D("hAdap50mKk40M1",    "hAdap50mKk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKmn54M1      = new TH1D("hAdap50mKmn54M1",   "hAdap50mKmn54M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKpb210M1     = new TH1D("hAdap50mKpb210M1",  "hAdap50mKpb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap50mKth232M1     = new TH1D("hAdap50mKth232M1",  "hAdap50mKth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdap50mKu238M1      = new TH1D("hAdap50mKu238M1",   "hAdap50mKu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKco58M1      = new TH1D("hAdap50mKco58M1",   "50mK Bulk co58 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKco60M1      = new TH1D("hAdap50mKco60M1",   "50mK Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKcs137M1     = new TH1D("hAdap50mKcs137M1",  "50mK Bulk cs137 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKk40M1       = new TH1D("hAdap50mKk40M1",    "50mK Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKmn54M1      = new TH1D("hAdap50mKmn54M1",   "50mK Bulk mn54 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKpb210M1     = new TH1D("hAdap50mKpb210M1",  "50mK Bulk pb210 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap50mKth232M1     = new TH1D("hAdap50mKth232M1",  "50mK Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap50mKu238M1      = new TH1D("hAdap50mKu238M1",   "50mK Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdap50mKco58M2      = new TH1D("hAdap50mKco58M2",   "hAdap50mKco58M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKco60M2      = new TH1D("hAdap50mKco60M2",   "hAdap50mKco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKcs137M2     = new TH1D("hAdap50mKcs137M2",  "hAdap50mKcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKk40M2       = new TH1D("hAdap50mKk40M2",    "hAdap50mKk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKmn54M2      = new TH1D("hAdap50mKmn54M2",   "hAdap50mKmn54M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKpb210M2     = new TH1D("hAdap50mKpb210M2",  "hAdap50mKpb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap50mKth232M2     = new TH1D("hAdap50mKth232M2",  "hAdap50mKth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdap50mKu238M2      = new TH1D("hAdap50mKu238M2",   "hAdap50mKu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKco58M2      = new TH1D("hAdap50mKco58M2",   "50mK Bulk co58 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKco60M2      = new TH1D("hAdap50mKco60M2",   "50mK Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKcs137M2     = new TH1D("hAdap50mKcs137M2",  "50mK Bulk cs137 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKk40M2       = new TH1D("hAdap50mKk40M2",    "50mK Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKmn54M2      = new TH1D("hAdap50mKmn54M2",   "50mK Bulk mn54 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKpb210M2     = new TH1D("hAdap50mKpb210M2",  "50mK Bulk pb210 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap50mKth232M2     = new TH1D("hAdap50mKth232M2",  "50mK Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap50mKu238M2      = new TH1D("hAdap50mKu238M2",   "50mK Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdap50mKco58M2Sum      = new TH1D("hAdap50mKco58M2Sum",   "hAdap50mKco58M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKco60M2Sum      = new TH1D("hAdap50mKco60M2Sum",   "hAdap50mKco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKcs137M2Sum     = new TH1D("hAdap50mKcs137M2Sum",  "hAdap50mKcs137M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKk40M2Sum       = new TH1D("hAdap50mKk40M2Sum",    "hAdap50mKk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKmn54M2Sum      = new TH1D("hAdap50mKmn54M2Sum",   "hAdap50mKmn54M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKpb210M2Sum     = new TH1D("hAdap50mKpb210M2Sum",  "hAdap50mKpb210M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap50mKth232M2Sum     = new TH1D("hAdap50mKth232M2Sum",  "hAdap50mKth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdap50mKu238M2Sum      = new TH1D("hAdap50mKu238M2Sum",   "hAdap50mKu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKco58M2Sum      = new TH1D("hAdap50mKco58M2Sum",   "50mK Bulk co58 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKco60M2Sum      = new TH1D("hAdap50mKco60M2Sum",   "50mK Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKcs137M2Sum     = new TH1D("hAdap50mKcs137M2Sum",  "50mK Bulk cs137 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKk40M2Sum       = new TH1D("hAdap50mKk40M2Sum",    "50mK Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKmn54M2Sum      = new TH1D("hAdap50mKmn54M2Sum",   "50mK Bulk mn54 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKpb210M2Sum     = new TH1D("hAdap50mKpb210M2Sum",  "50mK Bulk pb210 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap50mKth232M2Sum     = new TH1D("hAdap50mKth232M2Sum",  "50mK Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdap50mKu238M2Sum      = new TH1D("hAdap50mKu238M2Sum",   "50mK Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 ////////// 600mK M1 and M2
-  hAdap600mKco60M1      = new TH1D("hAdap600mKco60M1",   "hAdap600mKco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap600mKk40M1       = new TH1D("hAdap600mKk40M1",    "hAdap600mKk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdap600mKth232M1     = new TH1D("hAdap600mKth232M1",  "hAdap600mKth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdap600mKu238M1      = new TH1D("hAdap600mKu238M1",   "hAdap600mKu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKco60M1      = new TH1D("hAdap600mKco60M1",   "600mK Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKk40M1       = new TH1D("hAdap600mKk40M1",    "600mK Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdap600mKth232M1     = new TH1D("hAdap600mKth232M1",  "600mK Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdap600mKu238M1      = new TH1D("hAdap600mKu238M1",   "600mK Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdap600mKco60M2      = new TH1D("hAdap600mKco60M2",   "hAdap600mKco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap600mKk40M2       = new TH1D("hAdap600mKk40M2",    "hAdap600mKk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdap600mKth232M2     = new TH1D("hAdap600mKth232M2",  "hAdap600mKth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdap600mKu238M2      = new TH1D("hAdap600mKu238M2",   "hAdap600mKu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKco60M2      = new TH1D("hAdap600mKco60M2",   "600mK Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKk40M2       = new TH1D("hAdap600mKk40M2",    "600mK Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdap600mKth232M2     = new TH1D("hAdap600mKth232M2",  "600mK Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdap600mKu238M2      = new TH1D("hAdap600mKu238M2",   "600mK Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
 
-  hAdap600mKco60M2Sum      = new TH1D("hAdap600mKco60M2Sum",   "hAdap600mKco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap600mKk40M2Sum       = new TH1D("hAdap600mKk40M2Sum",    "hAdap600mKk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdap600mKth232M2Sum     = new TH1D("hAdap600mKth232M2Sum",  "hAdap600mKth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdap600mKu238M2Sum      = new TH1D("hAdap600mKu238M2Sum",   "hAdap600mKu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap600mKco60M2Sum      = new TH1D("hAdap600mKco60M2Sum",   "600mK Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap600mKk40M2Sum       = new TH1D("hAdap600mKk40M2Sum",    "600mK Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdap600mKth232M2Sum     = new TH1D("hAdap600mKth232M2Sum",  "600mK Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdap600mKu238M2Sum      = new TH1D("hAdap600mKu238M2Sum",   "600mK Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 ////////// Roman Lead M1 and M2
-  hAdapPbRombi207M1     = new TH1D("hAdapPbRombi207M1",  "hAdapPbRombi207M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapPbRomco60M1      = new TH1D("hAdapPbRomco60M1",   "hAdapPbRomco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapPbRomcs137M1     = new TH1D("hAdapPbRomcs137M1",  "hAdapPbRomcs137M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapPbRomk40M1       = new TH1D("hAdapPbRomk40M1",    "hAdapPbRomk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapPbRompb210M1     = new TH1D("hAdapPbRompb210M1",  "hAdapPbRompb210M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapPbRomth232M1     = new TH1D("hAdapPbRomth232M1",  "hAdapPbRomth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapPbRomu238M1      = new TH1D("hAdapPbRomu238M1",   "hAdapPbRomu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapPbRombi207M1     = new TH1D("hAdapPbRombi207M1",  "Roman Lead Bulk bi207 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapPbRomco60M1      = new TH1D("hAdapPbRomco60M1",   "Roman Lead Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapPbRomcs137M1     = new TH1D("hAdapPbRomcs137M1",  "Roman Lead Bulk cs137 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapPbRomk40M1       = new TH1D("hAdapPbRomk40M1",    "Roman Lead Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapPbRompb210M1     = new TH1D("hAdapPbRompb210M1",  "Roman Lead Bulk pb210 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapPbRomth232M1     = new TH1D("hAdapPbRomth232M1",  "Roman Lead Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapPbRomu238M1      = new TH1D("hAdapPbRomu238M1",   "Roman Lead Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapPbRombi207M2     = new TH1D("hAdapPbRombi207M2",  "hAdapPbRombi207M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapPbRomco60M2      = new TH1D("hAdapPbRomco60M2",   "hAdapPbRomco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapPbRomcs137M2     = new TH1D("hAdapPbRomcs137M2",  "hAdapPbRomcs137M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapPbRomk40M2       = new TH1D("hAdapPbRomk40M2",    "hAdapPbRomk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapPbRompb210M2     = new TH1D("hAdapPbRompb210M2",  "hAdapPbRompb210M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapPbRomth232M2     = new TH1D("hAdapPbRomth232M2",  "hAdapPbRomth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapPbRomu238M2      = new TH1D("hAdapPbRomu238M2",   "hAdapPbRomu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapPbRombi207M2     = new TH1D("hAdapPbRombi207M2",  "Roman Lead Bulk bi207 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapPbRomco60M2      = new TH1D("hAdapPbRomco60M2",   "Roman Lead Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapPbRomcs137M2     = new TH1D("hAdapPbRomcs137M2",  "Roman Lead Bulk cs137 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapPbRomk40M2       = new TH1D("hAdapPbRomk40M2",    "Roman Lead Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapPbRompb210M2     = new TH1D("hAdapPbRompb210M2",  "Roman Lead Bulk pb210 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapPbRomth232M2     = new TH1D("hAdapPbRomth232M2",  "Roman Lead Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapPbRomu238M2      = new TH1D("hAdapPbRomu238M2",   "Roman Lead Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapPbRombi207M2Sum     = new TH1D("hAdapPbRombi207M2Sum",  "hAdapPbRombi207M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapPbRomco60M2Sum      = new TH1D("hAdapPbRomco60M2Sum",   "hAdapPbRomco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapPbRomcs137M2Sum     = new TH1D("hAdapPbRomcs137M2Sum",  "hAdapPbRomcs137M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapPbRomk40M2Sum       = new TH1D("hAdapPbRomk40M2Sum",    "hAdapPbRomk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapPbRompb210M2Sum     = new TH1D("hAdapPbRompb210M2Sum",  "hAdapPbRompb210M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapPbRomth232M2Sum     = new TH1D("hAdapPbRomth232M2Sum",  "hAdapPbRomth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapPbRomu238M2Sum      = new TH1D("hAdapPbRomu238M2Sum",   "hAdapPbRomu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapPbRombi207M2Sum     = new TH1D("hAdapPbRombi207M2Sum",  "Roman Lead Bulk bi207 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapPbRomco60M2Sum      = new TH1D("hAdapPbRomco60M2Sum",   "Roman Lead Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapPbRomcs137M2Sum     = new TH1D("hAdapPbRomcs137M2Sum",  "Roman Lead Bulk cs137 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapPbRomk40M2Sum       = new TH1D("hAdapPbRomk40M2Sum",    "Roman Lead Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapPbRompb210M2Sum     = new TH1D("hAdapPbRompb210M2Sum",  "Roman Lead Bulk pb210 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapPbRomth232M2Sum     = new TH1D("hAdapPbRomth232M2Sum",  "Roman Lead Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapPbRomu238M2Sum      = new TH1D("hAdapPbRomu238M2Sum",   "Roman Lead Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 
 ///////// Internal Shields M1 and M2
-  hAdapInternalco60M1 = new TH1D("hAdapInternalco60M1", "hAdapInternalco60M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapInternalk40M1 = new TH1D("hAdapInternalk40M1", "hAdapInternalk40M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapInternalth232M1 = new TH1D("hAdapInternalth232M1", "hAdapInternalth232M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapInternalu238M1 = new TH1D("hAdapInternalu238M1", "hAdapInternalu238M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapInternalco60M1 = new TH1D("hAdapInternalco60M1", "Internal Shields Bulk co60 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapInternalk40M1 = new TH1D("hAdapInternalk40M1", "Internal Shields Bulk k40 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapInternalth232M1 = new TH1D("hAdapInternalth232M1", "Internal Shields Bulk th232 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapInternalu238M1 = new TH1D("hAdapInternalu238M1", "Internal Shields Bulk u238 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapInternalco60M2 = new TH1D("hAdapInternalco60M2", "hAdapInternalco60M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapInternalk40M2 = new TH1D("hAdapInternalk40M2", "hAdapInternalk40M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapInternalth232M2 = new TH1D("hAdapInternalth232M2", "hAdapInternalth232M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapInternalu238M2 = new TH1D("hAdapInternalu238M2", "hAdapInternalu238M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapInternalco60M2 = new TH1D("hAdapInternalco60M2", "Internal Shields Bulk co60 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapInternalk40M2 = new TH1D("hAdapInternalk40M2", "Internal Shields Bulk k40 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapInternalth232M2 = new TH1D("hAdapInternalth232M2", "Internal Shields Bulk th232 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapInternalu238M2 = new TH1D("hAdapInternalu238M2", "Internal Shields Bulk u238 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapInternalco60M2Sum = new TH1D("hAdapInternalco60M2Sum", "hAdapInternalco60M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapInternalk40M2Sum = new TH1D("hAdapInternalk40M2Sum", "hAdapInternalk40M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapInternalth232M2Sum = new TH1D("hAdapInternalth232M2Sum", "hAdapInternalth232M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapInternalu238M2Sum = new TH1D("hAdapInternalu238M2Sum", "hAdapInternalu238M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapInternalco60M2Sum = new TH1D("hAdapInternalco60M2Sum", "Internal Shields Bulk co60 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapInternalk40M2Sum = new TH1D("hAdapInternalk40M2Sum", "Internal Shields Bulk k40 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapInternalth232M2Sum = new TH1D("hAdapInternalth232M2Sum", "Internal Shields Bulk th232 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapInternalu238M2Sum = new TH1D("hAdapInternalu238M2Sum", "Internal Shields Bulk u238 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
 
 ////////////// Main bath M1 and M2
-  hAdapMBco60M1      = new TH1D("hAdapMBco60M1",   "hAdapMBco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapMBk40M1       = new TH1D("hAdapMBk40M1",    "hAdapMBk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapMBth232M1     = new TH1D("hAdapMBth232M1",  "hAdapMBth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapMBu238M1      = new TH1D("hAdapMBu238M1",   "hAdapMBu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapMBco60M1      = new TH1D("hAdapMBco60M1",   "Main Bath Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapMBk40M1       = new TH1D("hAdapMBk40M1",    "Main Bath Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapMBth232M1     = new TH1D("hAdapMBth232M1",  "Main Bath Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapMBu238M1      = new TH1D("hAdapMBu238M1",   "Main Bath Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapMBco60M2      = new TH1D("hAdapMBco60M2",   "hAdapMBco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapMBk40M2       = new TH1D("hAdapMBk40M2",    "hAdapMBk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapMBth232M2     = new TH1D("hAdapMBth232M2",  "hAdapMBth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapMBu238M2      = new TH1D("hAdapMBu238M2",   "hAdapMBu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapMBco60M2      = new TH1D("hAdapMBco60M2",   "Main Bath Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapMBk40M2       = new TH1D("hAdapMBk40M2",    "Main Bath Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapMBth232M2     = new TH1D("hAdapMBth232M2",  "Main Bath Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapMBu238M2      = new TH1D("hAdapMBu238M2",   "Main Bath Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
 
-  hAdapMBco60M2Sum      = new TH1D("hAdapMBco60M2Sum",   "hAdapMBco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapMBk40M2Sum       = new TH1D("hAdapMBk40M2Sum",    "hAdapMBk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapMBth232M2Sum     = new TH1D("hAdapMBth232M2Sum",  "hAdapMBth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapMBu238M2Sum      = new TH1D("hAdapMBu238M2Sum",   "hAdapMBu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapMBco60M2Sum      = new TH1D("hAdapMBco60M2Sum",   "Main Bath Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapMBk40M2Sum       = new TH1D("hAdapMBk40M2Sum",    "Main Bath Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapMBth232M2Sum     = new TH1D("hAdapMBth232M2Sum",  "Main Bath Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapMBu238M2Sum      = new TH1D("hAdapMBu238M2Sum",   "Main Bath Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
 
 /////////// Super Insulation M1 and M2
-  hAdapSIk40M1       = new TH1D("hAdapSIk40M1",    "hAdapSIk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1); 
-  hAdapSIth232M1     = new TH1D("hAdapSIth232M1",  "hAdapSIth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapSIu238M1      = new TH1D("hAdapSIu238M1",   "hAdapSIu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapSIk40M1       = new TH1D("hAdapSIk40M1",    "Super Insulation Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1); 
+  hAdapSIth232M1     = new TH1D("hAdapSIth232M1",  "Super Insulation Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapSIu238M1      = new TH1D("hAdapSIu238M1",   "Super Insulation Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapSIk40M2       = new TH1D("hAdapSIk40M2",    "hAdapSIk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapSIth232M2     = new TH1D("hAdapSIth232M2",  "hAdapSIth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapSIu238M2      = new TH1D("hAdapSIu238M2",   "hAdapSIu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapSIk40M2       = new TH1D("hAdapSIk40M2",    "Super Insulation Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapSIth232M2     = new TH1D("hAdapSIth232M2",  "Super Insulation Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapSIu238M2      = new TH1D("hAdapSIu238M2",   "Super Insulation Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-  hAdapSIk40M2Sum       = new TH1D("hAdapSIk40M2Sum",    "hAdapSIk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapSIth232M2Sum     = new TH1D("hAdapSIth232M2Sum",  "hAdapSIth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapSIu238M2Sum      = new TH1D("hAdapSIu238M2Sum",   "hAdapSIu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapSIk40M2Sum       = new TH1D("hAdapSIk40M2Sum",    "Super Insulation Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapSIth232M2Sum     = new TH1D("hAdapSIth232M2Sum",  "Super Insulation Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapSIu238M2Sum      = new TH1D("hAdapSIu238M2Sum",   "Super Insulation Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 //////////// IVC M1 and M2
-  hAdapIVCco60M1      = new TH1D("hAdapIVCco60M1",   "hAdapIVCco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapIVCk40M1       = new TH1D("hAdapIVCk40M1",    "hAdapIVCk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapIVCth232M1     = new TH1D("hAdapIVCth232M1",  "hAdapIVCth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapIVCu238M1      = new TH1D("hAdapIVCu238M1",   "hAdapIVCu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapIVCco60M1      = new TH1D("hAdapIVCco60M1",   "IVC Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapIVCk40M1       = new TH1D("hAdapIVCk40M1",    "IVC Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapIVCth232M1     = new TH1D("hAdapIVCth232M1",  "IVC Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapIVCu238M1      = new TH1D("hAdapIVCu238M1",   "IVC Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapIVCco60M2      = new TH1D("hAdapIVCco60M2",   "hAdapIVCco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapIVCk40M2       = new TH1D("hAdapIVCk40M2",    "hAdapIVCk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapIVCth232M2     = new TH1D("hAdapIVCth232M2",  "hAdapIVCth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapIVCu238M2      = new TH1D("hAdapIVCu238M2",   "hAdapIVCu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapIVCco60M2      = new TH1D("hAdapIVCco60M2",   "IVC Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapIVCk40M2       = new TH1D("hAdapIVCk40M2",    "IVC Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapIVCth232M2     = new TH1D("hAdapIVCth232M2",  "IVC Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapIVCu238M2      = new TH1D("hAdapIVCu238M2",   "IVC Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
 
-  hAdapIVCco60M2Sum      = new TH1D("hAdapIVCco60M2Sum",   "hAdapIVCco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapIVCk40M2Sum       = new TH1D("hAdapIVCk40M2Sum",    "hAdapIVCk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapIVCth232M2Sum     = new TH1D("hAdapIVCth232M2Sum",  "hAdapIVCth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapIVCu238M2Sum      = new TH1D("hAdapIVCu238M2Sum",   "hAdapIVCu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum); 
+  hAdapIVCco60M2Sum      = new TH1D("hAdapIVCco60M2Sum",   "IVC Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapIVCk40M2Sum       = new TH1D("hAdapIVCk40M2Sum",    "IVC Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapIVCth232M2Sum     = new TH1D("hAdapIVCth232M2Sum",  "IVC Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapIVCu238M2Sum      = new TH1D("hAdapIVCu238M2Sum",   "IVC Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum); 
 
 ////////////// OVC M1 and M2
-  hAdapOVCco60M1      = new TH1D("hAdapOVCco60M1",   "hAdapOVCco60M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapOVCk40M1       = new TH1D("hAdapOVCk40M1",    "hAdapOVCk40M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapOVCth232M1     = new TH1D("hAdapOVCth232M1",  "hAdapOVCth232M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
-  hAdapOVCu238M1      = new TH1D("hAdapOVCu238M1",   "hAdapOVCu238M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVCco60M1      = new TH1D("hAdapOVCco60M1",   "OVC Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVCk40M1       = new TH1D("hAdapOVCk40M1",    "OVC Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVCth232M1     = new TH1D("hAdapOVCth232M1",  "OVC Bulk th232 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);  
+  hAdapOVCu238M1      = new TH1D("hAdapOVCu238M1",   "OVC Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapOVCco60M2      = new TH1D("hAdapOVCco60M2",   "hAdapOVCco60M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapOVCk40M2       = new TH1D("hAdapOVCk40M2",    "hAdapOVCk40M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapOVCth232M2     = new TH1D("hAdapOVCth232M2",  "hAdapOVCth232M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  hAdapOVCu238M2      = new TH1D("hAdapOVCu238M2",   "hAdapOVCu238M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapOVCco60M2      = new TH1D("hAdapOVCco60M2",   "OVC Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapOVCk40M2       = new TH1D("hAdapOVCk40M2",    "OVC Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapOVCth232M2     = new TH1D("hAdapOVCth232M2",  "OVC Bulk th232 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);  
+  hAdapOVCu238M2      = new TH1D("hAdapOVCu238M2",   "OVC Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);  
 
-  hAdapOVCco60M2Sum      = new TH1D("hAdapOVCco60M2Sum",   "hAdapOVCco60M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapOVCk40M2Sum       = new TH1D("hAdapOVCk40M2Sum",    "hAdapOVCk40M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  hAdapOVCth232M2Sum     = new TH1D("hAdapOVCth232M2Sum",  "hAdapOVCth232M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
-  hAdapOVCu238M2Sum      = new TH1D("hAdapOVCu238M2Sum",   "hAdapOVCu238M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapOVCco60M2Sum      = new TH1D("hAdapOVCco60M2Sum",   "OVC Bulk co60 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapOVCk40M2Sum       = new TH1D("hAdapOVCk40M2Sum",    "OVC Bulk k40 M2Sum",    dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapOVCth232M2Sum     = new TH1D("hAdapOVCth232M2Sum",  "OVC Bulk th232 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
+  hAdapOVCu238M2Sum      = new TH1D("hAdapOVCu238M2Sum",   "OVC Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
 
 /////////// External Sources M1 and M2
-  hAdapExtPbbi210M1 = new TH1D("hAdapExtPbbi210M1", "hAdapExtPbbi210M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapExtPbbi210M2 = new TH1D("hAdapExtPbbi210M2", "hAdapExtPbbi210M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapExtPbbi210M2Sum = new TH1D("hAdapExtPbbi210M2Sum", "hAdapExtPbbi210M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapExtPbbi210M1 = new TH1D("hAdapExtPbbi210M1", "External Lead Bulk bi210 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapExtPbbi210M2 = new TH1D("hAdapExtPbbi210M2", "External Lead Bulk bi210 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapExtPbbi210M2Sum = new TH1D("hAdapExtPbbi210M2Sum", "External Lead Bulk bi210 M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 /////////// Fudge Factors
-  hAdapFudge661M1 = new TH1D("hAdapFudge661M1", "hAdapFudge661M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapFudge803M1 = new TH1D("hAdapFudge803M1", "hAdapFudge803M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapFudge1063M1 = new TH1D("hAdapFudge1063M1", "hAdapFudge1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapFudge661M1 = new TH1D("hAdapFudge661M1", "Fudge Factor 661M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapFudge803M1 = new TH1D("hAdapFudge803M1", "Fudge Factor 803M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapFudge1063M1 = new TH1D("hAdapFudge1063M1", "Fudge Factor 1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
-  hAdapFudge661M2 = new TH1D("hAdapFudge661M2", "hAdapFudge661M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapFudge803M2 = new TH1D("hAdapFudge803M2", "hAdapFudge803M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapFudge1063M2 = new TH1D("hAdapFudge1063M2", "hAdapFudge1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapFudge661M2 = new TH1D("hAdapFudge661M2", "Fudge Factor 661M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapFudge803M2 = new TH1D("hAdapFudge803M2", "Fudge Factor 803M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapFudge1063M2 = new TH1D("hAdapFudge1063M2", "Fudge Factor 1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
