@@ -4537,7 +4537,7 @@ void TBackgroundModel::SetParEfficiency()
    fParEfficiencyM1[21] = 0.000191901; // External Lead bi210 
    fParEfficiencyM1[22] = 0.0510853; // CuBox+Frame th232 
    fParEfficiencyM1[23] = 0.0354736; // CuBox+Frame u238
-   fParEfficiencyM1[24] = 0.0237369 // PbRom cs137
+   fParEfficiencyM1[24] = 0.0237369; // PbRom cs137
 
    fParMass[0] = 39000/1000.; // TeO2 0nu
    fParMass[1] = 39000/1000.; // TeO2 2nu
