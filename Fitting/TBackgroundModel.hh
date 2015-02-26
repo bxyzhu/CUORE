@@ -53,8 +53,6 @@ public:
 
 	void Initialize();
 
-	void Initialize2();
-
 	TH1D *Kernal(TH1D *hMC, TH1D *hSMC);
 
 	void LatexResultTable(double fValue);
