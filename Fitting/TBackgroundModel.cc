@@ -4537,6 +4537,7 @@ void TBackgroundModel::SetParEfficiency()
    fParEfficiencyM1[21] = 0.000191901; // External Lead bi210 
    fParEfficiencyM1[22] = 0.0510853; // CuBox+Frame th232 
    fParEfficiencyM1[23] = 0.0354736; // CuBox+Frame u238
+   fParEfficiencyM1[24] = 0.0237369 // PbRom cs137
 
    fParMass[0] = 39000/1000.; // TeO2 0nu
    fParMass[1] = 39000/1000.; // TeO2 2nu
@@ -4562,6 +4563,7 @@ void TBackgroundModel::SetParEfficiency()
    fParMass[21] = 24652026/1000.; // External Lead bi210 
    fParMass[22] = (2610.04+6929.71)/1000.; // CuBox+Frame th232 
    fParMass[23] = (2610.04+6929.71)/1000.; // CuBox+Frame u238
+   fParMass[24] = 202294.46/1000.; // PbRom cs137
 
    fParSurfaceArea[0] = 7800.; // TeO2 0nu
    fParSurfaceArea[1] = 7800.; // TeO2 2nu
@@ -4587,6 +4589,7 @@ void TBackgroundModel::SetParEfficiency()
    fParSurfaceArea[21] = 2.38E+005; // External Lead bi210 
    fParSurfaceArea[22] = 2314.02+9467.18; // CuBox+Frame th232 
    fParSurfaceArea[23] = 2314.02+9467.18; // CuBox+Frame u238
+   fParSurfaceArea[24] = 20898.8; // PbRom cs137
 
 
 }
@@ -5343,6 +5346,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fSaveResult->Add(fModelTotAdapM1);
   fSaveResult->Add(fModelTotAdapM2);
 
+  // Scale histograms for saving
   hAdapTeO20nuM1->Scale( dDataIntegralM1*fParameters[0]);
   hAdapTeO22nuM1->Scale( dDataIntegralM1*fParameters[1]);
   hAdapCuBox_CuFrameco60M1->Scale( dDataIntegralM1*fParameters[2]);
@@ -5355,13 +5359,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hAdapTeO2Sxra226pb210M1_001->Scale( dDataIntegralM1*fParameters[9]);
   hAdapTeO2Sxpb210M1_1->Scale( dDataIntegralM1*fParameters[10]);
   hAdapTeO2Sxpb210M1_001->Scale( dDataIntegralM1*fParameters[11]);
-
   hAdapCuBox_CuFrameth232M1_10->Scale( dDataIntegralM1*fParameters[12]);
   hAdapCuBox_CuFrameu238M1_10->Scale( dDataIntegralM1*fParameters[13]);
   hAdapCuBox_CuFramepb210M1_01->Scale( dDataIntegralM1*fParameters[14]);
   hAdapCuBox_CuFramepb210M1_001->Scale( dDataIntegralM1*fParameters[15]);
-
-
   hAdapPbRomk40M1->Scale( dDataIntegralM1*fParameters[16]);
   hAdapOVCth232M1->Scale( dDataIntegralM1*fParameters[17]);
   hAdapOVCu238M1->Scale( dDataIntegralM1*fParameters[18]);
@@ -5372,7 +5373,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hAdapCuBox_CuFrameu238M1->Scale( dDataIntegralM1*fParameters[23]);
   hAdapPbRomcs137M1->Scale( dDataIntegralM1*fParameters[24]);
 
-// M2
   hAdapTeO20nuM2->Scale( dDataIntegralM2*fParameters[0]);
   hAdapTeO22nuM2->Scale( dDataIntegralM2*fParameters[1]);
   hAdapCuBox_CuFrameco60M2->Scale( dDataIntegralM2*fParameters[2]);
@@ -5385,13 +5385,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hAdapTeO2Sxra226pb210M2_001->Scale( dDataIntegralM2*fParameters[9]);
   hAdapTeO2Sxpb210M2_1->Scale( dDataIntegralM2*fParameters[10]);
   hAdapTeO2Sxpb210M2_001->Scale( dDataIntegralM2*fParameters[11]);
-
   hAdapCuBox_CuFrameth232M2_10->Scale( dDataIntegralM2*fParameters[12]);
   hAdapCuBox_CuFrameu238M2_10->Scale( dDataIntegralM2*fParameters[13]);
   hAdapCuBox_CuFramepb210M2_01->Scale( dDataIntegralM2*fParameters[14]);
   hAdapCuBox_CuFramepb210M2_001->Scale( dDataIntegralM2*fParameters[15]);
-
-
   hAdapPbRomk40M2->Scale( dDataIntegralM2*fParameters[16]);
   hAdapOVCth232M2->Scale( dDataIntegralM2*fParameters[17]);
   hAdapOVCu238M2->Scale( dDataIntegralM2*fParameters[18]);
