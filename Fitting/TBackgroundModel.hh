@@ -3,6 +3,7 @@
 #include "TObject.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "TH2C.h"
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TF1.h"
@@ -48,6 +49,8 @@ public:
 	void DrawMC();
 
 	TH1D *EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope);
+
+	void GenerateToyData();
 
 	double GetChiSquareAdaptive();
 
@@ -106,10 +109,10 @@ public:
 	int 	dFitMaxBinM2Sum;	
 	int 	dNumFreeParameters;
 
-	int  	dDataIntegralTot;
-	int 	dDataIntegralM1;
-	int 	dDataIntegralM2;
-	int 	dDataIntegralM2Sum;
+	double  	dDataIntegralTot;
+	double 	dDataIntegralM1;
+	double 	dDataIntegralM2;
+	double 	dDataIntegralM2Sum;
 
 	int 	dDataSet;
 	double 	dLivetime;
@@ -1851,6 +1854,7 @@ private:
 	TH1D *fTotCorrection;
 
 	TFile *fSaveResult;
+	TFile *fToyData;
 
 	std::string		dDataDir;
 	std::string 	dMCDir;
@@ -1863,6 +1867,7 @@ private:
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;
 	bool 			bSave;
+	bool 			bToyData;
 
 	int 			dNumCalls;
 	int 			dMult;
