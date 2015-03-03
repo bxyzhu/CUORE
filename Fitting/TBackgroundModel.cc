@@ -4507,6 +4507,7 @@ void TBackgroundModel::PrintParActivity()
 // Resets all parameters to 0
 void TBackgroundModel::ResetParameters()
 {
+  dNumCalls = 0;
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
     fParameters[i] = 0;
@@ -4699,7 +4700,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   gStyle->SetOptFit();
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -6187,7 +6188,6 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
 
-    dNumCalls = 0; // Resets number of calls (for saving purposes)
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
 
@@ -6237,7 +6237,6 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
 
-    dNumCalls = 0; // Resets number of calls (for saving purposes)
     nLoop++; // This is purely for file names and to keep track of number of loops
     }
   }
@@ -6275,11 +6274,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
 
 void TBackgroundModel::ToyFit(int fNumFits)
 {
-    hPullDist = new TH1D("hPullDist", "Pull Distribution", 10, -5, 5);
-    hToy2nbbRate = new TH1D("hToy2nbbRate", "Toy Monte Carlo half-life fit values", );
-    hToy2nbbError = new TH1D("hToy2nbbError", "Toy Monte Carlo half-life error values", );
-
-    OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+    OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
 
     OutToy << "{" << endl;
     OutToy << endl;
@@ -6288,9 +6283,11 @@ void TBackgroundModel::ToyFit(int fNumFits)
     OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", );" << endl;
     OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", );" << endl;
 
+    cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= fNumFits; i++)
+    for(int i = 1; i <= 100; i++)
     {
+      cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
@@ -6303,13 +6300,13 @@ void TBackgroundModel::ToyFit(int fNumFits)
       fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
       fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
 
-      for(int i = 1; i <= dAdaptiveBinsM1; i++)
+      for(int j = 1; j <= dAdaptiveBinsM1; j++)
       {
-        fAdapDataHistoM1->SetBinError(i, TMath::Sqrt(fAdapDataHistoM1->GetBinContent(i))/fAdapDataHistoM1->GetBinWidth(i));
+        fAdapDataHistoM1->SetBinError(j, TMath::Sqrt(fAdapDataHistoM1->GetBinContent(j))/fAdapDataHistoM1->GetBinWidth(j));
       }
-      for(int i = 1; i <= dAdaptiveBinsM2; i++)
+      for(int k = 1; k <= dAdaptiveBinsM2; k++)
       {
-        fAdapDataHistoM2->SetBinError(i, TMath::Sqrt(fAdapDataHistoM2->GetBinContent(i))/fAdapDataHistoM2->GetBinWidth(i));
+        fAdapDataHistoM2->SetBinError(k, TMath::Sqrt(fAdapDataHistoM2->GetBinContent(k))/fAdapDataHistoM2->GetBinWidth(k));
       }
 
     // M1 - 450231
@@ -6327,7 +6324,6 @@ void TBackgroundModel::ToyFit(int fNumFits)
       OutToy << Form("hToy2nbbError->Fill(%.5e);", fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
       OutToy << Form("hPullDist->Fill(%5e);", ((0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) - 6.80668e+20)/(fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1))  ) << endl;
 
-      fToyData->Close();
     }
 
     OutToy << endl;

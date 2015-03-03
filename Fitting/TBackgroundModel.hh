@@ -1813,13 +1813,6 @@ private:
 
 	TH1D 			*hOut;
 
-
-////////// Toy Fits
-	TH1D 		*hPullDist;
-	TH1D 		*hToy2nbbRate;
-	TH1D		*hToy2nbbError;
-
-
 	TDatime 		*tTime;
 
 	// Smearing
@@ -1833,7 +1826,7 @@ private:
 
 	ofstream 		OutFile;
 	ofstream 	 	OutPNLL;
-	ofstrem 		OutToy;
+	ofstream 		OutToy;
 
 	int 			nLoop;
 	std::vector<double> 	fInitValues;
