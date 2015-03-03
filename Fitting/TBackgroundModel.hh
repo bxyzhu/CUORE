@@ -85,6 +85,8 @@ public:
 	
 	void Test();
 
+	void ToyFit(int fNumFits);
+
 	void UpdateModelAdaptive();
 
 	void WriteParameters();	
@@ -1812,6 +1814,12 @@ private:
 	TH1D 			*hOut;
 
 
+////////// Toy Fits
+	TH1D 		*hPullDist;
+	TH1D 		*hToy2nbbRate;
+	TH1D		*hToy2nbbError;
+
+
 	TDatime 		*tTime;
 
 	// Smearing
@@ -1825,6 +1833,7 @@ private:
 
 	ofstream 		OutFile;
 	ofstream 	 	OutPNLL;
+	ofstrem 		OutToy;
 
 	int 			nLoop;
 	std::vector<double> 	fInitValues;

@@ -745,20 +745,14 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
     // fAdapDataHistoM2Sum->SetBinError(i, 0); // If I don't want errors for some reason
   }
 
-  if(bToyData)
-  {
-    fAdapDataHistoM1->Reset();
-    fAdapDataHistoM2->Reset();
-    fToyData = new TFile(Form("%s/Toy/ToyData_p1.root", dMCDir.c_str()));
-    fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
-    fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
-    // Scale histograms to have same integral as before
-    dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
-    dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-    
-    // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral());
-    // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral());
-  }
+  // dDataIntegral = fDataHistoM1->Integral(1, dNBins);
+  // dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
+  // dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
+  dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
+  dDataIntegralTot = qtree->GetEntries();
+
+  dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
+  dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
 
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
   dFitMinBinM2 = fAdapDataHistoM2->FindBin(dFitMin);
@@ -767,9 +761,16 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dFitMaxBinM2 = fAdapDataHistoM2->FindBin(dFitMax);
   // dFitMaxBinM2Sum = fAdapDataHistoM2Sum->FindBin(dFitMax);
 
+  // Outputs on screen
   cout << "Fit M1 from bin: " << dFitMinBinM1 << " to " << dFitMaxBinM1 << endl;
   cout << "Fit M2 from bin: " << dFitMinBinM2 << " to " << dFitMaxBinM2 << endl;
   // cout << "Fit M2Sum from bin: " << dFitMinBinM2Sum << " to " << dFitMaxBinM2Sum << endl;
+
+  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
+  cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
+  cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
+  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
+  cout << "Livetime of background: " << dLivetimeYr << endl;
 
 
 //////////////// Adaptive binned histograms
@@ -1373,27 +1374,18 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   }
 */
 
-  // dDataIntegral = fDataHistoM1->Integral(1, dNBins);
-  // dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
-  // dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
-  dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
-  // dDataIntegralTot = qtree->GetEntries();
-
-  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
-  cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
-  cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
-  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
-  cout << "Livetime of background: " << dLivetimeYr << endl;
-
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0,0);
+  // DoTheFitAdaptive(0,0);
   // DoTheFitAdaptive(0.0674202742, 0.0263278758);
   if(bSave)LatexResultTable(0);
   
   // ProfileNLL(0.0685222152, 3968.95); 
   // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
+
+  // Number of Toy fits
+  if(bToyData)ToyFit(100);
 
 }
 
@@ -4703,6 +4695,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   ResetParameters();
 
   gStyle->SetOptStat(0);
+  gStyle->SetOptTitle(0);
   gStyle->SetOptFit();
 
   // Reduce Minuit Output
@@ -5284,18 +5277,18 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   pM1->cd();
   pM1->SetGrid();
   pM1->SetFillStyle(4000);
-  // mCorrMatrix.Draw("colz");
+  mCorrMatrix.Draw("colz");
 
   // If want inverted y-axis for matrix
   // pM1->SetGrid();
-  TH2D *h2Dummy = new TH2D("h2Dummy","", TBackgroundModel::dNParam, 0, TBackgroundModel::dNParam, TBackgroundModel::dNParam, 0, TBackgroundModel::dNParam);
-  h2Dummy->Draw();
-  mCorrMatrix.Draw("colz SAME");
+  // TH2D *h2Dummy = new TH2D("h2Dummy","", TBackgroundModel::dNParam, 0, TBackgroundModel::dNParam, TBackgroundModel::dNParam, 0, TBackgroundModel::dNParam);
+  // h2Dummy->Draw();
+  // mCorrMatrix.Draw("colz SAME");
 
-  TH2C *hgrid = new TH2C("hgrid","",dNParam,0.,dNParam,dNParam,0.,dNParam);
-  hgrid->Draw("SAME");
-  hgrid->GetXaxis()->SetNdivisions(dNParam);
-  hgrid->GetYaxis()->SetNdivisions(dNParam);
+  // TH2C *hgrid = new TH2C("hgrid","",dNParam,0.,dNParam,dNParam,0.,dNParam);
+  // hgrid->Draw("SAME");
+  // hgrid->GetXaxis()->SetNdivisions(dNParam);
+  // hgrid->GetYaxis()->SetNdivisions(dNParam);
 
   // mCorrMatrixInverse.Draw("colzSAME");
   // Setting axis (inverted axis for matrix)
@@ -6279,6 +6272,70 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   OutPNLL.close();
 }
 
+
+void TBackgroundModel::ToyFit(int fNumFits)
+{
+    hPullDist = new TH1D("hPullDist", "Pull Distribution", 10, -5, 5);
+    hToy2nbbRate = new TH1D("hToy2nbbRate", "Toy Monte Carlo half-life fit values", );
+    hToy2nbbError = new TH1D("hToy2nbbError", "Toy Monte Carlo half-life error values", );
+
+    OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+
+    OutToy << "{" << endl;
+    OutToy << endl;
+
+    OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 10, -5, 5);" << endl;
+    OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", );" << endl;
+    OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", );" << endl;
+
+    // Number of toy fits
+    for(int i = 1; i <= fNumFits; i++)
+    {
+      fAdapDataHistoM1->Reset();
+      fAdapDataHistoM2->Reset();
+      
+      fToyData = new TFile(Form("%s/Toy/ToyTest_p%d.root", dMCDir.c_str(), i));
+      fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
+      fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
+    
+    // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
+    // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
+      fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
+      fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
+
+      for(int i = 1; i <= dAdaptiveBinsM1; i++)
+      {
+        fAdapDataHistoM1->SetBinError(i, TMath::Sqrt(fAdapDataHistoM1->GetBinContent(i))/fAdapDataHistoM1->GetBinWidth(i));
+      }
+      for(int i = 1; i <= dAdaptiveBinsM2; i++)
+      {
+        fAdapDataHistoM2->SetBinError(i, TMath::Sqrt(fAdapDataHistoM2->GetBinContent(i))/fAdapDataHistoM2->GetBinWidth(i));
+      }
+
+    // M1 - 450231
+    // M2 - 135452
+    // M1 - Adap 450162
+    // M2 - Adap 135379
+    // Scale histograms to have same integral as before
+    // dDataIntegralM1 = 450162;
+    // dDataIntegralM2 = 135379;
+    // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
+    // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
+      DoTheFitAdaptive(0,0);
+      // Probably need to add a way to input the best-fit half-life
+      OutToy << Form("hToy2nbbRate->Fill(%.5e);", (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+      OutToy << Form("hToy2nbbError->Fill(%.5e);", fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+      OutToy << Form("hPullDist->Fill(%5e);", ((0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) - 6.80668e+20)/(fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1))  ) << endl;
+
+      fToyData->Close();
+    }
+
+    OutToy << endl;
+    OutToy << endl;
+    OutToy << "}" << endl;
+    OutToy << endl;
+    OutToy.close();
+}
 
 TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
 {
