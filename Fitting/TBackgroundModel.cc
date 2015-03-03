@@ -2791,7 +2791,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   double chiSquare = 0.;
   double datam1_i, errm1_i;
   double datam2_i, errm2_i;
-  double datam2sum_i, errm2sum_i;
+  // double datam2sum_i, errm2sum_i;
   double modelm1_i, modelm2_i, modelm2sum_i;
 
   for(int i = dFitMinBinM1 ; i <= dFitMaxBinM1; i++)
@@ -6285,7 +6285,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
 
     cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 100; i++)
+    for(int i = 1; i <= 10; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();

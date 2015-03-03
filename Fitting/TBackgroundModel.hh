@@ -50,8 +50,6 @@ public:
 
 	TH1D *EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope);
 
-	void GenerateToyData();
-
 	double GetChiSquareAdaptive();
 
 	void Initialize();
@@ -63,8 +61,6 @@ public:
 	// Dumb to have all of these but w/e
 	void LoadData();
 
-	void LoadPDFs();
-
 	void PrintParameters();
 
 	void PrintParActivity();
@@ -72,8 +68,6 @@ public:
 	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
 
 	void ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq);
-
-	void ReadMC();
 
 	void ResetParameters();
 
@@ -83,14 +77,9 @@ public:
 
 	void SetParEfficiency();
 	
-	void Test();
-
 	void ToyFit(int fNumFits);
 
 	void UpdateModelAdaptive();
-
-	void WriteParameters();	
-
 
 	int 	dNParam;
 	int 	dBinSize;
