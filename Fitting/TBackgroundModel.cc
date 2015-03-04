@@ -754,6 +754,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
   dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
 
+  dDataIntegralM1 = dDataIntegralM1*100;
+  dDataIntegralM2 = dDataIntegralM2*100;
+
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
   dFitMinBinM2 = fAdapDataHistoM2->FindBin(dFitMin);
   // dFitMinBinM2Sum = fAdapDataHistoM2Sum->FindBin(dFitMin);
@@ -1377,7 +1380,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0,0);
+  // DoTheFitAdaptive(0,0);
   // DoTheFitAdaptive(0.0674202742, 0.0263278758);
   if(bSave)LatexResultTable(0);
   
@@ -1385,7 +1388,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
 
   // Number of Toy fits
-  if(bToyData)ToyFit(100);
+  if(bToyData)ToyFit(1);
 
 }
 
@@ -4482,7 +4485,7 @@ void TBackgroundModel::LoadData()
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
   qtree->Project("fDataHistoM2Sum",  "TotalEnergy_Sync", base_cut && "Multiplicity_Sync == 2");
 
-  dLivetimeYr = dLivetime*dSecToYears;  
+  dLivetimeYr = 100*dLivetime*dSecToYears;  
 }
 
 // Prints parameters, needs update 11-06-2014
@@ -6288,7 +6291,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
 
     cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 100; i++)
+    for(int i = 1; i <= 1; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
@@ -6300,8 +6303,8 @@ void TBackgroundModel::ToyFit(int fNumFits)
     
     // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
     // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
-      fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
-      fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
+      fAdapDataHistoM1->Scale(100*274875./fAdapDataHistoM1->Integral());
+      fAdapDataHistoM2->Scale(100*97635.6/fAdapDataHistoM2->Integral());
 
       for(int j = 1; j <= dAdaptiveBinsM1; j++)
       {
