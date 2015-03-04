@@ -754,8 +754,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
   dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
 
-  dDataIntegralM1 = dDataIntegralM1*100;
-  dDataIntegralM2 = dDataIntegralM2*100;
+  dDataIntegralM1 = dDataIntegralM1*20;
+  dDataIntegralM2 = dDataIntegralM2*20;
 
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
   dFitMinBinM2 = fAdapDataHistoM2->FindBin(dFitMin);
@@ -4485,7 +4485,7 @@ void TBackgroundModel::LoadData()
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
   qtree->Project("fDataHistoM2Sum",  "TotalEnergy_Sync", base_cut && "Multiplicity_Sync == 2");
 
-  dLivetimeYr = 100*dLivetime*dSecToYears;  
+  dLivetimeYr = 20*dLivetime*dSecToYears;  
 }
 
 // Prints parameters, needs update 11-06-2014
@@ -4512,6 +4512,101 @@ void TBackgroundModel::ResetParameters()
 {
   dNumCalls = 0;
   dChiSquare = 0;
+  
+  fModelTotM1->Reset();
+  fModelTotthM1->Reset();
+  fModelTotuM1->Reset();
+  fModelTotkM1->Reset();
+  fModelTotcoM1->Reset();
+  fModelTotmnM1->Reset();
+  fModelTotNDBDM1->Reset();
+  fModelTot2NDBDM1->Reset();
+  fModelTotbiM1->Reset();
+  fModelTotbi2M1->Reset();
+  fModelTotptM1->Reset();
+  fModelTotpbM1->Reset();
+  fModelTotcsM1->Reset();
+  fModelTotco2M1->Reset();
+  fModelTotteo2M1->Reset();
+
+  fModelTotSthM1->Reset();
+  fModelTotSuM1->Reset();
+  fModelTotSpoM1->Reset();
+  fModelTotSpbM1->Reset();
+  fModelTotExtM1->Reset();
+
+  fModelTotAdapM1->Reset();
+  fModelTotAdapthM1->Reset();
+  fModelTotAdapuM1->Reset();
+  fModelTotAdapkM1->Reset();
+  fModelTotAdapcoM1->Reset();
+  fModelTotAdapmnM1->Reset();
+  fModelTotAdapNDBDM1->Reset();
+  fModelTotAdap2NDBDM1->Reset();
+  fModelTotAdapbiM1->Reset();
+  fModelTotAdapbi2M1->Reset();
+  fModelTotAdapptM1->Reset();
+  fModelTotAdappbM1->Reset();
+  fModelTotAdapcsM1->Reset();
+  fModelTotAdapco2M1->Reset();
+  fModelTotAdapteo2M1->Reset();
+
+  fModelTotAdapSthM1->Reset();
+  fModelTotAdapSuM1->Reset();
+  fModelTotAdapSpoM1->Reset();
+  fModelTotAdapSpbM1->Reset();
+  fModelTotAdapExtM1->Reset();
+
+  fModelTotAdapFudgeM1->Reset();
+
+  // Total PDFs M2
+  fModelTotM2->Reset();
+  fModelTotthM2->Reset();
+  fModelTotuM2->Reset();
+  fModelTotkM2->Reset();
+  fModelTotcoM2->Reset();
+  fModelTotmnM2->Reset();
+  fModelTotNDBDM2->Reset();
+  fModelTot2NDBDM2->Reset();
+  fModelTotbiM2->Reset();
+  fModelTotbi2M2->Reset();
+  fModelTotptM2->Reset();
+  fModelTotpbM2->Reset();
+  fModelTotcsM2->Reset();
+  fModelTotco2M2->Reset();
+  fModelTotteo2M2->Reset();
+
+  fModelTotSthM2->Reset();
+  fModelTotSuM2->Reset();
+  fModelTotSpoM2->Reset();
+  fModelTotSpbM2->Reset();
+  fModelTotExtM2->Reset();
+
+  fModelTotAdapM2->Reset();
+  fModelTotAdapthM2->Reset();
+  fModelTotAdapuM2->Reset();
+  fModelTotAdapkM2->Reset();
+  fModelTotAdapcoM2->Reset();
+  fModelTotAdapmnM2->Reset();
+  fModelTotAdapNDBDM2->Reset();
+  fModelTotAdap2NDBDM2->Reset();
+  fModelTotAdapbiM2->Reset();
+  fModelTotAdapbi2M2->Reset();
+  fModelTotAdapptM2->Reset();
+  fModelTotAdappbM2->Reset();
+  fModelTotAdapcsM2->Reset();
+  fModelTotAdapco2M2->Reset();
+  fModelTotAdapteo2M2->Reset();
+
+  fModelTotAdapSthM2->Reset();
+  fModelTotAdapSuM2->Reset();
+  fModelTotAdapSpoM2->Reset();
+  fModelTotAdapSpbM2->Reset();
+  fModelTotAdapExtM2->Reset();
+
+  fModelTotAdapFudgeM2->Reset();
+
+
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
     fParameters[i] = 0;
@@ -4704,7 +4799,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   gStyle->SetOptFit();
 
   // Reduce Minuit Output
-  minuit->SetPrintLevel(0); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
+  minuit->SetPrintLevel(-1); // Print level -1 (Quiet), 0 (Normal), 1 (Verbose)
   minuit->Command("SET STRategy 2"); // Sets strategy of fit
   minuit->SetMaxIterations(10000);
   minuit->SetObjectFit(this); //see the external FCN  above
@@ -6291,7 +6386,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
 
     cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 1; i++)
+    for(int i = 1; i <= 5; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
@@ -6303,8 +6398,8 @@ void TBackgroundModel::ToyFit(int fNumFits)
     
     // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
     // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
-      fAdapDataHistoM1->Scale(100*274875./fAdapDataHistoM1->Integral());
-      fAdapDataHistoM2->Scale(100*97635.6/fAdapDataHistoM2->Integral());
+      fAdapDataHistoM1->Scale(20*274875./fAdapDataHistoM1->Integral());
+      fAdapDataHistoM2->Scale(20*97635.6/fAdapDataHistoM2->Integral());
 
       for(int j = 1; j <= dAdaptiveBinsM1; j++)
       {
@@ -6333,16 +6428,21 @@ void TBackgroundModel::ToyFit(int fNumFits)
     }
     OutToy << endl;
     OutToy << endl;
-    OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 800, 600);" << endl;
+    OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
+    OutToy << "c1->cd(1);" << endl;
+    OutToy << "hPullDist->GetXaxis()->SetTitle(\"#Deltat_{1/2}/#sigma_{t_{1/2}}\");" << endl;
     OutToy << "hPullDist->Draw();" << endl;
 
-    OutToy << "TCanvas *c2 = new TCanvas(\"c2\", \"c2\", 800, 600);" << endl;
+    OutToy << "c1->cd(2);" << endl;    
+    OutToy << "hToy2nbbRate->GetXaxis()->SetTitle(\"t_{1/2}\");" << endl;
     OutToy << "hToy2nbbRate->Draw();" << endl;
 
-    OutToy << "TCanvas *c3 = new TCanvas(\"c3\", \"c3\", 800, 600);" << endl;
+    OutToy << "c1->cd(3);" << endl;    
+    OutToy << "hToy2nbbError->GetXaxis()->SetTitle(\"#sigma_{t_{1/2}}\");" << endl;
     OutToy << "hToy2nbbError->Draw();" << endl;
 
-    OutToy << "TCanvas *c4 = new TCanvas(\"c4\", \"c4\", 800, 600);" << endl;
+    OutToy << "c1->cd(4);" << endl;    
+    OutToy << "hChiSquared->GetXaxis()->SetTitle(\"#chi^{2}\");" << endl;
     OutToy << "hChiSquared->Draw();" << endl;
 
     OutToy << endl;

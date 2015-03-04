@@ -247,6 +247,8 @@ private:
 	TH1D			*fModelTotAdapSpbM2;
 	TH1D			*fModelTotAdapExtM2;
 
+	TH1D 			*fModelTotAdapFudgeM2;
+
 
 	// TH1D			*fModelTotAdapAlphaM2;
 	// TH1D			*fModelTotAdapAlphaHighM2;
@@ -300,8 +302,6 @@ private:
 	TH1D			*fModelTotAdapAlphaM2Sum;
 	TH1D			*fModelTotAdapAlphaHighM2Sum;
 	TH1D			*fModelTotAdapAlphaLowM2Sum;
-
-	TH1D 			*fModelTotAdapFudgeM2;
 
 
 //////////// Residual distributions
