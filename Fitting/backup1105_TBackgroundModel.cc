@@ -1481,7 +1481,7 @@ bool TBackgroundModel::DoTheFit()
   fModelTotPbM2->Add( fSmearCrystalBi2M2, fParameters[25]);
 
   ////////// Only for testing
-  // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(2*R*T)
+  // Correction for M2 spectra, it's the M1 spectra but scaled down by N_M1*1-Exp(2*R*T) where T is the coincidence window and R is the rate (in 1 crystal or in whole tower)
   // 2 because of double counting in M2 spectrum...
   fTotCorrection->Add(fCorrectionM2, 180197*(1-TMath::Exp(-2*0.05*0.1)));
 

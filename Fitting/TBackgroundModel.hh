@@ -48,8 +48,6 @@ public:
 
 	void DrawMC();
 
-	TH1D *EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope);
-
 	double GetChiSquareAdaptive();
 
 	void Initialize();
@@ -99,6 +97,7 @@ public:
 	int 	dFitMinBinM2Sum;
 	int 	dFitMaxBinM2Sum;	
 	int 	dNumFreeParameters;
+	int 	dNDF;
 
 	double  	dDataIntegralTot;
 	double 	dDataIntegralM1;

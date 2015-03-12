@@ -2488,28 +2488,34 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(1450) && i < h1->FindBin(1470))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1450)));
-     // dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1455)));
-     // dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1465)));
-
-     // dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1440)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
      i = i+(1470-1450)/dBaseBinSize;
     }
-*/
-/*
+    if(i >= h1->FindBin(1755) && i < h1->FindBin(1775))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1755)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(1775-1755)/dBaseBinSize;
+    }    
+    if(i >= h1->FindBin(2195) && i < h1->FindBin(2215))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2195)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(2215-2195)/dBaseBinSize;
+    }        
     // Tl-208
     if(i >= h1->FindBin(2600) && i < h1->FindBin(2630))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2600)));
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2605)));
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2610)));
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2615)));
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2620)));
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2625)));
-     // dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2600)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
@@ -2517,6 +2523,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
      i = i+(2630-2600)/dBaseBinSize;
     }
 */
+
     // Pt peak 3150 - 3400
     if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
     {
@@ -2589,6 +2596,17 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
      dDummyFill = 0;
      dDummy = 0;
      i = i+(5650-5400)/dBaseBinSize;
+    }
+
+    // 5650 - 5800
+    if(i >= h1->FindBin(5650) && i < h1->FindBin(5800))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5650)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(5800-5650)/dBaseBinSize;
     }
 
     // 5800 - 6050
@@ -2688,30 +2706,31 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   // Variables used in Residual calculations
   double dResidualX = 0, dResidualY = 0, dResidualXErr = 0, dResidualYErr = 0;
 
+  double datam1_i = 0, modelm1_i = 0;
+
   // Residual plot and distribution
-  for(int j = binMin ; j < binMax ; j++)
+  for(int j = binMin ; j <= binMax ; j++)
   {
 
     if( hCloneBkg->GetBinCenter(j) >= 3150 && hCloneBkg->GetBinCenter(j) <= 3400)continue;    
     // if( hCloneBkg->GetBinCenter(j) >= 800 && hCloneBkg->GetBinCenter(j) <= 808)continue;
     // if( hCloneBkg->GetBinCenter(j) >= 1060 && hCloneBkg->GetBinCenter(j) <= 1068)continue;
+    // if( hCloneBkg->GetBinCenter(j) >= 1450 && hCloneBkg->GetBinCenter(j) <= 1475)continue;
+    // if( hCloneBkg->GetBinCenter(j) >= 1755 && hCloneBkg->GetBinCenter(j) <= 1775)continue;
+    // if( hCloneBkg->GetBinCenter(j) >= 2600 && hCloneBkg->GetBinCenter(j) <= 2630)continue;
 
     dResidualX    = hCloneBkg->GetBinCenter(j);
+
+    datam1_i = h1->GetBinContent(j)*h1->GetBinWidth(j);
+    modelm1_i = h2->GetBinContent(j)*h1->GetBinWidth(j);
     
     // Re-multiply bin content by bin width (for # of counts)
-    
-    dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j)) * hCloneBkg->GetBinWidth(j) /
-              (TMath::Sqrt((hCloneBkg->GetBinContent(j))*hCloneBkg->GetBinWidth(j)) ); // Sqrt(MC + data) = sigma for poisson distribution
-    
-    // dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j) /
-              // (TMath::Sqrt(hCloneBkg->GetBinContent(i))/hCloneBkg->GetBinWidth(i) ); // Sqrt(MC + data) = sigma for poisson distribution
-    
-    // dResidualY  = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j))*hCloneBkg->GetBinWidth(j)/dBinSize; // not normalized
-    // g1->SetPoint(j, dResidualX, dResidualY);
+    // dResidualY    = (hCloneBkg->GetBinContent(j) - hCloneMC->GetBinContent(j)) * hCloneBkg->GetBinWidth(j) /
+              // (TMath::Sqrt( hCloneBkg->GetBinContent(j)*hCloneBkg->GetBinWidth(j) ) ); // Sqrt(MC + data) = sigma for poisson distribution
+    dResidualY = (datam1_i - modelm1_i)/TMath::Sqrt(datam1_i);
+
     hOut->SetBinContent(j, dResidualY);
     hOut->SetBinError(j, 0.01);
-    // cout << "bin: " << j << " Energy: " << hCloneBkg->GetBinCenter(j) << " Bkg: " <<  hCloneBkg->GetBinContent(j) << " MC: " << hCloneMC->GetBinContent(j) << endl;
-    // cout << "   Residual: " << dResidualY << endl;
     hResid->Fill(dResidualY);
   }
 
@@ -2774,20 +2793,6 @@ void TBackgroundModel::DrawBkg()
 
 }
 
-// This function applies an energy scaling of E' = dSlope*E + dConst
-TH1D *TBackgroundModel::EnergyScale(TH1D *hIn, TH1D *hDummy, double dConst, double dSlope)
-{
-  hDummy->Reset();
-  int fBins = hDummy->GetNbinsX();
-
-    for(int i = 1; i <= fBins; i++)
-    {
-      hDummy->Fill(dConst + dSlope*hIn->GetBinCenter(i), hIn->GetBinContent(i));
-    }
-
-  return hDummy;
-}
-
 double TBackgroundModel::GetChiSquareAdaptive()
 {
   double chiSquare = 0.;
@@ -2796,7 +2801,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   // double datam2sum_i, errm2sum_i;
   double modelm1_i, modelm2_i, modelm2sum_i;
 
-  for(int i = dFitMinBinM1 ; i <= dFitMaxBinM1; i++)
+  for(int i = dFitMinBinM1; i <= dFitMaxBinM1; i++)
   {
 
     // Dividing by base bin size in chi-squared because the weight is width/base bin size when filling
@@ -2809,12 +2814,13 @@ double TBackgroundModel::GetChiSquareAdaptive()
     modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
     
     if(modelm1_i != 0 && datam1_i != 0)
+    // if(modelm1_i != 0)
     {
       // Log-likelihood
       chiSquare += 2 * (modelm1_i - datam1_i + datam1_i * TMath::Log(datam1_i/modelm1_i));
 
       // Pearson chi-squared
-      // chiSquare += (datam1_i - modelm1_i)*(datam1_i - modelm1_i)/datam1_i;
+      // chiSquare += (datam1_i - modelm1_i)*(datam1_i - modelm1_i)/(datam1_i);
       // Neyman chi-squared
       // chiSquare += (datam1_i - modelm1_i)*(datam1_i - modelm1_i)/modelm1_i;
 
@@ -2822,8 +2828,6 @@ double TBackgroundModel::GetChiSquareAdaptive()
     }
     
   }
-
-
 
   for(int i = dFitMinBinM2; i <= dFitMaxBinM2; i++)
   {
@@ -2835,12 +2839,13 @@ double TBackgroundModel::GetChiSquareAdaptive()
     modelm2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i);
     
     if(modelm2_i != 0 && datam2_i != 0)
+    // if(modelm2_i != 0)      
     {
       // Log-likelihood
       chiSquare += 2 * (modelm2_i - datam2_i + datam2_i * TMath::Log(datam2_i/modelm2_i));
 
       // Pearson chi-squared
-      // chiSquare += (datam2_i - modelm2_i)*(datam2_i - modelm2_i)/datam2_i;
+      // chiSquare += (datam2_i - modelm2_i)*(datam2_i - modelm2_i)/(datam2_i);
       
       // Neyman chi-squared
       // chiSquare += (datam2_i - modelm2_i)*(datam2_i - modelm2_i)/modelm2_i;
@@ -4847,14 +4852,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   minuit->DefineParameter(21, "CuBox + CuFrame th232",  1.98125E-2, 1E-7, 0, 1.0);
   minuit->DefineParameter(22, "CuBox + CuFrame u238",  4.74432E-3, 1E-7, 0, 1.0);
   minuit->DefineParameter(23, "PbRom cs137",  0, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(25, "Internal Shields th232",  0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(26, "Internal Shields u238",  0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(27, "Internal Shields co60",  0., 1E-7, 0, 1.0);    
-  // minuit->DefineParameter(28, "Internal Shields k40",  0., 1E-7, 0, 1.0);
-
+  // minuit->DefineParameter(24, "PbRom cs137",  0, 1E-7, 0, 1.0);
 
 /*
-  // With Initial Values
+  // With Initial Values and 0nu
   minuit->DefineParameter(0, "TeO2 0nu",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(1, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
   minuit->DefineParameter(2, "CuBox + CuFrame co60",  0., 1E-7, 0, 1.0);
@@ -4888,34 +4889,35 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
    // Uncommend to fix parameters here
    // minuit->FixParameter(0); // TeO2 0nu
-   // minuit->FixParameter(1); // TeO2 2nu
-   // minuit->FixParameter(2); // CuBox+Frame co60
-   // minuit->FixParameter(3); // TeO2 th232 only
-   // minuit->FixParameter(4); // TeO2 th230 only
-   // minuit->FixParameter(5); // TeO2 Sx th232 0.01
-   // minuit->FixParameter(6); // TeO2 Sx ra228 to pb208 0.01 
-   // minuit->FixParameter(7); // TeO2 Sx u238 to th230 0.01  
-   // minuit->FixParameter(8); // TeO2 Sx th230 only 0.01
-   // minuit->FixParameter(9); // TeO2 Sx ra226 to pb210 0.01
-   // minuit->FixParameter(10); // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
-   // minuit->FixParameter(11); // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   // minuit->FixParameter(12); // CuBox+CuFrame Sx th232 10
-   // minuit->FixParameter(13); // CuBox+CuFrame Sx u238 10
-   // minuit->FixParameter(14); // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   // minuit->FixParameter(15); // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   // minuit->FixParameter(16); // PbRom k40
-   // minuit->FixParameter(17); // OVC th232
-   // minuit->FixParameter(18); // OVC u238
-   // minuit->FixParameter(19); // OVC co60
-   // minuit->FixParameter(20); // OVC k40
-   // minuit->FixParameter(21); // External Lead bi210 
-   // minuit->FixParameter(22); // CuBox+Frame th232 
-   // minuit->FixParameter(23); // CuBox+Frame u238
-   // minuit->FixParameter(24); // PbRom cs137
+   // minuit->FixParameter(0); // TeO2 2nu
+   // minuit->FixParameter(1); // CuBox+Frame co60
+   // minuit->FixParameter(2); // TeO2 th232 only
+   // minuit->FixParameter(3); // TeO2 th230 only
+   // minuit->FixParameter(4); // TeO2 Sx th232 0.01
+   // minuit->FixParameter(5); // TeO2 Sx ra228 to pb208 0.01 
+   // minuit->FixParameter(6); // TeO2 Sx u238 to th230 0.01  
+   // minuit->FixParameter(7); // TeO2 Sx th230 only 0.01
+   // minuit->FixParameter(8); // TeO2 Sx ra226 to pb210 0.01
+   // minuit->FixParameter(9); // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
+   // minuit->FixParameter(10); // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
+   // minuit->FixParameter(11); // CuBox+CuFrame Sx th232 10
+   // minuit->FixParameter(12); // CuBox+CuFrame Sx u238 10
+   // minuit->FixParameter(13); // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
+   // minuit->FixParameter(14); // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
+   // minuit->FixParameter(15); // PbRom k40
+   // minuit->FixParameter(16); // OVC th232
+   // minuit->FixParameter(17); // OVC u238
+   // minuit->FixParameter(18); // OVC co60
+   // minuit->FixParameter(19); // OVC k40
+   // minuit->FixParameter(20); // External Lead bi210 
+   // minuit->FixParameter(21); // CuBox+Frame th232 
+   // minuit->FixParameter(22); // CuBox+Frame u238
+   // minuit->FixParameter(23); // PbRom cs137
 
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
    dNumFreeParameters = minuit->GetNumPars() - minuit->GetNumFixedPars();
+   dNDF = (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters);
    // Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
    int status = minuit->Command("MINImize 500000 0.1"); // Command that actually does the minimization
@@ -4931,9 +4933,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   
   dChiSquare = GetChiSquareAdaptive();
 
-  cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
-  cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
-  cout << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
+  // cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
+  // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
+  // cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
 
 // M1
   // fModelTotAdapNDBDM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
@@ -5373,6 +5375,12 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
+
+  dChiSquare = GetChiSquareAdaptive();
+
+  cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
+  cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
+  cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
 
 /*
     2nbb calculation:
@@ -6246,9 +6254,9 @@ void TBackgroundModel::LatexResultTable(double fValue)
   OutFile << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
   OutFile << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
   OutFile << "Livetime of background: " << dLivetimeYr << endl;
-  OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/(dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl; // for M1 and M2
-  OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) << endl;
-  OutFile << "Probability = " << TMath::Prob(dChiSquare, (dFitMaxBinM1+dFitMaxBinM2-dFitMinBinM1-dFitMinBinM2-dNumFreeParameters) ) << endl;
+  OutFile << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
+  OutFile << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
+  OutFile << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
 
   OutFile << endl;
   OutFile << endl;
