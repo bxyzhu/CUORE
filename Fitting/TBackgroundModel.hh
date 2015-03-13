@@ -1801,6 +1801,9 @@ private:
 
 	TH1D 			*hOut;
 
+	TH1D 			*hChiSquaredProgressM1;
+	TH1D 			*hChiSquaredProgressM2;
+
 	TDatime 		*tTime;
 
 	// Smearing
