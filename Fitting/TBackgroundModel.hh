@@ -1870,6 +1870,7 @@ private:
 	double				fParameters[139];
 	double				fParError[139];
 	double 				fParActivity[139]; // Integral of all events
+	double 				fParActivityErr[139];
 	double 				fParMass[139]; // Mass of all elements
 	double 				fParSurfaceArea[139]; // Surface area of all elements
 	double				fResolution[52];
