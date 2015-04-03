@@ -2708,6 +2708,9 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxu238M1_01 = new TH1D("hTeO2Sxu238M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M1_1 = new TH1D("hTeO2Sxu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M1_10 = new TH1D("hTeO2Sxu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238M1_100 = new TH1D("hTeO2Sxu238M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232M1_100 = new TH1D("hTeO2Sxth232M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxpb210M1_100 = new TH1D("hTeO2Sxpb210M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	TH1D *hTeO2Sxth232onlyM1_001 = new TH1D("hTeO2Sxth232onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra228pb208M1_001 = new TH1D("hTeO2Sxra228pb208M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2715,6 +2718,18 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxth230onlyM1_001 = new TH1D("hTeO2Sxth230onlyM1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra226pb210M1_001 = new TH1D("hTeO2Sxra226pb210M1_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M1_0001 = new TH1D("hTeO2Sxpb210M1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM1_01 = new TH1D("hTeO2Sxth232onlyM1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M1_01 = new TH1D("hTeO2Sxra228pb208M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M1_01 = new TH1D("hTeO2Sxu238th230M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM1_01 = new TH1D("hTeO2Sxth230onlyM1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M1_01 = new TH1D("hTeO2Sxra226pb210M1_01", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM1_0001 = new TH1D("hTeO2Sxth232onlyM1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M1_0001 = new TH1D("hTeO2Sxra228pb208M1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M1_0001 = new TH1D("hTeO2Sxu238th230M1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM1_0001 = new TH1D("hTeO2Sxth230onlyM1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M1_0001 = new TH1D("hTeO2Sxra226pb210M1_0001", "", dNBins, dMinEnergy, dMaxEnergy);
 
 //////////////////////////////
 
@@ -2740,6 +2755,10 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxu238M2_01 = new TH1D("hTeO2Sxu238M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M2_1 = new TH1D("hTeO2Sxu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M2_10 = new TH1D("hTeO2Sxu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238M2_100 = new TH1D("hTeO2Sxu238M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232M2_100 = new TH1D("hTeO2Sxth232M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxpb210M2_100 = new TH1D("hTeO2Sxpb210M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	TH1D *hTeO2Sxth232onlyM2_001 = new TH1D("hTeO2Sxth232onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra228pb208M2_001 = new TH1D("hTeO2Sxra228pb208M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2747,6 +2766,18 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxth230onlyM2_001 = new TH1D("hTeO2Sxth230onlyM2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra226pb210M2_001 = new TH1D("hTeO2Sxra226pb210M2_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M2_0001 = new TH1D("hTeO2Sxpb210M2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM2_01 = new TH1D("hTeO2Sxth232onlyM2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M2_01 = new TH1D("hTeO2Sxra228pb208M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M2_01 = new TH1D("hTeO2Sxu238th230M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM2_01 = new TH1D("hTeO2Sxth230onlyM2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M2_01 = new TH1D("hTeO2Sxra226pb210M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM2_0001 = new TH1D("hTeO2Sxth232onlyM2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M2_0001 = new TH1D("hTeO2Sxra228pb208M2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M2_0001 = new TH1D("hTeO2Sxu238th230M2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM2_0001 = new TH1D("hTeO2Sxth230onlyM2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M2_0001 = new TH1D("hTeO2Sxra226pb210M2_0001", "", dNBins, dMinEnergy, dMaxEnergy);
 
 //////////////////////////////
 
@@ -2772,6 +2803,10 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxu238M2Sum_01 = new TH1D("hTeO2Sxu238M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M2Sum_1 = new TH1D("hTeO2Sxu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxu238M2Sum_10 = new TH1D("hTeO2Sxu238M2Sum_10", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238M2Sum_100 = new TH1D("hTeO2Sxu238M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth232M2Sum_100 = new TH1D("hTeO2Sxth232M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxpb210M2Sum_100 = new TH1D("hTeO2Sxpb210M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	TH1D *hTeO2Sxth232onlyM2Sum_001 = new TH1D("hTeO2Sxth232onlyM2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra228pb208M2Sum_001 = new TH1D("hTeO2Sxra228pb208M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -2779,6 +2814,18 @@ void SaveHistogramsSurfaceCrystal()
 	TH1D *hTeO2Sxth230onlyM2Sum_001 = new TH1D("hTeO2Sxth230onlyM2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxra226pb210M2Sum_001 = new TH1D("hTeO2Sxra226pb210M2Sum_001", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hTeO2Sxpb210M2Sum_0001 = new TH1D("hTeO2Sxpb210M2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM2Sum_01 = new TH1D("hTeO2Sxth232onlyM2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M2Sum_01 = new TH1D("hTeO2Sxra228pb208M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M2Sum_01 = new TH1D("hTeO2Sxu238th230M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM2Sum_01 = new TH1D("hTeO2Sxth230onlyM2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M2Sum_01 = new TH1D("hTeO2Sxra226pb210M2Sum_01", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hTeO2Sxth232onlyM2Sum_0001 = new TH1D("hTeO2Sxth232onlyM2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra228pb208M2Sum_0001 = new TH1D("hTeO2Sxra228pb208M2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxu238th230M2Sum_0001 = new TH1D("hTeO2Sxu238th230M2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxth230onlyM2Sum_0001 = new TH1D("hTeO2Sxth230onlyM2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hTeO2Sxra226pb210M2Sum_0001 = new TH1D("hTeO2Sxra226pb210M2Sum_0001", "", dNBins, dMinEnergy, dMaxEnergy);
 
 	// TChain *tTeO2Spb210_01 = LoadMC(sDataDir.c_str(), "TeO2S", "pb210-.1");
 	// TChain *tTeO2Spo210_001 = LoadMC(sDataDir.c_str(), "TeO2S", "po210-.01");
@@ -2803,6 +2850,10 @@ void SaveHistogramsSurfaceCrystal()
 	TChain *tTeO2Sxu238_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-.1");
 	TChain *tTeO2Sxu238_1 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-1");
 	TChain *tTeO2Sxu238_10 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-10");	
+	TChain *tTeO2Sxu238_100 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-100");	
+	TChain *tTeO2Sxth232_100 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232-100");
+	TChain *tTeO2Sxpb210_100 = LoadMC(sDataDir.c_str(), "TeO2Sx", "pb210-100");
+
 
 	TChain *tTeO2Sxth232only_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232_only-.01");
 	TChain *tTeO2Sxra228pb208_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra228-pb208-.01");
@@ -2811,6 +2862,17 @@ void SaveHistogramsSurfaceCrystal()
 	TChain *tTeO2Sxra226pb210_001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra226-pb210-.01");
 	TChain *tTeO2Sxpb210_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "pb210-.001");
 
+	TChain *tTeO2Sxth232only_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232_only-.1");
+	TChain *tTeO2Sxra228pb208_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra228-pb208-.1");
+	TChain *tTeO2Sxu238th230_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-th230-.1");
+	TChain *tTeO2Sxth230only_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th230_only-.1");
+	TChain *tTeO2Sxra226pb210_01 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra226-pb210-.1");
+
+	TChain *tTeO2Sxth232only_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th232_only-.001");
+	TChain *tTeO2Sxra228pb208_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra228-pb208-.001");
+	TChain *tTeO2Sxu238th230_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "u238-th230-.001");
+	TChain *tTeO2Sxth230only_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "th230_only-.001");
+	TChain *tTeO2Sxra226pb210_0001 = LoadMC(sDataDir.c_str(), "TeO2Sx", "ra226-pb210-.001");
 
 ///////////////////
 
@@ -2836,6 +2898,9 @@ void SaveHistogramsSurfaceCrystal()
 	tTeO2Sxu238_01->Project("hTeO2Sxu238M1_01", "Ener2", "Multiplicity==1");
 	tTeO2Sxu238_1->Project("hTeO2Sxu238M1_1", "Ener2", "Multiplicity==1");
 	tTeO2Sxu238_10->Project("hTeO2Sxu238M1_10", "Ener2", "Multiplicity==1");
+	tTeO2Sxu238_100->Project("hTeO2Sxu238M1_100", "Ener2", "Multiplicity==1");
+	tTeO2Sxth232_100->Project("hTeO2Sxth232M1_100", "Ener2", "Multiplicity==1");
+	tTeO2Sxpb210_100->Project("hTeO2Sxpb210M1_100", "Ener2", "Multiplicity==1");
 
 	tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M1_001", "Ener2", "Multiplicity==1");
@@ -2843,6 +2908,19 @@ void SaveHistogramsSurfaceCrystal()
 	tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M1_001", "Ener2", "Multiplicity==1");
 	tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M1_0001", "Ener2", "Multiplicity==1");
+
+	tTeO2Sxth232only_01->Project("hTeO2Sxth232onlyM1_01", "Ener2", "Multiplicity==1");
+	tTeO2Sxra228pb208_01->Project("hTeO2Sxra228pb208M1_01", "Ener2", "Multiplicity==1");
+	tTeO2Sxu238th230_01->Project("hTeO2Sxu238th230M1_01", "Ener2", "Multiplicity==1");
+	tTeO2Sxth230only_01->Project("hTeO2Sxth230onlyM1_01", "Ener2", "Multiplicity==1");
+	tTeO2Sxra226pb210_01->Project("hTeO2Sxra226pb210M1_01", "Ener2", "Multiplicity==1");
+
+	tTeO2Sxth232only_0001->Project("hTeO2Sxth232onlyM1_0001", "Ener2", "Multiplicity==1");
+	tTeO2Sxra228pb208_0001->Project("hTeO2Sxra228pb208M1_0001", "Ener2", "Multiplicity==1");
+	tTeO2Sxu238th230_0001->Project("hTeO2Sxu238th230M1_0001", "Ener2", "Multiplicity==1");
+	tTeO2Sxth230only_0001->Project("hTeO2Sxth230onlyM1_0001", "Ener2", "Multiplicity==1");
+	tTeO2Sxra226pb210_0001->Project("hTeO2Sxra226pb210M1_0001", "Ener2", "Multiplicity==1");
+
 
 //////////////////////////////////
 
@@ -2868,6 +2946,9 @@ void SaveHistogramsSurfaceCrystal()
 	tTeO2Sxu238_01->Project("hTeO2Sxu238M2_01", "Ener2", "Multiplicity==2");
 	tTeO2Sxu238_1->Project("hTeO2Sxu238M2_1", "Ener2", "Multiplicity==2");
 	tTeO2Sxu238_10->Project("hTeO2Sxu238M2_10", "Ener2", "Multiplicity==2");
+	tTeO2Sxu238_100->Project("hTeO2Sxu238M2_100", "Ener2", "Multiplicity==2");
+	tTeO2Sxth232_100->Project("hTeO2Sxth232M2_100", "Ener2", "Multiplicity==2");
+	tTeO2Sxpb210_100->Project("hTeO2Sxpb210M2_100", "Ener2", "Multiplicity==2");
 
 	tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M2_001", "Ener2", "Multiplicity==2");
@@ -2875,6 +2956,18 @@ void SaveHistogramsSurfaceCrystal()
 	tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M2_001", "Ener2", "Multiplicity==2");
 	tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M2_0001", "Ener2", "Multiplicity==2");
+
+	tTeO2Sxth232only_01->Project("hTeO2Sxth232onlyM2_01", "Ener2", "Multiplicity==2");
+	tTeO2Sxra228pb208_01->Project("hTeO2Sxra228pb208M2_01", "Ener2", "Multiplicity==2");
+	tTeO2Sxu238th230_01->Project("hTeO2Sxu238th230M2_01", "Ener2", "Multiplicity==2");
+	tTeO2Sxth230only_01->Project("hTeO2Sxth230onlyM2_01", "Ener2", "Multiplicity==2");
+	tTeO2Sxra226pb210_01->Project("hTeO2Sxra226pb210M2_01", "Ener2", "Multiplicity==2");
+
+	tTeO2Sxth232only_0001->Project("hTeO2Sxth232onlyM2_0001", "Ener2", "Multiplicity==2");
+	tTeO2Sxra228pb208_0001->Project("hTeO2Sxra228pb208M2_0001", "Ener2", "Multiplicity==2");
+	tTeO2Sxu238th230_0001->Project("hTeO2Sxu238th230M2_0001", "Ener2", "Multiplicity==2");
+	tTeO2Sxth230only_0001->Project("hTeO2Sxth230onlyM2_0001", "Ener2", "Multiplicity==2");
+	tTeO2Sxra226pb210_0001->Project("hTeO2Sxra226pb210M2_0001", "Ener2", "Multiplicity==2");
 
 //////////////////////////////////
 
@@ -2884,30 +2977,45 @@ void SaveHistogramsSurfaceCrystal()
 	// tTeO2Sth232_01->Project("hTeO2Sth232M2Sum_01", "Esum2", "Multiplicity==2");
 	// tTeO2Su238_01->Project("hTeO2Su238M2Sum_01", "Esum2", "Multiplicity==2");
 
-	// tTeO2Sxpb210_001->Project("hTeO2Sxpb210M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpb210_01->Project("hTeO2Sxpb210M2Sum_01", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpb210_1->Project("hTeO2Sxpb210M2Sum_1", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpb210_10->Project("hTeO2Sxpb210M2Sum_10", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpo210_001->Project("hTeO2Sxpo210M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpo210_01->Project("hTeO2Sxpo210M2Sum_01", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpo210_1->Project("hTeO2Sxpo210M2Sum_1", "Esum2", "Multiplicity==2");
-	// // tTeO2Sxpo210_10->Project("hTeO2Sxpo210M2Sum_10", "Esum2", "Multiplicity==2");
-	// tTeO2Sxth232_001->Project("hTeO2Sxth232M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxth232_01->Project("hTeO2Sxth232M2Sum_01", "Esum2", "Multiplicity==2");
-	// tTeO2Sxth232_1->Project("hTeO2Sxth232M2Sum_1", "Esum2", "Multiplicity==2");
-	// tTeO2Sxth232_10->Project("hTeO2Sxth232M2Sum_10", "Esum2", "Multiplicity==2");
-	// tTeO2Sxu238_001->Project("hTeO2Sxu238M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxu238_01->Project("hTeO2Sxu238M2Sum_01", "Esum2", "Multiplicity==2");
-	// tTeO2Sxu238_1->Project("hTeO2Sxu238M2Sum_1", "Esum2", "Multiplicity==2");
-	// tTeO2Sxu238_10->Project("hTeO2Sxu238M2Sum_10", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_001->Project("hTeO2Sxpb210M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_01->Project("hTeO2Sxpb210M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_1->Project("hTeO2Sxpb210M2Sum_1", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_10->Project("hTeO2Sxpb210M2Sum_10", "Esum2", "Multiplicity==2");
+	tTeO2Sxpo210_001->Project("hTeO2Sxpo210M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxpo210_01->Project("hTeO2Sxpo210M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxpo210_1->Project("hTeO2Sxpo210M2Sum_1", "Esum2", "Multiplicity==2");
+	// tTeO2Sxpo210_10->Project("hTeO2Sxpo210M2Sum_10", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232_001->Project("hTeO2Sxth232M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232_01->Project("hTeO2Sxth232M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232_1->Project("hTeO2Sxth232M2Sum_1", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232_10->Project("hTeO2Sxth232M2Sum_10", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238_001->Project("hTeO2Sxu238M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238_01->Project("hTeO2Sxu238M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238_1->Project("hTeO2Sxu238M2Sum_1", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238_10->Project("hTeO2Sxu238M2Sum_10", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238_100->Project("hTeO2Sxu238M2Sum_100", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232_100->Project("hTeO2Sxth232M2Sum_100", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_100->Project("hTeO2Sxpb210M2Sum_100", "Esum2", "Multiplicity==2");
 
-	// tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxu238th230_001->Project("hTeO2Sxu238th230M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M2Sum_001", "Esum2", "Multiplicity==2");
-	// tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M2Sum_0001", "Esum2", "Multiplicity==2");
+	tTeO2Sxth232only_001->Project("hTeO2Sxth232onlyM2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxra228pb208_001->Project("hTeO2Sxra228pb208M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238th230_001->Project("hTeO2Sxu238th230M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxth230only_001->Project("hTeO2Sxth230onlyM2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxra226pb210_001->Project("hTeO2Sxra226pb210M2Sum_001", "Esum2", "Multiplicity==2");
+	tTeO2Sxpb210_0001->Project("hTeO2Sxpb210M2Sum_0001", "Esum2", "Multiplicity==2");
 
+
+	tTeO2Sxth232only_01->Project("hTeO2Sxth232onlyM2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxra228pb208_01->Project("hTeO2Sxra228pb208M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238th230_01->Project("hTeO2Sxu238th230M2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxth230only_01->Project("hTeO2Sxth230onlyM2Sum_01", "Esum2", "Multiplicity==2");
+	tTeO2Sxra226pb210_01->Project("hTeO2Sxra226pb210M2Sum_01", "Esum2", "Multiplicity==2");
+
+	tTeO2Sxth232only_0001->Project("hTeO2Sxth232onlyM2Sum_0001", "Esum2", "Multiplicity==2");
+	tTeO2Sxra228pb208_0001->Project("hTeO2Sxra228pb208M2Sum_0001", "Esum2", "Multiplicity==2");
+	tTeO2Sxu238th230_0001->Project("hTeO2Sxu238th230M2Sum_0001", "Esum2", "Multiplicity==2");
+	tTeO2Sxth230only_0001->Project("hTeO2Sxth230onlyM2Sum_0001", "Esum2", "Multiplicity==2");
+	tTeO2Sxra226pb210_0001->Project("hTeO2Sxra226pb210M2Sum_0001", "Esum2", "Multiplicity==2");
 
 ////////////////////////////
 
@@ -2933,6 +3041,9 @@ void SaveHistogramsSurfaceCrystal()
 	NormalizePDFs(hTeO2Sxu238M1_01, hTeO2Sxu238M2_01, hTeO2Sxu238M2Sum_01, 0, 10000);
 	NormalizePDFs(hTeO2Sxu238M1_1, hTeO2Sxu238M2_1, hTeO2Sxu238M2Sum_1, 0, 10000);
 	NormalizePDFs(hTeO2Sxu238M1_10, hTeO2Sxu238M2_10, hTeO2Sxu238M2Sum_10, 0, 10000);	
+	NormalizePDFs(hTeO2Sxu238M1_100, hTeO2Sxu238M2_100, hTeO2Sxu238M2Sum_100, 0, 10000);	
+	NormalizePDFs(hTeO2Sxth232M1_100, hTeO2Sxth232M2_100, hTeO2Sxth232M2Sum_100, 0, 10000);
+	NormalizePDFs(hTeO2Sxpb210M1_100, hTeO2Sxpb210M2_100, hTeO2Sxpb210M2Sum_100, 0, 10000);
 
 	NormalizePDFs(hTeO2Sxth232onlyM1_001, hTeO2Sxth232onlyM2_001, hTeO2Sxth232onlyM2Sum_001, 0, 10000);
 	NormalizePDFs(hTeO2Sxra228pb208M1_001, hTeO2Sxra228pb208M2_001, hTeO2Sxra228pb208M2Sum_001, 0, 10000);
@@ -2940,6 +3051,18 @@ void SaveHistogramsSurfaceCrystal()
 	NormalizePDFs(hTeO2Sxra226pb210M1_001, hTeO2Sxra226pb210M2_001, hTeO2Sxra226pb210M2Sum_001, 0, 10000);
 	NormalizePDFs(hTeO2Sxth230onlyM1_001, hTeO2Sxth230onlyM2_001, hTeO2Sxth230onlyM2Sum_001, 0, 10000);
 	NormalizePDFs(hTeO2Sxpb210M1_0001, hTeO2Sxpb210M2_0001, hTeO2Sxpb210M2Sum_0001, 0, 10000);
+
+	NormalizePDFs(hTeO2Sxth232onlyM1_01, hTeO2Sxth232onlyM2_01, hTeO2Sxth232onlyM2Sum_01, 0, 10000);
+	NormalizePDFs(hTeO2Sxra228pb208M1_01, hTeO2Sxra228pb208M2_01, hTeO2Sxra228pb208M2Sum_01, 0, 10000);
+	NormalizePDFs(hTeO2Sxu238th230M1_01, hTeO2Sxu238th230M2_01, hTeO2Sxu238th230M2Sum_01, 0, 10000);
+	NormalizePDFs(hTeO2Sxra226pb210M1_01, hTeO2Sxra226pb210M2_01, hTeO2Sxra226pb210M2Sum_01, 0, 10000);
+	NormalizePDFs(hTeO2Sxth230onlyM1_01, hTeO2Sxth230onlyM2_01, hTeO2Sxth230onlyM2Sum_01, 0, 10000);
+
+	NormalizePDFs(hTeO2Sxth232onlyM1_0001, hTeO2Sxth232onlyM2_0001, hTeO2Sxth232onlyM2Sum_0001, 0, 10000);
+	NormalizePDFs(hTeO2Sxra228pb208M1_0001, hTeO2Sxra228pb208M2_0001, hTeO2Sxra228pb208M2Sum_0001, 0, 10000);
+	NormalizePDFs(hTeO2Sxu238th230M1_0001, hTeO2Sxu238th230M2_0001, hTeO2Sxu238th230M2Sum_0001, 0, 10000);
+	NormalizePDFs(hTeO2Sxra226pb210M1_0001, hTeO2Sxra226pb210M2_0001, hTeO2Sxra226pb210M2Sum_0001, 0, 10000);
+	NormalizePDFs(hTeO2Sxth230onlyM1_0001, hTeO2Sxth230onlyM2_0001, hTeO2Sxth230onlyM2Sum_0001, 0, 10000);
 
 
 	TFile *file2 = new TFile("MCProduction_SurfaceCrystal_1keV.root", "RECREATE");
@@ -2968,6 +3091,9 @@ void SaveHistogramsSurfaceCrystal()
 	hTeO2Sxu238M1_01->Write();
 	hTeO2Sxu238M1_1->Write();
 	hTeO2Sxu238M1_10->Write();
+	hTeO2Sxu238M1_100->Write();
+	hTeO2Sxth232M1_100->Write();
+	hTeO2Sxpb210M1_100->Write();
 
 	hTeO2Sxth232onlyM1_001->Write();
 	hTeO2Sxra228pb208M1_001->Write();
@@ -2975,6 +3101,18 @@ void SaveHistogramsSurfaceCrystal()
 	hTeO2Sxth230onlyM1_001->Write();
 	hTeO2Sxra226pb210M1_001->Write();
 	hTeO2Sxpb210M1_0001->Write();
+
+	hTeO2Sxth232onlyM1_01->Write();
+	hTeO2Sxra228pb208M1_01->Write();
+	hTeO2Sxu238th230M1_01->Write();
+	hTeO2Sxth230onlyM1_01->Write();
+	hTeO2Sxra226pb210M1_01->Write();
+
+	hTeO2Sxth232onlyM1_0001->Write();
+	hTeO2Sxra228pb208M1_0001->Write();
+	hTeO2Sxu238th230M1_0001->Write();
+	hTeO2Sxth230onlyM1_0001->Write();
+	hTeO2Sxra226pb210M1_0001->Write();
 
 ///////////////////////////////
 
@@ -3001,7 +3139,9 @@ void SaveHistogramsSurfaceCrystal()
 	hTeO2Sxu238M2_01->Write();
 	hTeO2Sxu238M2_1->Write();
 	hTeO2Sxu238M2_10->Write();
-
+	hTeO2Sxu238M2_100->Write();
+	hTeO2Sxth232M2_100->Write();
+	hTeO2Sxpb210M2_100->Write();
 
 	hTeO2Sxth232onlyM2_001->Write();
 	hTeO2Sxra228pb208M2_001->Write();
@@ -3009,6 +3149,18 @@ void SaveHistogramsSurfaceCrystal()
 	hTeO2Sxth230onlyM2_001->Write();
 	hTeO2Sxra226pb210M2_001->Write();
 	hTeO2Sxpb210M2_0001->Write();
+
+	hTeO2Sxth232onlyM2_01->Write();
+	hTeO2Sxra228pb208M2_01->Write();
+	hTeO2Sxu238th230M2_01->Write();
+	hTeO2Sxth230onlyM2_01->Write();
+	hTeO2Sxra226pb210M2_01->Write();
+
+	hTeO2Sxth232onlyM2_0001->Write();
+	hTeO2Sxra228pb208M2_0001->Write();
+	hTeO2Sxu238th230M2_0001->Write();
+	hTeO2Sxth230onlyM2_0001->Write();
+	hTeO2Sxra226pb210M2_0001->Write();
 
 ///////////////////////////////
 
@@ -3019,29 +3171,44 @@ void SaveHistogramsSurfaceCrystal()
 	// hTeO2Su238M2Sum_01->Write();
 
 
-	// hTeO2Sxpb210M2Sum_001->Write();
-	// hTeO2Sxpb210M2Sum_01->Write();
-	// hTeO2Sxpb210M2Sum_1->Write();
-	// hTeO2Sxpb210M2Sum_10->Write();
-	// hTeO2Sxpo210M2Sum_001->Write();
-	// hTeO2Sxpo210M2Sum_01->Write();
-	// hTeO2Sxpo210M2Sum_1->Write();
-	// // hTeO2Sxpo210M2Sum_10->Write();	
-	// hTeO2Sxth232M2Sum_001->Write();
-	// hTeO2Sxth232M2Sum_01->Write();
-	// hTeO2Sxth232M2Sum_1->Write();
-	// hTeO2Sxth232M2Sum_10->Write();	
-	// hTeO2Sxu238M2Sum_001->Write();
-	// hTeO2Sxu238M2Sum_01->Write();
-	// hTeO2Sxu238M2Sum_1->Write();
-	// hTeO2Sxu238M2Sum_10->Write();
+	hTeO2Sxpb210M2Sum_001->Write();
+	hTeO2Sxpb210M2Sum_01->Write();
+	hTeO2Sxpb210M2Sum_1->Write();
+	hTeO2Sxpb210M2Sum_10->Write();
+	hTeO2Sxpo210M2Sum_001->Write();
+	hTeO2Sxpo210M2Sum_01->Write();
+	hTeO2Sxpo210M2Sum_1->Write();
+	// hTeO2Sxpo210M2Sum_10->Write();	
+	hTeO2Sxth232M2Sum_001->Write();
+	hTeO2Sxth232M2Sum_01->Write();
+	hTeO2Sxth232M2Sum_1->Write();
+	hTeO2Sxth232M2Sum_10->Write();	
+	hTeO2Sxu238M2Sum_001->Write();
+	hTeO2Sxu238M2Sum_01->Write();
+	hTeO2Sxu238M2Sum_1->Write();
+	hTeO2Sxu238M2Sum_10->Write();
+	hTeO2Sxu238M2Sum_100->Write();
+	hTeO2Sxth232M2Sum_100->Write();
+	hTeO2Sxpb210M2Sum_100->Write();
 
-	// hTeO2Sxth232onlyM2Sum_001->Write();
-	// hTeO2Sxra228pb208M2Sum_001->Write();
-	// hTeO2Sxu238th230M2Sum_001->Write();
-	// hTeO2Sxth230onlyM2Sum_001->Write();
-	// hTeO2Sxra226pb210M2Sum_001->Write();
-	// hTeO2Sxpb210M2Sum_0001->Write();
+	hTeO2Sxth232onlyM2Sum_001->Write();
+	hTeO2Sxra228pb208M2Sum_001->Write();
+	hTeO2Sxu238th230M2Sum_001->Write();
+	hTeO2Sxth230onlyM2Sum_001->Write();
+	hTeO2Sxra226pb210M2Sum_001->Write();
+	hTeO2Sxpb210M2Sum_0001->Write();
+
+	hTeO2Sxth232onlyM2Sum_01->Write();
+	hTeO2Sxra228pb208M2Sum_01->Write();
+	hTeO2Sxu238th230M2Sum_01->Write();
+	hTeO2Sxth230onlyM2Sum_01->Write();
+	hTeO2Sxra226pb210M2Sum_01->Write();
+
+	hTeO2Sxth232onlyM2Sum_001->Write();
+	hTeO2Sxra228pb208M2Sum_001->Write();
+	hTeO2Sxu238th230M2Sum_001->Write();
+	hTeO2Sxth230onlyM2Sum_001->Write();
+	hTeO2Sxra226pb210M2Sum_001->Write();
 
 	file2->Write();
 
