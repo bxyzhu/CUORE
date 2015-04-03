@@ -1431,6 +1431,18 @@ private:
 	TH1			*hnewTeO2Sxra226pb210M1_001;
 	TH1			*hnewTeO2Sxpb210M1_0001;
 
+	TH1			*hnewTeO2Sxth232onlyM1_01;
+	TH1			*hnewTeO2Sxra228pb208M1_01;
+	TH1			*hnewTeO2Sxu238th230M1_01;
+	TH1			*hnewTeO2Sxth230onlyM1_01;
+	TH1			*hnewTeO2Sxra226pb210M1_01;
+
+	TH1			*hnewTeO2Sxth232onlyM1_0001;
+	TH1			*hnewTeO2Sxra228pb208M1_0001;
+	TH1			*hnewTeO2Sxu238th230M1_0001;
+	TH1			*hnewTeO2Sxth230onlyM1_0001;
+	TH1			*hnewTeO2Sxra226pb210M1_0001;	
+
 	TH1			*hnewTeO2Spb210M1_01;
 	TH1			*hnewTeO2Spo210M1_001;
 	TH1			*hnewTeO2Spo210M1_01;
@@ -1451,6 +1463,11 @@ private:
 	TH1			*hnewTeO2Sxu238M1_01;
 	TH1			*hnewTeO2Sxu238M1_1;
 	TH1			*hnewTeO2Sxu238M1_10;
+
+	TH1			*hnewTeO2Sxu238M1_100;
+	TH1			*hnewTeO2Sxth232M1_100;
+	TH1			*hnewTeO2Sxpb210M1_100;
+
 
 	TH1			*hnewTeO20nuM2;
 	TH1			*hnewTeO22nuM2;
@@ -1478,6 +1495,17 @@ private:
 	TH1			*hnewTeO2Sxra226pb210M2_001;
 	TH1			*hnewTeO2Sxpb210M2_0001;
 
+	TH1			*hnewTeO2Sxth232onlyM2_01;
+	TH1			*hnewTeO2Sxra228pb208M2_01;
+	TH1			*hnewTeO2Sxu238th230M2_01;
+	TH1			*hnewTeO2Sxth230onlyM2_01;
+	TH1			*hnewTeO2Sxra226pb210M2_01;
+
+	TH1			*hnewTeO2Sxth232onlyM2_0001;
+	TH1			*hnewTeO2Sxra228pb208M2_0001;
+	TH1			*hnewTeO2Sxu238th230M2_0001;
+	TH1			*hnewTeO2Sxth230onlyM2_0001;
+	TH1			*hnewTeO2Sxra226pb210M2_0001;	
 
 	TH1			*hnewTeO2Spb210M2_01;
 	TH1			*hnewTeO2Spo210M2_001;
@@ -1499,6 +1527,11 @@ private:
 	TH1			*hnewTeO2Sxu238M2_01;
 	TH1			*hnewTeO2Sxu238M2_1;
 	TH1			*hnewTeO2Sxu238M2_10;
+
+	TH1			*hnewTeO2Sxu238M2_100;
+	TH1			*hnewTeO2Sxth232M2_100;
+	TH1			*hnewTeO2Sxpb210M2_100;
+
 
 	TH1			*hnewTeO20nuM2Sum;
 	TH1			*hnewTeO22nuM2Sum;
@@ -1526,6 +1559,18 @@ private:
 	TH1			*hnewTeO2Sxra226pb210M2Sum_001;
 	TH1			*hnewTeO2Sxpb210M2Sum_0001;
 
+	TH1			*hnewTeO2Sxth232onlyM2Sum_01;
+	TH1			*hnewTeO2Sxra228pb208M2Sum_01;
+	TH1			*hnewTeO2Sxu238th230M2Sum_01;
+	TH1			*hnewTeO2Sxth230onlyM2Sum_01;
+	TH1			*hnewTeO2Sxra226pb210M2Sum_01;
+
+	TH1			*hnewTeO2Sxth232onlyM2Sum_0001;
+	TH1			*hnewTeO2Sxra228pb208M2Sum_0001;
+	TH1			*hnewTeO2Sxu238th230M2Sum_0001;
+	TH1			*hnewTeO2Sxth230onlyM2Sum_0001;
+	TH1			*hnewTeO2Sxra226pb210M2Sum_0001;	
+
 	TH1			*hnewTeO2Spb210M2Sum_01;
 	TH1			*hnewTeO2Spo210M2Sum_001;
 	TH1			*hnewTeO2Spo210M2Sum_01;
@@ -1546,6 +1591,11 @@ private:
 	TH1			*hnewTeO2Sxu238M2Sum_01;
 	TH1			*hnewTeO2Sxu238M2Sum_1;
 	TH1			*hnewTeO2Sxu238M2Sum_10;
+
+	TH1			*hnewTeO2Sxu238M2Sum_100;
+	TH1			*hnewTeO2Sxth232M2Sum_100;
+	TH1			*hnewTeO2Sxpb210M2Sum_100;
+
 
 ///////// Frame M1 and M2
 	TH1			*hnewCuFrameco58M1;
