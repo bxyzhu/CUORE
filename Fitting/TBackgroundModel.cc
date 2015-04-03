@@ -2633,24 +2633,24 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
      i = i+(3400-3150)/dBaseBinSize;
     }
     // 4050 - 4200
-    if(i >= h1->FindBin(4050) && i < h1->FindBin(4200))
+    if(i >= h1->FindBin(4025) && i < h1->FindBin(4170))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4050)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4025)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(4200-4050)/dBaseBinSize;
+     i = i+(4170-4025)/dBaseBinSize;
     }
     // 4200 - 4350
-    if(i >= h1->FindBin(4200) && i < h1->FindBin(4350))
+    if(i >= h1->FindBin(4170) && i < h1->FindBin(4350))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4200)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4170)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(4350-4200)/dBaseBinSize;
+     i = i+(4350-4170)/dBaseBinSize;
     }    
 
     // 4700 - 4850
@@ -2687,79 +2687,79 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
     }
 
     // 5200 - 5400
-    if(i >= h1->FindBin(5200) && i < h1->FindBin(5380))
+    if(i >= h1->FindBin(5200) && i < h1->FindBin(5400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5200)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(5380-5200)/dBaseBinSize;
+     i = i+(5400-5200)/dBaseBinSize;
     }
     // 5400 - 5650
-    if(i >= h1->FindBin(5380) && i < h1->FindBin(5650))
+    if(i >= h1->FindBin(5400) && i < h1->FindBin(5650))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5380)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5400)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(5650-5380)/dBaseBinSize;
+     i = i+(5650-5400)/dBaseBinSize;
     }
 
     // 5650 - 5800
-    if(i >= h1->FindBin(5650) && i < h1->FindBin(5800))
+    if(i >= h1->FindBin(5650) && i < h1->FindBin(5780))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5650)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(5800-5650)/dBaseBinSize;
+     i = i+(5780-5650)/dBaseBinSize;
     }
 
     // 5800 - 6050
-    if(i >= h1->FindBin(5800) && i < h1->FindBin(6050))
+    if(i >= h1->FindBin(5780) && i < h1->FindBin(6100))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5800)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5780)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(6050-5800)/dBaseBinSize;
+     i = i+(6100-5780)/dBaseBinSize;
     }    
 
     // 6050 - 6350
-    if(i >= h1->FindBin(6050) && i < h1->FindBin(6450))
+    if(i >= h1->FindBin(6100) && i < h1->FindBin(6450))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6050)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6100)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(6450-6050)/dBaseBinSize;
+     i = i+(6450-6100)/dBaseBinSize;
     }    
 
     // 6700 - 6900
-    if(i >= h1->FindBin(6700) && i < h1->FindBin(6900))
+    if(i >= h1->FindBin(6700) && i < h1->FindBin(7000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6700)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(6900-6700)/dBaseBinSize;
+     i = i+(7000-6700)/dBaseBinSize;
     }    
 
     // 7500 - 8000
-    if(i >= h1->FindBin(7500) && i < h1->FindBin(8000))
+    if(i >= h1->FindBin(7000) && i < h1->FindBin(8000))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(7500)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(7000)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(8000-7500)/dBaseBinSize;
+     i = i+(8000-7000)/dBaseBinSize;
     }    
 
     // 8000 to the end 10000
@@ -2902,7 +2902,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   double datam2sum_i, errm2sum_i;
   double modelm1_i, modelm2_i, modelm2sum_i;
 
-/*
+
   for(int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
   {
     // Dividing by base bin size in chi-squared because the weight is width/base bin size when filling
@@ -2937,8 +2937,8 @@ double TBackgroundModel::GetChiSquareAdaptive()
       // chiSquare += (datam1_i - modelm1_i)*(datam1_i - modelm1_i)/modelm1_i;
     }
   }
-*/
 
+/*
   for(int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
   {
     if( fAdapDataHistoM2->GetBinCenter(i) >= 3150 && fAdapDataHistoM2->GetBinCenter(i) <= 3400)continue;
@@ -2973,7 +2973,8 @@ double TBackgroundModel::GetChiSquareAdaptive()
 
     }
   }
-
+*/
+  
 /*
   for(int i = dFitMinBinM2Sum; i < dFitMaxBinM2Sum; i++)
   {
@@ -3028,8 +3029,8 @@ void TBackgroundModel::Initialize()
   fBulkOuterOld = new TFile(Form("%s/OldProd/MCProduction_BulkOuter_1keV.root", dMCDir.c_str()));
   fBulkOuterM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
 
-  fSurfaceCrystal = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV.root", dMCDir.c_str()));
-  fSurfaceCrystalOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV.root", dMCDir.c_str()));
+  fSurfaceCrystal = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str()));
+  fSurfaceCrystalOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str()));
   fSurfaceOther = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
   fSurfaceOtherOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
 
@@ -3366,9 +3367,9 @@ void TBackgroundModel::Initialize()
   hTeO2Sxu238M1_1     = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_1");
   hTeO2Sxu238M1_10    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_10");
 
-  hTeO2Sxu238M1_100    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_100");
-  hTeO2Sxth232M1_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M1_100");
-  hTeO2Sxpb210M1_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_100");
+  hTeO2Sxu238M1_100    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M1_100");
+  hTeO2Sxth232M1_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232M1_100");
+  hTeO2Sxpb210M1_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M1_100");
 
   hTeO2Sxth232onlyM1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM1_001");
   hTeO2Sxra228pb208M1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M1_001");
@@ -3377,17 +3378,17 @@ void TBackgroundModel::Initialize()
   hTeO2Sxra226pb210M1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M1_001");
   hTeO2Sxpb210M1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_0001");
 
-  hTeO2Sxth232onlyM1_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM1_01");
-  hTeO2Sxra228pb208M1_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M1_01");
-  hTeO2Sxu238th230M1_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M1_01");
-  hTeO2Sxth230onlyM1_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM1_01");
-  hTeO2Sxra226pb210M1_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M1_01");
+  hTeO2Sxth232onlyM1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM1_01");
+  hTeO2Sxra228pb208M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M1_01");
+  hTeO2Sxu238th230M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M1_01");
+  hTeO2Sxth230onlyM1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM1_01");
+  hTeO2Sxra226pb210M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M1_01");
 
-  hTeO2Sxth232onlyM1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM1_0001");
-  hTeO2Sxra228pb208M1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M1_0001");
-  hTeO2Sxu238th230M1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M1_0001");
-  hTeO2Sxth230onlyM1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM1_0001");
-  hTeO2Sxra226pb210M1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M1_0001");
+  hTeO2Sxth232onlyM1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM1_0001");
+  hTeO2Sxra228pb208M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M1_0001");
+  hTeO2Sxu238th230M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M1_0001");
+  hTeO2Sxth230onlyM1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM1_0001");
+  hTeO2Sxra226pb210M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M1_0001");
 
   // hTeO2Spb210M2_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M2_01");
   // hTeO2Spo210M2_001   = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2_001");
@@ -3410,9 +3411,9 @@ void TBackgroundModel::Initialize()
   hTeO2Sxu238M2_1     = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_1");
   hTeO2Sxu238M2_10    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_10");
 
-  hTeO2Sxu238M2_100    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_100");
-  hTeO2Sxth232M2_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2_100");
-  hTeO2Sxpb210M2_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_100");
+  hTeO2Sxu238M2_100    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M2_100");
+  hTeO2Sxth232M2_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232M2_100");
+  hTeO2Sxpb210M2_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2_100");
 
   hTeO2Sxth232onlyM2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2_001");
   hTeO2Sxra228pb208M2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2_001");
@@ -3421,17 +3422,17 @@ void TBackgroundModel::Initialize()
   hTeO2Sxra226pb210M2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2_001");
   hTeO2Sxpb210M2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_0001");
 
-  hTeO2Sxth232onlyM2_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2_01");
-  hTeO2Sxra228pb208M2_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2_01");
-  hTeO2Sxu238th230M2_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M2_01");
-  hTeO2Sxth230onlyM2_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM2_01");
-  hTeO2Sxra226pb210M2_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2_01");
+  hTeO2Sxth232onlyM2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2_01");
+  hTeO2Sxra228pb208M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2_01");
+  hTeO2Sxu238th230M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2_01");
+  hTeO2Sxth230onlyM2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2_01");
+  hTeO2Sxra226pb210M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2_01");
 
-  hTeO2Sxth232onlyM2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2_0001");
-  hTeO2Sxra228pb208M2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2_0001");
-  hTeO2Sxu238th230M2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M2_0001");
-  hTeO2Sxth230onlyM2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM2_0001");
-  hTeO2Sxra226pb210M2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2_0001");
+  hTeO2Sxth232onlyM2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2_0001");
+  hTeO2Sxra228pb208M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2_0001");
+  hTeO2Sxu238th230M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2_0001");
+  hTeO2Sxth230onlyM2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2_0001");
+  hTeO2Sxra226pb210M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2_0001");
 
   // hTeO2Spb210M2Sum_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M2Sum_01");
   // hTeO2Spo210M2Sum_001   = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2Sum_001");
@@ -3454,9 +3455,9 @@ void TBackgroundModel::Initialize()
   hTeO2Sxu238M2Sum_1     = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M2Sum_1");
   hTeO2Sxu238M2Sum_10    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M2Sum_10");
 
-  hTeO2Sxu238M2Sum_100    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2Sum_100");
-  hTeO2Sxth232M2Sum_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2Sum_100");
-  hTeO2Sxpb210M2Sum_100   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2Sum_100");
+  hTeO2Sxu238M2Sum_100    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M2Sum_100");
+  hTeO2Sxth232M2Sum_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232M2Sum_100");
+  hTeO2Sxpb210M2Sum_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_100");
 
   hTeO2Sxth232onlyM2Sum_001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2Sum_001");
   hTeO2Sxra228pb208M2Sum_001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2Sum_001");
@@ -3465,17 +3466,17 @@ void TBackgroundModel::Initialize()
   hTeO2Sxra226pb210M2Sum_001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2Sum_001");
   hTeO2Sxpb210M2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_0001");
 
-  hTeO2Sxth232onlyM2Sum_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2Sum_01");
-  hTeO2Sxra228pb208M2Sum_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2Sum_01");
-  hTeO2Sxu238th230M2Sum_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M2Sum_01");
-  hTeO2Sxth230onlyM2Sum_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM2Sum_01");
-  hTeO2Sxra226pb210M2Sum_01 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2Sum_01");
+  hTeO2Sxth232onlyM2Sum_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2Sum_01");
+  hTeO2Sxra228pb208M2Sum_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2Sum_01");
+  hTeO2Sxu238th230M2Sum_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2Sum_01");
+  hTeO2Sxth230onlyM2Sum_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2Sum_01");
+  hTeO2Sxra226pb210M2Sum_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2Sum_01");
 
-  hTeO2Sxth232onlyM2Sum_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2Sum_0001");
-  hTeO2Sxra228pb208M2Sum_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2Sum_0001");
-  hTeO2Sxu238th230M2Sum_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M2Sum_0001");
-  hTeO2Sxth230onlyM2Sum_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM2Sum_0001");
-  hTeO2Sxra226pb210M2Sum_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2Sum_0001");
+  hTeO2Sxth232onlyM2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2Sum_0001");
+  hTeO2Sxra228pb208M2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2Sum_0001");
+  hTeO2Sxu238th230M2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2Sum_0001");
+  hTeO2Sxth230onlyM2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2Sum_0001");
+  hTeO2Sxra226pb210M2Sum_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2Sum_0001");
 
 //////// Frame M1 and M2
   // hCuFrameSth232M1_1    = (TH1D*)fSurfaceOther->Get("hCuFrameSth232M1_1");
@@ -4996,7 +4997,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[2]);
   fModelTotAdapM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM1->Add( hAdapTeO2Sxth232M1_001,      dDataIntegralM1*fParameters[4]);
+  fModelTotAdapM1->Add( hAdapTeO2Sxth232onlyM1_001,      dDataIntegralM1*fParameters[4]);
   fModelTotAdapM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[5]);
   fModelTotAdapM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[6]);
   fModelTotAdapM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[7]);
@@ -5032,7 +5033,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapCuBox_CuFrameco60M2,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM1*fParameters[2]);
   fModelTotAdapM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM2->Add( hAdapTeO2Sxth232M2_001,      dDataIntegralM1*fParameters[4]);
+  fModelTotAdapM2->Add( hAdapTeO2Sxth232onlyM2_001,      dDataIntegralM1*fParameters[4]);
   fModelTotAdapM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM1*fParameters[5]);
   fModelTotAdapM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM1*fParameters[6]);
   fModelTotAdapM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM1*fParameters[7]);
@@ -5069,7 +5070,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameco60M2Sum,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapM2Sum->Add( hAdapTeO2th232onlyM2Sum,        dDataIntegralM1*fParameters[2]);
   fModelTotAdapM2Sum->Add( hAdapTeO2th230onlyM2Sum,        dDataIntegralM1*fParameters[3]);
-  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth232M2Sum_001,      dDataIntegralM1*fParameters[4]);
+  fModelTotAdapM2Sum->Add( hAdapTeO2Sxth232onlyM2Sum_001,      dDataIntegralM1*fParameters[4]);
   fModelTotAdapM2Sum->Add( hAdapTeO2Sxra228pb208M2Sum_001, dDataIntegralM1*fParameters[5]);
   fModelTotAdapM2Sum->Add( hAdapTeO2Sxu238th230M2Sum_001,  dDataIntegralM1*fParameters[6]);
   fModelTotAdapM2Sum->Add( hAdapTeO2Sxth230onlyM2Sum_001,  dDataIntegralM1*fParameters[7]);
@@ -5128,7 +5129,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // minuit->DefineParameter(3, "TeO2 th230 only", 0.000321558, 1E-7, 0, 1.0);
   minuit->DefineParameter(2, "TeO2 th232 only", 0., 1E-7, 0, 1.0);
   minuit->DefineParameter(3, "TeO2 th230 only", 0., 1E-7, 0, 1.0);  
-  minuit->DefineParameter(4, "TeO2 Sx th232 0.01", 0.00160538, 1E-7, 0, 1.0);
+  minuit->DefineParameter(4, "TeO2 Sx th232 only 0.01", 0.00160538, 1E-7, 0, 1.0);
   minuit->DefineParameter(5, "TeO2 Sx ra228 to pb208 0.01", 0.00253029, 1E-7, 0, 1.0);
   minuit->DefineParameter(6, "TeO2 Sx u238 to th230 0.01", 0.00175202, 1E-7, 0, 1.0);
   minuit->DefineParameter(7, "TeO2 Sx th230 only 0.01", 0.000779451, 1E-7, 0, 1.0);
@@ -5142,12 +5143,12 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // minuit->DefineParameter(12, "CuBox + CuFrame Sx u238 10 ", 0.00682647, 1E-7, 0, 1.0);
   minuit->DefineParameter(12, "CuBox + CuFrame Sx u238 10 ", 0., 1E-7, 0, 1.0);
   // minuit->DefineParameter(13, "CuBox + CuFrame Sx pb210 0.1", 0.00562587, 1E-7, 0, 1.0);
-  minuit->DefineParameter(15, "CuBox + CuFrame Sx pb210 0.1", 0, 1E-7, 0, 1.0);
+  minuit->DefineParameter(13, "CuBox + CuFrame Sx pb210 0.1", 0, 1E-7, 0, 1.0);
   // minuit->DefineParameter(14, "CuBox + CuFrame Sx pb210 0.01", 0.0171725, 1E-7, 0, 1.0);
-  minuit->DefineParameter(16, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(14, "CuBox + CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(15, "PbRom k40",  4.41512e-02, 1E-7, 0, 1.0);
-  minuit->DefineParameter(16, "PbRom k40",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(15, "PbRom k40",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(16, "OVC th232",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(17, "OVC u238",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(18, "OVC co60",  0., 1E-7, 0, 1.0);    
@@ -5201,23 +5202,22 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 //////////////////////////////////////
 
    // Uncommend to fix parameters here
-   // minuit->FixParameter(0); // TeO2 0nu
    minuit->FixParameter(0); // TeO2 2nu
    minuit->FixParameter(1); // CuBox+Frame co60
-   minuit->FixParameter(2); // TeO2 th232 only
-   minuit->FixParameter(3); // TeO2 th230 only
-   // minuit->FixParameter(4); // TeO2 Sx th232 0.01
+   // minuit->FixParameter(2); // TeO2 th232 only
+   // minuit->FixParameter(3); // TeO2 th230 only
+   // minuit->FixParameter(4); // TeO2 Sx th232 only 0.01
    // minuit->FixParameter(5); // TeO2 Sx ra228 to pb208 0.01 
    // minuit->FixParameter(6); // TeO2 Sx u238 to th230 0.01  
    // minuit->FixParameter(7); // TeO2 Sx th230 only 0.01
    // minuit->FixParameter(8); // TeO2 Sx ra226 to pb210 0.01
    // minuit->FixParameter(9); // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
    // minuit->FixParameter(10); // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   minuit->FixParameter(11); // CuBox+CuFrame Sx th232 10
-   minuit->FixParameter(12); // CuBox+CuFrame Sx u238 10
-   minuit->FixParameter(13); // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   minuit->FixParameter(14); // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   minuit->FixParameter(15); // PbRom k40
+   // minuit->FixParameter(11); // CuBox+CuFrame Sx th232 10
+   // minuit->FixParameter(12); // CuBox+CuFrame Sx u238 10
+   // minuit->FixParameter(13); // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
+   // minuit->FixParameter(14); // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
+   minuit->FixParameter(15); // PbRom 
    minuit->FixParameter(16); // OVC th232
    minuit->FixParameter(17); // OVC u238
    minuit->FixParameter(18); // OVC co60
@@ -5264,7 +5264,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapthM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[2]);
   fModelTotAdapuM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[3]);
-  fModelTotAdapthM1->Add( hAdapTeO2Sxth232M1_001,   dDataIntegralM1*fParameters[4]);
+  fModelTotAdapthM1->Add( hAdapTeO2Sxth232onlyM1_001,   dDataIntegralM1*fParameters[4]);
   fModelTotAdapthM1->Add( hAdapTeO2Sxra228pb208M1_001, dDataIntegralM1*fParameters[5]);
   fModelTotAdapuM1->Add( hAdapTeO2Sxu238th230M1_001,  dDataIntegralM1*fParameters[6]);
   fModelTotAdapuM1->Add( hAdapTeO2Sxth230onlyM1_001,  dDataIntegralM1*fParameters[7]);
@@ -5300,7 +5300,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapcoM2->Add( hAdapCuBox_CuFrameco60M2,             dDataIntegralM2*fParameters[1]);
   fModelTotAdapthM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM2*fParameters[2]);
   fModelTotAdapuM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM2*fParameters[3]);
-  fModelTotAdapthM2->Add( hAdapTeO2Sxth232M2_001,   dDataIntegralM2*fParameters[4]);
+  fModelTotAdapthM2->Add( hAdapTeO2Sxth232onlyM2_001,   dDataIntegralM2*fParameters[4]);
   fModelTotAdapthM2->Add( hAdapTeO2Sxra228pb208M2_001, dDataIntegralM2*fParameters[5]);
   fModelTotAdapuM2->Add( hAdapTeO2Sxu238th230M2_001,  dDataIntegralM2*fParameters[6]);
   fModelTotAdapuM2->Add( hAdapTeO2Sxth230onlyM2_001,  dDataIntegralM2*fParameters[7]);
@@ -5337,7 +5337,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapcoM2Sum->Add( hAdapCuBox_CuFrameco60M2Sum,             dDataIntegralM2Sum*fParameters[1]);
   fModelTotAdapthM2Sum->Add( hAdapTeO2th232onlyM2Sum,        dDataIntegralM2Sum*fParameters[2]);
   fModelTotAdapuM2Sum->Add( hAdapTeO2th230onlyM2Sum,        dDataIntegralM2Sum*fParameters[3]);
-  fModelTotAdapthM2Sum->Add( hAdapTeO2Sxth232M2Sum_001,   dDataIntegralM2Sum*fParameters[4]);
+  fModelTotAdapthM2Sum->Add( hAdapTeO2Sxth232onlyM2Sum_001,   dDataIntegralM2Sum*fParameters[4]);
   fModelTotAdapthM2Sum->Add( hAdapTeO2Sxra228pb208M2Sum_001, dDataIntegralM2Sum*fParameters[5]);
   fModelTotAdapuM2Sum->Add( hAdapTeO2Sxu238th230M2Sum_001,  dDataIntegralM2Sum*fParameters[6]);
   fModelTotAdapuM2Sum->Add( hAdapTeO2Sxth230onlyM2Sum_001,  dDataIntegralM2Sum*fParameters[7]);
@@ -5356,7 +5356,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapuM2Sum->Add( hAdapOVCu238M2Sum,     dDataIntegralM2Sum*fParameters[17]);
   fModelTotAdapcoM2Sum->Add( hAdapOVCco60M2Sum,     dDataIntegralM2Sum*fParameters[18]);
   fModelTotAdapkM2Sum->Add( hAdapOVCk40M2Sum,      dDataIntegralM2Sum*fParameters[19]);
-  fModelTotAdapbiM2Sum->Add( hAdapExtPbbi210M2Sum,        dDataIntegralM2Sum*fParameters[20]);
+  fModelTotAdapbiM2Sum->Add( hAdapExtPbbi210M2Sum,        dDataIntegralM2Sum*fParameters[20]);  
   fModelTotAdapthM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum,    dDataIntegralM2Sum*fParameters[21]);
   fModelTotAdapuM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum,     dDataIntegralM2Sum*fParameters[22]);
   fModelTotAdapFudgeM2Sum->Add( hAdapPbRomcs137M2Sum,        dDataIntegralM2Sum*fParameters[23]);
@@ -5835,7 +5835,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   }
 
 
-  dResidualRMSTot = TMath::Sqrt( (dResidualRMSM1 + dResidualRMSM2 + dResidualRMSM2Sum)/ (dNDF + dNumFreeParameters) );
+  dResidualRMSTot = TMath::Sqrt( (dResidualRMSM1 + dResidualRMSM2)/ (dNDF + dNumFreeParameters) );
 
 
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/(dFitMaxBinM1-dFitMinBinM1));
