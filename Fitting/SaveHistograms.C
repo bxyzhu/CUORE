@@ -3204,11 +3204,11 @@ void SaveHistogramsSurfaceCrystal()
 	hTeO2Sxth230onlyM2Sum_01->Write();
 	hTeO2Sxra226pb210M2Sum_01->Write();
 
-	hTeO2Sxth232onlyM2Sum_001->Write();
-	hTeO2Sxra228pb208M2Sum_001->Write();
-	hTeO2Sxu238th230M2Sum_001->Write();
-	hTeO2Sxth230onlyM2Sum_001->Write();
-	hTeO2Sxra226pb210M2Sum_001->Write();
+	hTeO2Sxth232onlyM2Sum_0001->Write();
+	hTeO2Sxra228pb208M2Sum_0001->Write();
+	hTeO2Sxu238th230M2Sum_0001->Write();
+	hTeO2Sxth230onlyM2Sum_0001->Write();
+	hTeO2Sxra226pb210M2Sum_0001->Write();
 
 	file2->Write();
 

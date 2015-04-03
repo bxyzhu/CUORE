@@ -3742,9 +3742,9 @@ void TBackgroundModel::Initialize()
   hnewTeO2Sxu238M2Sum_1 = hTeO2Sxu238M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_1", dAdaptiveArrayM2Sum);
   hnewTeO2Sxu238M2Sum_10 = hTeO2Sxu238M2Sum_10->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_10", dAdaptiveArrayM2Sum);
 
-  hnewTeO2Sxu238M2sum_100 = hTeO2Sxu238M2sum_100->Rebin(dAdaptiveBinsM2sum, "hnewTeO2Sxu238M2sum_100", dAdaptiveArrayM2sum);
-  hnewTeO2Sxth232M2sum_100 = hTeO2Sxth232M2sum_100->Rebin(dAdaptiveBinsM2sum, "hnewTeO2Sxth232M2sum_100", dAdaptiveArrayM2sum);
-  hnewTeO2Sxpb210M2sum_100 = hTeO2Sxpb210M2sum_100->Rebin(dAdaptiveBinsM2sum, "hnewTeO2Sxpb210M2sum_100", dAdaptiveArrayM2sum);
+  hnewTeO2Sxu238M2Sum_100 = hTeO2Sxu238M2Sum_100->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxu238M2Sum_100", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxth232M2Sum_100 = hTeO2Sxth232M2Sum_100->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxth232M2Sum_100", dAdaptiveArrayM2Sum);
+  hnewTeO2Sxpb210M2Sum_100 = hTeO2Sxpb210M2Sum_100->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_100", dAdaptiveArrayM2Sum);
 
   hnewTeO2th232onlyM2Sum = hTeO2th232onlyM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2th232onlyM2Sum", dAdaptiveArrayM2Sum);
   hnewTeO2ra228pb208M2Sum = hTeO2ra228pb208M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2ra228pb208M2Sum", dAdaptiveArrayM2Sum);
