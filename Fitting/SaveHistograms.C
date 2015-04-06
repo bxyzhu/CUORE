@@ -3271,6 +3271,16 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M1_1 = new TH1D("hCuBox_CuFrameu238M1_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M1_10 = new TH1D("hCuBox_CuFrameu238M1_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
+	TH1D *hCuBox_CuFramepb210M1_100 = new TH1D("hCuBox_CuFramepb210M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M1_100 = new TH1D("hCuBox_CuFrameu238M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M1_100 = new TH1D("hCuBox_CuFrameth232M1_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M1_50 = new TH1D("hCuBox_CuFramepb210M1_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M1_50 = new TH1D("hCuBox_CuFrameu238M1_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M1_50 = new TH1D("hCuBox_CuFrameth232M1_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M1_5 = new TH1D("hCuBox_CuFramepb210M1_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M1_5 = new TH1D("hCuBox_CuFrameu238M1_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M1_5 = new TH1D("hCuBox_CuFrameth232M1_5", "", dNBins, dMinEnergy, dMaxEnergy);
+
 //////////////////////////////
 	// TH1D *hCuBoxSth232M2_1 = new TH1D("hCuBoxSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
 	// TH1D *hCuBoxSu238M2_1 = new TH1D("hCuBoxSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -3287,6 +3297,7 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBoxSxu238M2_01 = new TH1D("hCuBoxSxu238M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxu238M2_1 = new TH1D("hCuBoxSxu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBoxSxu238M2_10 = new TH1D("hCuBoxSxu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
 
 	// TH1D *hCuFrameSth232M2_1 = new TH1D("hCuFrameSth232M2_1", "", dNBins, dMinEnergy, dMaxEnergy);	
 	// TH1D *hCuFrameSu238M2_1 = new TH1D("hCuFrameSu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -3316,6 +3327,18 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M2_01 = new TH1D("hCuBox_CuFrameu238M2_01", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2_1 = new TH1D("hCuBox_CuFrameu238M2_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2_10 = new TH1D("hCuBox_CuFrameu238M2_10", "", dNBins, dMinEnergy, dMaxEnergy);
+
+	TH1D *hCuBox_CuFramepb210M2_100 = new TH1D("hCuBox_CuFramepb210M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2_100 = new TH1D("hCuBox_CuFrameu238M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2_100 = new TH1D("hCuBox_CuFrameth232M2_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M2_50 = new TH1D("hCuBox_CuFramepb210M2_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2_50 = new TH1D("hCuBox_CuFrameu238M2_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2_50 = new TH1D("hCuBox_CuFrameth232M2_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M2_5 = new TH1D("hCuBox_CuFramepb210M2_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2_5 = new TH1D("hCuBox_CuFrameu238M2_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2_5 = new TH1D("hCuBox_CuFrameth232M2_5", "", dNBins, dMinEnergy, dMaxEnergy);
+
+
 //////////////////////////////
 	// TH1D *hCuBoxSth232M2Sum_1 = new TH1D("hCuBoxSth232M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);	
 	// TH1D *hCuBoxSu238M2Sum_1 = new TH1D("hCuBoxSu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
@@ -3362,6 +3385,16 @@ void SaveHistogramsSurfaceOther()
 	TH1D *hCuBox_CuFrameu238M2Sum_1 = new TH1D("hCuBox_CuFrameu238M2Sum_1", "", dNBins, dMinEnergy, dMaxEnergy);
 	TH1D *hCuBox_CuFrameu238M2Sum_10 = new TH1D("hCuBox_CuFrameu238M2Sum_10", "", dNBins, dMinEnergy, dMaxEnergy);
 
+	TH1D *hCuBox_CuFramepb210M2Sum_100 = new TH1D("hCuBox_CuFramepb210M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2Sum_100 = new TH1D("hCuBox_CuFrameu238M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2Sum_100 = new TH1D("hCuBox_CuFrameth232M2Sum_100", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M2Sum_50 = new TH1D("hCuBox_CuFramepb210M2Sum_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2Sum_50 = new TH1D("hCuBox_CuFrameu238M2Sum_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2Sum_50 = new TH1D("hCuBox_CuFrameth232M2Sum_50", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFramepb210M2Sum_5 = new TH1D("hCuBox_CuFramepb210M2Sum_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameu238M2Sum_5 = new TH1D("hCuBox_CuFrameu238M2Sum_5", "", dNBins, dMinEnergy, dMaxEnergy);
+	TH1D *hCuBox_CuFrameth232M2Sum_5 = new TH1D("hCuBox_CuFrameth232M2Sum_5", "", dNBins, dMinEnergy, dMaxEnergy);
+
 	// TChain *tCuBoxSth232_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "th232-1");
 	// TChain *tCuBoxSu238_1 = LoadMC(sDataDir.c_str(), "CuBoxS", "u238-1");
 
@@ -3407,6 +3440,16 @@ void SaveHistogramsSurfaceOther()
 	TChain *tCuBox_CuFrameu238_1 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-1");
 	TChain *tCuBox_CuFrameu238_10 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-10");
 
+	TChain *tCuBox_CuFramepb210_100 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-100");
+	TChain *tCuBox_CuFrameth232_100 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-100");
+	TChain *tCuBox_CuFrameu238_100 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-100");
+	TChain *tCuBox_CuFramepb210_50 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-50");
+	TChain *tCuBox_CuFrameth232_50 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-50");
+	TChain *tCuBox_CuFrameu238_50 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-50");
+	TChain *tCuBox_CuFramepb210_5 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "pb210-5");
+	TChain *tCuBox_CuFrameth232_5 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "th232-5");
+	TChain *tCuBox_CuFrameu238_5 = LoadMC(sDataDir.c_str(), "CuBox+CuFrame", "u238-5");	
+
 ///////////////////
 	// tCuBoxSth232_1->Project("hCuBoxSth232M1_1", "Ener2", "Multiplicity==1");
 	// tCuBoxSu238_1->Project("hCuBoxSu238M1_1", "Ener2", "Multiplicity==1");
@@ -3423,6 +3466,7 @@ void SaveHistogramsSurfaceOther()
 	tCuBoxSxu238_01->Project("hCuBoxSxu238M1_01", "Ener2", "Multiplicity==1");
 	tCuBoxSxu238_1->Project("hCuBoxSxu238M1_1", "Ener2", "Multiplicity==1");
 	tCuBoxSxu238_10->Project("hCuBoxSxu238M1_10", "Ener2", "Multiplicity==1");
+
 
 	// tCuFrameSth232_1->Project("hCuFrameSth232M1_1", "Ener2", "Multiplicity==1");
 	// tCuFrameSu238_1->Project("hCuFrameSu238M1_1", "Ener2", "Multiplicity==1");
@@ -3453,6 +3497,15 @@ void SaveHistogramsSurfaceOther()
 	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M1_1", "Ener2", "Multiplicity==1");
 	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M1_10", "Ener2", "Multiplicity==1");
 
+	tCuBox_CuFramepb210_100->Project("hCuBox_CuFramepb210M1_100", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameth232_100->Project("hCuBox_CuFrameth232M1_100", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameu238_100->Project("hCuBox_CuFrameu238M1_100", "Ener2", "Multiplicity==1");
+	tCuBox_CuFramepb210_50->Project("hCuBox_CuFramepb210M1_50", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameth232_50->Project("hCuBox_CuFrameth232M1_50", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameu238_50->Project("hCuBox_CuFrameu238M1_50", "Ener2", "Multiplicity==1");
+	tCuBox_CuFramepb210_5->Project("hCuBox_CuFramepb210M1_5", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameth232_5->Project("hCuBox_CuFrameth232M1_5", "Ener2", "Multiplicity==1");
+	tCuBox_CuFrameu238_5->Project("hCuBox_CuFrameu238M1_5", "Ener2", "Multiplicity==1");
 
 //////////////////////////////////
 	// tCuBoxSth232_1->Project("hCuBoxSth232M2_1", "Ener2", "Multiplicity==2");
@@ -3501,6 +3554,15 @@ void SaveHistogramsSurfaceOther()
 	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2_1", "Ener2", "Multiplicity==2");
 	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2_10", "Ener2", "Multiplicity==2");
 
+	tCuBox_CuFramepb210_100->Project("hCuBox_CuFramepb210M2_100", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameth232_100->Project("hCuBox_CuFrameth232M2_100", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameu238_100->Project("hCuBox_CuFrameu238M2_100", "Ener2", "Multiplicity==2");
+	tCuBox_CuFramepb210_50->Project("hCuBox_CuFramepb210M2_50", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameth232_50->Project("hCuBox_CuFrameth232M2_50", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameu238_50->Project("hCuBox_CuFrameu238M2_50", "Ener2", "Multiplicity==2");
+	tCuBox_CuFramepb210_5->Project("hCuBox_CuFramepb210M2_5", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameth232_5->Project("hCuBox_CuFrameth232M2_5", "Ener2", "Multiplicity==2");
+	tCuBox_CuFrameu238_5->Project("hCuBox_CuFrameu238M2_5", "Ener2", "Multiplicity==2");
 
 //////////////////////////////////
 	// tCuBoxSth232_1->Project("hCuBoxSth232M2Sum_1", "Esum2", "Multiplicity==2");
@@ -3548,6 +3610,16 @@ void SaveHistogramsSurfaceOther()
 	tCuBox_CuFrameu238_01->Project("hCuBox_CuFrameu238M2Sum_01", "Esum2", "Multiplicity==2");
 	tCuBox_CuFrameu238_1->Project("hCuBox_CuFrameu238M2Sum_1", "Esum2", "Multiplicity==2");
 	tCuBox_CuFrameu238_10->Project("hCuBox_CuFrameu238M2Sum_10", "Esum2", "Multiplicity==2");
+
+	tCuBox_CuFramepb210_100->Project("hCuBox_CuFramepb210M2Sum_100", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameth232_100->Project("hCuBox_CuFrameth232M2Sum_100", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameu238_100->Project("hCuBox_CuFrameu238M2Sum_100", "Esum2", "Multiplicity==2");
+	tCuBox_CuFramepb210_50->Project("hCuBox_CuFramepb210M2Sum_50", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameth232_50->Project("hCuBox_CuFrameth232M2Sum_50", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameu238_50->Project("hCuBox_CuFrameu238M2Sum_50", "Esum2", "Multiplicity==2");
+	tCuBox_CuFramepb210_5->Project("hCuBox_CuFramepb210M2Sum_5", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameth232_5->Project("hCuBox_CuFrameth232M2Sum_5", "Esum2", "Multiplicity==2");
+	tCuBox_CuFrameu238_5->Project("hCuBox_CuFrameu238M2Sum_5", "Esum2", "Multiplicity==2");
 
 	//////////////////////////////////
 	// CuBox+CuFrame here
@@ -3617,6 +3689,16 @@ void SaveHistogramsSurfaceOther()
 	NormalizePDFs(hCuBox_CuFrameu238M1_1 , hCuBox_CuFrameu238M2_1 , hCuBox_CuFrameu238M2Sum_1, 0, 10000); 
 	NormalizePDFs(hCuBox_CuFrameu238M1_10 , hCuBox_CuFrameu238M2_10 , hCuBox_CuFrameu238M2Sum_10, 0, 10000); 
 
+	NormalizePDFs(hCuBox_CuFramepb210M1_100 , hCuBox_CuFramepb210M2_100 , hCuBox_CuFramepb210M2Sum_100, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameth232M1_100 , hCuBox_CuFrameth232M2_100 , hCuBox_CuFrameth232M2Sum_100, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameu238M1_100 , hCuBox_CuFrameu238M2_100 , hCuBox_CuFrameu238M2Sum_100, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFramepb210M1_50 , hCuBox_CuFramepb210M2_50 , hCuBox_CuFramepb210M2Sum_50, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameth232M1_50 , hCuBox_CuFrameth232M2_50 , hCuBox_CuFrameth232M2Sum_50, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameu238M1_50 , hCuBox_CuFrameu238M2_50 , hCuBox_CuFrameu238M2Sum_50, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFramepb210M1_5 , hCuBox_CuFramepb210M2_5 , hCuBox_CuFramepb210M2Sum_5, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameth232M1_5 , hCuBox_CuFrameth232M2_5 , hCuBox_CuFrameth232M2Sum_5, 0, 10000); 
+	NormalizePDFs(hCuBox_CuFrameu238M1_5 , hCuBox_CuFrameu238M2_5 , hCuBox_CuFrameu238M2Sum_5, 0, 10000); 
+
 	TFile *file2 = new TFile("MCProduction_SurfaceOther_1keV.root", "RECREATE");
 
 	// hCuBoxSth232M1_1->Write();
@@ -3665,6 +3747,18 @@ void SaveHistogramsSurfaceOther()
 	hCuBox_CuFrameu238M1_1->Write();
 	hCuBox_CuFrameu238M1_10->Write();
 
+
+	hCuBox_CuFramepb210M1_100->Write();
+	hCuBox_CuFrameth232M1_100->Write();
+	hCuBox_CuFrameu238M1_100->Write();
+	hCuBox_CuFramepb210M1_50->Write();
+	hCuBox_CuFrameth232M1_50->Write();
+	hCuBox_CuFrameu238M1_50->Write();
+	hCuBox_CuFramepb210M1_5->Write();
+	hCuBox_CuFrameth232M1_5->Write();
+	hCuBox_CuFrameu238M1_5->Write();
+
+
 ///////////////////////////////
 	// hCuBoxSth232M2_1->Write();
 	// hCuBoxSu238M2_1->Write();
@@ -3711,6 +3805,16 @@ void SaveHistogramsSurfaceOther()
 	hCuBox_CuFrameu238M2_1->Write();
 	hCuBox_CuFrameu238M2_10->Write();
 
+	hCuBox_CuFramepb210M2_100->Write();
+	hCuBox_CuFrameth232M2_100->Write();
+	hCuBox_CuFrameu238M2_100->Write();
+	hCuBox_CuFramepb210M2_50->Write();
+	hCuBox_CuFrameth232M2_50->Write();
+	hCuBox_CuFrameu238M2_50->Write();
+	hCuBox_CuFramepb210M2_5->Write();
+	hCuBox_CuFrameth232M2_5->Write();
+	hCuBox_CuFrameu238M2_5->Write();
+
 ///////////////////////////////
 	// hCuBoxSth232M2Sum_1->Write();
 	// hCuBoxSu238M2Sum_1->Write();
@@ -3756,6 +3860,16 @@ void SaveHistogramsSurfaceOther()
 	hCuBox_CuFrameu238M2Sum_01->Write();
 	hCuBox_CuFrameu238M2Sum_1->Write();
 	hCuBox_CuFrameu238M2Sum_10->Write();
+
+	hCuBox_CuFramepb210M2Sum_100->Write();
+	hCuBox_CuFrameth232M2Sum_100->Write();
+	hCuBox_CuFrameu238M2Sum_100->Write();
+	hCuBox_CuFramepb210M2Sum_50->Write();
+	hCuBox_CuFrameth232M2Sum_50->Write();
+	hCuBox_CuFrameu238M2Sum_50->Write();
+	hCuBox_CuFramepb210M2Sum_5->Write();
+	hCuBox_CuFrameth232M2Sum_5->Write();
+	hCuBox_CuFrameu238M2Sum_5->Write();
 
 	file2->Write();
 
