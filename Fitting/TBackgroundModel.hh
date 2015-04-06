@@ -673,6 +673,16 @@ private:
 	TH1D			*hCuBox_CuFrameth232M1_001;
 	TH1D			*hCuBox_CuFrameu238M1_001;
 
+	TH1D			*hCuBox_CuFramepb210M1_100;
+	TH1D			*hCuBox_CuFrameth232M1_100;
+	TH1D			*hCuBox_CuFrameu238M1_100;
+	TH1D			*hCuBox_CuFramepb210M1_50;
+	TH1D			*hCuBox_CuFrameth232M1_50;
+	TH1D			*hCuBox_CuFrameu238M1_50;
+	TH1D			*hCuBox_CuFramepb210M1_5;
+	TH1D			*hCuBox_CuFrameth232M1_5;
+	TH1D			*hCuBox_CuFrameu238M1_5;
+
 	TH1D			*hCuBox_CuFrameco60M2;
 	TH1D			*hCuBox_CuFramek40M2;
 	TH1D			*hCuBox_CuFrameth232M2;
@@ -692,6 +702,15 @@ private:
 	TH1D			*hCuBox_CuFrameth232M2_001;
 	TH1D			*hCuBox_CuFrameu238M2_001;
 
+	TH1D			*hCuBox_CuFramepb210M2_100;
+	TH1D			*hCuBox_CuFrameth232M2_100;
+	TH1D			*hCuBox_CuFrameu238M2_100;
+	TH1D			*hCuBox_CuFramepb210M2_50;
+	TH1D			*hCuBox_CuFrameth232M2_50;
+	TH1D			*hCuBox_CuFrameu238M2_50;
+	TH1D			*hCuBox_CuFramepb210M2_5;
+	TH1D			*hCuBox_CuFrameth232M2_5;
+	TH1D			*hCuBox_CuFrameu238M2_5;
 
 	TH1D			*hCuBox_CuFrameco60M2Sum;
 	TH1D			*hCuBox_CuFramek40M2Sum;
@@ -712,6 +731,15 @@ private:
 	TH1D			*hCuBox_CuFrameth232M2Sum_001;
 	TH1D			*hCuBox_CuFrameu238M2Sum_001;
 
+	TH1D			*hCuBox_CuFramepb210M2Sum_100;
+	TH1D			*hCuBox_CuFrameth232M2Sum_100;
+	TH1D			*hCuBox_CuFrameu238M2Sum_100;
+	TH1D			*hCuBox_CuFramepb210M2Sum_50;
+	TH1D			*hCuBox_CuFrameth232M2Sum_50;
+	TH1D			*hCuBox_CuFrameu238M2Sum_50;
+	TH1D			*hCuBox_CuFramepb210M2Sum_5;
+	TH1D			*hCuBox_CuFrameth232M2Sum_5;
+	TH1D			*hCuBox_CuFrameu238M2Sum_5;
 
 ///////////// 50mK M1 and M2
 	TH1D			*h50mKco58M1;
@@ -1236,6 +1264,15 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M1_001;
 	TH1D			*hAdapCuBox_CuFrameu238M1_001;
 
+	TH1D			*hAdapCuBox_CuFramepb210M1_100;
+	TH1D			*hAdapCuBox_CuFrameth232M1_100;
+	TH1D			*hAdapCuBox_CuFrameu238M1_100;
+	TH1D			*hAdapCuBox_CuFramepb210M1_50;
+	TH1D			*hAdapCuBox_CuFrameth232M1_50;
+	TH1D			*hAdapCuBox_CuFrameu238M1_50;
+	TH1D			*hAdapCuBox_CuFramepb210M1_5;
+	TH1D			*hAdapCuBox_CuFrameth232M1_5;
+	TH1D			*hAdapCuBox_CuFrameu238M1_5;
 
 	TH1D			*hAdapCuBox_CuFrameco60M2;
 	TH1D			*hAdapCuBox_CuFramek40M2;
@@ -1256,6 +1293,16 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M2_001;
 	TH1D			*hAdapCuBox_CuFrameu238M2_001;
 
+	TH1D			*hAdapCuBox_CuFramepb210M2_100;
+	TH1D			*hAdapCuBox_CuFrameth232M2_100;
+	TH1D			*hAdapCuBox_CuFrameu238M2_100;
+	TH1D			*hAdapCuBox_CuFramepb210M2_50;
+	TH1D			*hAdapCuBox_CuFrameth232M2_50;
+	TH1D			*hAdapCuBox_CuFrameu238M2_50;
+	TH1D			*hAdapCuBox_CuFramepb210M2_5;
+	TH1D			*hAdapCuBox_CuFrameth232M2_5;
+	TH1D			*hAdapCuBox_CuFrameu238M2_5;
+
 	TH1D			*hAdapCuBox_CuFrameco60M2Sum;
 	TH1D			*hAdapCuBox_CuFramek40M2Sum;
 	TH1D			*hAdapCuBox_CuFrameth232M2Sum;
@@ -1275,6 +1322,15 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M2Sum_001;
 	TH1D			*hAdapCuBox_CuFrameu238M2Sum_001;
 
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_100;
+	TH1D			*hAdapCuBox_CuFrameth232M2Sum_100;
+	TH1D			*hAdapCuBox_CuFrameu238M2Sum_100;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_50;
+	TH1D			*hAdapCuBox_CuFrameth232M2Sum_50;
+	TH1D			*hAdapCuBox_CuFrameu238M2Sum_50;
+	TH1D			*hAdapCuBox_CuFramepb210M2Sum_5;
+	TH1D			*hAdapCuBox_CuFrameth232M2Sum_5;
+	TH1D			*hAdapCuBox_CuFrameu238M2Sum_5;
 
 /////////// 50mK M1 and M2
 	TH1D			*hAdap50mKco58M1;
@@ -1808,6 +1864,16 @@ private:
 	TH1		*hnewCuBox_CuFrameth232M1_001;
 	TH1		*hnewCuBox_CuFrameu238M1_001;
 
+	TH1			*hnewCuBox_CuFramepb210M1_100;
+	TH1			*hnewCuBox_CuFrameth232M1_100;
+	TH1			*hnewCuBox_CuFrameu238M1_100;
+	TH1			*hnewCuBox_CuFramepb210M1_50;
+	TH1			*hnewCuBox_CuFrameth232M1_50;
+	TH1			*hnewCuBox_CuFrameu238M1_50;
+	TH1			*hnewCuBox_CuFramepb210M1_5;
+	TH1			*hnewCuBox_CuFrameth232M1_5;
+	TH1			*hnewCuBox_CuFrameu238M1_5;
+
 	TH1			*hnewCuBox_CuFrameco60M2;
 	TH1			*hnewCuBox_CuFramek40M2;
 	TH1			*hnewCuBox_CuFrameth232M2;
@@ -1827,6 +1893,16 @@ private:
 	TH1		*hnewCuBox_CuFrameth232M2_001;
 	TH1		*hnewCuBox_CuFrameu238M2_001;
 
+	TH1			*hnewCuBox_CuFramepb210M2_100;
+	TH1			*hnewCuBox_CuFrameth232M2_100;
+	TH1			*hnewCuBox_CuFrameu238M2_100;
+	TH1			*hnewCuBox_CuFramepb210M2_50;
+	TH1			*hnewCuBox_CuFrameth232M2_50;
+	TH1			*hnewCuBox_CuFrameu238M2_50;
+	TH1			*hnewCuBox_CuFramepb210M2_5;
+	TH1			*hnewCuBox_CuFrameth232M2_5;
+	TH1			*hnewCuBox_CuFrameu238M2_5;
+
 	TH1			*hnewCuBox_CuFrameco60M2Sum;
 	TH1			*hnewCuBox_CuFramek40M2Sum;
 	TH1			*hnewCuBox_CuFrameth232M2Sum;
@@ -1845,6 +1921,16 @@ private:
 	TH1		*hnewCuBox_CuFrameu238M2Sum_01;
 	TH1		*hnewCuBox_CuFrameth232M2Sum_001;
 	TH1		*hnewCuBox_CuFrameu238M2Sum_001;
+
+	TH1			*hnewCuBox_CuFramepb210M2Sum_100;
+	TH1			*hnewCuBox_CuFrameth232M2Sum_100;
+	TH1			*hnewCuBox_CuFrameu238M2Sum_100;
+	TH1			*hnewCuBox_CuFramepb210M2Sum_50;
+	TH1			*hnewCuBox_CuFrameth232M2Sum_50;
+	TH1			*hnewCuBox_CuFrameu238M2Sum_50;
+	TH1			*hnewCuBox_CuFramepb210M2Sum_5;
+	TH1			*hnewCuBox_CuFrameth232M2Sum_5;
+	TH1			*hnewCuBox_CuFrameu238M2Sum_5;
 
 ///////////// 50mK M1 and M2
 	TH1			*hnew50mKco58M1;
