@@ -5251,7 +5251,6 @@ void TBackgroundModel::UpdateModelAdaptive()
 
 /////// Create model
 /////// M1
-  // fModelTotAdapM1->Add( hAdapTeO20nuM1,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[2]);
@@ -5299,14 +5298,13 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_50,      dDataIntegralM1*fParameters[38]);
   // fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_50,      dDataIntegralM1*fParameters[39]);
 
-  fModelTotAdapM1->Add( hAdapOVCth232M1,     dDataIntegralM1*fParameters[37]);
-  fModelTotAdapM1->Add( hAdapOVCu238M1,      dDataIntegralM1*fParameters[38]);
-  fModelTotAdapM1->Add( hAdapOVCco60M1,      dDataIntegralM1*fParameters[39]);
-  fModelTotAdapM1->Add( hAdapOVCk40M1,       dDataIntegralM1*fParameters[40]);
+  fModelTotAdapM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[38]);
+  fModelTotAdapM1->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM1->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[40]);
 
 
 /////// M2
-  // fModelTotAdapM2->Add( hAdapTeO20nuM2,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM2->Add( hAdapTeO22nuM2,              dDataIntegralM1*fParameters[0]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFrameco60M2,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM1*fParameters[2]);
@@ -5636,9 +5634,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
   // cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
 
-/*
+
 // M1
   fModelTotAdap2NDBDM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[0]);
+/*
   fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapthM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[2]);
   fModelTotAdapuM1->Add( hAdapTeO2th230onlyM1,        dDataIntegralM1*fParameters[3]);
@@ -6263,14 +6262,24 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
 
   TH1D *fModelGammaClose = new TH1D("fModelGammaClose", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1,     dDataIntegralM1*fParameters[21]);
-  fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1,      dDataIntegralM1*fParameters[22]);
+  fModelGammaClose->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
+  fModelGammaClose->Add( hAdapCuBox_CuFrameth232M1,     dDataIntegralM1*fParameters[21]);
+  fModelGammaClose->Add( hAdapCuBox_CuFrameu238M1,      dDataIntegralM1*fParameters[22]);
 
   TH1D *fModelGammaMid = new TH1D("fModelGammaMid", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  fModelGammaMid->Add( hAdapPbRomk40M1,       dDataIntegralM1*fParameters[15]);
+  fModelGammaMid->Add( hAdapPbRomcs137M1,             dDataIntegralM1*fParameters[23]);
+  fModelGammaMid->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[37]);
+  fModelGammaMid->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[38]);
+  fModelGammaMid->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[39]);
+  fModelGammaMid->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[40]);
 
   TH1D *fModelGammaFar = new TH1D("fModelGammaFar", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
-
+  fModelGammaFar->Add( hAdapOVCth232M1,     dDataIntegralM1*fParameters[16]);
+  fModelGammaFar->Add( hAdapOVCu238M1,      dDataIntegralM1*fParameters[17]);
+  fModelGammaFar->Add( hAdapOVCco60M1,      dDataIntegralM1*fParameters[18]);
+  fModelGammaFar->Add( hAdapOVCk40M1,       dDataIntegralM1*fParameters[19]);
+  fModelGammaFar->Add( hAdapExtPbbi210M1,   dDataIntegralM1*fParameters[20]);
 
 
   double dAlpha2nbbBulk = fModelAlphaBulk->Integral( fModelAlphaBulk->FindBin(500), fModelAlphaBulk->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
@@ -6286,6 +6295,11 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   double dGammaClose2nbb = fModelGammaClose->Integral( fModelGammaClose->FindBin(500), fModelGammaClose->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
   double dGammaClose2nbbErr = TMath::Sqrt(fModelGammaClose->Integral( fModelGammaClose->FindBin(500), fModelGammaClose->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
+  double dGammaMid2nbb = fModelGammaMid->Integral( fModelGammaMid->FindBin(500), fModelGammaMid->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
+  double dGammaMid2nbbErr = TMath::Sqrt(fModelGammaMid->Integral( fModelGammaMid->FindBin(500), fModelGammaMid->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
+  double dGammaFar2nbb = fModelGammaFar->Integral( fModelGammaFar->FindBin(500), fModelGammaFar->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
+  double dGammaFar2nbbErr = TMath::Sqrt(fModelGammaFar->Integral( fModelGammaFar->FindBin(500), fModelGammaFar->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
+
 
   double dAlpha0nbbBulk = fModelAlphaBulk->Integral( fModelAlphaBulk->FindBin(2470), fModelAlphaBulk->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
   double dAlpha0nbbBulkErr = TMath::Sqrt(fModelAlphaBulk->Integral( fModelAlphaBulk->FindBin(2470), fModelAlphaBulk->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
@@ -6298,8 +6312,12 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   double dAlpha0nbbCuSurface2 = fModelAlphaCuSurface2->Integral( fModelAlphaCuSurface2->FindBin(2470), fModelAlphaCuSurface2->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
   double dAlpha0nbbCuSurface2Err = TMath::Sqrt(fModelAlphaTeSurface2->Integral( fModelAlphaTeSurface2->FindBin(2470), fModelAlphaTeSurface2->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
 
-  double dGammaClose0nbb = fModelGammaClose->Integral( fModelGammaClose->FindBin(500), fModelGammaClose->FindBin(2000), "width" )/(dROIRange*dLivetimeYr);
-  double dGammaClose0nbbErr = TMath::Sqrt(fModelGammaClose->Integral( fModelGammaClose->FindBin(500), fModelGammaClose->FindBin(2000), "width" ))/(dROIRange*dLivetimeYr);
+  double dGammaClose0nbb = fModelGammaClose->Integral( fModelGammaClose->FindBin(2470), fModelGammaClose->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
+  double dGammaClose0nbbErr = TMath::Sqrt(fModelGammaClose->Integral( fModelGammaClose->FindBin(2470), fModelGammaClose->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
+  double dGammaMid0nbb = fModelGammaMid->Integral( fModelGammaMid->FindBin(2470), fModelGammaMid->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
+  double dGammaMid0nbbErr = TMath::Sqrt(fModelGammaMid->Integral( fModelGammaMid->FindBin(2470), fModelGammaMid->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
+  double dGammaFar0nbb = fModelGammaFar->Integral( fModelGammaFar->FindBin(2470), fModelGammaFar->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
+  double dGammaFar0nbbErr = TMath::Sqrt(fModelGammaFar->Integral( fModelGammaFar->FindBin(2470), fModelGammaFar->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
 
 
   double d2nbbData = fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
@@ -6358,6 +6376,14 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   cout << "Copper Surface (depth ~alpha range) in 0nbb PDF (c/keV/y): " << dAlpha0nbbCuSurface1 << " $\\pm$ " << dAlpha0nbbCuSurface1Err << endl;
   cout << "Copper Surface (depth << alpha range) 0nbb (c/keV/y): " << dAlpha0nbbCuSurface2 << " $\\pm$ " << dAlpha0nbbCuSurface2Err << endl;  
   cout << endl;
+  cout << "Gamma Close in 2nbb region (c/keV/y): " << dGammaClose2nbb << " $\\pm$ " << dGammaClose2nbbErr << endl;
+  cout << "Gamma Mid in 2nbb region (c/keV/y): " << dGammaMid2nbb << " $\\pm$ " << dGammaMid2nbbErr << endl;
+  cout << "Gamma Far in 2nbb region (c/keV/y): " << dGammaFar2nbb << " $\\pm$ " << dGammaFar2nbbErr << endl;
+  cout << endl;
+  cout << "Gamma Close in 0nbb region (c/keV/y): " << dGammaClose0nbb << " $\\pm$ " << dGammaClose0nbbErr << endl;
+  cout << "Gamma Mid in 0nbb region (c/keV/y): " << dGammaMid0nbb << " $\\pm$ " << dGammaMid0nbbErr << endl;
+  cout << "Gamma Far in 0nbb region (c/keV/y): " << dGammaFar0nbb << " $\\pm$ " << dGammaFar0nbbErr << endl;
+  cout << endl;  
   cout << endl;
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << "\t Residual RMS (M2Sum): "  << dResidualRMSM2Sum << endl;
