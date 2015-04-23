@@ -5603,10 +5603,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
-   minuit->FixParameter(37); // 
-   minuit->FixParameter(38); // 
-   minuit->FixParameter(39); //
-   minuit->FixParameter(40); //
+   // minuit->FixParameter(37); // 
+   // minuit->FixParameter(38); // 
+   // minuit->FixParameter(39); //
+   // minuit->FixParameter(40); //
 
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
