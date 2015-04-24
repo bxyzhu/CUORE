@@ -36,7 +36,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 41; i++ )
+  for(int i = 0; i < 44; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -56,7 +56,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bToyData = false;
 
   tTime = new TDatime();
-  dNParam = 41; // number of fitting parameters
+  dNParam = 44; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
 
@@ -5294,15 +5294,18 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_10,     dDataIntegralM1*fParameters[35]);
   fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_1,     dDataIntegralM1*fParameters[36]);
 
-  // fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1_50,     dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_50,      dDataIntegralM1*fParameters[38]);
-  // fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_50,      dDataIntegralM1*fParameters[39]);
+  // fModelTotAdapM1->Add( hAdapCuBox_CuFrameth232M1_5,     dDataIntegralM1*fParameters[37]);
+  // fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_5,      dDataIntegralM1*fParameters[38]);
+  // fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_5,      dDataIntegralM1*fParameters[39]);
 
   fModelTotAdapM1->Add( hAdapInternalth232M1,     dDataIntegralM1*fParameters[37]);
   fModelTotAdapM1->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[38]);
   fModelTotAdapM1->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[39]);
   fModelTotAdapM1->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[40]);
 
+  fModelTotAdapM1->Add( hAdapPbRomth232M1,     dDataIntegralM1*fParameters[41]);
+  fModelTotAdapM1->Add( hAdapPbRomu238M1,      dDataIntegralM1*fParameters[42]);
+  fModelTotAdapM1->Add( hAdapPbRomco60M1,      dDataIntegralM1*fParameters[43]);
 
 /////// M2
   fModelTotAdapM2->Add( hAdapTeO22nuM2,              dDataIntegralM1*fParameters[0]);
@@ -5349,14 +5352,18 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_10,     dDataIntegralM1*fParameters[35]);
   fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_1,     dDataIntegralM1*fParameters[36]);
 
-  // fModelTotAdapM2->Add( hAdapCuBox_CuFrameth232M2_50,     dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2_50,      dDataIntegralM1*fParameters[38]);
-  // fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_50,      dDataIntegralM1*fParameters[39]);
+  // fModelTotAdapM2->Add( hAdapCuBox_CuFrameth232M2_5,     dDataIntegralM1*fParameters[37]);
+  // fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2_5,      dDataIntegralM1*fParameters[38]);
+  // fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_5,      dDataIntegralM1*fParameters[39]);
 
   fModelTotAdapM2->Add( hAdapInternalth232M2,     dDataIntegralM1*fParameters[37]);
   fModelTotAdapM2->Add( hAdapInternalu238M2,      dDataIntegralM1*fParameters[38]);
   fModelTotAdapM2->Add( hAdapInternalco60M2,      dDataIntegralM1*fParameters[39]);
-  fModelTotAdapM2->Add( hAdapInternalk40M2,       dDataIntegralM1*fParameters[49]);
+  fModelTotAdapM2->Add( hAdapInternalk40M2,       dDataIntegralM1*fParameters[40]);
+
+  fModelTotAdapM2->Add( hAdapPbRomth232M2,     dDataIntegralM1*fParameters[41]);
+  fModelTotAdapM2->Add( hAdapPbRomu238M2,      dDataIntegralM1*fParameters[42]);
+  fModelTotAdapM2->Add( hAdapPbRomco60M2,      dDataIntegralM1*fParameters[43]);
 
 /////// M2Sum
   // fModelTotAdapM2Sum->Add( hAdapTeO20nuM2Sum,              dDataIntegralM1*fParameters[0]);
@@ -5404,9 +5411,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_10,     dDataIntegralM1*fParameters[35]);
   fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_1,     dDataIntegralM1*fParameters[36]);
 
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum_5,     dDataIntegralM1*fParameters[37]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_5,     dDataIntegralM1*fParameters[38]);
-  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_5,     dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameth232M2Sum_100,     dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_100,     dDataIntegralM1*fParameters[38]);
+  fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_100,     dDataIntegralM1*fParameters[39]);
 
 }
   
@@ -5549,15 +5556,20 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // minuit->DefineParameter(36, "CuBox + CuFrame Sx pb210 1", 5.21599e-05, 1E-7, 0, 1.0);
   minuit->DefineParameter(36, "CuBox + CuFrame Sx pb210 1", 0, 1E-7, 0, 1.0);
 
-  // minuit->DefineParameter(37, "CuBox + CuFrame Sx th232 50", 0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(38, "CuBox + CuFrame Sx u238 50", 0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(39, "CuBox + CuFrame Sx pb210 50", 0, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(37, "CuBox + CuFrame Sx th232 5", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(38, "CuBox + CuFrame Sx u238 5", 0., 1E-7, 0, 1.0);
+  // minuit->DefineParameter(39, "CuBox + CuFrame Sx pb210 5", 0, 1E-7, 0, 1.0);
 
 
   minuit->DefineParameter(37, "Internal th232",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(38, "Internal u238",  0., 1E-7, 0, 1.0);
   minuit->DefineParameter(39, "Internal co60",  0., 1E-7, 0, 1.0);    
   minuit->DefineParameter(40, "Internal k40",  0., 1E-7, 0, 1.0);
+
+  minuit->DefineParameter(41, "PbRom th232",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(42, "PbRom u238",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(43, "PbRom co60",  0., 1E-7, 0, 1.0);
+
 
 
 //////////////////////////////////////
@@ -5603,11 +5615,14 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
-   // minuit->FixParameter(37); // 
-   // minuit->FixParameter(38); // 
-   // minuit->FixParameter(39); //
-   // minuit->FixParameter(40); //
+   minuit->FixParameter(37); // 
+   minuit->FixParameter(38); // 
+   minuit->FixParameter(39); //
+   minuit->FixParameter(40); //
 
+   minuit->FixParameter(41); // 
+   minuit->FixParameter(42); //
+   minuit->FixParameter(43); //
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
    dNumFreeParameters = minuit->GetNumPars() - minuit->GetNumFixedPars();
@@ -5741,7 +5756,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapuM2Sum->Add( hAdapTeO2Sxu238M2Sum_10,     dDataIntegralM2Sum*fParameters[27]);
   fModelTotAdapSpbM2Sum->Add( hAdapTeO2Sxpb210M2Sum_10,     dDataIntegralM2Sum*fParameters[28]);
 */
-
 
   // ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
@@ -6137,8 +6151,17 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // fDataHistoM2Sum->SetLineColor(17);
   // fDataHistoM2Sum->Draw("SAME");
 
+
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
+
+  TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
+
+  TCanvas *cResidual2Sum = new TCanvas("cResidual2Sum", "cResidual2Sum", 1200, 800);
+
+  TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
+
+/*
   hResidualGausM1 = new TH1D("hResidualGausM1", "M1", 100, -50, 50);
   hResidualDistM1 = CalculateResidualsAdaptive(fAdapDataHistoM1, fModelTotAdapM1, hResidualGausM1, dFitMinBinM1, dFitMaxBinM1, 1);
   hResidualDistM1->SetLineColor(kBlack);
@@ -6154,7 +6177,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM1->Draw();
 
-  TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
   hResidualGausM2 = new TH1D("hResidualGausM2", "M2", 100, -50, 50);  
   hResidualDistM2 = CalculateResidualsAdaptive(fAdapDataHistoM2, fModelTotAdapM2, hResidualGausM2, dFitMinBinM2, dFitMaxBinM2, 2);
   hResidualDistM2->SetLineColor(kBlack);
@@ -6171,7 +6193,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hResidualDistM2->Draw();
 
 
-  TCanvas *cResidual2Sum = new TCanvas("cResidual2Sum", "cResidual2Sum", 1200, 800);
   hResidualGausM2Sum = new TH1D("hResidualGausM2Sum", "M2Sum", 100, -50, 50);  
   hResidualDistM2Sum = CalculateResidualsAdaptive(fAdapDataHistoM2Sum, fModelTotAdapM2Sum, hResidualGausM2Sum, dFitMinBinM2Sum, dFitMaxBinM2Sum, 3);
   hResidualDistM2Sum->SetLineColor(kBlack);
@@ -6187,7 +6208,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hResidualDistM2Sum->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM2Sum->Draw();
 
-  TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
   cres1->Divide(2,1);
   cres1->cd(1);
   hResidualGausM1->Fit("gaus");
@@ -6217,6 +6237,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/(dFitMaxBinM1-dFitMinBinM1));
   dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/(dFitMaxBinM2-dFitMinBinM2));
   dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/(dFitMaxBinM2Sum-dFitMinBinM2Sum));
+*/
 
 
   //
@@ -6273,6 +6294,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelGammaMid->Add( hAdapInternalu238M1,      dDataIntegralM1*fParameters[38]);
   fModelGammaMid->Add( hAdapInternalco60M1,      dDataIntegralM1*fParameters[39]);
   fModelGammaMid->Add( hAdapInternalk40M1,       dDataIntegralM1*fParameters[40]);
+  fModelGammaMid->Add( hAdapPbRomth232M1,     dDataIntegralM1*fParameters[41]);
+  fModelGammaMid->Add( hAdapPbRomu238M1,      dDataIntegralM1*fParameters[42]);
+  fModelGammaMid->Add( hAdapPbRomco60M1,      dDataIntegralM1*fParameters[43]);
 
   TH1D *fModelGammaFar = new TH1D("fModelGammaFar", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
   fModelGammaFar->Add( hAdapOVCth232M1,     dDataIntegralM1*fParameters[16]);
