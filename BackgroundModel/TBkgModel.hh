@@ -24,6 +24,7 @@
 #include <TMinuitMinimizer.h>
 #include "TROOT.h"
 #include "TStyle.h"
+#include "TBkgModelParameter.hh"
 
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
@@ -50,6 +51,8 @@ public:
 	void DrawBkg();
 
 	double GetChiSquareAdaptive();
+
+	void GenerateParameters();
 
 	void Initialize();
 

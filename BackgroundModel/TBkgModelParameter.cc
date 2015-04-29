@@ -4,16 +4,47 @@ ClassImp(TBkgModelParameter)
 
 TBkgModelParameter::TBkgModelParameter()
 {
-	TBackgroundModel *f1 = new TBackgroundModel(500, 8000, 50, 0, false);
 }
 
-TBkgModelParameter::TBkgModelParameter(int fNParam)
+TBkgModelParameter::TBkgModelParameter(const char *fParName, int dParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist)
 {
-	dNParam = fNParam
-	
+	dParName = fParName;
+	dParIndex = fParIndex;
+	dInitialValue = fInitialValue;
+	dMinLimit = fMinLimit;
+	dMaxLimit = fMaxLimit;	
+	dHist = fHist;
 }
-
 
 TBkgModelParameter::~TBkgModelParameter()
 {}
 
+int TBkgModelParameter::GetParIndex()
+{
+	return dParIndex;
+}
+
+const char *TBkgModelParameter::GetParName()
+{
+	return dParName;
+}
+
+double TBkgModelParameter::GetParInitial()
+{
+	return dInitialValue;
+}
+
+double TBkgModelParameter::GetParMin()
+{
+	return dParMin;
+}
+
+double TBkgModelParameter::GetParMax()
+{
+	return dParMax;
+}
+
+TH1D *TBkgModelParameter::GetHist()
+{
+	return dHist;
+}
