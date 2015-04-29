@@ -333,7 +333,6 @@ vector<double> TBkgModelSource::AdaptiveBinning(TH1D *h1, int dBinBase)
 return dBinArrayThing;
 }
 
-
 void TBkgModelSource::CreateModelHistograms()
 {
  // Total model histograms M1
