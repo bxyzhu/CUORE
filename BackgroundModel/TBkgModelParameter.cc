@@ -8,6 +8,7 @@ TBkgModelParameter::TBkgModelParameter()
 
 TBkgModelParameter::TBkgModelParameter(const char *fParName, int dParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist)
 {
+	if(fHist == NULL) cout << Form(" \"%s\" histogram not created", fParName) << endl;
 	dParName = fParName;
 	dParIndex = fParIndex;
 	dInitialValue = fInitialValue;

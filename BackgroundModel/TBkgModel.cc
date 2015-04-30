@@ -11,6 +11,7 @@
 #include "TPaveText.h"
 #include "TPave.h"
 #include "TMath.h"
+#include "TF1.h"
 #include <cmath>
 #include <string>
 #include <vector>
@@ -64,6 +65,7 @@ TBkgModel::TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet,
 
   minuit = new TMinuit(dNParam);
 
+  // Apply efficiency
   TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
   fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
 
@@ -78,13 +80,7 @@ TBkgModel::TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet,
   fDataHistoM2->Divide( hEfficiency );
   fDataHistoM2Sum->Divide( hEfficiency );
 
-  dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
-  // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0,0);
-  // DoTheFitAdaptive(0.0674202742, 0.0263278758);  
-  // ProfileNLL(0.0685222152, 3968.95); 
-  // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
 
   // Number of Toy fits
   if(bToyData)ToyFit(1);
@@ -105,9 +101,6 @@ int TBkgModel::ShowNParameters()
 // Initialize parameters
 void TBkgModel::GenerateParameters()
 {
-  // Array of parameters
-  TBackgroundModelParameter BkgParM1[dNParam];
-  TBackgroundModelParameter BkgParM2[dNParam];
   
   // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histogram)
   // M1
@@ -499,11 +492,11 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // Create and fix parameters
   for(int i = 0; i < dNParam; i++)
   {
-    minuit->DefineParameter(BkgParM1->GetParIndex(), BkgParM1->GetParName(); BkgParM1->GetParInital(), BkgParM1->GetParMin(); BkgParM1->GetParMax());
+    minuit->DefineParameter(BkgParM1[i]->GetParIndex(), BkgParM1[i]->GetParName(); BkgParM1[i]->GetParInital(), BkgParM1[i]->GetParMin(); BkgParM1[i]->GetParMax());
     if(bFixedArray[i]) 
     {
       minuit->FixParameter(i);
-    // For debugging
+    // For debugging purposes only
     // cout << "Parameter " << fParameterName[i] << " is fixed" << endl; 
     }
   }
@@ -531,10 +524,10 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
-  cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
+  cout << "Probability = " << TMath::Prob(dChiSquare, dNDF) << endl;
 
 /*
-    2nbb calculation:
+    How to calculate 2nbb:
      - TeO2 molar mass: 159.6 g/mol
      - half life is 9.81 * 10^20 years
      - how many in Q0 data so far? 1/rate = half life/ln(2) -> rate = ln(2)/half life = 7.066*10^-22 decays/year (Laura's thesis)
@@ -550,6 +543,48 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
     fParActivity[i] = fParameters[i]*dDataIntegralM1/fParEfficiencyM1[i];
     fParActivityErr[i] = fParError[i]*dDataIntegralM1/fParEfficiencyM1[i];
   }
+
+
+  if(bSave)
+  {
+  // // Saving plots
+  cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cMatrix->SaveAs(Form("%s/FitResults/Test/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+ 
+  cProgress->SaveAs(Form("%s/FitResults/Test/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+
+  // Save histograms to file
+  fSaveResult = new TFile(Form("%s/FitResults/Test/FitResult_%d_%d.root", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime()), "RECREATE");
+  fSaveResult->Add(fAdapDataHistoM1);
+  fSaveResult->Add(fAdapDataHistoM2);
+  fSaveResult->Add(fModelTotAdapM1);
+  fSaveResult->Add(fModelTotAdapM2);
+
+  // Scale histograms by parameter for saving (so that actual fit value is represented)
+  for(int i = 0; i < dNParam; i++)
+  {
+    BkgParM1[i]->GetHist()->Scale( dDataIntegralM1*fParameters[i]) 
+    BkgParM2[i]->GetHist()->Scale( dDataIntegralM2*fParameters[i]) 
+
+    fSaveResult->Add( BkgParM1[i]->GetHist() );
+    fSaveResult->Add( BkgParM2[i]->GetHist() );    
+  }
+
+  fSaveResult->Add(&mCorrMatrix);
+
+  fSaveResult->Write(); 
+
+  // cadap1->SaveAs(Form("%s/FitResults/CovMatrix/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cadap2->SaveAs(Form("%s/FitResults/CovMatrix/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual1->SaveAs(Form("%s/FitResults/CovMatrix/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/CovMatrix/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/CovMatrix/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cMatrix->SaveAs(Form("%s/FitResults/CovMatrix/FitCovMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  } // end bSave
 
   return true;
 }

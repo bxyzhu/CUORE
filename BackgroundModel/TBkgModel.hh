@@ -4,6 +4,7 @@
 #define __TBkgModel__
 #include "TObject.h"
 #include "TBkgModelSource.hh"
+#include "TBkgModelParameter.hh"
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2C.h"
@@ -24,7 +25,6 @@
 #include <TMinuitMinimizer.h>
 #include "TROOT.h"
 #include "TStyle.h"
-#include "TBkgModelParameter.hh"
 
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
@@ -82,51 +82,12 @@ public:
 
 	void UpdateModelAdaptive();
 
-	int 	dNParam;
-	int 	dBinSize;
-	int 	dBaseBinSize;
-	int 	dNBins;
-	int 	dBinBase;
 
-	double	dMinEnergy;
-	double 	dMaxEnergy;
-	double	dFitMin;
-	double	dFitMax;
-	double 	dNorm;
-	int 	dFitMinBinM1;
-	int 	dFitMaxBinM1;
-	int 	dFitMinBinM2;
-	int 	dFitMaxBinM2;
-	int 	dFitMinBinM2Sum;
-	int 	dFitMaxBinM2Sum;	
-	int 	dNumFreeParameters;
-	int 	dNDF;
+  	TBackgroundModelParameter BkgParM1[100];
+  	TBackgroundModelParameter BkgParM2[100];
 
-	double  	dDataIntegralTot;
-	double 	dDataIntegralM1;
-	double 	dDataIntegralM2;
-	double 	dDataIntegralM2Sum;
-
-	int 	dDataSet;
-	double 	dLivetime;
-	double 	dLivetimeYr;
 
 	double 	dChiSquare;
-	double 	dResidualRMSM1;
-	double 	dResidualRMSM2;
-	double 	dResidualRMSM2Sum;
-	double 	dResidualRMSTot;
-
-
-	int 	dAdaptiveBinsM1;
-	int 	dAdaptiveBinsM2;
-	int 	dAdaptiveBinsM2Sum;
-	std::vector<double> dAdaptiveVectorM1;
-	std::vector<double> dAdaptiveVectorM2;
-	std::vector<double> dAdaptiveVectorM2Sum;
-	double 	*dAdaptiveArrayM1;
-	double 	*dAdaptiveArrayM2;
-	double 	*dAdaptiveArrayM2Sum;
 
 	std::map<std::string, int> dParMap;
 
@@ -153,19 +114,6 @@ protected:
 	std::vector<double> 	fInitValues;
 	std::vector<double> 	fInitValues2;
 
-	TFile *fBulkInner;
-	TFile *fBulkInnerOld;
-	TFile *fBulkInnerM2Sum;
-	TFile *fBulkOuter;
-	TFile *fBulkOuterOld;
-	TFile *fBulkOuterM2Sum;
-	TFile *fSurfaceCrystal;
-	TFile *fSurfaceCrystalOld;
-	TFile *fSurfaceOther;
-	TFile *fSurfaceOtherOld;
-
-	TFile *fFudge;
-
 	TFile *fBulkSmeared;
 	TFile *fSurfaceSmeared;
 
@@ -178,9 +126,6 @@ protected:
 
 	TFile *fSaveResult;
 	TFile *fToyData;
-
-	std::string		dDataDir;
-	std::string 	dMCDir;
 	std::string 	dSaveDir;
 
 
@@ -194,9 +139,13 @@ protected:
 
 	int 			dNumCalls;
 	int 			dMult;
-	double			dBestChiSq;
 
 	// Parameters
+
+	int 			dNParam;
+	int 			dNumFreeParameters;
+	int 			dNDF;
+
 	double				fParameters[139];
 	double				fParError[139];
 	double 				fParActivity[139]; // Integral of all events
