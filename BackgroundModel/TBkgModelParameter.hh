@@ -13,7 +13,7 @@ class TBkgModelParameter : public TObject {
 public:
 	TBkgModelParameter();
 
-	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist);
+	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *&fHist);
 
 	virtual ~TBkgModelParameter();
 

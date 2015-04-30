@@ -8,9 +8,8 @@ TBkgModelParameter::TBkgModelParameter()
 {
 }
 
-TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist)
+TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *&fHist)
 {
-	// if(fHist == NULL) std::cout << Form(" \"%s\" histogram not created", fParName) << std::endl;
 	dParName = fParName;
 	dParIndex = fParIndex;
 	dInitialValue = fInitialValue;
