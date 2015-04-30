@@ -36,7 +36,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   TBackgroundModel* Obj = (TBackgroundModel*)gMinuit->GetObjectFit(); 
 
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
-  for(int i = 0; i < 44; i++ )
+  for(int i = 0; i < Obj->dNParam; i++ )
   {
     Obj->SetParameters(i, x[i]);
   }
@@ -46,9 +46,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
 }
 
 TBackgroundModel::TBackgroundModel()
-{
-
-}
+{}
 
 TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet, bool fSave)
 {
@@ -793,10 +791,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 
 // Mess with rebinning here 
-  fDataHistoM1->Rebin(4);
-  fDataHistoM2->Rebin(4);
-  fDataHistoM2Sum->Rebin(4);
-  dBaseBinSize = dBinSize*4;
+  // fDataHistoM1->Rebin(4);
+  // fDataHistoM2->Rebin(4);
+  // fDataHistoM2Sum->Rebin(4);
+  dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
  // Calculates adaptive binning vectors

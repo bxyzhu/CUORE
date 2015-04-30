@@ -26,6 +26,8 @@ public:
 
 	TH1D *GetHist();
 
+	void SetInitValue();
+
 protected:
 	bool bFixed;
 	const char 	 	*dParName;

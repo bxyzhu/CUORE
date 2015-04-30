@@ -48,3 +48,8 @@ TH1D *TBkgModelParameter::GetHist()
 {
 	return dHist;
 }
+
+void TBkgModelParameter::SetInitValue(double fInitialValue)
+{
+	dInitialValue = fInitialValue;
+}
