@@ -1,22 +1,20 @@
 #ifndef __TTest__
 #define __TTest__
 #include "TObject.h"
-#include "TBackgroundModel.hh"
+#include "TBkgModelSource.hh"
+#include "TBkgModelParameter.hh"
 
-class TTest : public TBackgroundModel {
+class TTest : public TBkgModelSource {
 
 public:
 	TTest();
 
-	TTest(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
+	// Call using base class header
+	// TTest(double fFitMin, double fFitMax, int fBinBase, int fDataset);
 
 	virtual ~TTest();
 
-	double GetChiSquareM1();
-
-	double GetChiSquareM2();
-
-
+	void TestStuff();
 
 	ClassDef(TTest, 1)
 };

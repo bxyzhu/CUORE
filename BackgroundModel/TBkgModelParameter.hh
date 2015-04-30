@@ -6,11 +6,14 @@
 #define __TBkgModelParameter__
 #include "TObject.h"
 #include "TH1D.h"
+#include "TStyle.h"
 
 class TBkgModelParameter : public TObject {
 
 public:
 	TBkgModelParameter();
+
+	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist);
 
 	virtual ~TBkgModelParameter();
 
@@ -26,16 +29,15 @@ public:
 
 	TH1D *GetHist();
 
-	void SetInitValue();
+	void SetInitValue(double fInitialValue);
 
-protected:
-	bool bFixed;
+	bool 			bFixed;
 	const char 	 	*dParName;
 	int 	 		dParIndex;
-	double	 		dInitalValue;
+	double	 		dInitialValue;
 	double	 		dMinLimit;
 	double	 		dMaxLimit;
-	TH1D 			*fHist
+	TH1D 			*dHist;
 
 	ClassDef(TBkgModelParameter, 1)
 };

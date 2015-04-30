@@ -1,14 +1,16 @@
 #include "TBkgModelParameter.hh"
 
+// using namespace std;
+
 ClassImp(TBkgModelParameter)
 
 TBkgModelParameter::TBkgModelParameter()
 {
 }
 
-TBkgModelParameter::TBkgModelParameter(const char *fParName, int dParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist)
+TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *fHist)
 {
-	if(fHist == NULL) cout << Form(" \"%s\" histogram not created", fParName) << endl;
+	// if(fHist == NULL) std::cout << Form(" \"%s\" histogram not created", fParName) << std::endl;
 	dParName = fParName;
 	dParIndex = fParIndex;
 	dInitialValue = fInitialValue;
@@ -37,12 +39,12 @@ double TBkgModelParameter::GetParInitial()
 
 double TBkgModelParameter::GetParMin()
 {
-	return dParMin;
+	return dMinLimit;
 }
 
 double TBkgModelParameter::GetParMax()
 {
-	return dParMax;
+	return dMaxLimit;
 }
 
 TH1D *TBkgModelParameter::GetHist()

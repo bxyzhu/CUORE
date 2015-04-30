@@ -99,9 +99,6 @@ public:
 	std::string 	dMCDir;
 	std::string 	dSaveDir;
 
-
-protected:
-
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;

@@ -83,8 +83,8 @@ public:
 	void UpdateModelAdaptive();
 
 
-  	TBackgroundModelParameter BkgParM1[100];
-  	TBackgroundModelParameter BkgParM2[100];
+  	TBkgModelParameter BkgParM1[100];
+  	TBkgModelParameter BkgParM2[100];
 
 
 	double 	dChiSquare;

@@ -137,8 +137,6 @@ TBkgModelSource::TBkgModelSource(double fFitMin, double fFitMax, int fBinBase, i
 
   TBkgModelSource::LoadSources();
 
-  hAdapTeO22nuM1->Draw();
-
 }
 
 
@@ -1660,7 +1658,7 @@ void TBkgModelSource::CreateModelHistograms()
   hAdapFudge661M2 = new TH1D("hAdapFudge661M2", "Fudge Factor 661M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapFudge803M2 = new TH1D("hAdapFudge803M2", "Fudge Factor 803M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapFudge1063M2 = new TH1D("hAdapFudge1063M2", "Fudge Factor 1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  
+
 }
 
 
