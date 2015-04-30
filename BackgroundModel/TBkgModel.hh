@@ -142,9 +142,9 @@ protected:
 
 	// Parameters
 
-	int 			dNParam;
-	int 			dNumFreeParameters;
-	int 			dNDF;
+	int 				dNParam;
+	int 				dNumFreeParameters;
+	int 				dNDF;
 
 	double				fParameters[139];
 	double				fParError[139];
@@ -158,6 +158,6 @@ protected:
 	double				fMCEff[62];
 
  ClassDef(TBkgModel,1) // 
-    };
+ };
 
 #endif // __TBkgModel__

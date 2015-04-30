@@ -93,6 +93,7 @@ TBkgModel::~TBkgModel()
 
 }
 
+// Shows total number of parameters
 int TBkgModel::ShowNParameters()
 {
   return dNParam;

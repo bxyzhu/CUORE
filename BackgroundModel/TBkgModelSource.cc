@@ -135,6 +135,10 @@ TBkgModelSource::TBkgModelSource(double fFitMin, double fFitMax, int fBinBase, i
   // Create Model Histograms
   TBkgModelSource::CreateModelHistograms();
 
+  TBkgModelSource::LoadSources();
+
+  hAdapTeO22nuM1->Draw();
+
 }
 
 
@@ -1656,15 +1660,7 @@ void TBkgModelSource::CreateModelHistograms()
   hAdapFudge661M2 = new TH1D("hAdapFudge661M2", "Fudge Factor 661M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapFudge803M2 = new TH1D("hAdapFudge803M2", "Fudge Factor 803M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapFudge1063M2 = new TH1D("hAdapFudge1063M2", "Fudge Factor 1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-  hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hEnergyScaleDummyM2Sum = new TH1D("hEnergyScaleDummyM2Sum",   "Energy Scale M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-
-  hChiSquaredProgressM1 = new TH1D("hChiSquaredProgressM1", "Chi Squared Progress", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hChiSquaredProgressM2 = new TH1D("hChiSquaredProgressM2", "Chi Squared Progress", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hChiSquaredProgressM2Sum = new TH1D("hChiSquaredProgressM2Sum", "Chi Squared Progress", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-
+  
 }
 
 
@@ -1704,12 +1700,12 @@ void TBkgModelSource::LoadData()
     cout << "Using Data Release 3" << endl;
   break;
 
-  case -1:
-    cout << "Using Toy data" << endl;
-    bToyData = true;
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds*.root", dDataDir.c_str())); 
-    dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
-  break;
+  // case -1:
+  //   cout << "Using Toy data" << endl;
+  //   bToyData = true;
+  //   qtree->Add(Form("%s/Unblinded/ReducedB-ds*.root", dDataDir.c_str())); 
+  //   dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
+  // break;
 
   default:   
     qtree->Add(Form("%s/Unblinded/ReducedB-ds*.root", dDataDir.c_str())); 
@@ -1756,12 +1752,12 @@ void TBkgModelSource::LoadSources()
   hTeO2po210M1   = (TH1D*)fBulkInnerOld->Get("hTeO2po210M1");
   hTeO2te125M1   = (TH1D*)fBulkInnerOld->Get("hTeO2te125M1");
   hTeO2th232M1   = (TH1D*)fBulkInnerOld->Get("hTeO2th232M1");
-  hTeO2th228M1   = (TH1D*)fBulkInner->Get("hTeO2th228M1");
-  hTeO2ra226M1   = (TH1D*)fBulkInner->Get("hTeO2ra226M1");
-  hTeO2rn222M1   = (TH1D*)fBulkInner->Get("hTeO2rn222M1");
+  // hTeO2th228M1   = (TH1D*)fBulkInner->Get("hTeO2th228M1");
+  // hTeO2ra226M1   = (TH1D*)fBulkInner->Get("hTeO2ra226M1");
+  // hTeO2rn222M1   = (TH1D*)fBulkInner->Get("hTeO2rn222M1");
   hTeO2u238M1    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M1");
-  hTeO2th230M1   = (TH1D*)fBulkInner->Get("hTeO2th230M1");
-  hTeO2u234M1    = (TH1D*)fBulkInner->Get("hTeO2u234M1");
+  // hTeO2th230M1   = (TH1D*)fBulkInner->Get("hTeO2th230M1");
+  // hTeO2u234M1    = (TH1D*)fBulkInner->Get("hTeO2u234M1");
 
   hTeO2th232onlyM1 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM1");
   hTeO2ra228pb208M1 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M1");
@@ -1775,12 +1771,12 @@ void TBkgModelSource::LoadSources()
   hTeO2po210M2   = (TH1D*)fBulkInnerOld->Get("hTeO2po210M2");
   hTeO2te125M2   = (TH1D*)fBulkInnerOld->Get("hTeO2te125M2");
   hTeO2th232M2   = (TH1D*)fBulkInnerOld->Get("hTeO2th232M2");
-  hTeO2th228M2   = (TH1D*)fBulkInner->Get("hTeO2th228M2");
-  hTeO2ra226M2   = (TH1D*)fBulkInner->Get("hTeO2ra226M2");
-  hTeO2rn222M2   = (TH1D*)fBulkInner->Get("hTeO2rn222M2");
+  // hTeO2th228M2   = (TH1D*)fBulkInner->Get("hTeO2th228M2");
+  // hTeO2ra226M2   = (TH1D*)fBulkInner->Get("hTeO2ra226M2");
+  // hTeO2rn222M2   = (TH1D*)fBulkInner->Get("hTeO2rn222M2");
   hTeO2u238M2    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M2");
-  hTeO2th230M2   = (TH1D*)fBulkInner->Get("hTeO2th230M2");
-  hTeO2u234M2    = (TH1D*)fBulkInner->Get("hTeO2u234M2");
+  // hTeO2th230M2   = (TH1D*)fBulkInner->Get("hTeO2th230M2");
+  // hTeO2u234M2    = (TH1D*)fBulkInner->Get("hTeO2u234M2");
 
   hTeO2th232onlyM2 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM2");
   hTeO2ra228pb208M2 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M2");
@@ -1794,12 +1790,12 @@ void TBkgModelSource::LoadSources()
   hTeO2po210M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2po210M2Sum");
   hTeO2te125M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2te125M2Sum");
   hTeO2th232M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th232M2Sum");
-  hTeO2th228M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th228M2Sum");
-  hTeO2ra226M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2ra226M2Sum");
-  hTeO2rn222M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2rn222M2Sum");
+  // hTeO2th228M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th228M2Sum");
+  // hTeO2ra226M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2ra226M2Sum");
+  // hTeO2rn222M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2rn222M2Sum");
   hTeO2u238M2Sum    = (TH1D*)fBulkInnerM2Sum->Get("hTeO2u238M2Sum");
-  hTeO2th230M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th230M2Sum");
-  hTeO2u234M2Sum    = (TH1D*)fBulkInnerM2Sum->Get("hTeO2u234M2Sum");
+  // hTeO2th230M2Sum   = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th230M2Sum");
+  // hTeO2u234M2Sum    = (TH1D*)fBulkInnerM2Sum->Get("hTeO2u234M2Sum");
 
   hTeO2th232onlyM2Sum = (TH1D*)fBulkInnerM2Sum->Get("hTeO2th232onlyM2Sum");
   hTeO2ra228pb208M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hTeO2ra228pb208M2Sum");
@@ -1878,7 +1874,7 @@ void TBkgModelSource::LoadSources()
   hCuBox_CuFrameth232M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hCuBox_CuFrameth232M2Sum");
   hCuBox_CuFrameu238M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hCuBox_CuFrameu238M2Sum");
 
-
+/*
 ///////// 50mK M1 and M2
   h50mKco58M1    = (TH1D*)fBulkOuter->Get("h50mKco58M1");
   h50mKco60M1    = (TH1D*)fBulkOuter->Get("h50mKco60M1");
@@ -1922,7 +1918,7 @@ void TBkgModelSource::LoadSources()
   h600mKk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("h600mKk40M2Sum");
   h600mKth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h600mKth232M2Sum");
   h600mKu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("h600mKu238M2Sum");
-
+*/
 //////// Roman Lead M1 and M2
   // hPbRombi207M1   = (TH1D*)fBulkOuter->Get("hPbRombi207M1");
   hPbRomco60M1    = (TH1D*)fBulkOuterOld->Get("hPbRomco60M1");
@@ -1948,7 +1944,7 @@ void TBkgModelSource::LoadSources()
   hPbRomth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hPbRomth232M2Sum");
   hPbRomu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hPbRomu238M2Sum");
 
-
+/*
 /////// Main Bath M1 and M2
   hMBco60M1    = (TH1D*)fBulkOuter->Get("hMBco60M1");
   hMBk40M1     = (TH1D*)fBulkOuter->Get("hMBk40M1");
@@ -1964,7 +1960,7 @@ void TBkgModelSource::LoadSources()
   hMBk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hMBk40M2Sum");
   hMBth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hMBth232M2Sum");
   hMBu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hMBu238M2Sum");
-
+*/
 ////// Internal Shields M1 and M2
   // hInternalco60M1 = (TH1D*)fBulkInnerOld->Get("hInternalco60M1");
   // hInternalk40M1 = (TH1D*)fBulkOuter->Get("hInternalk40M1");
@@ -1992,7 +1988,7 @@ void TBkgModelSource::LoadSources()
   hInternalth232M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalth232M2Sum");
   hInternalu238M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalu238M2Sum");
 
-
+/*
 /////// Super Insulation M1 and M2
   hSIk40M1     = (TH1D*)fBulkOuter->Get("hSIk40M1");
   hSIth232M1   = (TH1D*)fBulkOuter->Get("hSIth232M1");
@@ -2021,7 +2017,7 @@ void TBkgModelSource::LoadSources()
   hIVCk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hIVCk40M2Sum");
   hIVCth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hIVCth232M2Sum");
   hIVCu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hIVCu238M2Sum");
-
+*/
 /////// OVC M1 and M2
   hOVCco60M1    = (TH1D*)fBulkOuterOld->Get("hOVCco60M1");
   hOVCk40M1     = (TH1D*)fBulkOuterOld->Get("hOVCk40M1");
@@ -2768,7 +2764,7 @@ void TBkgModelSource::LoadSources()
   hnewCuBox_CuFrameu238M2Sum_5 = hCuBox_CuFrameu238M2Sum_5->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFrameu238M2Sum_5", dAdaptiveArrayM2Sum);
   hnewCuBox_CuFramepb210M2Sum_5 = hCuBox_CuFramepb210M2Sum_5->Rebin(dAdaptiveBinsM2Sum, "hnewCuBox_CuFramepb210M2Sum_5", dAdaptiveArrayM2Sum);
 
-
+/*
 ////////// 50mK M1 and M2
   h50mKco58M1->Rebin(dAdaptiveBinsM1, "hnew50mKco58M1", dAdaptiveArrayM1);
   h50mKco60M1->Rebin(dAdaptiveBinsM1, "hnew50mKco60M1", dAdaptiveArrayM1);
@@ -2796,7 +2792,7 @@ void TBkgModelSource::LoadSources()
   h50mKpb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKpb210M2Sum", dAdaptiveArrayM2Sum);
   h50mKth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKth232M2Sum", dAdaptiveArrayM2Sum);
   h50mKu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnew50mKu238M2Sum", dAdaptiveArrayM2Sum);
-
+*/
 //////// 600mK
   hnew600mKco60M1 = h600mKco60M1->Rebin(dAdaptiveBinsM1, "hnew600mKco60M1", dAdaptiveArrayM1);
   hnew600mKk40M1 = h600mKk40M1->Rebin(dAdaptiveBinsM1, "hnew600mKk40M1", dAdaptiveArrayM1);
@@ -2852,7 +2848,7 @@ void TBkgModelSource::LoadSources()
   hnewInternalth232M2Sum = hInternalth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalth232M2Sum", dAdaptiveArrayM2Sum);
   hnewInternalu238M2Sum = hInternalu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewInternalu238M2Sum", dAdaptiveArrayM2Sum);
 
-
+/*
 ////////// Main Bath M1 and M2
   hMBco60M1->Rebin(dAdaptiveBinsM1, "hnewMBco60M1", dAdaptiveArrayM1);
   hMBk40M1->Rebin(dAdaptiveBinsM1, "hnewMBk40M1", dAdaptiveArrayM1);
@@ -2897,7 +2893,7 @@ void TBkgModelSource::LoadSources()
   hIVCk40M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewIVCk40M2Sum", dAdaptiveArrayM2Sum);
   hIVCth232M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewIVCth232M2Sum", dAdaptiveArrayM2Sum);
   hIVCu238M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewIVCu238M2Sum", dAdaptiveArrayM2Sum);
-
+*/
 
 ////////// OVC M1 and M2
   hnewOVCco60M1 = hOVCco60M1->Rebin(dAdaptiveBinsM1, "hnewOVCco60M1", dAdaptiveArrayM1);
@@ -2932,12 +2928,12 @@ void TBkgModelSource::LoadSources()
     hAdapTeO2po210M1->SetBinContent(i, hnewTeO2po210M1->GetBinContent(i)/hnewTeO2po210M1->GetBinWidth(i));
     hAdapTeO2te125M1->SetBinContent(i, hnewTeO2te125M1->GetBinContent(i)/hnewTeO2te125M1->GetBinWidth(i));
     hAdapTeO2th232M1->SetBinContent(i, hnewTeO2th232M1->GetBinContent(i)/hnewTeO2th232M1->GetBinWidth(i));
-    hAdapTeO2th228M1->SetBinContent(i, hnewTeO2th228M1->GetBinContent(i)/hnewTeO2th228M1->GetBinWidth(i));
-    hAdapTeO2ra226M1->SetBinContent(i, hnewTeO2ra226M1->GetBinContent(i)/hnewTeO2ra226M1->GetBinWidth(i));
-    hAdapTeO2rn222M1->SetBinContent(i, hnewTeO2rn222M1->GetBinContent(i)/hnewTeO2rn222M1->GetBinWidth(i));
+    // hAdapTeO2th228M1->SetBinContent(i, hnewTeO2th228M1->GetBinContent(i)/hnewTeO2th228M1->GetBinWidth(i));
+    // hAdapTeO2ra226M1->SetBinContent(i, hnewTeO2ra226M1->GetBinContent(i)/hnewTeO2ra226M1->GetBinWidth(i));
+    // hAdapTeO2rn222M1->SetBinContent(i, hnewTeO2rn222M1->GetBinContent(i)/hnewTeO2rn222M1->GetBinWidth(i));
     hAdapTeO2u238M1->SetBinContent(i, hnewTeO2u238M1->GetBinContent(i)/hnewTeO2u238M1->GetBinWidth(i));
-    hAdapTeO2th230M1->SetBinContent(i, hnewTeO2th230M1->GetBinContent(i)/hnewTeO2th230M1->GetBinWidth(i));
-    hAdapTeO2u234M1->SetBinContent(i, hnewTeO2u234M1->GetBinContent(i)/hnewTeO2u234M1->GetBinWidth(i));
+    // hAdapTeO2th230M1->SetBinContent(i, hnewTeO2th230M1->GetBinContent(i)/hnewTeO2th230M1->GetBinWidth(i));
+    // hAdapTeO2u234M1->SetBinContent(i, hnewTeO2u234M1->GetBinContent(i)/hnewTeO2u234M1->GetBinWidth(i));
 
     hAdapTeO2th232onlyM1->SetBinContent(i, hnewTeO2th232onlyM1->GetBinContent(i)/hnewTeO2th232onlyM1->GetBinWidth(i));
     hAdapTeO2ra228pb208M1->SetBinContent(i, hnewTeO2ra228pb208M1->GetBinContent(i)/hnewTeO2ra228pb208M1->GetBinWidth(i));
@@ -3067,7 +3063,7 @@ void TBkgModelSource::LoadSources()
 
 
 
-
+/*
     hAdap50mKco58M1->SetBinContent(i, hnew50mKco58M1->GetBinContent(i)/hnew50mKco58M1->GetBinWidth(i));
     hAdap50mKco60M1->SetBinContent(i, hnew50mKco60M1->GetBinContent(i)/hnew50mKco60M1->GetBinWidth(i));
     hAdap50mKcs137M1->SetBinContent(i, hnew50mKcs137M1->GetBinContent(i)/hnew50mKcs137M1->GetBinWidth(i));
@@ -3081,7 +3077,7 @@ void TBkgModelSource::LoadSources()
     hAdap600mKk40M1->SetBinContent(i, hnew600mKk40M1->GetBinContent(i)/hnew600mKk40M1->GetBinWidth(i));
     hAdap600mKth232M1->SetBinContent(i, hnew600mKth232M1->GetBinContent(i)/hnew600mKth232M1->GetBinWidth(i));
     hAdap600mKu238M1->SetBinContent(i, hnew600mKu238M1->GetBinContent(i)/hnew600mKu238M1->GetBinWidth(i));
-
+*/
 
     // hAdapPbRombi207M1->SetBinContent(i, hnewPbRombi207M1->GetBinContent(i)/hnewPbRombi207M1->GetBinWidth(i));
     hAdapPbRomco60M1->SetBinContent(i, hnewPbRomco60M1->GetBinContent(i)/hnewPbRomco60M1->GetBinWidth(i));
@@ -3096,7 +3092,7 @@ void TBkgModelSource::LoadSources()
     hAdapInternalth232M1->SetBinContent(i, hnewInternalth232M1->GetBinContent(i)/hnewInternalth232M1->GetBinWidth(i));
     hAdapInternalu238M1->SetBinContent(i, hnewInternalu238M1->GetBinContent(i)/hnewInternalu238M1->GetBinWidth(i));
 
-
+/*
     hAdapMBco60M1->SetBinContent(i, hnewMBco60M1->GetBinContent(i)/hnewMBco60M1->GetBinWidth(i));
     hAdapMBk40M1->SetBinContent(i, hnewMBk40M1->GetBinContent(i)/hnewMBk40M1->GetBinWidth(i));
     hAdapMBth232M1->SetBinContent(i, hnewMBth232M1->GetBinContent(i)/hnewMBth232M1->GetBinWidth(i));
@@ -3110,7 +3106,7 @@ void TBkgModelSource::LoadSources()
     hAdapIVCk40M1->SetBinContent(i, hnewIVCk40M1->GetBinContent(i)/hnewIVCk40M1->GetBinWidth(i));
     hAdapIVCth232M1->SetBinContent(i, hnewIVCth232M1->GetBinContent(i)/hnewIVCth232M1->GetBinWidth(i));
     hAdapIVCu238M1->SetBinContent(i, hnewIVCu238M1->GetBinContent(i)/hnewIVCu238M1->GetBinWidth(i));
-
+*/
     hAdapOVCco60M1->SetBinContent(i, hnewOVCco60M1->GetBinContent(i)/hnewOVCco60M1->GetBinWidth(i));
     hAdapOVCk40M1->SetBinContent(i, hnewOVCk40M1->GetBinContent(i)/hnewOVCk40M1->GetBinWidth(i));
     hAdapOVCth232M1->SetBinContent(i, hnewOVCth232M1->GetBinContent(i)/hnewOVCth232M1->GetBinWidth(i));
@@ -3130,12 +3126,12 @@ void TBkgModelSource::LoadSources()
     hAdapTeO2po210M2->SetBinContent(i, hnewTeO2po210M2->GetBinContent(i)/hnewTeO2po210M2->GetBinWidth(i));
     hAdapTeO2te125M2->SetBinContent(i, hnewTeO2te125M2->GetBinContent(i)/hnewTeO2te125M2->GetBinWidth(i));
     hAdapTeO2th232M2->SetBinContent(i, hnewTeO2th232M2->GetBinContent(i)/hnewTeO2th232M2->GetBinWidth(i));
-    hAdapTeO2th228M2->SetBinContent(i, hnewTeO2th228M2->GetBinContent(i)/hnewTeO2th228M2->GetBinWidth(i));
-    hAdapTeO2ra226M2->SetBinContent(i, hnewTeO2ra226M2->GetBinContent(i)/hnewTeO2ra226M2->GetBinWidth(i));
-    hAdapTeO2rn222M2->SetBinContent(i, hnewTeO2rn222M2->GetBinContent(i)/hnewTeO2rn222M2->GetBinWidth(i));
+    // hAdapTeO2th228M2->SetBinContent(i, hnewTeO2th228M2->GetBinContent(i)/hnewTeO2th228M2->GetBinWidth(i));
+    // hAdapTeO2ra226M2->SetBinContent(i, hnewTeO2ra226M2->GetBinContent(i)/hnewTeO2ra226M2->GetBinWidth(i));
+    // hAdapTeO2rn222M2->SetBinContent(i, hnewTeO2rn222M2->GetBinContent(i)/hnewTeO2rn222M2->GetBinWidth(i));
     hAdapTeO2u238M2->SetBinContent(i, hnewTeO2u238M2->GetBinContent(i)/hnewTeO2u238M2->GetBinWidth(i));
-    hAdapTeO2th230M2->SetBinContent(i, hnewTeO2th230M2->GetBinContent(i)/hnewTeO2th230M2->GetBinWidth(i));
-    hAdapTeO2u234M2->SetBinContent(i, hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
+    // hAdapTeO2th230M2->SetBinContent(i, hnewTeO2th230M2->GetBinContent(i)/hnewTeO2th230M2->GetBinWidth(i));
+    // hAdapTeO2u234M2->SetBinContent(i, hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
 
     // hAdapTeO2Spb210M2_01->SetBinContent(i, hnewTeO2Spb210M2_01->GetBinContent(i)/hnewTeO2Spb210M2_01->GetBinWidth(i));
     // hAdapTeO2Spo210M2_001->SetBinContent(i, hnewTeO2Spo210M2_001->GetBinContent(i)/hnewTeO2Spo210M2_001->GetBinWidth(i));
@@ -3263,7 +3259,7 @@ void TBkgModelSource::LoadSources()
     hAdapCuBox_CuFrameu238M2_5->SetBinContent(i, hnewCuBox_CuFrameu238M2_5->GetBinContent(i)/hnewCuBox_CuFrameu238M2_5->GetBinWidth(i));
     hAdapCuBox_CuFramepb210M2_5->SetBinContent(i, hnewCuBox_CuFramepb210M2_5->GetBinContent(i)/hnewCuBox_CuFramepb210M2_5->GetBinWidth(i));
 
-
+/*
     hAdap50mKco58M2->SetBinContent(i, hnew50mKco58M2->GetBinContent(i)/hnew50mKco58M2->GetBinWidth(i));
     hAdap50mKco60M2->SetBinContent(i, hnew50mKco60M2->GetBinContent(i)/hnew50mKco60M2->GetBinWidth(i));
     hAdap50mKcs137M2->SetBinContent(i, hnew50mKcs137M2->GetBinContent(i)/hnew50mKcs137M2->GetBinWidth(i));
@@ -3277,7 +3273,7 @@ void TBkgModelSource::LoadSources()
     hAdap600mKk40M2->SetBinContent(i, hnew600mKk40M2->GetBinContent(i)/hnew600mKk40M2->GetBinWidth(i));
     hAdap600mKth232M2->SetBinContent(i, hnew600mKth232M2->GetBinContent(i)/hnew600mKth232M2->GetBinWidth(i));
     hAdap600mKu238M2->SetBinContent(i, hnew600mKu238M2->GetBinContent(i)/hnew600mKu238M2->GetBinWidth(i));
-
+*/
 
     // hAdapPbRombi207M2->SetBinContent(i, hnewPbRombi207M2->GetBinContent(i)/hnewPbRombi207M2->GetBinWidth(i));
     hAdapPbRomco60M2->SetBinContent(i, hnewPbRomco60M2->GetBinContent(i)/hnewPbRomco60M2->GetBinWidth(i));
@@ -3292,7 +3288,7 @@ void TBkgModelSource::LoadSources()
     hAdapInternalth232M2->SetBinContent(i, hnewInternalth232M2->GetBinContent(i)/hnewInternalth232M2->GetBinWidth(i));
     hAdapInternalu238M2->SetBinContent(i, hnewInternalu238M2->GetBinContent(i)/hnewInternalu238M2->GetBinWidth(i));
 
-
+/*
     hAdapMBco60M2->SetBinContent(i, hnewMBco60M2->GetBinContent(i)/hnewMBco60M2->GetBinWidth(i));
     hAdapMBk40M2->SetBinContent(i, hnewMBk40M2->GetBinContent(i)/hnewMBk40M2->GetBinWidth(i));
     hAdapMBth232M2->SetBinContent(i, hnewMBth232M2->GetBinContent(i)/hnewMBth232M2->GetBinWidth(i));
@@ -3307,7 +3303,7 @@ void TBkgModelSource::LoadSources()
     hAdapIVCk40M2->SetBinContent(i, hnewIVCk40M2->GetBinContent(i)/hnewIVCk40M2->GetBinWidth(i));
     hAdapIVCth232M2->SetBinContent(i, hnewIVCth232M2->GetBinContent(i)/hnewIVCth232M2->GetBinWidth(i));
     hAdapIVCu238M2->SetBinContent(i, hnewIVCu238M2->GetBinContent(i)/hnewIVCu238M2->GetBinWidth(i));
-
+*/
 
     hAdapOVCco60M2->SetBinContent(i, hnewOVCco60M2->GetBinContent(i)/hnewOVCco60M2->GetBinWidth(i));
     hAdapOVCk40M2->SetBinContent(i, hnewOVCk40M2->GetBinContent(i)/hnewOVCk40M2->GetBinWidth(i));
@@ -3328,12 +3324,12 @@ void TBkgModelSource::LoadSources()
     hAdapTeO2po210M2Sum->SetBinContent(i, hnewTeO2po210M2Sum->GetBinContent(i)/hnewTeO2po210M2Sum->GetBinWidth(i));
     hAdapTeO2te125M2Sum->SetBinContent(i, hnewTeO2te125M2Sum->GetBinContent(i)/hnewTeO2te125M2Sum->GetBinWidth(i));
     hAdapTeO2th232M2Sum->SetBinContent(i, hnewTeO2th232M2Sum->GetBinContent(i)/hnewTeO2th232M2Sum->GetBinWidth(i));
-    hAdapTeO2th228M2Sum->SetBinContent(i, hnewTeO2th228M2Sum->GetBinContent(i)/hnewTeO2th228M2Sum->GetBinWidth(i));
-    hAdapTeO2ra226M2Sum->SetBinContent(i, hnewTeO2ra226M2Sum->GetBinContent(i)/hnewTeO2ra226M2Sum->GetBinWidth(i));
-    hAdapTeO2rn222M2Sum->SetBinContent(i, hnewTeO2rn222M2Sum->GetBinContent(i)/hnewTeO2rn222M2Sum->GetBinWidth(i));
+    // hAdapTeO2th228M2Sum->SetBinContent(i, hnewTeO2th228M2Sum->GetBinContent(i)/hnewTeO2th228M2Sum->GetBinWidth(i));
+    // hAdapTeO2ra226M2Sum->SetBinContent(i, hnewTeO2ra226M2Sum->GetBinContent(i)/hnewTeO2ra226M2Sum->GetBinWidth(i));
+    // hAdapTeO2rn222M2Sum->SetBinContent(i, hnewTeO2rn222M2Sum->GetBinContent(i)/hnewTeO2rn222M2Sum->GetBinWidth(i));
     hAdapTeO2u238M2Sum->SetBinContent(i, hnewTeO2u238M2Sum->GetBinContent(i)/hnewTeO2u238M2Sum->GetBinWidth(i));
-    hAdapTeO2th230M2Sum->SetBinContent(i, hnewTeO2th230M2Sum->GetBinContent(i)/hnewTeO2th230M2Sum->GetBinWidth(i));
-    hAdapTeO2u234M2Sum->SetBinContent(i, hnewTeO2u234M2Sum->GetBinContent(i)/hnewTeO2u234M2Sum->GetBinWidth(i));
+    // hAdapTeO2th230M2Sum->SetBinContent(i, hnewTeO2th230M2Sum->GetBinContent(i)/hnewTeO2th230M2Sum->GetBinWidth(i));
+    // hAdapTeO2u234M2Sum->SetBinContent(i, hnewTeO2u234M2Sum->GetBinContent(i)/hnewTeO2u234M2Sum->GetBinWidth(i));
 
     // hAdapTeO2Spb210M2Sum_01->SetBinContent(i, hnewTeO2Spb210M2Sum_01->GetBinContent(i)/hnewTeO2Spb210M2Sum_01->GetBinWidth(i));
     // hAdapTeO2Spo210M2Sum_001->SetBinContent(i, hnewTeO2Spo210M2Sum_001->GetBinContent(i)/hnewTeO2Spo210M2Sum_001->GetBinWidth(i));
@@ -3461,7 +3457,7 @@ void TBkgModelSource::LoadSources()
     hAdapCuBox_CuFrameu238M2Sum_5->SetBinContent(i, hnewCuBox_CuFrameu238M2Sum_5->GetBinContent(i)/hnewCuBox_CuFrameu238M2Sum_5->GetBinWidth(i));
     hAdapCuBox_CuFramepb210M2Sum_5->SetBinContent(i, hnewCuBox_CuFramepb210M2Sum_5->GetBinContent(i)/hnewCuBox_CuFramepb210M2Sum_5->GetBinWidth(i));
 
-
+/*
     hAdap50mKco58M2Sum->SetBinContent(i, hnew50mKco58M2Sum->GetBinContent(i)/hnew50mKco58M2Sum->GetBinWidth(i));
     hAdap50mKco60M2Sum->SetBinContent(i, hnew50mKco60M2Sum->GetBinContent(i)/hnew50mKco60M2Sum->GetBinWidth(i));
     hAdap50mKcs137M2Sum->SetBinContent(i, hnew50mKcs137M2Sum->GetBinContent(i)/hnew50mKcs137M2Sum->GetBinWidth(i));
@@ -3475,7 +3471,7 @@ void TBkgModelSource::LoadSources()
     hAdap600mKk40M2Sum->SetBinContent(i, hnew600mKk40M2Sum->GetBinContent(i)/hnew600mKk40M2Sum->GetBinWidth(i));
     hAdap600mKth232M2Sum->SetBinContent(i, hnew600mKth232M2Sum->GetBinContent(i)/hnew600mKth232M2Sum->GetBinWidth(i));
     hAdap600mKu238M2Sum->SetBinContent(i, hnew600mKu238M2Sum->GetBinContent(i)/hnew600mKu238M2Sum->GetBinWidth(i));
-
+*/
 
     // hAdapPbRombi207M2Sum->SetBinContent(i, hnewPbRombi207M2Sum->GetBinContent(i)/hnewPbRombi207M2Sum->GetBinWidth(i));
     hAdapPbRomco60M2Sum->SetBinContent(i, hnewPbRomco60M2Sum->GetBinContent(i)/hnewPbRomco60M2Sum->GetBinWidth(i));
@@ -3490,7 +3486,7 @@ void TBkgModelSource::LoadSources()
     hAdapInternalth232M2Sum->SetBinContent(i, hnewInternalth232M2Sum->GetBinContent(i)/hnewInternalth232M2Sum->GetBinWidth(i));
     hAdapInternalu238M2Sum->SetBinContent(i, hnewInternalu238M2Sum->GetBinContent(i)/hnewInternalu238M2Sum->GetBinWidth(i));
 
-
+/*
     hAdapMBco60M2Sum->SetBinContent(i, hnewMBco60M2Sum->GetBinContent(i)/hnewMBco60M2Sum->GetBinWidth(i));
     hAdapMBk40M2Sum->SetBinContent(i, hnewMBk40M2Sum->GetBinContent(i)/hnewMBk40M2Sum->GetBinWidth(i));
     hAdapMBth232M2Sum->SetBinContent(i, hnewMBth232M2Sum->GetBinContent(i)/hnewMBth232M2Sum->GetBinWidth(i));
@@ -3504,6 +3500,7 @@ void TBkgModelSource::LoadSources()
     hAdapIVCk40M2Sum->SetBinContent(i, hnewIVCk40M2Sum->GetBinContent(i)/hnewIVCk40M2Sum->GetBinWidth(i));
     hAdapIVCth232M2Sum->SetBinContent(i, hnewIVCth232M2Sum->GetBinContent(i)/hnewIVCth232M2Sum->GetBinWidth(i));
     hAdapIVCu238M2Sum->SetBinContent(i, hnewIVCu238M2Sum->GetBinContent(i)/hnewIVCu238M2Sum->GetBinWidth(i));
+*/
 
     hAdapOVCco60M2Sum->SetBinContent(i, hnewOVCco60M2Sum->GetBinContent(i)/hnewOVCco60M2Sum->GetBinWidth(i));
     hAdapOVCk40M2Sum->SetBinContent(i, hnewOVCk40M2Sum->GetBinContent(i)/hnewOVCk40M2Sum->GetBinWidth(i));
@@ -3513,7 +3510,5 @@ void TBkgModelSource::LoadSources()
     hAdapExtPbbi210M2Sum->SetBinContent(i, hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
 
   }
-
-  SetParEfficiency();
 
 }

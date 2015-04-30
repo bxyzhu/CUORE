@@ -9,6 +9,7 @@
 #include "TFile.h"
 #include "TChain.h"
 #include "TCut.h"
+#include "TMath.h"
 #include <iostream>
 #include <fstream>
 
@@ -266,19 +267,6 @@ protected:
 	// TH1D			*fModelTotAdapAlphaLowM2Sum;
 
 	TH1D 			*fModelTotAdapFudgeM2Sum;
-
-//////////// Residual distributions
-	TGraph			*gResidualM1;
-	TGraph 			*gResidualM2;
-	TGraph 			*gResidualM2Sum;
-
-	TH1D			*hResidualDistM1;
-	TH1D			*hResidualDistM2;
-	TH1D			*hResidualDistM2Sum;
-
-	TH1D			*hResidualGausM1;
-	TH1D			*hResidualGausM2;
-	TH1D			*hResidualGausM2Sum;
 
 
 //////////////////// MC Histograms
