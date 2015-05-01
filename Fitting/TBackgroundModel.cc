@@ -118,7 +118,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   LoadData();
 
-/*
+
   TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
   fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
 
@@ -132,7 +132,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fDataHistoM1->Divide( hEfficiency );
   fDataHistoM2->Divide( hEfficiency );
   fDataHistoM2Sum->Divide( hEfficiency );
-*/
+
 
   // Total model histograms M1
   // M2Sum histograms created but not used (in case I need them someday...)
@@ -3037,7 +3037,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2090 && fAdapDataHistoM1->GetBinCenter(i) <= 2130)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2200 && fAdapDataHistoM1->GetBinCenter(i) <= 2220)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2440 && fAdapDataHistoM1->GetBinCenter(i) <= 2450)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2600 && fAdapDataHistoM1->GetBinCenter(i) <= 2630)continue;  
+    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2600 && fAdapDataHistoM1->GetBinCenter(i) <= 2630)continue;   
 
     datam1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
     modelm1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
@@ -5673,10 +5673,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
-   // minuit->FixParameter(37); // 
-   // minuit->FixParameter(38); // 
-   // minuit->FixParameter(39); //
-   // minuit->FixParameter(40); //
+   minuit->FixParameter(37); // 
+   minuit->FixParameter(38); // 
+   minuit->FixParameter(39); //
+   minuit->FixParameter(40); //
 
    // minuit->FixParameter(41); // 
    // minuit->FixParameter(42); //
@@ -6688,6 +6688,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hChiSquaredProgressM2Sum->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2Sum->Draw();
 
+/*
   if(bSave)
   {
   // Save matrix to file
@@ -6842,14 +6843,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   LatexResultTable(0);
   } // end bSave
 
-  // Kernal Convolution
-  // TH1D *hKernalConvM1 = new TH1D("hKernalConvM1", "", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  // Kernal(fModelTotAdapM1, hKernalConvM1);
-
-  // TCanvas *cKernal1 = new TCanvas("cKernal1", "cKernal1", 1200, 1200);
-  // hKernalConvM1->Draw();
-
-
+*/
 
   return true;
 }
