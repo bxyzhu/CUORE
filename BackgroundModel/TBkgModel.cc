@@ -43,28 +43,19 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   }
 
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimize fval
-    Obj->UpdateModelAdaptive();
-    fval = Obj->GetChiSquareAdaptive();
+  Obj->UpdateModelAdaptive();
+  fval = Obj->GetChiSquareAdaptive();
 }
 
 TBkgModel::TBkgModel()
 {}
 
-TBkgModel::TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet, bool fSave)
+// Probably needs to be done...
+TBkgModel::~TBkgModel()
+{}
+
+void TBkgModel::CorrectForEfficiency()
 {
-
-  TBkgModelSource *fSource = new TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataSet);
-
-  bSave = fSave;
-  bToyData = false;
-
-  tTime = new TDatime();
-  dNParam = 44; // number of fitting parameters
-  dNumCalls = 0;
-  dSecToYears = 1./(60*60*24*365);
-
-  minuit = new TMinuit(dNParam);
-
   // Apply efficiency
   TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
   fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
@@ -79,18 +70,6 @@ TBkgModel::TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataSet,
   fDataHistoM1->Divide( hEfficiency );
   fDataHistoM2->Divide( hEfficiency );
   fDataHistoM2Sum->Divide( hEfficiency );
-
-  nLoop = 0;
-
-  // Number of Toy fits
-  if(bToyData)ToyFit(1);
-
-}
-
-// Probably needs updating  
-TBkgModel::~TBkgModel()
-{
-
 }
 
 // Shows total number of parameters
@@ -479,7 +458,7 @@ void TBkgModel::UpdateModelAdaptive()
 bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 { 
   // Reset initial parameter/error values
-  ResetParameters();
+  TBkgModel::ResetParameters();
 
   gStyle->SetOptStat(0);
   gStyle->SetOptFit();
@@ -519,9 +498,9 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   }
 
   // Update model with final parameters
-  UpdateModelAdaptive();
+  TBkgModel::UpdateModelAdaptive();
   
-  dChiSquare = GetChiSquareAdaptive();
+  dChiSquare = TBkgModel::GetChiSquareAdaptive();
 
   cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
@@ -548,6 +527,7 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   if(bSave)
   {
+  tTime = new TDatime();
   // // Saving plots
   cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));

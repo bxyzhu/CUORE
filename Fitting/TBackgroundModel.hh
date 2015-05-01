@@ -895,14 +895,22 @@ private:
 	TH1D			*hOVCth232M2Sum;
 	TH1D			*hOVCu238M2Sum;	
 
-////////// Fudge Factors
-	TH1D 		*hFudge661M1;
-	TH1D 		*hFudge803M1;
-	TH1D 		*hFudge1063M1;
+////////// Fudge Factor Models
+	TH1D 		*hOVC804M1;
+	TH1D 		*hOVC1063M1;
+	TH1D 		*hPbRom804M1;
+	TH1D 		*hPbRom1063M1;
 
-	TH1D 		*hFudge661M2;
-	TH1D 		*hFudge803M2;
-	TH1D 		*hFudge1063M2;
+	TH1D 		*hOVC804M2;
+	TH1D 		*hOVC1063M2;
+	TH1D 		*hPbRom804M2;
+	TH1D 		*hPbRom1063M2;
+
+	TH1D 		*hOVC804M2Sum;
+	TH1D 		*hOVC1063M2Sum;
+	TH1D 		*hPbRom804M2Sum;
+	TH1D 		*hPbRom1063M2Sum;	
+
 
 ///////////////// Adaptive binned histograms
 /////////// Crystal M1 and M2
@@ -1485,14 +1493,21 @@ private:
 	
 	TH1D			*hAdapExtPbbi210M2Sum;
 
-////////// Fudge Factors
-	TH1D 		*hAdapFudge661M1;
-	TH1D 		*hAdapFudge803M1;
-	TH1D 		*hAdapFudge1063M1;
+////////// Fudge Factor Models
+	TH1D 		*hAdapOVC804M1;
+	TH1D 		*hAdapOVC1063M1;
+	TH1D 		*hAdapPbRom804M1;
+	TH1D 		*hAdapPbRom1063M1;
 
-	TH1 		*hAdapFudge661M2;
-	TH1 		*hAdapFudge803M2;
-	TH1 		*hAdapFudge1063M2;
+	TH1D 		*hAdapOVC804M2;
+	TH1D 		*hAdapOVC1063M2;
+	TH1D 		*hAdapPbRom804M2;
+	TH1D 		*hAdapPbRom1063M2;
+
+	TH1D 		*hAdapOVC804M2Sum;
+	TH1D 		*hAdapOVC1063M2Sum;
+	TH1D 		*hAdapPbRom804M2Sum;
+	TH1D 		*hAdapPbRom1063M2Sum;	
 
 
 	TH1D			*hEnergyScaleDummyM1;
@@ -2087,14 +2102,21 @@ private:
 	TH1			*hnewOVCu238M2Sum;	
 
 
-////////// Fudge Factors
-	TH1 		*hnewFudge661M1;
-	TH1 		*hnewFudge803M1;
-	TH1 		*hnewFudge1063M1;
+////////// Fudge Factor Models
+	TH1 		*hnewOVC804M1;
+	TH1 		*hnewOVC1063M1;
+	TH1 		*hnewPbRom804M1;
+	TH1 		*hnewPbRom1063M1;
 
-	TH1 		*hnewFudge661M2;
-	TH1 		*hnewFudge803M2;
-	TH1 		*hnewFudge1063M2;
+	TH1 		*hnewOVC804M2;
+	TH1 		*hnewOVC1063M2;
+	TH1 		*hnewPbRom804M2;
+	TH1 		*hnewPbRom1063M2;
+
+	TH1 		*hnewOVC804M2Sum;
+	TH1 		*hnewOVC1063M2Sum;
+	TH1 		*hnewPbRom804M2Sum;
+	TH1 		*hnewPbRom1063M2Sum;	
 
 
 	TH1D 			*hOut;

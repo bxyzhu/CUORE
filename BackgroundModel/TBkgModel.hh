@@ -39,34 +39,30 @@ class TBkgModel : public TBkgModelSource {
 public:
 	TBkgModel();
 
-	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
-	virtual ~TBkgModel();
+	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave):TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataSet)
+	{
+		bSave = fSave;
+  		dNParam = 44; // number of fitting parameters
+  		dNumCalls = 0;
+  		minuit = new TMinuit(dNParam);
+  		nLoop = 0;
+	}
 
-	std::vector<double> AdaptiveBinning(TH1D *h1, int dBinBase);
+	virtual ~TBkgModel();
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	bool DoTheFitAdaptive(double f2nuValue, double fVariableValue);
+	void CorrectForEfficiency();
 
-	void DrawBkg();
+	bool DoTheFitAdaptive(double f2nuValue, double fVariableValue);
 
 	double GetChiSquareAdaptive();
 
 	void GenerateParameters();
 
-	void Initialize();
-
-	TH1D *Kernal(TH1D *hMC, TH1D *hSMC);
-
-	void LatexResultTable(double fValue);
-
 	void PrintParameters();
 
 	void PrintParActivity();
-
-	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
-
-	void ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq);
 
 	void ResetParameters();
 
@@ -78,20 +74,18 @@ public:
 	
 	int ShowNParameters();
 
-	void ToyFit(int fNumFits);
-
 	void UpdateModelAdaptive();
 
 
-  	TBkgModelParameter BkgParM1[100];
-  	TBkgModelParameter BkgParM2[100];
-
+  	TBkgModelParameter *BkgParM1[100];
+  	TBkgModelParameter *BkgParM2[100];
 
 	double 	dChiSquare;
 
 	std::map<std::string, int> dParMap;
 
-protected:
+private:
+
 	TMinuit			*minuit;
 
 	TH1D 			*hChiSquaredProgressM1;
@@ -106,26 +100,9 @@ protected:
 	TH1D 			*hEfficiencyM2;
 	// TH1 			*hEfficiencyM1;
 
-	ofstream 		OutFile;
-	ofstream 	 	OutPNLL;
-	ofstream 		OutToy;
-
 	int 			nLoop;
-	std::vector<double> 	fInitValues;
-	std::vector<double> 	fInitValues2;
-
-	TFile *fBulkSmeared;
-	TFile *fSurfaceSmeared;
-
-	// For accidental coincidence test
-	TFile *fFileCoin;
-	TFile *fFileCorrection;
-	TH1D *fCorrectionM2; // Correction spectra for M2 (for accidental coincidences)
-	TH1D *fCorrectionM2Tot;
-	TH1D *fTotCorrection;
 
 	TFile *fSaveResult;
-	TFile *fToyData;
 	std::string 	dSaveDir;
 
 
@@ -135,7 +112,6 @@ protected:
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;
 	bool 			bSave;
-	bool 			bToyData;
 
 	int 			dNumCalls;
 	int 			dMult;
