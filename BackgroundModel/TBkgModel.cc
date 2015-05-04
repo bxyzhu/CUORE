@@ -706,19 +706,21 @@ bool TBkgModel::DoTheFitAdaptive()
   fAdapDataHistoM2Sum->Draw("E");
   fModelTotAdapM2Sum->Draw("SAME");
 
-/*
-  // Correlation Matrix section
-  TMatrixT<double> mCorrMatrix;
-  mCorrMatrix.ResizeTo(dNParam, dNParam);
-  minuit->mnemat(mCorrMatrix.GetMatrixArray(), dNParam);
 
-  for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
-    for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
+  // Correlation Matrix section
+  // TMatrixT<double> mCorrMatrix;
+  // mCorrMatrix.ResizeTo(dNParam, dNParam);
+  mCorrMatrix = new TMatrixT<double>(dNParam, dNParam);
+  minuit->mnemat(mCorrMatrix->GetMatrixArray(), dNParam);
+
+  for(int i = mCorrMatrix->GetRowLwb(); i <= mCorrMatrix->GetRowUpb(); i++)
+    for(int j = mCorrMatrix->GetColLwb(); j <= mCorrMatrix->GetColUpb(); j++)
       mCorrMatrix(i,j) = mCorrMatrix(i,j)/(fParError[i]*fParError[j]);
 
-  for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
-    for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
-      mCorrMatrixInverse(i,j) = mCorrMatrix(dNParam-i-1, j); 
+  // For inverse
+  // for(int i = mCorrMatrix->GetRowLwb(); i <= mCorrMatrix->GetRowUpb(); i++)
+  //   for(int j = mCorrMatrix->GetColLwb(); j <= mCorrMatrix->GetColUpb(); j++)
+  //     mCorrMatrixInverse(i,j) = mCorrMatrix(dNParam-i-1, j); 
 
   TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
   TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
@@ -744,8 +746,19 @@ bool TBkgModel::DoTheFitAdaptive()
   pM1->cd();
   pM1->SetGrid();
   pM1->SetFillStyle(4000);
-  mCorrMatrix.Draw("colz");
-*/
+  mCorrMatrix->Draw("colz");
+
+  // Text on right panel of matrix
+  pM2->cd();
+  TPaveText *pPave = new TPaveText(0,0,1,1, "NB"); // Text for matrix
+  pPave->SetTextSize(0.04);
+  pPave->SetFillColor(0);
+  pPave->SetBorderSize(0);
+  for(int i=0; i < TBackgroundModel::dNParam; i++)
+  {
+    pPave->AddText(Form("%d: %s", i, minuit->fCpnam[i].Data() ) );
+  }
+  pPave->Draw();
 
 /*
     How to calculate 2nbb:

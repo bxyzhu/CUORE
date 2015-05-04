@@ -20,7 +20,6 @@
 #include "TRandom3.h"
 #include "TDatime.h"
 #include "TMatrixT.h"
-#include "TMatrixDEigen.h"
 #include "TGaxis.h"
 #include <TMinuitMinimizer.h>
 #include "TROOT.h"
@@ -94,6 +93,8 @@ private:
 	TH1D 			*hChiSquaredProgressM2Sum;
 
 	TDatime 		*tTime;
+
+	TMatrixT<double> 	*mCorrMatrix;
 
 	// Cut Efficiency correction
 	TH1D 			*hEfficiency;
