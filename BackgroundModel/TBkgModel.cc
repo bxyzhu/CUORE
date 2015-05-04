@@ -764,7 +764,7 @@ bool TBkgModel::DoTheFitAdaptive()
     fParActivityErr[i] = fParError[i]*dDataIntegralM1/fParEfficiencyM1[i];
   }
 
-
+/*
   if(bSave)
   {
   tTime = new TDatime();
@@ -806,6 +806,8 @@ bool TBkgModel::DoTheFitAdaptive()
   // cres1->SaveAs(Form("%s/FitResults/CovMatrix/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cMatrix->SaveAs(Form("%s/FitResults/CovMatrix/FitCovMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   } // end bSave
+*/
+
 
   return true;
 }
