@@ -96,7 +96,7 @@ void TBkgModel::GenerateParameters()
   BkgParM1[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001, hAdapTeO2Sxra226pb210M2_001, hAdapTeO2Sxra226pb210M2Sum_001);
   BkgParM1[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1, hAdapTeO2Sxpb210M2_1, hAdapTeO2Sxpb210M2Sum_1);
   BkgParM1[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001, hAdapTeO2Sxpb210M2_001, hAdapTeO2Sxpb210M2Sum_001);
-  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10, hAdapCuBox_CuFrameth232M2Sum_10, hAdapCuBox_CuFrameth232M2_10);
+  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10, hAdapCuBox_CuFrameth232M2_10, hAdapCuBox_CuFrameth232M2Sum_10);
   BkgParM1[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10, hAdapCuBox_CuFrameu238M2_10, hAdapCuBox_CuFrameu238M2Sum_10);
   BkgParM1[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01, hAdapCuBox_CuFramepb210M2_01, hAdapCuBox_CuFramepb210M2Sum_01);
   BkgParM1[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001, hAdapCuBox_CuFramepb210M2_001, hAdapCuBox_CuFramepb210M2Sum_001);
@@ -144,7 +144,7 @@ void TBkgModel::GenerateParameters()
   BkgParM1[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001);
   BkgParM1[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1);
   BkgParM1[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001);
-  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1Sum_10);
+  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10);
   BkgParM1[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10);
   BkgParM1[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01);
   BkgParM1[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001);
