@@ -6498,9 +6498,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   // Correlation Matrix section
   TMatrixT<double> mCorrMatrix;
-  TMatrixT<double> mCorrMatrixInverse;
   mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
-  mCorrMatrixInverse.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
   minuit->mnemat(mCorrMatrix.GetMatrixArray(), TBackgroundModel::dNParam);
 
   for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)

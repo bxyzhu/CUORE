@@ -39,22 +39,23 @@ class TBkgModel : public TBkgModelSource {
 public:
 	TBkgModel();
 
-	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave):TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataSet)
+	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave):TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataset)
 	{
 		bSave = fSave;
   		dNParam = 44; // number of fitting parameters
   		dNumCalls = 0;
   		minuit = new TMinuit(dNParam);
   		nLoop = 0;
+
+  		TBkgModel::GenerateParameters();
+	
 	}
 
 	virtual ~TBkgModel();
 
-	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
-
 	void CorrectForEfficiency();
 
-	bool DoTheFitAdaptive(double f2nuValue, double fVariableValue);
+	bool DoTheFitAdaptive();
 
 	double GetChiSquareAdaptive();
 
@@ -79,10 +80,11 @@ public:
 
   	TBkgModelParameter *BkgParM1[100];
   	TBkgModelParameter *BkgParM2[100];
+  	TBkgModelParameter *BkgParM2Sum[100];
+
+  	bool 	bFixedArray[100];
 
 	double 	dChiSquare;
-
-	std::map<std::string, int> dParMap;
 
 private:
 
@@ -94,20 +96,14 @@ private:
 
 	TDatime 		*tTime;
 
-	// Cut Efficiency
-	// TF1 			*fEfficiency;
+	// Cut Efficiency correction
 	TH1D 			*hEfficiency;
-	TH1D 			*hEfficiencyM2;
-	// TH1 			*hEfficiencyM1;
 
 	int 			nLoop;
 
 	TFile *fSaveResult;
 	std::string 	dSaveDir;
 
-
-	// Error Matrix
-	// TMatrixT<double> 	*mCorrMatrix;
 
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;

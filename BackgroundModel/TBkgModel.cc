@@ -84,96 +84,50 @@ void TBkgModel::GenerateParameters()
   
   // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histogram)
   // M1
-  BkgParM1[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 0.0, 1.0, hAdapTeO22nuM1);
-  BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 0.0, 1.0, hAdapCuBox_CuFrameco60M1);
-  BkgParM1[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1);
-  BkgParM1[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1);  
-  BkgParM1[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_001);
-  BkgParM1[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001);
-  BkgParM1[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001);
-  BkgParM1[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001);
-  BkgParM1[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001);
-  BkgParM1[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1);
-  BkgParM1[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001);
-  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10);
-  BkgParM1[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10);
-  BkgParM1[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01);
-  BkgParM1[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001);
-  BkgParM1[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1);
-  BkgParM1[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M1);
-  BkgParM1[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M1);
-  BkgParM1[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M1);
-  BkgParM1[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M1);  
-  BkgParM1[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M1);
-  BkgParM1[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1);
-  BkgParM1[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1);
-  BkgParM1[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M1);
-  BkgParM1[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1);
-  BkgParM1[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10);
-  BkgParM1[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_1);
-  BkgParM1[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10);
-  BkgParM1[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10);
-  BkgParM1[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1);
-  BkgParM1[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01);
-  BkgParM1[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001);
-  BkgParM1[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1);
-  BkgParM1[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01);
-  BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001);
-  BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10);
-  BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1);
-  BkgParM1[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M1);
-  BkgParM1[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M1);
-  BkgParM1[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M1);
-  BkgParM1[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M1);
-  BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1);
-  BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1);
-  BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1);
-
-  // M2
-  BkgParM2[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 0.0, 1.0, hAdapTeO22nuM2);
-  BkgParM2[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 0.0, 1.0, hAdapCuBox_CuFrameco60M2);
-  BkgParM2[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM2);
-  BkgParM2[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM2);  
-  BkgParM2[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM2_001);
-  BkgParM2[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M2_001);
-  BkgParM2[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M2_001);
-  BkgParM2[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM2_001);
-  BkgParM2[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M2_001);
-  BkgParM2[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_1);
-  BkgParM2[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_001);
-  BkgParM2[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_10);
-  BkgParM2[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_10);
-  BkgParM2[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_01);
-  BkgParM2[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_001);
-  BkgParM2[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M2);
-  BkgParM2[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M2);
-  BkgParM2[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M2);
-  BkgParM2[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M2);
-  BkgParM2[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M2);  
-  BkgParM2[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M2);
-  BkgParM2[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2);
-  BkgParM2[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2);
-  BkgParM2[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M2);
-  BkgParM2[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2_1);
-  BkgParM2[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2_10);
-  BkgParM2[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2_1);
-  BkgParM2[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2_10);
-  BkgParM2[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_10);
-  BkgParM2[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_1);
-  BkgParM2[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_01);
-  BkgParM2[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_001);
-  BkgParM2[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_1);
-  BkgParM2[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_01);
-  BkgParM2[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_001);
-  BkgParM2[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_10);
-  BkgParM2[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_1);
-  BkgParM2[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M2);
-  BkgParM2[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M2);
-  BkgParM2[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M2);
-  BkgParM2[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M2);
-  BkgParM2[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M2);
-  BkgParM2[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M2);
-  BkgParM2[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M2);
+  BkgParM1[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM1, hAdapTeO22nuM2, hAdapTeO22nuM2Sum);
+  BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M1, hAdapCuBox_CuFrameco60M2, hAdapCuBox_CuFrameco60M2Sum);
+  BkgParM1[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1, hAdapTeO2th232onlyM2, hAdapTeO2th232onlyM2Sum);
+  BkgParM1[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1, hAdapTeO2th230onlyM2, hAdapTeO2th230onlyM2Sum);  
+  BkgParM1[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_001, hAdapTeO2Sxth232onlyM2_001, hAdapTeO2Sxth232onlyM2Sum_001);
+  BkgParM1[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001, hAdapTeO2Sxra228pb208M2_001, hAdapTeO2Sxra228pb208M2Sum_001);
+  BkgParM1[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001, hAdapTeO2Sxu238th230M2_001, hAdapTeO2Sxu238th230M2Sum_001);
+  BkgParM1[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001, hAdapTeO2Sxth230onlyM2_001, hAdapTeO2Sxth230onlyM2Sum_001);
+  BkgParM1[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001, hAdapTeO2Sxra226pb210M2_001, hAdapTeO2Sxra226pb210M2Sum_001);
+  BkgParM1[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1, hAdapTeO2Sxpb210M2_1, hAdapTeO2Sxpb210M2Sum_1);
+  BkgParM1[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001, hAdapTeO2Sxpb210M2_001, hAdapTeO2Sxpb210M2Sum_001);
+  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10, hAdapCuBox_CuFrameth232M2Sum_10, hAdapCuBox_CuFrameth232M2_10);
+  BkgParM1[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10, hAdapCuBox_CuFrameu238M2_10, hAdapCuBox_CuFrameu238M2Sum_10);
+  BkgParM1[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01, hAdapCuBox_CuFramepb210M2_01, hAdapCuBox_CuFramepb210M2Sum_01);
+  BkgParM1[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001, hAdapCuBox_CuFramepb210M2_001, hAdapCuBox_CuFramepb210M2Sum_001);
+  BkgParM1[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1, hAdapPbRomk40M2, hAdapPbRomk40M2Sum);
+  BkgParM1[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M1, hAdapOVCth232M2, hAdapOVCth232M2Sum);
+  BkgParM1[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M1, hAdapOVCu238M2, hAdapOVCu238M2Sum);
+  BkgParM1[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M1, hAdapOVCco60M2, hAdapOVCco60M2Sum);
+  BkgParM1[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M1, hAdapOVCk40M2, hAdapOVCk40M2Sum);  
+  BkgParM1[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M1, hAdapExtPbbi210M2, hAdapExtPbbi210M2Sum);
+  BkgParM1[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1, hAdapCuBox_CuFrameth232M2, hAdapCuBox_CuFrameth232M2Sum);
+  BkgParM1[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1, hAdapCuBox_CuFrameu238M2, hAdapCuBox_CuFrameu238M2Sum);
+  BkgParM1[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M1, hAdapPbRomcs137M2, hAdapPbRomcs137M2Sum);
+  BkgParM1[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1, hAdapTeO2Sxth232M2_1, hAdapTeO2Sxth232M2Sum_1);
+  BkgParM1[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10, hAdapTeO2Sxth232M2_10, hAdapTeO2Sxth232M2Sum_10);
+  BkgParM1[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_1, hAdapTeO2Sxu238M2_1, hAdapTeO2Sxu238M2Sum_1);
+  BkgParM1[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10, hAdapTeO2Sxu238M2_10, hAdapTeO2Sxu238M2Sum_10);
+  BkgParM1[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10, hAdapTeO2Sxpb210M2_10, hAdapTeO2Sxpb210M2Sum_10);
+  BkgParM1[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1, hAdapCuBox_CuFrameth232M2_1, hAdapCuBox_CuFrameth232M2Sum_1);
+  BkgParM1[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01, hAdapCuBox_CuFrameth232M2_01, hAdapCuBox_CuFrameth232M2Sum_01);
+  BkgParM1[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001, hAdapCuBox_CuFrameth232M2_001, hAdapCuBox_CuFrameth232M2Sum_001);
+  BkgParM1[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1, hAdapCuBox_CuFrameu238M2_1, hAdapCuBox_CuFrameu238M2Sum_1);
+  BkgParM1[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01, hAdapCuBox_CuFrameu238M2_01, hAdapCuBox_CuFrameu238M2Sum_01);
+  BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001, hAdapCuBox_CuFrameu238M2_001, hAdapCuBox_CuFrameu238M2Sum_001);
+  BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
+  BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1, hAdapCuBox_CuFramepb210M2_1, hAdapCuBox_CuFramepb210M2Sum_1);
+  BkgParM1[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M1, hAdapInternalth232M2, hAdapInternalth232M2Sum);
+  BkgParM1[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M1, hAdapInternalu238M2, hAdapInternalu238M2Sum);
+  BkgParM1[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M1, hAdapInternalco60M2, hAdapInternalco60M2Sum);
+  BkgParM1[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M1, hAdapInternalk40M2, hAdapInternalk40M2Sum);
+  BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1, hAdapPbRomth232M2, hAdapPbRomth232M2Sum);
+  BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1, hAdapPbRomu238M2, hAdapPbRomu238M2Sum);
+  BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1, hAdapPbRomco60M2, hAdapPbRomco60M2Sum);
 
 }
 
@@ -248,7 +202,7 @@ double TBkgModel::GetChiSquareAdaptive()
 // Prints parameters, needs update 11-06-2014
 void TBkgModel::PrintParameters()
 {
-  for(int i = 0; i < TBkgModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     cout << i << " " << minuit->fCpnam[i] << ": " << fParameters[i] << " +/- " << fParError[i] << endl;
   }
@@ -257,7 +211,7 @@ void TBkgModel::PrintParameters()
 void TBkgModel::PrintParActivity()
 { 
   // This only gets the number of counts corrected for detector efficiency
-  for(int i = 0; i < TBkgModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
   cout << i << " " << minuit->fCpnam[i] << " activity: " << fParActivity[i] << endl;
   }
@@ -411,7 +365,7 @@ void TBkgModel::ResetParameters()
 
   fModelTotAdapFudgeM2Sum->Reset();
 
-  for(int i = 0; i < TBkgModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     fParameters[i] = 0;
     fParError[i] = 0;
@@ -449,13 +403,14 @@ void TBkgModel::UpdateModelAdaptive()
   // Create model
   for(int i = 0; i < dNParam; i++)
   {
-    fModelTotAdapM1->Add( BkgParM1[i]->GetHist(),              dDataIntegralM1*fParameters[i]);
-    fModelTotAdapM2->Add( BkgParM2[i]->GetHist(),              dDataIntegralM1*fParameters[i]);
-    fModelTotAdapM2Sum->Add( BkgParM2Sum[i]->GetHist(),        dDataIntegralM1*fParameters[i]);
+    fModelTotAdapM1->Add( BkgParM1[i]->GetHistM1(),              dDataIntegralM1*fParameters[i]);
+    fModelTotAdapM2->Add( BkgParM2[i]->GetHistM2(),              dDataIntegralM1*fParameters[i]);
+    fModelTotAdapM2Sum->Add( BkgParM2Sum[i]->GetHistM2Sum(),        dDataIntegralM1*fParameters[i]);
   }
   
+}  
 // This method sets up minuit and does the fit
-bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
+bool TBkgModel::DoTheFitAdaptive()
 { 
   // Reset initial parameter/error values
   TBkgModel::ResetParameters();
@@ -472,7 +427,7 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // Create and fix parameters
   for(int i = 0; i < dNParam; i++)
   {
-    minuit->DefineParameter(BkgParM1[i]->GetParIndex(), BkgParM1[i]->GetParName(); BkgParM1[i]->GetParInital(), BkgParM1[i]->GetParMin(); BkgParM1[i]->GetParMax());
+    minuit->DefineParameter(BkgParM1[i]->GetParIndex(), BkgParM1[i]->GetParName(), BkgParM1[i]->GetParInitial(), BkgParM1[i]->GetParInitErr(), BkgParM1[i]->GetParMin(), BkgParM1[i]->GetParMax());
     if(bFixedArray[i]) 
     {
       minuit->FixParameter(i);
@@ -506,6 +461,291 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
   cout << "Probability = " << TMath::Prob(dChiSquare, dNDF) << endl;
 
+
+
+  // ///// Draw Data M1
+  fAdapDataHistoM1->SetLineColor(kBlack);
+  fAdapDataHistoM1->SetLineWidth(2);
+  // fAdapDataHistoM1->SetMaximum(90000);
+  // fAdapDataHistoM1->GetXaxis()->SetRange(1, fAdapDataHistoM1->FindBin(3000));
+  fModelTotAdapM1->SetLineColor(2);
+  fModelTotAdapM1->SetLineWidth(1);
+
+  int nHisto = 2;  
+  double width1 = 0.02;
+  double width2 = 0.98;
+  double canBotMargin = 0.02;
+  double canTopMargin = 0.02;
+  double padHeight = (1.-canTopMargin-canBotMargin)/nHisto;
+
+
+  TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
+  TPad* p1m1 = new TPad("p1m1","p1m1",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
+  p1m1->SetTopMargin(0.);
+  p1m1->SetBottomMargin(0.175);
+  p1m1->SetLeftMargin(0.1);
+  p1m1->SetRightMargin(0.05);
+  p1m1->SetFillColor(0);
+  p1m1->SetBorderMode(0);
+  p1m1->SetBorderSize(0);
+  p1m1->Draw();
+  
+  // p2 is on top!
+  TPad* p2m1 = new TPad("p2m1","p2m1",width1,canBotMargin+padHeight/1.5,width2,canBotMargin+2*padHeight,0,0);
+  p2m1->SetBottomMargin(0.);
+  p2m1->SetTopMargin(0.08);
+  p2m1->SetLeftMargin(0.1);
+  p2m1->SetRightMargin(0.05);
+  p2m1->SetFillColor(0);
+  p2m1->SetBorderMode(0);
+  p2m1->SetBorderSize(0);
+  p2m1->Draw();
+
+
+  p1m1->cd();
+  TH1D *hRatioM1_1 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1_1");
+  TH1D *hRatioM1_2 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1_2");
+  TH1D *hRatioM1_3 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1_3");
+
+  // hRatioM1_1->Add(fModelTotAdapM1, -1);
+  hRatioM1_1->Divide(fModelTotAdapM1);
+  hRatioM1_2->Divide(fModelTotAdapM1);
+  hRatioM1_3->Divide(fModelTotAdapM1);
+  hRatioM1_3->SetMaximum(2.9);
+  hRatioM1_3->SetMinimum(-0.9);
+  for(int i = 1; i <= hRatioM1_1->GetNbinsX(); i++)
+  {
+    hRatioM1_1->SetBinError(i, fAdapDataHistoM1->GetBinError(i)/fModelTotAdapM1->GetBinContent(i) );
+    hRatioM1_2->SetBinError(i, 2*fAdapDataHistoM1->GetBinError(i)/fModelTotAdapM1->GetBinContent(i) );
+    hRatioM1_3->SetBinError(i, 3*fAdapDataHistoM1->GetBinError(i)/fModelTotAdapM1->GetBinContent(i) );
+
+  }
+  TLine *LineM1 = new TLine();
+  hRatioM1_3->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));
+  hRatioM1_3->SetMarkerStyle(6);
+  hRatioM1_3->SetTitle("");
+  hRatioM1_3->GetXaxis()->SetTitle("Energy (keV)");
+  hRatioM1_3->GetYaxis()->SetTitle("Ratio (Data/MC)");
+  hRatioM1_3->GetXaxis()->SetLabelSize(0.07);
+  hRatioM1_3->GetYaxis()->SetLabelSize(0.07);
+  hRatioM1_3->GetXaxis()->SetTitleSize(0.07);
+  hRatioM1_3->GetYaxis()->SetTitleSize(0.07);
+  hRatioM1_3->GetYaxis()->SetTitleOffset(0.45);
+  hRatioM1_1->SetFillColor(kMagenta-9);
+  hRatioM1_2->SetFillColor(kGreen-8);
+  hRatioM1_3->SetFillColor(kCyan+3);
+  hRatioM1_3->Draw("pe2");
+  hRatioM1_2->Draw("SAME e2");
+  hRatioM1_1->Draw("SAME e2");
+  LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
+
+  p2m1->cd();
+  p2m1->SetLogy();
+  fAdapDataHistoM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));
+  fAdapDataHistoM1->SetTitle("Total Model (M1)");
+  // fAdapDataHistoM1->SetTitleOffset(1.5);
+  // fAdapDataHistoM1->SetTitleSize(0.005);
+  fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
+  fAdapDataHistoM1->Draw("E");
+  fModelTotAdapM1->Draw("SAME");
+
+  ///// Draw Data M2
+  fAdapDataHistoM2->SetLineColor(kBlack);
+  fAdapDataHistoM2->SetLineWidth(2);
+  // fAdapDataHistoM2->SetMaximum(9000);
+  // fAdapDataHistoM2->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
+  
+  fModelTotAdapM2->SetLineColor(2);
+  fModelTotAdapM2->SetLineWidth(1);
+
+  TCanvas *cadap2 = new TCanvas("cadap2", "cadap2", 1200, 800);  
+  TPad* p1m2 = new TPad("p1m2","p1m2",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
+  p1m2->SetTopMargin(0.);
+  p1m2->SetBottomMargin(0.175);
+  p1m2->SetLeftMargin(0.1);
+  p1m2->SetRightMargin(0.05);
+  p1m2->SetFillColor(0);
+  p1m2->SetBorderMode(0);
+  p1m2->SetBorderSize(0);
+  p1m2->Draw();
+  
+  // p2 is on top!
+  TPad* p2m2 = new TPad("p2m2","p2m2",width1,canBotMargin+padHeight/1.5,width2,canBotMargin+2*padHeight,0,0);
+  p2m2->SetBottomMargin(0.);
+  p2m2->SetTopMargin(0.08);
+  p2m2->SetLeftMargin(0.1);
+  p2m2->SetRightMargin(0.05);
+  p2m2->SetFillColor(0);
+  p2m2->SetBorderMode(0);
+  p2m2->SetBorderSize(0);
+  p2m2->Draw();
+
+
+  p1m2->cd();
+  TH1D *hRatioM2_1 = (TH1D*)fAdapDataHistoM2->Clone("hRatioM2_1");
+  TH1D *hRatioM2_2 = (TH1D*)fAdapDataHistoM2->Clone("hRatioM2_2");
+  TH1D *hRatioM2_3 = (TH1D*)fAdapDataHistoM2->Clone("hRatioM2_3");
+  hRatioM2_1->Divide(fModelTotAdapM2);
+  hRatioM2_2->Divide(fModelTotAdapM2);
+  hRatioM2_3->Divide(fModelTotAdapM2);
+  hRatioM2_3->SetMaximum(2.9);
+  hRatioM2_3->SetMinimum(-0.9);
+  for(int i = 1; i <= hRatioM2_1->GetNbinsX(); i++)
+  {
+    hRatioM2_1->SetBinError(i, fAdapDataHistoM2->GetBinError(i)/fModelTotAdapM2->GetBinContent(i) );
+    hRatioM2_2->SetBinError(i, 2*fAdapDataHistoM2->GetBinError(i)/fModelTotAdapM2->GetBinContent(i) );
+    hRatioM2_3->SetBinError(i, 3*fAdapDataHistoM2->GetBinError(i)/fModelTotAdapM2->GetBinContent(i) );
+  }
+  hRatioM2_3->GetXaxis()->SetRange(fAdapDataHistoM2->FindBin(dFitMin), fAdapDataHistoM2->FindBin(dFitMax-1));
+  hRatioM2_3->SetMarkerStyle(6);
+  hRatioM2_3->SetTitle("");
+  hRatioM2_3->GetXaxis()->SetTitle("Energy (keV)");
+  hRatioM2_3->GetYaxis()->SetTitle("Ratio (Data/MC)");  
+  hRatioM2_3->GetXaxis()->SetLabelSize(0.07);
+  hRatioM2_3->GetYaxis()->SetLabelSize(0.07);
+  hRatioM2_3->GetXaxis()->SetTitleSize(0.07);
+  hRatioM2_3->GetYaxis()->SetTitleSize(0.07);
+  hRatioM2_3->GetYaxis()->SetTitleOffset(0.45);
+  hRatioM2_1->SetFillColor(kMagenta-9);
+  hRatioM2_2->SetFillColor(kGreen-8);
+  hRatioM2_3->SetFillColor(kCyan+3);
+  hRatioM2_3->Draw("pE2");
+  hRatioM2_2->Draw("SAME e2");
+  hRatioM2_1->Draw("SAME e2");
+  LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
+
+
+
+  p2m2->cd();
+  p2m2->SetLogy();
+  fAdapDataHistoM2->GetXaxis()->SetRange(fAdapDataHistoM2->FindBin(dFitMin), fAdapDataHistoM2->FindBin(dFitMax-1));
+  // fAdapDataHistoM2->SetTitleOffset(0.45);
+  // fAdapDataHistoM2->SetTitleSize(0.01);
+  fAdapDataHistoM2->SetTitle("Total Model (M2)");
+  fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
+  fAdapDataHistoM2->Draw("E");
+  fModelTotAdapM2->Draw("SAME");
+
+
+  ///// Draw Data M2Sum
+  fAdapDataHistoM2Sum->SetLineColor(kBlack);
+  fAdapDataHistoM2Sum->SetLineWidth(2);
+  // fAdapDataHistoM2Sum->SetMaximum(9000);
+  // fAdapDataHistoM2Sum->GetXaxis()->SetRange(1, fAdapDataHistoM2Sum->FindBin(3000));
+  fModelTotAdapM2Sum->SetLineColor(2);
+  fModelTotAdapM2Sum->SetLineWidth(1);
+
+
+
+  TCanvas *cadap2sum = new TCanvas("cadap2sum", "cadap2sum", 1200, 800);
+  TPad* p1m2sum = new TPad("p1m2sum","p1m2sum",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
+  p1m2sum->SetTopMargin(0.);
+  p1m2sum->SetBottomMargin(0.175);
+  p1m2sum->SetLeftMargin(0.1);
+  p1m2sum->SetRightMargin(0.05);
+  p1m2sum->SetFillColor(0);
+  p1m2sum->SetBorderMode(0);
+  p1m2sum->SetBorderSize(0);
+  p1m2sum->Draw();
+  
+  // p2 is on top!
+  TPad* p2m2sum = new TPad("p2m2sum","p2m2sum",width1,canBotMargin+padHeight/1.5,width2,canBotMargin+2*padHeight,0,0);
+  p2m2sum->SetBottomMargin(0.);
+  p2m2sum->SetTopMargin(0.08);
+  p2m2sum->SetLeftMargin(0.1);
+  p2m2sum->SetRightMargin(0.05);
+  p2m2sum->SetFillColor(0);
+  p2m2sum->SetBorderMode(0);
+  p2m2sum->SetBorderSize(0);
+  p2m2sum->Draw();
+
+  p1m2sum->cd();
+  TH1D *hRatioM2Sum_1 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_1");
+  TH1D *hRatioM2Sum_2 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_2");
+  TH1D *hRatioM2Sum_3 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_3");
+  hRatioM2Sum_1->Divide(fModelTotAdapM2Sum);
+  hRatioM2Sum_2->Divide(fModelTotAdapM2Sum);
+  hRatioM2Sum_3->Divide(fModelTotAdapM2Sum);
+  hRatioM2Sum_3->SetMaximum(2.9);
+  hRatioM2Sum_3->SetMinimum(-0.9);
+  for(int i = 1; i <= hRatioM2Sum_1->GetNbinsX(); i++)
+  {
+    hRatioM2Sum_1->SetBinError(i, fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
+    hRatioM2Sum_2->SetBinError(i, 2*fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
+    hRatioM2Sum_3->SetBinError(i, 3*fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
+  }
+  hRatioM2Sum_3->GetXaxis()->SetRange(fAdapDataHistoM2Sum->FindBin(dFitMin), fAdapDataHistoM2Sum->FindBin(dFitMax-1));
+  hRatioM2Sum_3->SetMarkerStyle(6);
+  hRatioM2Sum_3->SetTitle("");
+  hRatioM2Sum_3->GetXaxis()->SetTitle("Energy (keV)");
+  hRatioM2Sum_3->GetYaxis()->SetTitle("Ratio (Data/MC)");  
+  hRatioM2Sum_3->GetXaxis()->SetLabelSize(0.07);
+  hRatioM2Sum_3->GetYaxis()->SetLabelSize(0.07);
+  hRatioM2Sum_3->GetXaxis()->SetTitleSize(0.07);
+  hRatioM2Sum_3->GetYaxis()->SetTitleSize(0.07);
+  hRatioM2Sum_3->GetYaxis()->SetTitleOffset(0.45);
+  hRatioM2Sum_1->SetFillColor(kMagenta-9);
+  hRatioM2Sum_2->SetFillColor(kGreen-8);
+  hRatioM2Sum_3->SetFillColor(kCyan+3);
+  hRatioM2Sum_3->Draw("pE2");
+  hRatioM2Sum_2->Draw("SAME e2");
+  hRatioM2Sum_1->Draw("SAME e2");
+  LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
+
+  p2m2sum->cd();
+  p2m2sum->SetLogy();
+  fAdapDataHistoM2Sum->GetXaxis()->SetRange(fAdapDataHistoM2Sum->FindBin(dFitMin), fAdapDataHistoM2Sum->FindBin(dFitMax-1));
+  // fAdapDataHistoM2Sum->SetTitleOffset(0.45);
+  // fAdapDataHistoM2Sum->SetTitleSize(0.01);
+  fAdapDataHistoM2Sum->SetTitle("Total Model (M2Sum)");
+  fAdapDataHistoM2Sum->GetXaxis()->SetTitle("Energy (keV)");
+  fAdapDataHistoM2Sum->GetYaxis()->SetTitle("Counts/Bin");
+  fAdapDataHistoM2Sum->Draw("E");
+  fModelTotAdapM2Sum->Draw("SAME");
+
+/*
+  // Correlation Matrix section
+  TMatrixT<double> mCorrMatrix;
+  mCorrMatrix.ResizeTo(dNParam, dNParam);
+  minuit->mnemat(mCorrMatrix.GetMatrixArray(), dNParam);
+
+  for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
+    for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
+      mCorrMatrix(i,j) = mCorrMatrix(i,j)/(fParError[i]*fParError[j]);
+
+  for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
+    for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
+      mCorrMatrixInverse(i,j) = mCorrMatrix(dNParam-i-1, j); 
+
+  TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
+  TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
+  pM1->SetTopMargin(0.05);
+  pM1->SetBottomMargin(0.05);
+  pM1->SetLeftMargin(0.05);
+  pM1->SetRightMargin(0.15);
+  pM1->SetFillColor(0);
+  pM1->SetBorderMode(0);
+  pM1->SetBorderSize(0);
+  pM1->Draw();
+
+  TPad* pM2 = new TPad("pM2","pM2",width2*0.75,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
+  pM2->SetTopMargin(0.05);
+  pM2->SetBottomMargin(0.05);
+  pM2->SetLeftMargin(0.1);
+  pM2->SetRightMargin(0.05);
+  pM2->SetFillColor(0);
+  pM2->SetBorderMode(0);
+  pM2->SetBorderSize(0);
+  pM2->Draw();
+
+  pM1->cd();
+  pM1->SetGrid();
+  pM1->SetFillStyle(4000);
+  mCorrMatrix.Draw("colz");
+*/
+
 /*
     How to calculate 2nbb:
      - TeO2 molar mass: 159.6 g/mol
@@ -518,7 +758,7 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 */
 
   // This gets the number of counts corrected for detector efficiency
-  for(int i = 0; i < TBkgModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     fParActivity[i] = fParameters[i]*dDataIntegralM1/fParEfficiencyM1[i];
     fParActivityErr[i] = fParError[i]*dDataIntegralM1/fParEfficiencyM1[i];
@@ -548,8 +788,8 @@ bool TBkgModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // Scale histograms by parameter for saving (so that actual fit value is represented)
   for(int i = 0; i < dNParam; i++)
   {
-    BkgParM1[i]->GetHist()->Scale( dDataIntegralM1*fParameters[i]) 
-    BkgParM2[i]->GetHist()->Scale( dDataIntegralM2*fParameters[i]) 
+    BkgParM1[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]) 
+    BkgParM2[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]) 
 
     fSaveResult->Add( BkgParM1[i]->GetHist() );
     fSaveResult->Add( BkgParM2[i]->GetHist() );    

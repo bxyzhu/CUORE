@@ -8,14 +8,19 @@ TBkgModelParameter::TBkgModelParameter()
 {
 }
 
-TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fMinLimit, double fMaxLimit, TH1D *&fHist)
+TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHistM1, TH1D *&fHistM2, TH1D *&fHistM2Sum)
 {
 	dParName = fParName;
 	dParIndex = fParIndex;
 	dInitialValue = fInitialValue;
+	dInitErr = fInitErr; 
 	dMinLimit = fMinLimit;
 	dMaxLimit = fMaxLimit;	
-	dHist = fHist;
+	dHistM1 = fHistM1;
+	dHistM2 = fHistM2;
+	dHistM2Sum = fHistM2Sum;
+
+
 }
 
 TBkgModelParameter::~TBkgModelParameter()
@@ -36,6 +41,11 @@ double TBkgModelParameter::GetParInitial()
 	return dInitialValue;
 }
 
+double TBkgModelParameter::GetParInitErr()
+{
+	return dInitErr;
+}
+
 double TBkgModelParameter::GetParMin()
 {
 	return dMinLimit;
@@ -46,9 +56,19 @@ double TBkgModelParameter::GetParMax()
 	return dMaxLimit;
 }
 
-TH1D *TBkgModelParameter::GetHist()
+TH1D *TBkgModelParameter::GetHistM1()
 {
-	return dHist;
+	return dHistM1;
+}
+
+TH1D *TBkgModelParameter::GetHistM2()
+{
+	return dHistM2;
+}
+
+TH1D *TBkgModelParameter::GetHistM2Sum()
+{
+	return dHistM2Sum;
 }
 
 void TBkgModelParameter::SetInitValue(double fInitialValue)
