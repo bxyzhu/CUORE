@@ -47,8 +47,8 @@ public:
   		minuit = new TMinuit(dNParam);
   		nLoop = 0;
 
+  		// Generates parameter list
   		TBkgModel::GenerateParameters();
-	
 	}
 
 	virtual ~TBkgModel();
@@ -67,11 +67,7 @@ public:
 
 	void ResetParameters();
 
-	void SanityCheck();
-
 	void SetParameters(int index, double value);
-
-	void SetParEfficiency();
 	
 	int ShowNParameters();
 

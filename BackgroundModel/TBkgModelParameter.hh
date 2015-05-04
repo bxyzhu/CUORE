@@ -15,6 +15,8 @@ public:
 
 	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHistM1, TH1D *&fHistM2, TH1D *&fHistM2Sum);
 
+	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHist);
+
 	virtual ~TBkgModelParameter();
 
 	int GetParIndex();
@@ -28,6 +30,8 @@ public:
 	double GetParMin();
 
 	double GetParMax();
+
+	TH1D *GetHist();
 
 	TH1D *GetHistM1();
 
@@ -45,6 +49,7 @@ public:
 	double			dInitErr;
 	double	 		dMinLimit;
 	double	 		dMaxLimit;
+	TH1D 			*dHist;
 	TH1D 			*dHistM1;
 	TH1D 			*dHistM2;
 	TH1D 			*dHistM2Sum;
