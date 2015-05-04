@@ -58,9 +58,9 @@ public:
 
 	void CorrectForEfficiency();
 
-	bool DoTheFitAdaptive();
+	bool DoTheFit();
 
-	double GetChiSquareAdaptive();
+	double GetChiSquare();
 
 	void GenerateParameters();
 
@@ -74,7 +74,7 @@ public:
 	
 	int ShowNParameters();
 
-	void UpdateModelAdaptive();
+	void UpdateModel();
 
 
   	TBkgModelParameter *BkgParM1[100];

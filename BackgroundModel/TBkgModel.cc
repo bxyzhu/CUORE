@@ -43,8 +43,8 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   }
 
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimize fval
-  Obj->UpdateModelAdaptive();
-  fval = Obj->GetChiSquareAdaptive();
+  Obj->UpdateModel();
+  fval = Obj->GetChiSquare();
 }
 
 TBkgModel::TBkgModel()
@@ -132,7 +132,7 @@ void TBkgModel::GenerateParameters()
 
 }
 
-double TBkgModel::GetChiSquareAdaptive()
+double TBkgModel::GetChiSquare()
 {
   double chiSquare = 0.;
   double datam1_i, errm1_i;
@@ -382,7 +382,7 @@ void TBkgModel::SetParameters(int index, double value)
 }
 
 // Creates/updates the background model
-void TBkgModel::UpdateModelAdaptive()
+void TBkgModel::UpdateModel()
 {
   if(fModelTotAdapM1 == NULL || fModelTotAdapM2 == NULL || fModelTotAdapM2Sum == NULL) 
   {
@@ -411,7 +411,7 @@ void TBkgModel::UpdateModelAdaptive()
   
 }  
 // This method sets up minuit and does the fit
-bool TBkgModel::DoTheFitAdaptive()
+bool TBkgModel::DoTheFit()
 { 
   // Reset initial parameter/error values
   TBkgModel::ResetParameters();
@@ -454,9 +454,9 @@ bool TBkgModel::DoTheFitAdaptive()
   }
 
   // Update model with final parameters
-  TBkgModel::UpdateModelAdaptive();
+  TBkgModel::UpdateModel();
   
-  dChiSquare = TBkgModel::GetChiSquareAdaptive();
+  dChiSquare = TBkgModel::GetChiSquare();
 
   cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
@@ -785,7 +785,7 @@ bool TBkgModel::DoTheFitAdaptive()
   // // Saving plots
   cadap1->SaveAs(Form("%s/FitResults/FitM1_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
   cadap2->SaveAs(Form("%s/FitResults/FitM2_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
-  cadap2sum->SaveAs(Form("%s/FitResults/FitM2Sum_%d.pdf", dSaveDir.c_str(), tTime->GetDate() );
+  cadap2sum->SaveAs(Form("%s/FitResults/FitM2Sum_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
 
   // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
@@ -794,7 +794,7 @@ bool TBkgModel::DoTheFitAdaptive()
   // cProgress->SaveAs(Form("%s/FitResults/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   // Save histograms to file
-  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate(), "RECREATE");
+  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate()) "RECREATE");
   fSaveResult->Add(fAdapDataHistoM1);
   fSaveResult->Add(fAdapDataHistoM2);
   fSaveResult->Add(fModelTotAdapM1);
