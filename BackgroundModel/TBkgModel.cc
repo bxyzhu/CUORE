@@ -750,11 +750,11 @@ bool TBkgModel::DoTheFitAdaptive()
 
   // Text on right panel of matrix
   pM2->cd();
-  TPaveText *pPave = new TPaveText(0,0,1,1, "NB"); // Text for matrix
+  pPave = new TPaveText(0,0,1,1, "NB"); // Text for matrix
   pPave->SetTextSize(0.04);
   pPave->SetFillColor(0);
   pPave->SetBorderSize(0);
-  for(int i=0; i < TBackgroundModel::dNParam; i++)
+  for(int i=0; i < dNParam; i++)
   {
     pPave->AddText(Form("%d: %s", i, minuit->fCpnam[i].Data() ) );
   }

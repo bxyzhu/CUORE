@@ -21,6 +21,7 @@
 #include "TDatime.h"
 #include "TMatrixT.h"
 #include "TGaxis.h"
+#include "TPaveText.h"
 #include <TMinuitMinimizer.h>
 #include "TROOT.h"
 #include "TStyle.h"
@@ -95,6 +96,7 @@ private:
 	TDatime 		*tTime;
 
 	TMatrixT<double> 	*mCorrMatrix;
+	TPaveText 			*pPave; 
 
 	// Cut Efficiency correction
 	TH1D 			*hEfficiency;
