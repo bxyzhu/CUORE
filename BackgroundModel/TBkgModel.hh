@@ -46,6 +46,9 @@ public:
   		dNumCalls = 0;
   		minuit = new TMinuit(dNParam);
   		nLoop = 0;
+  		// Need to set save directory here...
+		dSaveDir = "/Users/brian/Dropbox/code/BackgroundModel/";
+
 
   		// Generates parameter list
   		TBkgModel::GenerateParameters();

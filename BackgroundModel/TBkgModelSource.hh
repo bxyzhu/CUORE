@@ -97,7 +97,7 @@ public:
 
 	std::string		dDataDir;
 	std::string 	dMCDir;
-	std::string 	dSaveDir;
+	// std::string 	dSaveDir;
 
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
