@@ -783,8 +783,9 @@ bool TBkgModel::DoTheFitAdaptive()
   {
   tTime = new TDatime();
   // // Saving plots
-  cadap1->SaveAs(Form("%s/FitResults/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cadap2->SaveAs(Form("%s/FitResults/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  cadap1->SaveAs(Form("%s/FitResults/FitM1_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
+  cadap2->SaveAs(Form("%s/FitResults/FitM2_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
+  cadap2sum->SaveAs(Form("%s/FitResults/FitM2Sum_%d.pdf", dSaveDir.c_str(), tTime->GetDate() );
 
   // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
@@ -793,7 +794,7 @@ bool TBkgModel::DoTheFitAdaptive()
   // cProgress->SaveAs(Form("%s/FitResults/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   // Save histograms to file
-  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d_%d.root", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime()), "RECREATE");
+  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate(), "RECREATE");
   fSaveResult->Add(fAdapDataHistoM1);
   fSaveResult->Add(fAdapDataHistoM2);
   fSaveResult->Add(fModelTotAdapM1);
