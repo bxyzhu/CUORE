@@ -130,148 +130,6 @@ void TBkgModel::GenerateParameters()
   BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1, hAdapPbRomu238M2, hAdapPbRomu238M2Sum);
   BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1, hAdapPbRomco60M2, hAdapPbRomco60M2Sum);
 
-
-/*
-  // M1
-  BkgParM1[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM1);
-  BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M1);
-  BkgParM1[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1);
-  BkgParM1[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1);  
-  BkgParM1[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_001);
-  BkgParM1[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001);
-  BkgParM1[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001);
-  BkgParM1[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001);
-  BkgParM1[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001);
-  BkgParM1[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1);
-  BkgParM1[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001);
-  BkgParM1[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10);
-  BkgParM1[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10);
-  BkgParM1[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01);
-  BkgParM1[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001);
-  BkgParM1[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1);
-  BkgParM1[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M1);
-  BkgParM1[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M1);
-  BkgParM1[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M1);
-  BkgParM1[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M1);  
-  BkgParM1[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M1);
-  BkgParM1[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1);
-  BkgParM1[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1);
-  BkgParM1[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M1);
-  BkgParM1[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1);
-  BkgParM1[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10);
-  BkgParM1[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_1);
-  BkgParM1[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10);
-  BkgParM1[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10);
-  BkgParM1[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1);
-  BkgParM1[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01);
-  BkgParM1[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001);
-  BkgParM1[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1);
-  BkgParM1[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01);
-  BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001);
-  BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10);
-  BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1);
-  BkgParM1[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M1);
-  BkgParM1[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M1);
-  BkgParM1[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M1);
-  BkgParM1[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M1);
-  BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1);
-  BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1);
-  BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1);
-
-  // M2
-  BkgParM2[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM2);
-  BkgParM2[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M2);
-  BkgParM2[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM2);
-  BkgParM2[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM2);  
-  BkgParM2[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM2_001);
-  BkgParM2[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M2_001);
-  BkgParM2[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M2_001);
-  BkgParM2[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM2_001);
-  BkgParM2[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M2_001);
-  BkgParM2[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_1);
-  BkgParM2[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_001);
-  BkgParM2[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2Sum_10);
-  BkgParM2[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_10);
-  BkgParM2[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_01);
-  BkgParM2[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_001);
-  BkgParM2[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M2);
-  BkgParM2[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M2);
-  BkgParM2[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M2);
-  BkgParM2[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M2);
-  BkgParM2[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M2);  
-  BkgParM2[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M2);
-  BkgParM2[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2);
-  BkgParM2[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2);
-  BkgParM2[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M2);
-  BkgParM2[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2_1);
-  BkgParM2[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2_10);
-  BkgParM2[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2_1);
-  BkgParM2[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2_10);
-  BkgParM2[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2_10);
-  BkgParM2[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_1);
-  BkgParM2[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_01);
-  BkgParM2[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2_001);
-  BkgParM2[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_1);
-  BkgParM2[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_01);
-  BkgParM2[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2_001);
-  BkgParM2[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_10);
-  BkgParM2[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2_1);
-  BkgParM2[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M2);
-  BkgParM2[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M2);
-  BkgParM2[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M2);
-  BkgParM2[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M2);
-  BkgParM2[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M2);
-  BkgParM2[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M2);
-  BkgParM2[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M2);
-
-  // M2Sum
-  BkgParM2Sum[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM2Sum);
-  BkgParM2Sum[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M2Sum);
-  BkgParM2Sum[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM2Sum);
-  BkgParM2Sum[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM2Sum);  
-  BkgParM2Sum[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM2Sum_001);
-  BkgParM2Sum[5] = new TBkgModelParameter("TeO2 Sx ra228 to pb208 0.01", 5, 3.07208e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M2Sum_001);
-  BkgParM2Sum[6] = new TBkgModelParameter("TeO2 Sx u238 to th230 0.01", 6, 1.71025e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M2Sum_001);
-  BkgParM2Sum[7] = new TBkgModelParameter("TeO2 Sx th230 only 0.01", 7, 7.23534e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM2Sum_001);
-  BkgParM2Sum[8] = new TBkgModelParameter("TeO2 Sx ra226 to pb210 0.01", 8, 2.98297e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M2Sum_001);
-  BkgParM2Sum[9] = new TBkgModelParameter("TeO2 Sx pb210 1", 9, 5.30974e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2Sum_1);
-  BkgParM2Sum[10] = new TBkgModelParameter("TeO2 Sx pb210 0.01", 10, 4.11621e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2Sum_001);
-  BkgParM2Sum[11] = new TBkgModelParameter("CuBox + CuFrame Sx th232 10", 11, 3.53539e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2SumSum_10);
-  BkgParM2Sum[12] = new TBkgModelParameter("CuBox + CuFrame Sx u238 10 ", 12, 5.80166e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2Sum_10);
-  BkgParM2Sum[13] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.1", 13, 5.91139e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2Sum_01);
-  BkgParM2Sum[14] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 0.01", 14, 1.79798e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2Sum_001);
-  BkgParM2Sum[15] = new TBkgModelParameter("PbRom k40",  15, 0., 1E-7, 0, 1.0, hAdapPbRomk40M2Sum);
-  BkgParM2Sum[16] = new TBkgModelParameter("OVC th232",  16, 9.25179e-02, 1E-7, 0, 1.0, hAdapOVCth232M2Sum);
-  BkgParM2Sum[17] = new TBkgModelParameter("OVC u238",  17, 1.33486e-01, 1E-7, 0, 1.0, hAdapOVCu238M2Sum);
-  BkgParM2Sum[18] = new TBkgModelParameter("OVC co60",  18, 1.94100e-02, 1E-7, 0, 1.0, hAdapOVCco60M2Sum);
-  BkgParM2Sum[19] = new TBkgModelParameter("OVC k40",  19, 9.90257e-02, 1E-7, 0, 1.0, hAdapOVCk40M2Sum);  
-  BkgParM2Sum[20] = new TBkgModelParameter("External Lead bi210", 20, 0, 1E-7, 0, 1.0, hAdapExtPbbi210M2Sum);
-  BkgParM2Sum[21] = new TBkgModelParameter("CuBox + CuFrame th232", 21, 2.66019e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2Sum);
-  BkgParM2Sum[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2Sum);
-  BkgParM2Sum[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M2Sum);
-  BkgParM2Sum[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2Sum_1);
-  BkgParM2Sum[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M2Sum_10);
-  BkgParM2Sum[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2Sum_1);
-  BkgParM2Sum[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M2Sum_10);
-  BkgParM2Sum[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M2Sum_10);
-  BkgParM2Sum[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2Sum_1);
-  BkgParM2Sum[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2Sum_01);
-  BkgParM2Sum[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M2Sum_001);
-  BkgParM2Sum[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2Sum_1);
-  BkgParM2Sum[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2Sum_01);
-  BkgParM2Sum[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M2Sum_001);
-  BkgParM2Sum[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2Sum_10);
-  BkgParM2Sum[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M2Sum_1);
-  BkgParM2Sum[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M2Sum);
-  BkgParM2Sum[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M2Sum);
-  BkgParM2Sum[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M2Sum);
-  BkgParM2Sum[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M2Sum);
-  BkgParM2Sum[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M2Sum);
-  BkgParM2Sum[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M2Sum);
-  BkgParM2Sum[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M2Sum);
-*/
-
-
 }
 
 double TBkgModel::GetChiSquareAdaptive()
@@ -907,19 +765,19 @@ bool TBkgModel::DoTheFitAdaptive()
     fParActivityErr[i] = fParError[i]*dDataIntegralM1/fParEfficiencyM1[i];
   }
 
-/*
+
   if(bSave)
   {
   tTime = new TDatime();
   // // Saving plots
   cadap1->SaveAs(Form("%s/FitResults/Test/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   cadap2->SaveAs(Form("%s/FitResults/Test/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  cMatrix->SaveAs(Form("%s/FitResults/Test/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
- 
-  cProgress->SaveAs(Form("%s/FitResults/Test/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+
+  // cResidual1->SaveAs(Form("%s/FitResults/Test/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cResidual2->SaveAs(Form("%s/FitResults/Test/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cres1->SaveAs(Form("%s/FitResults/Test/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cMatrix->SaveAs(Form("%s/FitResults/Test/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
+  // cProgress->SaveAs(Form("%s/FitResults/Test/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   // Save histograms to file
   fSaveResult = new TFile(Form("%s/FitResults/Test/FitResult_%d_%d.root", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime()), "RECREATE");
@@ -931,14 +789,16 @@ bool TBkgModel::DoTheFitAdaptive()
   // Scale histograms by parameter for saving (so that actual fit value is represented)
   for(int i = 0; i < dNParam; i++)
   {
-    BkgParM1[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]) 
-    BkgParM1[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]) 
+    BkgParM1[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]);
+    BkgParM1[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]);
+    BkgParM1[i]->GetHistM2Sum()->Scale( dDataIntegralM2Sum*fParameters[i]);    
 
     fSaveResult->Add( BkgParM1[i]->GetHistM1() );
     fSaveResult->Add( BkgParM1[i]->GetHistM2() );    
+    fSaveResult->Add( BkgParM1[i]->GetHistM2Sum() );    
   }
 
-  fSaveResult->Add(&mCorrMatrix);
+  // fSaveResult->Add(&mCorrMatrix);
 
   fSaveResult->Write(); 
 
@@ -949,7 +809,7 @@ bool TBkgModel::DoTheFitAdaptive()
   // cres1->SaveAs(Form("%s/FitResults/CovMatrix/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cMatrix->SaveAs(Form("%s/FitResults/CovMatrix/FitCovMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   } // end bSave
-*/
+
 
 
   return true;
