@@ -39,7 +39,6 @@ public:
 
 	TH1D *GetHistM2Sum();
 
-
 	void SetInitValue(double fInitialValue);
 
 	bool 			bFixed;
