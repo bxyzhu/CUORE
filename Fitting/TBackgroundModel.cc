@@ -1596,7 +1596,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0,0);
+  // DoTheFitAdaptive(0,0);
   // DoTheFitAdaptive(0.0674202742, 0.0263278758);  
   // ProfileNLL(0.0685222152, 3968.95); 
   // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
@@ -5673,10 +5673,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
-   // minuit->FixParameter(37); // 
-   // minuit->FixParameter(38); // 
-   // minuit->FixParameter(39); //
-   // minuit->FixParameter(40); //
+   minuit->FixParameter(37); // 
+   minuit->FixParameter(38); // 
+   minuit->FixParameter(39); //
+   minuit->FixParameter(40); //
 
    // minuit->FixParameter(41); // 
    // minuit->FixParameter(42); //
@@ -7117,33 +7117,32 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
 
 void TBackgroundModel::ToyFit(int fNumFits)
 {
-    OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
+    // OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
 
-    OutToy << "{" << endl;
-    OutToy << endl;
+    // OutToy << "{" << endl;
+    // OutToy << endl;
 
-    OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
-    OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
-    OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
-    OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
+    // OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
+    // OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
+    // OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
+    // OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
 
-
-    cout << "Number of Loops " << fNumFits << endl;
+    // cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 10; i++)
+    for(int i = 1; i <= 1; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
-      fToyData = new TFile(Form("%s/Toy/ToyTest_p%d.root", dMCDir.c_str(), i));
+      fToyData = new TFile(Form("%s/Toy/Toy_p%d.root", dMCDir.c_str(), i));
       fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
       fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
     
     // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
     // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
-      fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
-      fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
+      // fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
+      // fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
 
       for(int j = 1; j <= dAdaptiveBinsM1; j++)
       {
@@ -7165,36 +7164,36 @@ void TBackgroundModel::ToyFit(int fNumFits)
     // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
       DoTheFitAdaptive(0,0);
       // Probably need to add a way to input the best-fit half-life
-      OutToy << Form("hToy2nbbRate->Fill(%.5e);", (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
-      OutToy << Form("hToy2nbbError->Fill(%.5e);", fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
-      OutToy << Form("hPullDist->Fill(%5e);", ((0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) - 6.80668e+20)/(fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1))  ) << endl;
-      OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
+    //   OutToy << Form("hToy2nbbRate->Fill(%.5e);", (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    //   OutToy << Form("hToy2nbbError->Fill(%.5e);", fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    //   OutToy << Form("hPullDist->Fill(%5e);", ((0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) - 6.80668e+20)/(fParError[1]/fParameters[1]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[1]*dDataIntegralM1))  ) << endl;
+    //   OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
     }
-    OutToy << endl;
-    OutToy << endl;
-    OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
-    OutToy << "c1->Divide(2,2);" << endl;
-    OutToy << "c1->cd(1);" << endl;
-    OutToy << "hPullDist->GetXaxis()->SetTitle(\"#Deltat_{1/2}/#sigma_{t_{1/2}}\");" << endl;
-    OutToy << "hPullDist->Draw();" << endl;
+    // OutToy << endl;
+    // OutToy << endl;
+    // OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
+    // OutToy << "c1->Divide(2,2);" << endl;
+    // OutToy << "c1->cd(1);" << endl;
+    // OutToy << "hPullDist->GetXaxis()->SetTitle(\"#Deltat_{1/2}/#sigma_{t_{1/2}}\");" << endl;
+    // OutToy << "hPullDist->Draw();" << endl;
 
-    OutToy << "c1->cd(2);" << endl;    
-    OutToy << "hToy2nbbRate->GetXaxis()->SetTitle(\"t_{1/2}\");" << endl;
-    OutToy << "hToy2nbbRate->Draw();" << endl;
+    // OutToy << "c1->cd(2);" << endl;    
+    // OutToy << "hToy2nbbRate->GetXaxis()->SetTitle(\"t_{1/2}\");" << endl;
+    // OutToy << "hToy2nbbRate->Draw();" << endl;
 
-    OutToy << "c1->cd(3);" << endl;    
-    OutToy << "hToy2nbbError->GetXaxis()->SetTitle(\"#sigma_{t_{1/2}}\");" << endl;
-    OutToy << "hToy2nbbError->Draw();" << endl;
+    // OutToy << "c1->cd(3);" << endl;    
+    // OutToy << "hToy2nbbError->GetXaxis()->SetTitle(\"#sigma_{t_{1/2}}\");" << endl;
+    // OutToy << "hToy2nbbError->Draw();" << endl;
 
-    OutToy << "c1->cd(4);" << endl;    
-    OutToy << "hChiSquared->GetXaxis()->SetTitle(\"#chi^{2}\");" << endl;
-    OutToy << "hChiSquared->Draw();" << endl;
+    // OutToy << "c1->cd(4);" << endl;    
+    // OutToy << "hChiSquared->GetXaxis()->SetTitle(\"#chi^{2}\");" << endl;
+    // OutToy << "hChiSquared->Draw();" << endl;
 
-    OutToy << endl;
-    OutToy << endl;
-    OutToy << "}" << endl;
-    OutToy << endl;
-    OutToy.close();
+    // OutToy << endl;
+    // OutToy << endl;
+    // OutToy << "}" << endl;
+    // OutToy << endl;
+    // OutToy.close();
 }
 
 TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
