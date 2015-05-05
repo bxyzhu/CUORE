@@ -1596,7 +1596,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0,0);
+  DoTheFitAdaptive(0,0);
   // DoTheFitAdaptive(0.0674202742, 0.0263278758);  
   // ProfileNLL(0.0685222152, 3968.95); 
   // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
