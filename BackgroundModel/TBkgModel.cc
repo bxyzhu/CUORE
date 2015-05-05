@@ -72,18 +72,22 @@ void TBkgModel::CorrectForEfficiency()
   fDataHistoM2Sum->Divide( hEfficiency );
 }
 
-// Shows total number of parameters
-int TBkgModel::ShowNParameters()
+void TBkgModel::FixPar(int fParIndex)
 {
-  return dNParam;
+  bFixedArray[fParIndex] = true;
 }
+
+void TBkgModel::ReleasePar(int fParIndex)
+{
+  bFixedArray[fParIndex] = false;
+}
+
 
 // Initialize parameters
 void TBkgModel::GenerateParameters()
 {
   
-  // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histogram)
-
+  // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histograms.. )
   // M1
   BkgParM1[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM1, hAdapTeO22nuM2, hAdapTeO22nuM2Sum);
   BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M1, hAdapCuBox_CuFrameco60M2, hAdapCuBox_CuFrameco60M2Sum);
@@ -122,13 +126,15 @@ void TBkgModel::GenerateParameters()
   BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001, hAdapCuBox_CuFrameu238M2_001, hAdapCuBox_CuFrameu238M2Sum_001);
   BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
   BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1, hAdapCuBox_CuFramepb210M2_1, hAdapCuBox_CuFramepb210M2Sum_1);
-  BkgParM1[37] = new TBkgModelParameter("Internal th232",  37, 0., 1E-7, 0, 1.0, hAdapInternalth232M1, hAdapInternalth232M2, hAdapInternalth232M2Sum);
-  BkgParM1[38] = new TBkgModelParameter("Internal u238",  38, 0., 1E-7, 0, 1.0, hAdapInternalu238M1, hAdapInternalu238M2, hAdapInternalu238M2Sum);
-  BkgParM1[39] = new TBkgModelParameter("Internal co60",  39, 0., 1E-7, 0, 1.0, hAdapInternalco60M1, hAdapInternalco60M2, hAdapInternalco60M2Sum);
-  BkgParM1[40] = new TBkgModelParameter("Internal k40",  40, 0., 1E-7, 0, 1.0, hAdapInternalk40M1, hAdapInternalk40M2, hAdapInternalk40M2Sum);
-  BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1, hAdapPbRomth232M2, hAdapPbRomth232M2Sum);
-  BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1, hAdapPbRomu238M2, hAdapPbRomu238M2Sum);
-  BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1, hAdapPbRomco60M2, hAdapPbRomco60M2Sum);
+
+  BkgParM1[37] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  37, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
+  BkgParM1[38] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  38, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
+  BkgParM1[39] = new TBkgModelParameter("Fudge Factor PbRom 804 keV",  39, 0., 1E-7, 0, 1.0, hAdapPbRom804M1, hAdapPbRom804M2, hAdapPbRom804M2Sum);
+  BkgParM1[40] = new TBkgModelParameter("Fudge Factor PbRom 1063 keV",  40, 0., 1E-7, 0, 1.0, hAdapPbRom1063M1, hAdapPbRom1063M2, hAdapPbRom1063M2Sum);
+  
+  // BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1, hAdapPbRomth232M2, hAdapPbRomth232M2Sum);
+  // BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1, hAdapPbRomu238M2, hAdapPbRomu238M2Sum);
+  // BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1, hAdapPbRomco60M2, hAdapPbRomco60M2Sum)
 
 }
 
@@ -379,6 +385,12 @@ void TBkgModel::SetParameters(int index, double value)
 	// Change the index max depending on model
 	if(index > dNParam) cout << "Index too large" << endl;
 	else fParameters[index] = value;
+}
+
+// Shows total number of parameters
+int TBkgModel::ShowNParameters()
+{
+  return dNParam;
 }
 
 // Creates/updates the background model
@@ -786,15 +798,15 @@ bool TBkgModel::DoTheFit()
   cadap1->SaveAs(Form("%s/FitResults/FitM1_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
   cadap2->SaveAs(Form("%s/FitResults/FitM2_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
   cadap2sum->SaveAs(Form("%s/FitResults/FitM2Sum_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
+  cMatrix->SaveAs(Form("%s/FitResults/FitCovMatrix_%d_.pdf", dSaveDir.c_str(), tTime->GetDate() ));
 
   // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cres1->SaveAs(Form("%s/FitResults/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cMatrix->SaveAs(Form("%s/FitResults/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cProgress->SaveAs(Form("%s/FitResults/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
 
   // Save histograms to file
-  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate()) "RECREATE");
+  fSaveResult = new TFile(Form("%s/FitResults/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate()), "RECREATE");
   fSaveResult->Add(fAdapDataHistoM1);
   fSaveResult->Add(fAdapDataHistoM2);
   fSaveResult->Add(fModelTotAdapM1);

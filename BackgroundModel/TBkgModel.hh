@@ -42,7 +42,7 @@ public:
 	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave):TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataset)
 	{
 		bSave = fSave;
-  		dNParam = 44; // number of fitting parameters
+  		dNParam = 41; // number of fitting parameters
   		dNumCalls = 0;
   		minuit = new TMinuit(dNParam);
   		nLoop = 0;
@@ -59,6 +59,10 @@ public:
 	void CorrectForEfficiency();
 
 	bool DoTheFit();
+
+	void FixPar(int fParIndex);
+
+	void ReleasePar(int fParIndex);
 
 	double GetChiSquare();
 

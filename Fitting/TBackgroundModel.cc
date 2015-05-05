@@ -118,7 +118,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   LoadData();
 
-
+/*
   TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
   fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
 
@@ -132,7 +132,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fDataHistoM1->Divide( hEfficiency );
   fDataHistoM2->Divide( hEfficiency );
   fDataHistoM2Sum->Divide( hEfficiency );
-
+*/
 
   // Total model histograms M1
   // M2Sum histograms created but not used (in case I need them someday...)
@@ -5587,10 +5587,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   minuit->DefineParameter(19, "OVC k40",  9.90257e-02, 1E-7, 0, 1.0);  
   minuit->DefineParameter(20, "External Lead bi210", fVariableValue, 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(21, "CuBox + CuFrame th232",  0, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(21, "CuBox + CuFrame th232",  2.66019e-02, 1E-7, 0, 1.0);
-  minuit->DefineParameter(22, "CuBox + CuFrame u238",  0, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(22, "CuBox + CuFrame u238",  4.98365e-03, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(21, "CuBox + CuFrame th232",  0, 1E-7, 0, 1.0);
+  minuit->DefineParameter(21, "CuBox + CuFrame th232",  2.66019e-02, 1E-7, 0, 1.0);
+  // minuit->DefineParameter(22, "CuBox + CuFrame u238",  0, 1E-7, 0, 1.0);
+  minuit->DefineParameter(22, "CuBox + CuFrame u238",  4.98365e-03, 1E-7, 0, 1.0);
   minuit->DefineParameter(23, "PbRom cs137",  0, 1E-7, 0, 1.0);
 
   minuit->DefineParameter(24, "TeO2 Sx th232 1", 1.12618e-03, 1E-7, 0, 1.0);
@@ -5673,10 +5673,10 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
    // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
-   minuit->FixParameter(37); // 
-   minuit->FixParameter(38); // 
-   minuit->FixParameter(39); //
-   minuit->FixParameter(40); //
+   // minuit->FixParameter(37); // 
+   // minuit->FixParameter(38); // 
+   // minuit->FixParameter(39); //
+   // minuit->FixParameter(40); //
 
    // minuit->FixParameter(41); // 
    // minuit->FixParameter(42); //
