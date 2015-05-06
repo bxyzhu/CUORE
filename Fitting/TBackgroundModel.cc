@@ -60,12 +60,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 
   // Data directories depending on QCC/local
-  // dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
-   dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/";
-  // dMCDir = "/Users/brian/macros/Simulations/Production";
-   dMCDir = "/cuore/user/zhubrian/MC/Bkg";
-  // dSaveDir = "/Users/brian/Dropbox/code/Fitting";
-   dSaveDir = "/cuore/user/zhubrian/";
+  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
+   // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/";
+  dMCDir = "/Users/brian/macros/Simulations/Production";
+   // dMCDir = "/cuore/user/zhubrian/MC/Bkg";
+  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
+   // dSaveDir = "/cuore/user/zhubrian/";
   dDataIntegral = 0;
 
   // Bin size (keV) -- base binning is 1 keV
@@ -1584,8 +1584,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // Loads all of the PDFs from file
   Initialize();
 
-/*
+
   // Add 2nbb events to background
+/*
   SanityCheck();
   // Set Error Bars to 0 for MC histograms so I don't go crazy
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
@@ -1602,7 +1603,19 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   {
     fAdapDataHistoM2Sum->SetBinError(i, 0);
   }
+  // Recalculate integrals
+  dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
+  dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
+  dDataIntegralM2Sum = fAdapDataHistoM2Sum->Integral("width");
+
+  cout << "Recalculated integrals: " << endl;
+  cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
+  cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
+  cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
+  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
+  cout << "Livetime of background: " << dLivetimeYr << endl;
 */
+
 
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
@@ -5577,7 +5590,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 */
 
   //// 50 counts
-  minuit->DefineParameter(0, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
+  minuit->DefineParameter(0, "TeO2 2nu",  f2nuValue, 1E-7, 0, 2.0);
   minuit->DefineParameter(1, "CuBox + CuFrame co60",  0, 1E-7, 0, 1.0);
 
   minuit->DefineParameter(2, "TeO2 th232 only", 0, 1E-7, 0, 1.0);
@@ -5742,6 +5755,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
 // M1
   fModelTotAdap2NDBDM1->Add( hAdapTeO22nuM1,              dDataIntegralM1*fParameters[0]);
+  fModelTotAdap2NDBDM2->Add( hAdapTeO22nuM2,              dDataIntegralM2*fParameters[0]);
 /*
   fModelTotAdapcoM1->Add( hAdapCuBox_CuFrameco60M1,             dDataIntegralM1*fParameters[1]);
   fModelTotAdapthM1->Add( hAdapTeO2th232onlyM1,        dDataIntegralM1*fParameters[2]);
@@ -5777,7 +5791,6 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   fModelTotAdapSpbM1->Add( hAdapTeO2Sxpb210M1_10,     dDataIntegralM1*fParameters[28]);
 
 // M2
-  fModelTotAdap2NDBDM2->Add( hAdapTeO22nuM2,              dDataIntegralM2*fParameters[0]);
   fModelTotAdapcoM2->Add( hAdapCuBox_CuFrameco60M2,             dDataIntegralM2*fParameters[1]);
   fModelTotAdapthM2->Add( hAdapTeO2th232onlyM2,        dDataIntegralM2*fParameters[2]);
   fModelTotAdapuM2->Add( hAdapTeO2th230onlyM2,        dDataIntegralM2*fParameters[3]);
@@ -6465,9 +6478,11 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   cout << "Integral Total Pb-210 PDF in ROI (counts/keV/y): " << fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt(fModelTotAdapSpbM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   // cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;  
   cout << "Integral Total 0NDBD PDF in ROI (counts/keV/y): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
-  cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  
   cout << "Number of 2nbb: " << fParameters[0]*dDataIntegralM1 << " +/- " << fParError[0]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << " +/- " << (fParError[0]/fParameters[0]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << endl;
   cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
+  cout << endl;
+  cout << endl;
+  cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  
   cout << "Model in 2nbb region (c/keV/y): " << d2nbbModel << " $\\pm$ " << d2nbbModelErr << endl;
   cout << "Model of 2nbb PDF (c/keV/y): " << d2nbbPDF << " $\\pm$ " << d2nbbPDFErr << endl;
   cout << "Model of PDFs in 2nbb region without 2nbb (c/keV/y): " << d2nbbModel - d2nbbPDF << " $\\pm$ " << d2nbbModelErr << endl;
@@ -7026,15 +7041,18 @@ void TBackgroundModel::LatexResultTable(double fValue)
 // Adds a random percentage of events of 2nbb into spectrum
 void TBackgroundModel::SanityCheck()
 {
-  double dM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
-  double dM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
-  // Sanity check, adding to background a set amount of 2nbb events, see if code can reconstruct it properly
-  fDataHistoM1->Add(hTeO22nuM1, 1.0*dM1);
-  fDataHistoM2->Add(hTeO22nuM2, 1.0*dM2);
+  double dM1 = fDataHistoM1->Integral(1, 10000/dBaseBinSize, "width");
+  double dM2 = fDataHistoM2->Integral(1, 10000/dBaseBinSize, "width");
+  // // Sanity check, adding to background a set amount of 2nbb events, see if code can reconstruct it properly
+  // fDataHistoM1->Add(hTeO22nuM1, 0.1*dM1);
+  // fDataHistoM2->Add(hTeO22nuM2, 0.1*dM2);
 
-  fAdapDataHistoM1->Add(hAdapTeO22nuM1, 1.0*dM1);
-  fAdapDataHistoM2->Add(hAdapTeO22nuM2, 1.0*dM2);
-  // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 0.5*dDataIntegralM2Sum);
+  fAdapDataHistoM1->Add(hAdapTeO22nuM1, 0.002*dM1);
+  fAdapDataHistoM2->Add(hAdapTeO22nuM2, 0.002*dM2);
+  // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 1.0*dDataIntegralM2Sum);
+
+  cout << "Adding " << (0.002*dM1)*hAdapTeO22nuM1->Integral("width") + (0.002*dM2)*hAdapTeO22nuM2->Integral("width") << " 2nbb events to spectrum" << endl;
+
 }
 
 // Only run in batch mode and make sure to have the 2nbb normalization FIXED
@@ -7061,7 +7079,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     DoTheFitAdaptive(*iter, 0);
     // LatexResultTable(*iter);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", dChiSquare-dBestChiSq, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
 
     nLoop++; // This is purely for file names and to keep track of number of loops
   }

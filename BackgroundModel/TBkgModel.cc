@@ -1,3 +1,5 @@
+// Number of parameters dNParam is defined in header file, maybe it's easier if I load it here later...
+
 #include "TMinuit.h"
 #include "TLine.h"
 #include "TCanvas.h"
@@ -90,7 +92,7 @@ void TBkgModel::GenerateParameters()
   // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histograms.. )
   // M1
   BkgParM1[0] = new TBkgModelParameter("TeO2 2nbb", 0, 0, 1E-7, 0.0, 1.0, hAdapTeO22nuM1, hAdapTeO22nuM2, hAdapTeO22nuM2Sum);
-  BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 0, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M1, hAdapCuBox_CuFrameco60M2, hAdapCuBox_CuFrameco60M2Sum);
+  BkgParM1[1] = new TBkgModelParameter("CuBox + CuFrame co60", 1, 1.00871e-02, 1E-7, 0.0, 1.0, hAdapCuBox_CuFrameco60M1, hAdapCuBox_CuFrameco60M2, hAdapCuBox_CuFrameco60M2Sum);
   BkgParM1[2] = new TBkgModelParameter("TeO2 th232 only", 2, 0, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1, hAdapTeO2th232onlyM2, hAdapTeO2th232onlyM2Sum);
   BkgParM1[3] = new TBkgModelParameter("TeO2 th230 only", 3, 3.07203e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1, hAdapTeO2th230onlyM2, hAdapTeO2th230onlyM2Sum);  
   BkgParM1[4] = new TBkgModelParameter("TeO2 Sx th232 only 0.01", 4, 1.43894e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_001, hAdapTeO2Sxth232onlyM2_001, hAdapTeO2Sxth232onlyM2Sum_001);
@@ -114,27 +116,37 @@ void TBkgModel::GenerateParameters()
   BkgParM1[22] = new TBkgModelParameter("CuBox + CuFrame u238",  22, 4.98365e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1, hAdapCuBox_CuFrameu238M2, hAdapCuBox_CuFrameu238M2Sum);
   BkgParM1[23] = new TBkgModelParameter("PbRom cs137",  23, 0, 1E-7, 0, 1.0, hAdapPbRomcs137M1, hAdapPbRomcs137M2, hAdapPbRomcs137M2Sum);
   BkgParM1[24] = new TBkgModelParameter("TeO2 Sx th232 1", 24, 1.12618e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1, hAdapTeO2Sxth232M2_1, hAdapTeO2Sxth232M2Sum_1);
-  BkgParM1[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10, hAdapTeO2Sxth232M2_10, hAdapTeO2Sxth232M2Sum_10);
-  BkgParM1[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_1, hAdapTeO2Sxu238M2_1, hAdapTeO2Sxu238M2Sum_1);
-  BkgParM1[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10, hAdapTeO2Sxu238M2_10, hAdapTeO2Sxu238M2Sum_10);
-  BkgParM1[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10, hAdapTeO2Sxpb210M2_10, hAdapTeO2Sxpb210M2Sum_10);
-  BkgParM1[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1, hAdapCuBox_CuFrameth232M2_1, hAdapCuBox_CuFrameth232M2Sum_1);
-  BkgParM1[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01, hAdapCuBox_CuFrameth232M2_01, hAdapCuBox_CuFrameth232M2Sum_01);
-  BkgParM1[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001, hAdapCuBox_CuFrameth232M2_001, hAdapCuBox_CuFrameth232M2Sum_001);
-  BkgParM1[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1, hAdapCuBox_CuFrameu238M2_1, hAdapCuBox_CuFrameu238M2Sum_1);
-  BkgParM1[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01, hAdapCuBox_CuFrameu238M2_01, hAdapCuBox_CuFrameu238M2Sum_01);
-  BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001, hAdapCuBox_CuFrameu238M2_001, hAdapCuBox_CuFrameu238M2Sum_001);
-  BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
-  BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1, hAdapCuBox_CuFramepb210M2_1, hAdapCuBox_CuFramepb210M2Sum_1);
 
-  BkgParM1[37] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  37, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
-  BkgParM1[38] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  38, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
+  BkgParM1[25] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 25, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001, hAdapCuBox_CuFrameth232M2_001, hAdapCuBox_CuFrameth232M2Sum_001);
+  BkgParM1[26] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 26, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01, hAdapCuBox_CuFrameu238M2_01, hAdapCuBox_CuFrameu238M2Sum_01);
+  BkgParM1[27] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 27, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
+
+
+  // BkgParM1[37] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  37, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
+  // BkgParM1[38] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  38, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
+  
+/*  
+  // Sources used in testing but not necessary
+  // BkgParM1[25] = new TBkgModelParameter("TeO2 Sx th232 10", 25, 1.15477e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10, hAdapTeO2Sxth232M2_10, hAdapTeO2Sxth232M2Sum_10);
+  // BkgParM1[26] = new TBkgModelParameter("TeO2 Sx u238 1", 26, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_1, hAdapTeO2Sxu238M2_1, hAdapTeO2Sxu238M2Sum_1);
+  // BkgParM1[27] = new TBkgModelParameter("TeO2 Sx u238 10", 27, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10, hAdapTeO2Sxu238M2_10, hAdapTeO2Sxu238M2Sum_10);
+  // BkgParM1[28] = new TBkgModelParameter("TeO2 Sx pb210 10", 28, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10, hAdapTeO2Sxpb210M2_10, hAdapTeO2Sxpb210M2Sum_10);
+  // BkgParM1[29] = new TBkgModelParameter("CuBox + CuFrame Sx th232 1", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1, hAdapCuBox_CuFrameth232M2_1, hAdapCuBox_CuFrameth232M2Sum_1);
+  // BkgParM1[30] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.1", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01, hAdapCuBox_CuFrameth232M2_01, hAdapCuBox_CuFrameth232M2Sum_01);
+  BkgParM1[31] = new TBkgModelParameter("CuBox + CuFrame Sx th232 0.01", 31, 5.75719e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001, hAdapCuBox_CuFrameth232M2_001, hAdapCuBox_CuFrameth232M2Sum_001);
+  // BkgParM1[32] = new TBkgModelParameter("CuBox + CuFrame Sx u238 1", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1, hAdapCuBox_CuFrameu238M2_1, hAdapCuBox_CuFrameu238M2Sum_1);
+  BkgParM1[33] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 33, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01, hAdapCuBox_CuFrameu238M2_01, hAdapCuBox_CuFrameu238M2Sum_01);
+  // BkgParM1[34] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.01", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001, hAdapCuBox_CuFrameu238M2_001, hAdapCuBox_CuFrameu238M2Sum_001);
+  BkgParM1[35] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 35, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
+  // BkgParM1[36] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 1", 36, 5.21599e-05, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1, hAdapCuBox_CuFramepb210M2_1, hAdapCuBox_CuFramepb210M2Sum_1);
+
   BkgParM1[39] = new TBkgModelParameter("Fudge Factor PbRom 804 keV",  39, 0., 1E-7, 0, 1.0, hAdapPbRom804M1, hAdapPbRom804M2, hAdapPbRom804M2Sum);
   BkgParM1[40] = new TBkgModelParameter("Fudge Factor PbRom 1063 keV",  40, 0., 1E-7, 0, 1.0, hAdapPbRom1063M1, hAdapPbRom1063M2, hAdapPbRom1063M2Sum);
-  
+
   // BkgParM1[41] = new TBkgModelParameter("PbRom th232",  41, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1, hAdapPbRomth232M2, hAdapPbRomth232M2Sum);
   // BkgParM1[42] = new TBkgModelParameter("PbRom u238",  42, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1, hAdapPbRomu238M2, hAdapPbRomu238M2Sum);
   // BkgParM1[43] = new TBkgModelParameter("PbRom co60",  43, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1, hAdapPbRomco60M2, hAdapPbRomco60M2Sum)
+*/
 
 }
 
