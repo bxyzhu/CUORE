@@ -5691,19 +5691,19 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(23); // PbRom cs137
 
    // minuit->FixParameter(24); // TeO2 Sx th232 1
-   // minuit->FixParameter(25); // TeO2 Sx th232 10 
-   // minuit->FixParameter(26); // TeO2 Sx u238 1
-   // minuit->FixParameter(27); // TeO2 Sx u238 10
-   // minuit->FixParameter(28); // TeO2 Sx pb210 10
+   minuit->FixParameter(25); // TeO2 Sx th232 10 
+   minuit->FixParameter(26); // TeO2 Sx u238 1
+   minuit->FixParameter(27); // TeO2 Sx u238 10
+   minuit->FixParameter(28); // TeO2 Sx pb210 10
 
-   // minuit->FixParameter(29); // CuBox + CuFrame Sx th232 1
-   // minuit->FixParameter(30); // CuBox + CuFrame Sx th232 0.1 
+   minuit->FixParameter(29); // CuBox + CuFrame Sx th232 1
+   minuit->FixParameter(30); // CuBox + CuFrame Sx th232 0.1 
    // minuit->FixParameter(31); // CuBox + CuFrame Sx th232 0.01
-   // minuit->FixParameter(32); // CuBox + CuFrame Sx u238 1
+   minuit->FixParameter(32); // CuBox + CuFrame Sx u238 1
    // minuit->FixParameter(33); // CuBox + CuFrame Sx u238 0.1
-   // minuit->FixParameter(34); // CuBox + CuFrame Sx u238 0.01
+   minuit->FixParameter(34); // CuBox + CuFrame Sx u238 0.01
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
-   // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
+   minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
    minuit->FixParameter(37); // 
    minuit->FixParameter(38); // 
