@@ -7170,7 +7170,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
     double dToy2nbbRateErr;
 
     // Number of toy fits
-    for(int i = 1; i <= 5; i++)
+    for(int i = 1; i <= 500; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
