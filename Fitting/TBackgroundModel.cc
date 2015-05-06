@@ -6537,9 +6537,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
     for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
       mCorrMatrix(i,j) = mCorrMatrix(i,j)/(fParError[i]*fParError[j]);
 
-  for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
-    for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
-      mCorrMatrixInverse(i,j) = mCorrMatrix(TBackgroundModel::dNParam-i-1, j); 
+  // for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
+    // for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
+      // mCorrMatrixInverse(i,j) = mCorrMatrix(TBackgroundModel::dNParam-i-1, j); 
 
   TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1800, 1000);
   TPad* pM1 = new TPad("pM1","pM1",width1,canBotMargin,width2*0.75,canBotMargin+2*padHeight,0,0);
@@ -7170,7 +7170,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
     double dToy2nbbRateErr;
 
     // Number of toy fits
-    for(int i = 1; i <= 500; i++)
+    for(int i = 1; i <= 5; i++)
     {
       cout << "Toy: " << i << endl;
       fAdapDataHistoM1->Reset();
