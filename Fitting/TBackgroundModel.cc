@@ -3157,8 +3157,8 @@ void TBackgroundModel::Initialize()
   fBulkOuterOld = new TFile(Form("%s/OldProd/MCProduction_BulkOuter_1keV.root", dMCDir.c_str()));
   fBulkOuterM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
 
-  fSurfaceCrystal = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str()));
-  fSurfaceCrystalOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str()));
+  fSurfaceCrystal = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str())); // Has more PDFs
+  fSurfaceCrystalOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str())); // Has more PDFs
   fSurfaceOther = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
   fSurfaceOtherOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
 
@@ -5691,19 +5691,19 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
    // minuit->FixParameter(23); // PbRom cs137
 
    // minuit->FixParameter(24); // TeO2 Sx th232 1
-   minuit->FixParameter(25); // TeO2 Sx th232 10 
-   minuit->FixParameter(26); // TeO2 Sx u238 1
-   minuit->FixParameter(27); // TeO2 Sx u238 10
-   minuit->FixParameter(28); // TeO2 Sx pb210 10
+   // minuit->FixParameter(25); // TeO2 Sx th232 10 
+   // minuit->FixParameter(26); // TeO2 Sx u238 1
+   // minuit->FixParameter(27); // TeO2 Sx u238 10
+   // minuit->FixParameter(28); // TeO2 Sx pb210 10
 
-   minuit->FixParameter(29); // CuBox + CuFrame Sx th232 1
-   minuit->FixParameter(30); // CuBox + CuFrame Sx th232 0.1 
+   // minuit->FixParameter(29); // CuBox + CuFrame Sx th232 1
+   // minuit->FixParameter(30); // CuBox + CuFrame Sx th232 0.1 
    // minuit->FixParameter(31); // CuBox + CuFrame Sx th232 0.01
-   minuit->FixParameter(32); // CuBox + CuFrame Sx u238 1
+   // minuit->FixParameter(32); // CuBox + CuFrame Sx u238 1
    // minuit->FixParameter(33); // CuBox + CuFrame Sx u238 0.1
-   minuit->FixParameter(34); // CuBox + CuFrame Sx u238 0.01
+   // minuit->FixParameter(34); // CuBox + CuFrame Sx u238 0.01
    // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
-   minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
+   // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
 
    minuit->FixParameter(37); // 
    minuit->FixParameter(38); // 
@@ -5712,7 +5712,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
    minuit->FixParameter(41); // 
    minuit->FixParameter(42); //
-   minuit->FixParameter(43); //
+   // minuit->FixParameter(43); //
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
    dNumFreeParameters = minuit->GetNumPars() - minuit->GetNumFixedPars();
