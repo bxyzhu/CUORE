@@ -981,18 +981,24 @@ void TBkgModelSource::CreateModelHistograms()
 
 /////////// Fudge Factors
   hOVC804M1 = new TH1D("hOVC804M1", "hOVC804M1", dNBins, dMinEnergy, dMaxEnergy);
+  hOVC835M1 = new TH1D("hOVC835M1", "hOVC835M1", dNBins, dMinEnergy, dMaxEnergy);
   hOVC1063M1 = new TH1D("hOVC1063M1", "hOVC1063M1", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom804M1 = new TH1D("hPbRom804M1", "hPbRom804M1", dNBins, dMinEnergy, dMaxEnergy);
+  hPbRom835M1 = new TH1D("hPbRom835M1", "hPbRom835M1", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom1063M1 = new TH1D("hPbRom1063M1", "hPbRom1063M1", dNBins, dMinEnergy, dMaxEnergy);
 
   hOVC804M2 = new TH1D("hOVC804M2", "hOVC804M2", dNBins, dMinEnergy, dMaxEnergy);
+  hOVC835M2 = new TH1D("hOVC835M2", "hOVC835M2", dNBins, dMinEnergy, dMaxEnergy);
   hOVC1063M2 = new TH1D("hOVC1063M2", "hOVC1063M2", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom804M2 = new TH1D("hPbRom804M2", "hPbRom804M2", dNBins, dMinEnergy, dMaxEnergy);
+  hPbRom835M2 = new TH1D("hPbRom835M2", "hPbRom835M2", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom1063M2 = new TH1D("hPbRom1063M2", "hPbRom1063M2", dNBins, dMinEnergy, dMaxEnergy);
 
   hOVC804M2Sum = new TH1D("hOVC804M2Sum", "hOVC804M2Sum", dNBins, dMinEnergy, dMaxEnergy);
+  hOVC835M2Sum = new TH1D("hOVC835M2Sum", "hOVC835M2Sum", dNBins, dMinEnergy, dMaxEnergy);
   hOVC1063M2Sum = new TH1D("hOVC1063M2Sum", "hOVC1063M2Sum", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom804M2Sum = new TH1D("hPbRom804M2Sum", "hPbRom804M2Sum", dNBins, dMinEnergy, dMaxEnergy);
+  hPbRom835M2Sum = new TH1D("hPbRom835M2Sum", "hPbRom835M2Sum", dNBins, dMinEnergy, dMaxEnergy);
   hPbRom1063M2Sum = new TH1D("hPbRom1063M2Sum", "hPbRom1063M2Sum", dNBins, dMinEnergy, dMaxEnergy);
 
 
@@ -1659,18 +1665,24 @@ void TBkgModelSource::CreateModelHistograms()
 
 /////////// Fudge Factors
   hAdapOVC804M1 = new TH1D("hAdapOVC804M1", "hAdapOVC804M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapOVC835M1 = new TH1D("hAdapOVC835M1", "hAdapOVC835M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapOVC1063M1 = new TH1D("hAdapOVC1063M1", "hAdapOVC1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapPbRom804M1 = new TH1D("hAdapPbRom804M1", "hAdapPbRom804M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapPbRom835M1 = new TH1D("hAdapPbRom835M1", "hAdapPbRom835M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapPbRom1063M1 = new TH1D("hAdapPbRom1063M1", "hAdapPbRom1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
 
   hAdapOVC804M2 = new TH1D("hAdapOVC804M2", "hAdapOVC804M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapOVC835M2 = new TH1D("hAdapOVC835M2", "hAdapOVC835M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapOVC1063M2 = new TH1D("hAdapOVC1063M2", "hAdapOVC1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapPbRom804M2 = new TH1D("hAdapPbRom804M2", "hAdapPbRom804M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapPbRom835M2 = new TH1D("hAdapPbRom835M2", "hAdapPbRom835M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapPbRom1063M2 = new TH1D("hAdapPbRom1063M2", "hAdapPbRom1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   hAdapOVC804M2Sum = new TH1D("hAdapOVC804M2Sum", "hAdapOVC804M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapOVC835M2Sum = new TH1D("hAdapOVC835M2Sum", "hAdapOVC835M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapOVC1063M2Sum = new TH1D("hAdapOVC1063M2Sum", "hAdapOVC1063M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapPbRom804M2Sum = new TH1D("hAdapPbRom804M2Sum", "hAdapPbRom804M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapPbRom835M2Sum = new TH1D("hAdapPbRom835M2Sum", "hAdapPbRom835M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapPbRom1063M2Sum = new TH1D("hAdapPbRom1063M2Sum", "hAdapPbRom1063M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
 
@@ -2056,18 +2068,24 @@ void TBkgModelSource::LoadSources()
 
 ////////// Fudge Factors
   hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
+  hOVC835M1 = (TH1D*)fFudge->Get("hOVC835M1");
   hOVC1063M1 = (TH1D*)fFudge->Get("hOVC1063M1");
   hPbRom804M1 = (TH1D*)fFudge->Get("hPbRom804M1");
+  hPbRom835M1 = (TH1D*)fFudge->Get("hPbRom835M1");
   hPbRom1063M1 = (TH1D*)fFudge->Get("hPbRom1063M1");
 
   hOVC804M2 = (TH1D*)fFudge->Get("hOVC804M2");
+  hOVC835M2 = (TH1D*)fFudge->Get("hOVC835M2");
   hOVC1063M2 = (TH1D*)fFudge->Get("hOVC1063M2");
   hPbRom804M2 = (TH1D*)fFudge->Get("hPbRom804M2");
+  hPbRom835M2 = (TH1D*)fFudge->Get("hPbRom835M2");
   hPbRom1063M2 = (TH1D*)fFudge->Get("hPbRom1063M2");
 
   hOVC804M2Sum = (TH1D*)fFudge->Get("hOVC804M2Sum");
+  hOVC835M2Sum = (TH1D*)fFudge->Get("hOVC835M2Sum");
   hOVC1063M2Sum = (TH1D*)fFudge->Get("hOVC1063M2Sum");
   hPbRom804M2Sum = (TH1D*)fFudge->Get("hPbRom804M2Sum");
+  hPbRom835M2Sum = (TH1D*)fFudge->Get("hPbRom835M2Sum");
   hPbRom1063M2Sum = (TH1D*)fFudge->Get("hPbRom1063M2Sum");
 
 //////////// Surface PDFs
@@ -2937,18 +2955,24 @@ void TBkgModelSource::LoadSources()
 
   ///////// Fudge Factors
   hnewOVC804M1 = hOVC804M1->Rebin(dAdaptiveBinsM1, "hnewOVC804M1", dAdaptiveArrayM1);
+  hnewOVC835M1 = hOVC835M1->Rebin(dAdaptiveBinsM1, "hnewOVC835M1", dAdaptiveArrayM1);
   hnewOVC1063M1 = hOVC1063M1->Rebin(dAdaptiveBinsM1, "hnewOVC1063M1", dAdaptiveArrayM1);
   hnewPbRom804M1 = hPbRom804M1->Rebin(dAdaptiveBinsM1, "hnewPbRom804M1", dAdaptiveArrayM1);
+  hnewPbRom835M1 = hPbRom835M1->Rebin(dAdaptiveBinsM1, "hnewPbRom835M1", dAdaptiveArrayM1);
   hnewPbRom1063M1 = hPbRom1063M1->Rebin(dAdaptiveBinsM1, "hnewPbRom1063M1", dAdaptiveArrayM1);
 
   hnewOVC804M2 = hOVC804M2->Rebin(dAdaptiveBinsM2, "hnewOVC804M2", dAdaptiveArrayM2);
+  hnewOVC835M2 = hOVC835M2->Rebin(dAdaptiveBinsM2, "hnewOVC835M2", dAdaptiveArrayM2);
   hnewOVC1063M2 = hOVC1063M2->Rebin(dAdaptiveBinsM2, "hnewOVC1063M2", dAdaptiveArrayM2);
   hnewPbRom804M2 = hPbRom804M2->Rebin(dAdaptiveBinsM2, "hnewPbRom804M2", dAdaptiveArrayM2);
+  hnewPbRom835M2 = hPbRom835M2->Rebin(dAdaptiveBinsM2, "hnewPbRom835M2", dAdaptiveArrayM2);
   hnewPbRom1063M2 = hPbRom1063M2->Rebin(dAdaptiveBinsM2, "hnewPbRom1063M2", dAdaptiveArrayM2);
 
   hnewOVC804M2Sum = hOVC804M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVC804M2Sum", dAdaptiveArrayM2Sum);
+  hnewOVC835M2Sum = hOVC835M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVC835M2Sum", dAdaptiveArrayM2Sum);
   hnewOVC1063M2Sum = hOVC1063M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewOVC1063M2Sum", dAdaptiveArrayM2Sum);
   hnewPbRom804M2Sum = hPbRom804M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRom804M2Sum", dAdaptiveArrayM2Sum);
+  hnewPbRom835M2Sum = hPbRom835M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRom835M2Sum", dAdaptiveArrayM2Sum);
   hnewPbRom1063M2Sum = hPbRom1063M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewPbRom1063M2Sum", dAdaptiveArrayM2Sum);
 
   // Fill adaptive binning histograms
@@ -3149,8 +3173,10 @@ void TBkgModelSource::LoadSources()
     hAdapExtPbbi210M1->SetBinContent(i, hnewExtPbbi210M1->GetBinContent(i)/hnewExtPbbi210M1->GetBinWidth(i));
 
     hAdapOVC804M1->SetBinContent(i, hnewOVC804M1->GetBinContent(i)/hnewOVC804M1->GetBinWidth(i));
+    hAdapOVC835M1->SetBinContent(i, hnewOVC835M1->GetBinContent(i)/hnewOVC835M1->GetBinWidth(i));
     hAdapOVC1063M1->SetBinContent(i, hnewOVC1063M1->GetBinContent(i)/hnewOVC1063M1->GetBinWidth(i));
     hAdapPbRom804M1->SetBinContent(i, hnewPbRom804M1->GetBinContent(i)/hnewPbRom804M1->GetBinWidth(i));
+    hAdapPbRom835M1->SetBinContent(i, hnewPbRom835M1->GetBinContent(i)/hnewPbRom835M1->GetBinWidth(i));
     hAdapPbRom1063M1->SetBinContent(i, hnewPbRom1063M1->GetBinContent(i)/hnewPbRom1063M1->GetBinWidth(i));
 
   }
@@ -3352,8 +3378,10 @@ void TBkgModelSource::LoadSources()
     hAdapExtPbbi210M2->SetBinContent(i, hnewExtPbbi210M2->GetBinContent(i)/hnewExtPbbi210M2->GetBinWidth(i));
 
     hAdapOVC804M2->SetBinContent(i, hnewOVC804M2->GetBinContent(i)/hnewOVC804M2->GetBinWidth(i));
+    hAdapOVC835M2->SetBinContent(i, hnewOVC835M2->GetBinContent(i)/hnewOVC835M2->GetBinWidth(i));
     hAdapOVC1063M2->SetBinContent(i, hnewOVC1063M2->GetBinContent(i)/hnewOVC1063M2->GetBinWidth(i));
     hAdapPbRom804M2->SetBinContent(i, hnewPbRom804M2->GetBinContent(i)/hnewPbRom804M2->GetBinWidth(i));
+    hAdapPbRom835M2->SetBinContent(i, hnewPbRom835M2->GetBinContent(i)/hnewPbRom835M2->GetBinWidth(i));
     hAdapPbRom1063M2->SetBinContent(i, hnewPbRom1063M2->GetBinContent(i)/hnewPbRom1063M2->GetBinWidth(i));    
   }
 
@@ -3554,8 +3582,10 @@ void TBkgModelSource::LoadSources()
     hAdapExtPbbi210M2Sum->SetBinContent(i, hnewExtPbbi210M2Sum->GetBinContent(i)/hnewExtPbbi210M2Sum->GetBinWidth(i));
 
     hAdapOVC804M2Sum->SetBinContent(i, hnewOVC804M2Sum->GetBinContent(i)/hnewOVC804M2Sum->GetBinWidth(i));
+    hAdapOVC835M2Sum->SetBinContent(i, hnewOVC835M2Sum->GetBinContent(i)/hnewOVC835M2Sum->GetBinWidth(i));
     hAdapOVC1063M2Sum->SetBinContent(i, hnewOVC1063M2Sum->GetBinContent(i)/hnewOVC1063M2Sum->GetBinWidth(i));
     hAdapPbRom804M2Sum->SetBinContent(i, hnewPbRom804M2Sum->GetBinContent(i)/hnewPbRom804M2Sum->GetBinWidth(i));
+    hAdapPbRom835M2Sum->SetBinContent(i, hnewPbRom835M2Sum->GetBinContent(i)/hnewPbRom835M2Sum->GetBinWidth(i));
     hAdapPbRom1063M2Sum->SetBinContent(i, hnewPbRom1063M2Sum->GetBinContent(i)/hnewPbRom1063M2Sum->GetBinWidth(i));   
 
   }

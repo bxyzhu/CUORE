@@ -847,18 +847,24 @@ public:
 
 ////////// Fudge Factor Models
 	TH1D 		*hOVC804M1;
+	TH1D 		*hOVC835M1;
 	TH1D 		*hOVC1063M1;
 	TH1D 		*hPbRom804M1;
+	TH1D 		*hPbRom835M1;
 	TH1D 		*hPbRom1063M1;
 
 	TH1D 		*hOVC804M2;
+	TH1D 		*hOVC835M2;
 	TH1D 		*hOVC1063M2;
 	TH1D 		*hPbRom804M2;
+	TH1D 		*hPbRom835M2;
 	TH1D 		*hPbRom1063M2;
 
 	TH1D 		*hOVC804M2Sum;
+	TH1D 		*hOVC835M2Sum;
 	TH1D 		*hOVC1063M2Sum;
 	TH1D 		*hPbRom804M2Sum;
+	TH1D 		*hPbRom835M2Sum;
 	TH1D 		*hPbRom1063M2Sum;	
 
 ///////////////// Adaptive binned histograms
@@ -1444,18 +1450,24 @@ public:
 
 ////////// Fudge Factor Models
 	TH1D 		*hAdapOVC804M1;
+	TH1D 		*hAdapOVC835M1;
 	TH1D 		*hAdapOVC1063M1;
 	TH1D 		*hAdapPbRom804M1;
+	TH1D 		*hAdapPbRom835M1;
 	TH1D 		*hAdapPbRom1063M1;
 
 	TH1D 		*hAdapOVC804M2;
+	TH1D 		*hAdapOVC835M2;
 	TH1D 		*hAdapOVC1063M2;
 	TH1D 		*hAdapPbRom804M2;
+	TH1D 		*hAdapPbRom835M2;
 	TH1D 		*hAdapPbRom1063M2;
 
 	TH1D 		*hAdapOVC804M2Sum;
+	TH1D 		*hAdapOVC835M2Sum;
 	TH1D 		*hAdapOVC1063M2Sum;
 	TH1D 		*hAdapPbRom804M2Sum;
+	TH1D 		*hAdapPbRom835M2Sum;
 	TH1D 		*hAdapPbRom1063M2Sum;	
 
 
@@ -2053,19 +2065,25 @@ public:
 
 ////////// Fudge Factor Models
 	TH1 		*hnewOVC804M1;
+	TH1 		*hnewOVC835M1;
 	TH1 		*hnewOVC1063M1;
 	TH1 		*hnewPbRom804M1;
+	TH1 		*hnewPbRom835M1;
 	TH1 		*hnewPbRom1063M1;
 
 	TH1 		*hnewOVC804M2;
+	TH1 		*hnewOVC835M2;
 	TH1 		*hnewOVC1063M2;
 	TH1 		*hnewPbRom804M2;
+	TH1 		*hnewPbRom835M2;
 	TH1 		*hnewPbRom1063M2;
 
 	TH1 		*hnewOVC804M2Sum;
+	TH1 		*hnewOVC835M2Sum;
 	TH1 		*hnewOVC1063M2Sum;
 	TH1 		*hnewPbRom804M2Sum;
-	TH1 		*hnewPbRom1063M2Sum;	
+	TH1 		*hnewPbRom835M2Sum;
+	TH1 		*hnewPbRom1063M2Sum;		
 
 private:
 

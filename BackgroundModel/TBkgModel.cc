@@ -122,7 +122,8 @@ void TBkgModel::GenerateParameters()
   BkgParM1[27] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 27, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
 
   BkgParM1[28] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  28, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
-  BkgParM1[29] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  29, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
+  BkgParM1[29] = new TBkgModelParameter("Fudge Factor OVC 835 keV",  29, 0., 1E-7, 0, 1.0, hAdapOVC835M1, hAdapOVC835M2, hAdapOVC835M2Sum);
+  BkgParM1[30] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  30, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
   
 /*  
   // Sources used in testing but not necessary
@@ -809,7 +810,7 @@ bool TBkgModel::DoTheFit()
   cadap1->SaveAs(Form("%s/FitResults/FitM1_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
   cadap2->SaveAs(Form("%s/FitResults/FitM2_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
   cadap2sum->SaveAs(Form("%s/FitResults/FitM2Sum_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
-  cMatrix->SaveAs(Form("%s/FitResults/FitCovMatrix_%d_.pdf", dSaveDir.c_str(), tTime->GetDate() ));
+  cMatrix->SaveAs(Form("%s/FitResults/FitCovMatrix_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
 
   // cResidual1->SaveAs(Form("%s/FitResults/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
   // cResidual2->SaveAs(Form("%s/FitResults/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
