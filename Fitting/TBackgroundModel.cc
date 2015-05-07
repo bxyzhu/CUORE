@@ -1620,10 +1620,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0,0);
-  // DoTheFitAdaptive(0.0674202742, 0.0263278758);  
-  // ProfileNLL(0.0685222152, 3968.95); 
-  // ProfileNLL2D(0.0674202742, 0.0000003189, 3754);
+  // DoTheFitAdaptive(0,0);
+
+  // Try it out
+  ProfileNLL(0,0);
 
   // Number of Toy fits
   if(bToyData)ToyFit(1);
@@ -5590,7 +5590,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 */
 
   //// 50 counts
-  minuit->DefineParameter(0, "TeO2 2nu",  f2nuValue, 1E-7, 0, 2.0);
+  minuit->DefineParameter(0, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
   minuit->DefineParameter(1, "CuBox + CuFrame co60",  0, 1E-7, 0, 1.0);
 
   minuit->DefineParameter(2, "TeO2 th232 only", 0, 1E-7, 0, 1.0);
@@ -7047,11 +7047,11 @@ void TBackgroundModel::SanityCheck()
   // fDataHistoM1->Add(hTeO22nuM1, 0.1*dM1);
   // fDataHistoM2->Add(hTeO22nuM2, 0.1*dM2);
 
-  fAdapDataHistoM1->Add(hAdapTeO22nuM1, 0.002*dM1);
-  fAdapDataHistoM2->Add(hAdapTeO22nuM2, 0.002*dM2);
+  fAdapDataHistoM1->Add(hAdapTeO22nuM1, 0.25*dM1);
+  fAdapDataHistoM2->Add(hAdapTeO22nuM2, 0.25*dM2);
   // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 1.0*dDataIntegralM2Sum);
 
-  cout << "Adding " << (0.002*dM1)*hAdapTeO22nuM1->Integral("width") + (0.002*dM2)*hAdapTeO22nuM2->Integral("width") << " 2nbb events to spectrum" << endl;
+  cout << "Adding " << (0.25*dM1)*hAdapTeO22nuM1->Integral("width") + (0.25*dM2)*hAdapTeO22nuM2->Integral("width") << " 2nbb events to spectrum" << endl;
 
 }
 
@@ -7059,13 +7059,20 @@ void TBackgroundModel::SanityCheck()
 // Probably best to run Minuit in quiet mode as well
 void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
 {
-  dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
+  // Do the fit normally once first
+  DoTheFitAdaptive(0,0);
+
+  // Fix 2nbb value now
+  minuit->FixParameter(0);
+
+  dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
   for(int i = -15; i < 15; i++)
   {
-    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+    fInitValues.push_back(fParameters[0] + fParameters[0]/100*i);
   }
+
 
 
   OutPNLL.open(Form("%s/FitResults/ProfileNLL/ProfileNLL_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
@@ -7079,7 +7086,8 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
     DoTheFitAdaptive(*iter, 0);
     // LatexResultTable(*iter);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
+    // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
 
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
@@ -7092,7 +7100,7 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
   OutPNLL << "g1->SetLineColor(kBlue);" << endl;
   OutPNLL << "g1->SetLineWidth(2);" << endl;
   OutPNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}/2\");" << endl;
   OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
   OutPNLL << "g1->Draw(\"AC\");" << endl;
   OutPNLL << "}" << endl;

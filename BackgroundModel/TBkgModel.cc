@@ -121,9 +121,8 @@ void TBkgModel::GenerateParameters()
   BkgParM1[26] = new TBkgModelParameter("CuBox + CuFrame Sx u238 0.1", 26, 5.81734e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01, hAdapCuBox_CuFrameu238M2_01, hAdapCuBox_CuFrameu238M2Sum_01);
   BkgParM1[27] = new TBkgModelParameter("CuBox + CuFrame Sx pb210 10", 27, 6.09448e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10, hAdapCuBox_CuFramepb210M2_10, hAdapCuBox_CuFramepb210M2Sum_10);
 
-
-  // BkgParM1[37] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  37, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
-  // BkgParM1[38] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  38, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
+  BkgParM1[28] = new TBkgModelParameter("Fudge Factor OVC 804 keV",  28, 0., 1E-7, 0, 1.0, hAdapOVC804M1, hAdapOVC804M2, hAdapOVC804M2Sum);
+  BkgParM1[29] = new TBkgModelParameter("Fudge Factor OVC 1063 keV",  29, 0., 1E-7, 0, 1.0, hAdapOVC1063M1, hAdapOVC1063M2, hAdapOVC1063M2Sum);
   
 /*  
   // Sources used in testing but not necessary
