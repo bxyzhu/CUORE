@@ -903,12 +903,26 @@ private:
 	TH1D 		*hPbRom835M1;
 	TH1D 		*hPbRom1063M1;
 
+	TH1D 		*hCuBox804M1;
+	TH1D 		*hCuBox835M1;
+	TH1D 		*hCuBox1063M1;
+	TH1D 		*h50mK804M1;
+	TH1D 		*h50mK835M1;
+	TH1D 		*h50mK1063M1;
+
 	TH1D 		*hOVC804M2;
 	TH1D 		*hOVC835M2;
 	TH1D 		*hOVC1063M2;
 	TH1D 		*hPbRom804M2;
 	TH1D 		*hPbRom835M2;
 	TH1D 		*hPbRom1063M2;
+
+	TH1D 		*hCuBox804M2;
+	TH1D 		*hCuBox835M2;
+	TH1D 		*hCuBox1063M2;
+	TH1D 		*h50mK804M2;
+	TH1D 		*h50mK835M2;
+	TH1D 		*h50mK1063M2;
 
 	TH1D 		*hOVC804M2Sum;
 	TH1D 		*hOVC835M2Sum;
@@ -917,6 +931,12 @@ private:
 	TH1D 		*hPbRom835M2Sum;
 	TH1D 		*hPbRom1063M2Sum;	
 
+	TH1D 		*hCuBox804M2Sum;
+	TH1D 		*hCuBox835M2Sum;
+	TH1D 		*hCuBox1063M2Sum;
+	TH1D 		*h50mK804M2Sum;
+	TH1D 		*h50mK835M2Sum;
+	TH1D 		*h50mK1063M2Sum;
 
 ///////////////// Adaptive binned histograms
 /////////// Crystal M1 and M2
@@ -1507,12 +1527,26 @@ private:
 	TH1D 		*hAdapPbRom835M1;
 	TH1D 		*hAdapPbRom1063M1;
 
+	TH1D 		*hAdapCuBox804M1;
+	TH1D 		*hAdapCuBox835M1;
+	TH1D 		*hAdapCuBox1063M1;
+	TH1D 		*hAdap50mK804M1;
+	TH1D 		*hAdap50mK835M1;
+	TH1D 		*hAdap50mK1063M1;
+
 	TH1D 		*hAdapOVC804M2;
 	TH1D 		*hAdapOVC835M2;
 	TH1D 		*hAdapOVC1063M2;
 	TH1D 		*hAdapPbRom804M2;
 	TH1D 		*hAdapPbRom835M2;
 	TH1D 		*hAdapPbRom1063M2;
+
+	TH1D 		*hAdapCuBox804M2;
+	TH1D 		*hAdapCuBox835M2;
+	TH1D 		*hAdapCuBox1063M2;
+	TH1D 		*hAdap50mK804M2;
+	TH1D 		*hAdap50mK835M2;
+	TH1D 		*hAdap50mK1063M2;
 
 	TH1D 		*hAdapOVC804M2Sum;
 	TH1D 		*hAdapOVC835M2Sum;
@@ -1521,6 +1555,12 @@ private:
 	TH1D 		*hAdapPbRom835M2Sum;
 	TH1D 		*hAdapPbRom1063M2Sum;	
 
+	TH1D 		*hAdapCuBox804M2Sum;
+	TH1D 		*hAdapCuBox835M2Sum;
+	TH1D 		*hAdapCuBox1063M2Sum;
+	TH1D 		*hAdap50mK804M2Sum;
+	TH1D 		*hAdap50mK835M2Sum;
+	TH1D 		*hAdap50mK1063M2Sum;
 
 	TH1D			*hEnergyScaleDummyM1;
 	TH1D			*hEnergyScaleDummyM2;
@@ -2122,6 +2162,14 @@ private:
 	TH1 		*hnewPbRom835M1;
 	TH1 		*hnewPbRom1063M1;
 
+	TH1 		*hnewCuBox804M1;
+	TH1 		*hnewCuBox835M1;
+	TH1 		*hnewCuBox1063M1;
+	TH1 		*hnew50mK804M1;
+	TH1 		*hnew50mK835M1;
+	TH1 		*hnew50mK1063M1;
+
+
 	TH1 		*hnewOVC804M2;
 	TH1 		*hnewOVC835M2;
 	TH1 		*hnewOVC1063M2;
@@ -2129,12 +2177,27 @@ private:
 	TH1 		*hnewPbRom835M2;
 	TH1 		*hnewPbRom1063M2;
 
+	TH1 		*hnewCuBox804M2;
+	TH1 		*hnewCuBox835M2;
+	TH1 		*hnewCuBox1063M2;
+	TH1 		*hnew50mK804M2;
+	TH1 		*hnew50mK835M2;
+	TH1 		*hnew50mK1063M2;
+
+
 	TH1 		*hnewOVC804M2Sum;
 	TH1 		*hnewOVC835M2Sum;
 	TH1 		*hnewOVC1063M2Sum;
 	TH1 		*hnewPbRom804M2Sum;
 	TH1 		*hnewPbRom835M2Sum;
 	TH1 		*hnewPbRom1063M2Sum;	
+
+	TH1 		*hnewCuBox804M2Sum;
+	TH1 		*hnewCuBox835M2Sum;
+	TH1 		*hnewCuBox1063M2Sum;
+	TH1 		*hnew50mK804M2Sum;
+	TH1 		*hnew50mK835M2Sum;
+	TH1 		*hnew50mK1063M2Sum;
 
 
 	TH1D 			*hOut;

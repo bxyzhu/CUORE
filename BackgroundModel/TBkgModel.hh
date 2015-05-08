@@ -42,7 +42,7 @@ public:
 	TBkgModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave):TBkgModelSource(fFitMin, fFitMax, fBinBase, fDataset)
 	{
 		bSave = fSave;
-  		dNParam = 31; // number of fitting parameters
+  		dNParam = 28; // number of fitting parameters // code crashes if this isn't correct!
   		dNumCalls = 0;
   		minuit = new TMinuit(dNParam);
   		nLoop = 0;
