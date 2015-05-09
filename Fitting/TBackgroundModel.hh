@@ -83,6 +83,8 @@ public:
 	int 	dNBins;
 	int 	dBinBase;
 
+	double 	dMass;
+	
 	double	dMinEnergy;
 	double 	dMaxEnergy;
 	double	dFitMin;

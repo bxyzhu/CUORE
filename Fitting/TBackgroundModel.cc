@@ -57,7 +57,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dNParam = 43; // number of fitting parameters
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
-
+  dMass = 36.75;
 
   // Data directories depending on QCC/local
   dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
@@ -5500,9 +5500,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM1->Add( hAdapCuBox_CuFrameu238M1_5,    dDataIntegralM1*fParameters[38]);
   // fModelTotAdapM1->Add( hAdapCuBox_CuFramepb210M1_5,     dDataIntegralM1*fParameters[39]);
 
-  // fModelTotAdapM1->Add( hAdapOVC804M1,     dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM1->Add( hAdapOVC835M1,      dDataIntegralM1*fParameters[38]);  
-  // fModelTotAdapM1->Add( hAdapOVC1063M1,      dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM1->Add( hAdapOVC804M1,     dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM1->Add( hAdapOVC835M1,      dDataIntegralM1*fParameters[38]);  
+  fModelTotAdapM1->Add( hAdapOVC1063M1,      dDataIntegralM1*fParameters[39]);
   // fModelTotAdapM1->Add( hAdapCuBox804M1,      dDataIntegralM1*fParameters[40]);
   // fModelTotAdapM1->Add( hAdapCuBox835M1,       dDataIntegralM1*fParameters[41]);
   // fModelTotAdapM1->Add( hAdapCuBox1063M1,     dDataIntegralM1*fParameters[42]);
@@ -5557,9 +5557,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM2->Add( hAdapCuBox_CuFrameu238M2_5,      dDataIntegralM1*fParameters[38]);
   // fModelTotAdapM2->Add( hAdapCuBox_CuFramepb210M2_5,      dDataIntegralM1*fParameters[39]);
 
-  // fModelTotAdapM2->Add( hAdapOVC804M2,     dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM2->Add( hAdapOVC835M2,      dDataIntegralM1*fParameters[38]);  
-  // fModelTotAdapM2->Add( hAdapOVC1063M2,      dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM2->Add( hAdapOVC804M2,     dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM2->Add( hAdapOVC835M2,      dDataIntegralM1*fParameters[38]);  
+  fModelTotAdapM2->Add( hAdapOVC1063M2,      dDataIntegralM1*fParameters[39]);
   // fModelTotAdapM2->Add( hAdapCuBox804M2,      dDataIntegralM1*fParameters[40]);
   // fModelTotAdapM2->Add( hAdapCuBox835M2,       dDataIntegralM1*fParameters[41]);
   // fModelTotAdapM2->Add( hAdapCuBox1063M2,     dDataIntegralM1*fParameters[42]);
@@ -5623,9 +5623,9 @@ void TBackgroundModel::UpdateModelAdaptive()
   // fModelTotAdapM2Sum->Add( hAdapCuBox_CuFrameu238M2Sum_50,     dDataIntegralM1*fParameters[38]);
   // fModelTotAdapM2Sum->Add( hAdapCuBox_CuFramepb210M2Sum_50,     dDataIntegralM1*fParameters[39]);
 
-  // fModelTotAdapM2Sum->Add( hAdapOVC804M2Sum,     dDataIntegralM1*fParameters[37]);
-  // fModelTotAdapM2Sum->Add( hAdapOVC835M2Sum,      dDataIntegralM1*fParameters[38]);  
-  // fModelTotAdapM2Sum->Add( hAdapOVC1063M2Sum,      dDataIntegralM1*fParameters[39]);
+  fModelTotAdapM2Sum->Add( hAdapOVC804M2Sum,     dDataIntegralM1*fParameters[37]);
+  fModelTotAdapM2Sum->Add( hAdapOVC835M2Sum,      dDataIntegralM1*fParameters[38]);  
+  fModelTotAdapM2Sum->Add( hAdapOVC1063M2Sum,      dDataIntegralM1*fParameters[39]);
   // fModelTotAdapM2Sum->Add( hAdapCuBox804M2Sum,      dDataIntegralM1*fParameters[40]);
   // fModelTotAdapM2Sum->Add( hAdapCuBox835M2Sum,       dDataIntegralM1*fParameters[41]);
   // fModelTotAdapM2Sum->Add( hAdapCuBox1063M2Sum,     dDataIntegralM1*fParameters[42]);
@@ -5790,9 +5790,9 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
 */
 
-  // minuit->DefineParameter(37, "Fudge Factor OVC 804 keV",  0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(38, "Fudge Factor OVC 835 keV",  0., 1E-7, 0, 1.0);
-  // minuit->DefineParameter(39, "Fudge Factor OVC 1063 keV",  0., 1E-7, 0, 1.0);    
+  minuit->DefineParameter(37, "Fudge Factor OVC 804 keV",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(38, "Fudge Factor OVC 835 keV",  0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(39, "Fudge Factor OVC 1063 keV",  0., 1E-7, 0, 1.0);    
   // minuit->DefineParameter(40, "Fudge Factor CuBox 804 keV",  0., 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(41, "Fudge Factor CuBox 835 keV",  0., 1E-7, 0, 1.0);
@@ -6398,7 +6398,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   // fDataHistoM2Sum->SetLineColor(17);
   // fDataHistoM2Sum->Draw("SAME");
 
-/*
+
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
 
@@ -6452,12 +6452,15 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hResidualDistM2Sum->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM2Sum->Draw();
 
-  TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
-  cres1->Divide(2,1);
-  cres1->cd(1);
+  // TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
+  // cres1->Divide(2,1);
+  // cres1->cd(1);
+
+  TCanvas *cres1 = new TCanvas("cres1", "cres1", 1200, 800);
   hResidualGausM1->Fit("gaus");
   hResidualGausM1->Draw();
-  cres1->cd(2);
+  // cres1->cd(2);
+  TCanvas *cres2 = new TCanvas("cres2", "cres2", 1200, 800);
   hResidualGausM2->Fit("gaus");
   hResidualGausM2->Draw();
 
@@ -6482,7 +6485,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/(dFitMaxBinM1-dFitMinBinM1));
   dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/(dFitMaxBinM2-dFitMinBinM2));
   dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/(dFitMaxBinM2Sum-dFitMinBinM2Sum));
-*/
+
 
 
   //
