@@ -1658,7 +1658,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  DoTheFitAdaptive(0,0);
+  // DoTheFitAdaptive(0,0);
 
   // Try it out
   // ProfileNLL(0,0);
@@ -3060,6 +3060,7 @@ void TBackgroundModel::DrawBkg()
   c1->Divide(1, 2);
   c1->cd(1);
   gPad->SetLogy();
+  fAdapDataHistoM1->SetTitle("M1 Spectrum");
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/bin");  
   fAdapDataHistoM1->Draw("");
@@ -3067,6 +3068,7 @@ void TBackgroundModel::DrawBkg()
 
   c1->cd(2); 
   gPad->SetLogy();
+  fAdapDataHistoM2->SetTitle("M2 Spectrum");
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/bin");   
   fAdapDataHistoM2->Draw("");
@@ -6659,6 +6661,27 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   cout << "Gamma Far in 0nbb region (c/keV/y): " << dGammaFar0nbb << " $\\pm$ " << dGammaFar0nbbErr << endl;
   cout << endl;  
   cout << endl;
+  cout << "Crystal Bulk in 2nbb region (c/keV/kg/y): " << dAlpha2nbbBulk/dMass << " $\\pm$ " << dAlpha2nbbBulkErr/dMass << endl;
+  cout << "Crystal Surface (depth ~alpha range) in 2nbb PDF (c/keV/kg/y): " << dAlpha2nbbTeSurface1/dMass << " $\\pm$ " << dAlpha2nbbTeSurface1Err/dMass << endl;
+  cout << "Crystal Surface (depth << alpha range) 2nbb (c/keV/kg/y): " << dAlpha2nbbTeSurface2/dMass << " $\\pm$ " << dAlpha2nbbTeSurface2Err/dMass << endl;
+  cout << "Copper Surface (depth ~alpha range) in 2nbb PDF (c/keV/kg/y): " << dAlpha2nbbCuSurface1/dMass << " $\\pm$ " << dAlpha2nbbCuSurface1Err/dMass << endl;
+  cout << "Copper Surface (depth << alpha range) 2nbb (c/keV/kg/y): " << dAlpha2nbbCuSurface2/dMass << " $\\pm$ " << dAlpha2nbbCuSurface2Err/dMass << endl;
+  cout << endl;
+  cout << "Crystal Bulk in 0nbb region (c/keV/kg/y): " << dAlpha0nbbBulk/dMass << " $\\pm$ " << dAlpha0nbbBulkErr/dMass << endl;
+  cout << "Crystal Surface (depth ~alpha range) in 0nbb PDF (c/keV/kg/y): " << dAlpha0nbbTeSurface1/dMass << " $\\pm$ " << dAlpha0nbbTeSurface1Err/dMass << endl;
+  cout << "Crystal Surface (depth << alpha range) 0nbb (c/keV/kg/y): " << dAlpha0nbbTeSurface2/dMass << " $\\pm$ " << dAlpha0nbbTeSurface2Err/dMass << endl;
+  cout << "Copper Surface (depth ~alpha range) in 0nbb PDF (c/keV/kg/y): " << dAlpha0nbbCuSurface1/dMass << " $\\pm$ " << dAlpha0nbbCuSurface1Err/dMass << endl;
+  cout << "Copper Surface (depth << alpha range) 0nbb (c/keV/kg/y): " << dAlpha0nbbCuSurface2/dMass << " $\\pm$ " << dAlpha0nbbCuSurface2Err/dMass << endl;  
+  cout << endl;
+  cout << "Gamma Close in 2nbb region (c/keV/kg/y): " << dGammaClose2nbb/dMass << " $\\pm$ " << dGammaClose2nbbErr/dMass << endl;
+  cout << "Gamma Mid in 2nbb region (c/keV/kg/y): " << dGammaMid2nbb/dMass << " $\\pm$ " << dGammaMid2nbbErr/dMass << endl;
+  cout << "Gamma Far in 2nbb region (c/keV/kg/y): " << dGammaFar2nbb/dMass << " $\\pm$ " << dGammaFar2nbbErr/dMass << endl;
+  cout << endl;
+  cout << "Gamma Close in 0nbb region (c/keV/kg/y): " << dGammaClose0nbb/dMass << " $\\pm$ " << dGammaClose0nbbErr/dMass << endl;
+  cout << "Gamma Mid in 0nbb region (c/keV/kg/y): " << dGammaMid0nbb << " $\\pm$ " << dGammaMid0nbbErr << endl;
+  cout << "Gamma Far in 0nbb region (c/keV/kg/y): " << dGammaFar0nbb/dMass << " $\\pm$ " << dGammaFar0nbbErr/dMass << endl;
+  cout << endl;  
+  cout << endl;  
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
   cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << "\t Residual RMS (M2Sum): "  << dResidualRMSM2Sum << endl;
 
@@ -7284,7 +7307,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
     cout << "Step: " << *iter << " " << *iter2 << endl;    
     DoTheFitAdaptive(*iter, *iter2);
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[1]*dDataIntegralM1) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
 
     nLoop++; // This is purely for file names and to keep track of number of loops
     }
