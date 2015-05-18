@@ -1658,11 +1658,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0,0);
+  DoTheFitAdaptive(0,0);
 
   // Try it out
   // ProfileNLL(0,0);
-
+  // ProfileNLL2D(0,0,0);
   // Number of Toy fits
   if(bToyData)ToyFit(1);
 
@@ -2762,33 +2762,15 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
     // Added per each peak
 /*
     // K40
-    if(i >= h1->FindBin(1450) && i < h1->FindBin(1470))
+    if(i >= h1->FindBin(1445) && i < h1->FindBin(1470))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1450)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1445)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(1470-1450)/dBaseBinSize;
-    }
-    if(i >= h1->FindBin(1755) && i < h1->FindBin(1775))
-    {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(1755)));
-     // Reset everything
-     j = 0;
-     dDummyFill = 0;
-     dDummy = 0;
-     i = i+(1775-1755)/dBaseBinSize;
+     i = i+(1470-1445)/dBaseBinSize;
     }    
-    if(i >= h1->FindBin(2195) && i < h1->FindBin(2215))
-    {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(2195)));
-     // Reset everything
-     j = 0;
-     dDummyFill = 0;
-     dDummy = 0;
-     i = i+(2215-2195)/dBaseBinSize;
-    }        
     // Tl-208
     if(i >= h1->FindBin(2600) && i < h1->FindBin(2630))
     {
@@ -3096,7 +3078,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 579 && fAdapDataHistoM1->GetBinCenter(i) <= 589)continue;
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 605 && fAdapDataHistoM1->GetBinCenter(i) <= 615)continue;
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 906 && fAdapDataHistoM1->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1450 && fAdapDataHistoM1->GetBinCenter(i) <= 1475)continue;  
+    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1445 && fAdapDataHistoM1->GetBinCenter(i) <= 1475)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 1755 && fAdapDataHistoM1->GetBinCenter(i) <= 1780)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2090 && fAdapDataHistoM1->GetBinCenter(i) <= 2130)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2200 && fAdapDataHistoM1->GetBinCenter(i) <= 2220)continue;  
@@ -3130,7 +3112,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 579 && fAdapDataHistoM2->GetBinCenter(i) <= 589)continue;
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 605 && fAdapDataHistoM2->GetBinCenter(i) <= 615)continue;
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 906 && fAdapDataHistoM2->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1450 && fAdapDataHistoM2->GetBinCenter(i) <= 1475)continue;  
+    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1445 && fAdapDataHistoM2->GetBinCenter(i) <= 1475)continue;  
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 1755 && fAdapDataHistoM2->GetBinCenter(i) <= 1780)continue;  
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 2090 && fAdapDataHistoM2->GetBinCenter(i) <= 2130)continue;  
     // if( fAdapDataHistoM2->GetBinCenter(i) >= 2200 && fAdapDataHistoM2->GetBinCenter(i) <= 2220)continue;  
@@ -5689,7 +5671,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   minuit->DefineParameter(16, "OVC th232",  1.08312e-01, 1E-7, 0, 1.0);
   minuit->DefineParameter(17, "OVC u238",  1.55439e-01, 1E-7, 0, 1.0);
   minuit->DefineParameter(18, "OVC co60",  2.19384e-02, 1E-7, 0, 1.0);
-  minuit->DefineParameter(19, "OVC k40",  8.48360e-02, 1E-7, 0, 1.0);    
+  // minuit->DefineParameter(19, "OVC k40",  8.48360e-02, 1E-7, 0, 1.0);    
+  minuit->DefineParameter(19, "OVC k40",  fVariableValue, 1E-7, 0, 1.0);      
   minuit->DefineParameter(20, "External Lead bi210", 4.11150e-07, 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(21, "CuBox + CuFrame th232",  0, 1E-7, 0, 1.0);
@@ -6711,7 +6694,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   }
 
 
-/*
+
   // Correlation Matrix section
   TMatrixT<double> mCorrMatrix;
   mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
@@ -6822,7 +6805,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 579 && fAdapDataHistoM1->GetBinCenter(i) <= 589)continue;
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 605 && fAdapDataHistoM1->GetBinCenter(i) <= 615)continue;
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 906 && fAdapDataHistoM1->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1450 && fAdapDataHistoM1->GetBinCenter(i) <= 1475)continue;  
+    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1445 && fAdapDataHistoM1->GetBinCenter(i) <= 1475)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 1755 && fAdapDataHistoM1->GetBinCenter(i) <= 1780)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2090 && fAdapDataHistoM1->GetBinCenter(i) <= 2130)continue;  
     // if( fAdapDataHistoM1->GetBinCenter(i) >= 2200 && fAdapDataHistoM1->GetBinCenter(i) <= 2220)continue;  
@@ -6884,7 +6867,7 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   }
 
   TCanvas *cProgress = new TCanvas("cProgress", "cProgress", 1600, 1600);
-  cProgress->Divide(1, 3);
+  cProgress->Divide(1, 2);
   cProgress->cd(1);
   hChiSquaredProgressM1->SetTitle("Increase in #chi^{2} (M1)");
   hChiSquaredProgressM1->GetXaxis()->SetTitle("Energy (keV)");
@@ -6897,12 +6880,12 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   hChiSquaredProgressM2->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2->Draw();
 
-  cProgress->cd(3);
-  hChiSquaredProgressM2Sum->SetTitle("Increase in #chi^{2} (M2Sum)");  
-  hChiSquaredProgressM2Sum->GetXaxis()->SetTitle("Energy (keV)");
-  hChiSquaredProgressM2Sum->GetYaxis()->SetTitle("#chi^{2}");  
-  hChiSquaredProgressM2Sum->Draw();
-*/
+  // cProgress->cd(3);
+  // hChiSquaredProgressM2Sum->SetTitle("Increase in #chi^{2} (M2Sum)");  
+  // hChiSquaredProgressM2Sum->GetXaxis()->SetTitle("Energy (keV)");
+  // hChiSquaredProgressM2Sum->GetYaxis()->SetTitle("#chi^{2}");  
+  // hChiSquaredProgressM2Sum->Draw();
+
 
 /*
   if(bSave)
@@ -7281,16 +7264,26 @@ void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
 
 void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq)
 {
-  dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
+  // dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
+  
+  // Do the fit normally once first
+  DoTheFitAdaptive(0,8.48360e-02);
+  dBestChiSq = dChiSquare;
+
+  // Fix 2nbb value now
+  minuit->FixParameter(0); 
+  // Fix for OVC K40  
+  minuit->FixParameter(19);
+
   nLoop = 0;
   for(int i = -5; i < 5; i++)
   {
-    fInitValues.push_back(fBestFitInit + fBestFitInit/100*i);
+    fInitValues.push_back(fParameters[0] + fParameters[0]/75*i);
   }
   for(int j = -5; j < 5; j++)
   {
-    fInitValues2.push_back(fBestFitInit2 + fBestFitInit2/100*j);
+    fInitValues2.push_back(fParameters[19] + fParameters[19]/75*j);
   }
 
 
@@ -7323,7 +7316,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   OutPNLL << "g1->SetLineWidth(2);" << endl;
   OutPNLL << "g1->SetTitle(\"2#nu#beta#beta 2D Profile Negative Log-Likelihood\");" << endl;
   OutPNLL << "g1->GetZaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"External Bi-207\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"OVC K-40\");" << endl;
   OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
   // OutPNLL << "g1->Draw(\"surf1\");" << endl;
   OutPNLL << endl;
@@ -7473,3 +7466,4 @@ TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
   
   return hSMC;
 }
+
