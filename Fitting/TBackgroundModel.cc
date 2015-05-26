@@ -226,6 +226,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hTeO2u238M1      = new TH1D("hTeO2u238M1",   "hTeO2u238M1",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2th230M1     = new TH1D("hTeO2th230M1",  "hTeO2th230M1",  dNBins, dMinEnergy, dMaxEnergy);
   hTeO2u234M1      = new TH1D("hTeO2u234M1",   "hTeO2u234M1",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2sb125M1     = new TH1D("hTeO2sb125M1",  "hTeO2sb125M1",  dNBins, dMinEnergy, dMaxEnergy);
 
   hTeO2Spb210M1_01      = new TH1D("hTeO2Spb210M1_01",   "hTeO2Spb210M1_01",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2Spo210M1_001     = new TH1D("hTeO2Spo210M1_001",  "hTeO2Spo210M1_001",  dNBins, dMinEnergy, dMaxEnergy);
@@ -289,6 +290,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hTeO2u238M2      = new TH1D("hTeO2u238M2",   "hTeO2u238M2",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2th230M2     = new TH1D("hTeO2th230M2",  "hTeO2th230M2",  dNBins, dMinEnergy, dMaxEnergy);
   hTeO2u234M2      = new TH1D("hTeO2u234M2",   "hTeO2u234M2",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2sb125M2     = new TH1D("hTeO2sb125M2",  "hTeO2sb125M2",  dNBins, dMinEnergy, dMaxEnergy);
 
   hTeO2Spb210M2_01      = new TH1D("hTeO2Spb210M2_01",   "hTeO2Spb210M2_01",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2Spo210M2_001     = new TH1D("hTeO2Spo210M2_001",  "hTeO2Spo210M2_001",  dNBins, dMinEnergy, dMaxEnergy);
@@ -351,6 +353,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hTeO2u238M2Sum      = new TH1D("hTeO2u238M2Sum",   "hTeO2u238M2Sum",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2th230M2Sum     = new TH1D("hTeO2th230M2Sum",  "hTeO2th230M2Sum",  dNBins, dMinEnergy, dMaxEnergy);
   hTeO2u234M2Sum      = new TH1D("hTeO2u234M2Sum",   "hTeO2u234M2Sum",   dNBins, dMinEnergy, dMaxEnergy);
+  hTeO2sb125M2Sum     = new TH1D("hTeO2sb125M2Sum",  "hTeO2sb125M2Sum",  dNBins, dMinEnergy, dMaxEnergy);
 
   hTeO2Spb210M2Sum_01      = new TH1D("hTeO2Spb210M2Sum_01",   "hTeO2Spb210M2Sum_01",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2Spo210M2Sum_001     = new TH1D("hTeO2Spo210M2Sum_001",  "hTeO2Spo210M2Sum_001",  dNBins, dMinEnergy, dMaxEnergy);
@@ -1000,8 +1003,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hAdapTeO2ra226M1     = new TH1D("hAdapTeO2ra226M1",  "TeO2 Bulk ra226 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2rn222M1     = new TH1D("hAdapTeO2rn222M1",  "TeO2 Bulk rn222 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2u238M1      = new TH1D("hAdapTeO2u238M1",   "TeO2 Bulk u238 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapTeO2th230M1     = new TH1D("hAdapTeO2th230M1",  "TeO2 Bulk th230M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2th230M1     = new TH1D("hAdapTeO2th230M1",  "TeO2 Bulk th230M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2u234M1      = new TH1D("hAdapTeO2u234M1",   "TeO2 Bulk u234 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO2sb125M1     = new TH1D("hAdapTeO2sb125M1",  "TeO2 Bulk sb125 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
 
   hAdapTeO2Spb210M1_01      = new TH1D("hAdapTeO2Spb210M1_01",   "TeO2 S pb210M1 0.1 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2Spo210M1_001     = new TH1D("hAdapTeO2Spo210M1_001",  "TeO2 S po210M1 0.01 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -1066,6 +1070,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hAdapTeO2u238M2      = new TH1D("hAdapTeO2u238M2",   "TeO2 Bulk u238 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2th230M2     = new TH1D("hAdapTeO2th230M2",  "TeO2 Bulk th230 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2u234M2      = new TH1D("hAdapTeO2u234M2",   "TeO2 Bulk u234 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO2sb125M2     = new TH1D("hAdapTeO2sb125M2",  "TeO2 Bulk sb125 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
 
   hAdapTeO2Spb210M2_01      = new TH1D("hAdapTeO2Spb210M2_01",   "TeO2 S pb210 M2 0.1 #mum",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2Spo210M2_001     = new TH1D("hAdapTeO2Spo210M2_001",  "TeO2 S po210 M2 0.01 #mum",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -1130,6 +1135,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hAdapTeO2u238M2Sum      = new TH1D("hAdapTeO2u238M2Sum",   "TeO2 Bulk u238 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapTeO2th230M2Sum     = new TH1D("hAdapTeO2th230M2Sum",  "TeO2 Bulk th230 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapTeO2u234M2Sum      = new TH1D("hAdapTeO2u234M2Sum",   "TeO2 Bulk u234 M2Sum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
+  hAdapTeO2sb125M2Sum     = new TH1D("hAdapTeO2sb125M2Sum",  "TeO2 Bulk sb125 M2Sum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
 
   hAdapTeO2Spb210M2Sum_01      = new TH1D("hAdapTeO2Spb210M2Sum_01",   "TeO2 S pb210 M2Sum 0.1 #mum",   dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   hAdapTeO2Spo210M2Sum_001     = new TH1D("hAdapTeO2Spo210M2Sum_001",  "TeO2 S po210 M2Sum 0.01 #mum",  dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
@@ -1658,7 +1664,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dBestChiSq = 0; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // DoTheFitAdaptive(0,0);
+  DoTheFitAdaptive(0,0);
 
   // Try it out
   // ProfileNLL(0,0);
@@ -3215,6 +3221,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238M1    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M1");
   // hTeO2th230M1   = (TH1D*)fBulkInner->Get("hTeO2th230M1");
   // hTeO2u234M1    = (TH1D*)fBulkInner->Get("hTeO2u234M1");
+  hTeO2sb125M1   = (TH1D*)fBulkInnerOld->Get("hTeO2sb125M1");
 
   hTeO2th232onlyM1 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM1");
   hTeO2ra228pb208M1 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M1");
@@ -3234,6 +3241,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238M2    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M2");
   // hTeO2th230M2   = (TH1D*)fBulkInner->Get("hTeO2th230M2");
   // hTeO2u234M2    = (TH1D*)fBulkInner->Get("hTeO2u234M2");
+  hTeO2sb125M2   = (TH1D*)fBulkInnerOld->Get("hTeO2sb125M2");
 
   hTeO2th232onlyM2 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM2");
   hTeO2ra228pb208M2 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M2");
@@ -3853,6 +3861,7 @@ void TBackgroundModel::Initialize()
   hnewTeO2te125M1 = hTeO2te125M1->Rebin(dAdaptiveBinsM1, "hnewTeO2te125M1", dAdaptiveArrayM1);
   hnewTeO2th232M1 = hTeO2th232M1->Rebin(dAdaptiveBinsM1, "hnewTeO2th232M1", dAdaptiveArrayM1);
   hnewTeO2u238M1 = hTeO2u238M1->Rebin(dAdaptiveBinsM1, "hnewTeO2u238M1", dAdaptiveArrayM1);
+  hnewTeO2sb125M1 = hTeO2sb125M1->Rebin(dAdaptiveBinsM1, "hnewTeO2sb125M1", dAdaptiveArrayM1);
 
   // hnewTeO2Spb210M1_01 = hTeO2Spb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spb210M1_01", dAdaptiveArrayM1);
   // hnewTeO2Spo210M1_001 = hTeO2Spo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_001", dAdaptiveArrayM1);
@@ -3912,6 +3921,7 @@ void TBackgroundModel::Initialize()
   hnewTeO2te125M2 = hTeO2te125M2->Rebin(dAdaptiveBinsM2, "hnewTeO2te125M2", dAdaptiveArrayM2);
   hnewTeO2th232M2 = hTeO2th232M2->Rebin(dAdaptiveBinsM2, "hnewTeO2th232M2", dAdaptiveArrayM2);
   hnewTeO2u238M2 = hTeO2u238M2->Rebin(dAdaptiveBinsM2, "hnewTeO2u238M2", dAdaptiveArrayM2);
+  hnewTeO2sb125M2 = hTeO2sb125M2->Rebin(dAdaptiveBinsM2, "hnewTeO2sb125M2", dAdaptiveArrayM2);
 
   // hnewTeO2Spb210M2_01 = hTeO2Spb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spb210M2_01", dAdaptiveArrayM2);
   // hnewTeO2Spo210M2_001 = hTeO2Spo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_001", dAdaptiveArrayM2);
@@ -4264,7 +4274,6 @@ void TBackgroundModel::Initialize()
   // h50mKpb210M1->Rebin(dAdaptiveBinsM1, "hnew50mKpb210M1", dAdaptiveArrayM1);
   // h50mKth232M1->Rebin(dAdaptiveBinsM1, "hnew50mKth232M1", dAdaptiveArrayM1);
   // h50mKu238M1->Rebin(dAdaptiveBinsM1, "hnew50mKu238M1", dAdaptiveArrayM1);
-  hnew50mKcs137M1->Draw();
 
   // h50mKco58M2->Rebin(dAdaptiveBinsM2, "hnew50mKco58M2", dAdaptiveArrayM2);
   // h50mKco60M2->Rebin(dAdaptiveBinsM2, "hnew50mKco60M2", dAdaptiveArrayM2);
@@ -4468,6 +4477,7 @@ void TBackgroundModel::Initialize()
     hAdapTeO2u238M1->SetBinContent(i, hnewTeO2u238M1->GetBinContent(i)/hnewTeO2u238M1->GetBinWidth(i));
     // hAdapTeO2th230M1->SetBinContent(i, hnewTeO2th230M1->GetBinContent(i)/hnewTeO2th230M1->GetBinWidth(i));
     // hAdapTeO2u234M1->SetBinContent(i, hnewTeO2u234M1->GetBinContent(i)/hnewTeO2u234M1->GetBinWidth(i));
+    hAdapTeO2sb125M1->SetBinContent(i, hnewTeO2sb125M1->GetBinContent(i)/hnewTeO2sb125M1->GetBinWidth(i));
 
     hAdapTeO2th232onlyM1->SetBinContent(i, hnewTeO2th232onlyM1->GetBinContent(i)/hnewTeO2th232onlyM1->GetBinWidth(i));
     hAdapTeO2ra228pb208M1->SetBinContent(i, hnewTeO2ra228pb208M1->GetBinContent(i)/hnewTeO2ra228pb208M1->GetBinWidth(i));
@@ -4681,6 +4691,7 @@ void TBackgroundModel::Initialize()
     hAdapTeO2u238M2->SetBinContent(i, hnewTeO2u238M2->GetBinContent(i)/hnewTeO2u238M2->GetBinWidth(i));
     // hAdapTeO2th230M2->SetBinContent(i, hnewTeO2th230M2->GetBinContent(i)/hnewTeO2th230M2->GetBinWidth(i));
     // hAdapTeO2u234M2->SetBinContent(i, hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
+    hAdapTeO2sb125M2->SetBinContent(i, hnewTeO2sb125M2->GetBinContent(i)/hnewTeO2sb125M2->GetBinWidth(i));
 
     // hAdapTeO2Spb210M2_01->SetBinContent(i, hnewTeO2Spb210M2_01->GetBinContent(i)/hnewTeO2Spb210M2_01->GetBinWidth(i));
     // hAdapTeO2Spo210M2_001->SetBinContent(i, hnewTeO2Spo210M2_001->GetBinContent(i)/hnewTeO2Spo210M2_001->GetBinWidth(i));
@@ -5674,8 +5685,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   minuit->DefineParameter(16, "OVC th232",  1.08312e-01, 1E-7, 0, 1.0);
   minuit->DefineParameter(17, "OVC u238",  1.55439e-01, 1E-7, 0, 1.0);
   minuit->DefineParameter(18, "OVC co60",  2.19384e-02, 1E-7, 0, 1.0);
-  // minuit->DefineParameter(19, "OVC k40",  8.48360e-02, 1E-7, 0, 1.0);    
-  minuit->DefineParameter(19, "OVC k40",  fVariableValue, 1E-7, 0, 1.0);      
+  minuit->DefineParameter(19, "OVC k40",  8.48360e-02, 1E-7, 0, 1.0);    
+  // minuit->DefineParameter(19, "OVC k40",  fVariableValue, 1E-7, 0, 1.0);      
   minuit->DefineParameter(20, "External Lead bi210", 4.11150e-07, 1E-7, 0, 1.0);
 
   // minuit->DefineParameter(21, "CuBox + CuFrame th232",  0, 1E-7, 0, 1.0);

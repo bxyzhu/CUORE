@@ -334,6 +334,7 @@ private:
 	TH1D			*hTeO2u238M1;
 	TH1D			*hTeO2th230M1;
 	TH1D			*hTeO2u234M1;
+	TH1D 			*hTeO2sb125M1;
 
 	TH1D			*hTeO2th232onlyM1;
 	TH1D			*hTeO2ra228pb208M1;
@@ -397,6 +398,7 @@ private:
 	TH1D			*hTeO2u238M2;
 	TH1D			*hTeO2th230M2;
 	TH1D			*hTeO2u234M2;
+	TH1D 			*hTeO2sb125M2;
 
 	TH1D			*hTeO2th232onlyM2;
 	TH1D			*hTeO2ra228pb208M2;
@@ -460,6 +462,7 @@ private:
 	TH1D			*hTeO2u238M2Sum;
 	TH1D			*hTeO2th230M2Sum;
 	TH1D			*hTeO2u234M2Sum;
+	TH1D 			*hTeO2sb125M2Sum;
 
 	TH1D			*hTeO2th232onlyM2Sum;
 	TH1D			*hTeO2ra228pb208M2Sum;
@@ -956,6 +959,7 @@ private:
 	TH1D			*hAdapTeO2u238M1;
 	TH1D			*hAdapTeO2th230M1;
 	TH1D			*hAdapTeO2u234M1;
+	TH1D 			*hAdapTeO2sb125M1;
 
 	TH1D			*hAdapTeO2th232onlyM1;
 	TH1D			*hAdapTeO2ra228pb208M1;
@@ -1019,6 +1023,7 @@ private:
 	TH1D			*hAdapTeO2u238M2;
 	TH1D			*hAdapTeO2th230M2;
 	TH1D			*hAdapTeO2u234M2;
+	TH1D 			*hAdapTeO2sb125M2;
 
 	TH1D			*hAdapTeO2th232onlyM2;
 	TH1D			*hAdapTeO2ra228pb208M2;
@@ -1083,6 +1088,8 @@ private:
 	TH1D			*hAdapTeO2u238M2Sum;
 	TH1D			*hAdapTeO2th230M2Sum;
 	TH1D			*hAdapTeO2u234M2Sum;
+	TH1D 			*hAdapTeO2sb125M2Sum;
+
 
 	TH1D			*hAdapTeO2th232onlyM2Sum;
 	TH1D			*hAdapTeO2ra228pb208M2Sum;
@@ -1589,6 +1596,7 @@ private:
 	TH1			*hnewTeO2u238M1;
 	TH1			*hnewTeO2th230M1;
 	TH1			*hnewTeO2u234M1;
+	TH1 		*hnewTeO2sb125M1;
 
 	TH1			*hnewTeO2th232onlyM1;
 	TH1			*hnewTeO2ra228pb208M1;
@@ -1653,6 +1661,7 @@ private:
 	TH1			*hnewTeO2u238M2;
 	TH1			*hnewTeO2th230M2;
 	TH1			*hnewTeO2u234M2;
+	TH1 		*hnewTeO2sb125M2;
 
 	TH1			*hnewTeO2th232onlyM2;
 	TH1			*hnewTeO2ra228pb208M2;
@@ -1717,6 +1726,7 @@ private:
 	TH1			*hnewTeO2u238M2Sum;
 	TH1			*hnewTeO2th230M2Sum;
 	TH1			*hnewTeO2u234M2Sum;
+	TH1 		*hnewTeO2sb125M2Sum;
 
 	TH1			*hnewTeO2th232onlyM2Sum;
 	TH1			*hnewTeO2ra228pb208M2Sum;
