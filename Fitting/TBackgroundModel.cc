@@ -99,8 +99,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   // Data cuts 
   qtree = new TChain("qtree");
-  // base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-  // base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
   base_cut = base_cut && "Channel != 1 && Channel != 10"; 
 
   // Old PSA cuts
@@ -118,8 +118,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   LoadData();
 
 /*
-  TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
-  fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
+  // TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
+  // fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
+
+  TF1 *fEff = new TF1("fEff", "[0]+[1]*TMath::Exp([2]*x)", dMinEnergy, dMaxEnergy);
+  fEff->SetParameters(0.934, -4.982, -0.083);
 
   hEfficiency = new TH1D("hEfficiency", "", dNBins, dMinEnergy, dMaxEnergy);
 
@@ -2772,7 +2775,6 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   double dDummy = 0;
   double dDummyFill = 0;
   int j = 0;
-  // 25 since start at 50 keV with 2 keV bin width
   for(int i = h1->FindBin(0); i < h1->FindBin(50); i++)
   {
     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i));
@@ -5134,14 +5136,15 @@ void TBackgroundModel::LoadData()
   switch(dDataSet)
   { 
   case 1:
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2049.root", dDataDir.c_str()));   
+    // qtree->Add(Form("%s/Unblinded/ReducedB-ds2049.root", dDataDir.c_str()));   
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2064.root", dDataDir.c_str()));   
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2067.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2070.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2073.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2076.root", dDataDir.c_str())); 
-    dLivetime = 6042498; // DR 1 
+    // dLivetime = 6042498; // DR 1 
+    dLivetime = 1082802+867904+429707+1288128+1146692+291436; // DR 1 without DS
     cout << "Using Data Release 1" << endl;
   break;
 
@@ -5161,7 +5164,10 @@ void TBackgroundModel::LoadData()
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2109.root", dDataDir.c_str()));
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2118.root", dDataDir.c_str()));
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2124.root", dDataDir.c_str()));
-    dLivetime = 7647908; // DR 3
+    qtree->Add(Form("%s/Unblinded/ReducedB-ds2130.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/Unblinded/ReducedB-ds2133.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/Unblinded/ReducedB-ds2139.root", dDataDir.c_str()));
+    dLivetime = 1967358+2374242+1301016+2005292+1511379+901597+1639017; // DR 3
     cout << "Using Data Release 3" << endl;
   break;
 
@@ -5169,18 +5175,19 @@ void TBackgroundModel::LoadData()
     cout << "Using Toy data" << endl;
     bToyData = true;
     qtree->Add(Form("%s/Unblinded/ReducedB-ds*.root", dDataDir.c_str())); 
-    dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
+    // dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
   break;
 
   default:   
     qtree->Add(Form("%s/Unblinded/ReducedB-ds*.root", dDataDir.c_str())); 
-    dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
+    // dLivetime = 23077930+1511379+901597; // seconds of livetime (DR1 to DR3)
+    dLivetime = 11699901+9387524+5106669;
     cout << "Using Total Dataset" << endl;
   }
 
-  qtree->Project("fDataHistoTot", "RescaledEnergy", base_cut);
-  qtree->Project("fDataHistoM1",  "RescaledEnergy", base_cut && "Multiplicity_Sync == 1");
-  qtree->Project("fDataHistoM2",  "RescaledEnergy", base_cut && "Multiplicity_Sync == 2");
+  qtree->Project("fDataHistoTot", "Energy", base_cut);
+  qtree->Project("fDataHistoM1",  "Energy", base_cut && "Multiplicity_Sync == 1");
+  qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
   qtree->Project("fDataHistoM2Sum",  "TotalEnergy_Sync", base_cut && "Multiplicity_Sync == 2");
 
   dLivetimeYr = dLivetime*dSecToYears;  
@@ -5633,126 +5640,143 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
 
   // TeO2 Bulk
   minuit->DefineParameter(0, "TeO2 2nu",  f2nuValue, 1E-7, 0, 1.0);
-  minuit->DefineParameter(1, "TeO2 th232 only", 0., 1E-7, 0, 1.0);  
-  minuit->DefineParameter(2, "TeO2 ra228-pb208 ", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(3, "TeO2 u238-th230", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(4, "TeO2 th230 only", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(5, "TeO2 ra226-pb210", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(6, "TeO2 po210", 0., 1E-7, 0, 1.0); 
-  minuit->DefineParameter(7, "TeO2 k40", 0., 1E-7, 0, 1.0); 
-  minuit->DefineParameter(8, "TeO2 co60", 0., 1E-7, 0, 1.0);  
-  minuit->DefineParameter(9, "TeO2 sb125", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(1, "TeO2 th232 only", 2.27884e-04, 1E-7, 0, 1.0);  
+  minuit->DefineParameter(2, "TeO2 ra228-pb208 ", 1.50749e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(3, "TeO2 u238-th230", 7.71422e-01, 1E-7, 0, 1.0);
+  minuit->DefineParameter(4, "TeO2 th230 only", 6.90771e-04, 1E-7, 0, 1.0);
+  minuit->DefineParameter(5, "TeO2 ra226-pb210", 1.57853e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(6, "TeO2 po210", 7.18852e-06, 1E-7, 0, 1.0); 
+  minuit->DefineParameter(7, "TeO2 k40", 0, 1E-7, 0, 1.0); 
+  minuit->DefineParameter(8, "TeO2 co60", 6.70865e-03, 1E-7, 0, 1.0);  
+  minuit->DefineParameter(9, "TeO2 sb125", 1.94369e-02, 1E-7, 0, 1.0);
 
   // TeO2 Surface
-  minuit->DefineParameter(10, "TeO2 Sx u238 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(11, "TeO2 Sx pb210 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(12, "TeO2 Sx th232 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(13, "TeO2 Sx u238 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(14, "TeO2 Sx pb210 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(15, "TeO2 Sx th232 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(16, "TeO2 Sx th232 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(17, "TeO2 Sx ra228-pb208 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(18, "TeO2 Sx u238-th230 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(19, "TeO2 Sx th230 only 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(20, "TeO2 Sx ra226-pb210 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(21, "TeO2 Sx pb210 0.01", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(10, "TeO2 Sx u238 10", 6.04778e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(11, "TeO2 Sx pb210 10", 2.62726e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(12, "TeO2 Sx th232 10", 4.54862e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(13, "TeO2 Sx u238 1", 4.00809e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(14, "TeO2 Sx pb210 1", 7.54107e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(15, "TeO2 Sx th232 1", 2.27496e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(16, "TeO2 Sx th232 only 0.01", 7.12307e-06, 1E-7, 0, 1.0);
+  minuit->DefineParameter(17, "TeO2 Sx ra228-pb208 0.01", 3.39853e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(18, "TeO2 Sx u238-th230 0.01", 1.72670e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(19, "TeO2 Sx th230 only 0.01", 1.59535e-04, 1E-7, 0, 1.0);
+  minuit->DefineParameter(20, "TeO2 Sx ra226-pb210 0.01", 4.01852e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(21, "TeO2 Sx pb210 0.01", 4.41794e-02, 1E-7, 0, 1.0);
 
   // Cu Holder Surface
-  minuit->DefineParameter(22, "CuBox+CuFrame Sx u238 100", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(23, "CuBox+CuFrame Sx pb210 100", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(24, "CuBox+CuFrame Sx th232 100", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(25, "CuBox+CuFrame Sx u238 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(26, "CuBox+CuFrame Sx pb210 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(27, "CuBox+CuFrame Sx th232 10", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(28, "CuBox+CuFrame Sx u238 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(29, "CuBox+CuFrame Sx pb210 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(30, "CuBox+CuFrame Sx th232 1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(31, "CuBox+CuFrame Sx u238 0.1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(32, "CuBox+CuFrame Sx pb210 0.1", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(33, "CuBox+CuFrame SX th232 0.1", 0., 1E-7, 0, 1.0);  
-  minuit->DefineParameter(34, "CuBox+CuFrame Sx u238 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(35, "CuBox+CuFrame Sx pb210 0.01", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(36, "CuBox+CuFrame Sx th232 0.01", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(22, "CuBox+CuFrame Sx u238 100", 6.09547e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(23, "CuBox+CuFrame Sx pb210 100", 2.27199e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(24, "CuBox+CuFrame Sx th232 100", 8.09161e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(25, "CuBox+CuFrame Sx u238 10", 9.38284e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(26, "CuBox+CuFrame Sx pb210 10", 2.22958e-04, 1E-7, 0, 1.0);
+  minuit->DefineParameter(27, "CuBox+CuFrame Sx th232 10", 1.31438e-04, 1E-7, 0, 1.0);
+  minuit->DefineParameter(28, "CuBox+CuFrame Sx u238 1", 5.68126e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(29, "CuBox+CuFrame Sx pb210 1", 1.62160e-04, 1E-7, 0, 1.0);
+  minuit->DefineParameter(30, "CuBox+CuFrame Sx th232 1", 2.07984e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(31, "CuBox+CuFrame Sx u238 0.1", 1.90137e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(32, "CuBox+CuFrame Sx pb210 0.1", 1.68516e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(33, "CuBox+CuFrame SX th232 0.1", 2.00923e-04, 1E-7, 0, 1.0);  
+  minuit->DefineParameter(34, "CuBox+CuFrame Sx u238 0.01", 1.93753e-05, 1E-7, 0, 1.0);
+  minuit->DefineParameter(35, "CuBox+CuFrame Sx pb210 0.01", 1.19034e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(36, "CuBox+CuFrame Sx th232 0.01", 4.06856e-04, 1E-7, 0, 1.0);
 
   // Bulk Contamination
-  minuit->DefineParameter(37, "CuBox+CuFrame u238", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(38, "CuBox+CuFrame th232", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(39, "CuBox+CuFrame k40", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(40, "CuBox+CuFrame co60", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(41, "Internal Shields u238", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(42, "Internal Shields th232", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(43, "Internal Shields k40", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(44, "Internal Shields co60", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(45, "PbRom u238", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(46, "PbRom th232", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(47, "PbRom k40", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(48, "PbRom co60", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(49, "PbRom cs137", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(50, "50mK cs137", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(37, "CuBox+CuFrame u238", 4.87610e-13, 1E-7, 0, 1.0);
+  minuit->DefineParameter(38, "CuBox+CuFrame th232", 2.65529e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(39, "CuBox+CuFrame k40", 3.11869e-11, 1E-7, 0, 1.0);
+  minuit->DefineParameter(40, "CuBox+CuFrame co60", 1.04097e-11, 1E-7, 0, 1.0);
+  minuit->DefineParameter(41, "Internal Shields u238", 2.02871e-12, 1E-7, 0, 1.0);
+  minuit->DefineParameter(42, "Internal Shields th232", 6.15110e-11, 1E-7, 0, 1.0);
+  minuit->DefineParameter(43, "Internal Shields k40", 4.90393e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(44, "Internal Shields co60", 2.42561e-11, 1E-7, 0, 1.0);
+  minuit->DefineParameter(45, "PbRom u238", 5.00788e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(46, "PbRom th232", 5.00773e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(47, "PbRom k40", 5.00795e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(48, "PbRom co60", 5.00765e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(49, "PbRom cs137", 5.00819e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(50, "50mK cs137", 1.97318e-03, 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(51, "OVC u238", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(52, "OVC th232", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(53, "OVC k40", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(54, "OVC co60", 0., 1E-7, 0, 1.0);
+  minuit->DefineParameter(51, "OVC u238", 1.17207e-01, 1E-7, 0, 1.0);
+  minuit->DefineParameter(52, "OVC th232", 1.00671e-01, 1E-7, 0, 1.0);
+  minuit->DefineParameter(53, "OVC k40", 6.87829e-02, 1E-7, 0, 1.0);
+  minuit->DefineParameter(54, "OVC co60", 3.38267e-02, 1E-7, 0, 1.0);
 
-  minuit->DefineParameter(55, "External Lead bi210", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(56, "OVC 804", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(57, "OVC 835", 0., 1E-7, 0, 1.0);
-  minuit->DefineParameter(58, "OVC 1063", 0., 1E-7, 0, 1.0);   
+  minuit->DefineParameter(55, "External Lead bi210", 3.52574e-07, 1E-7, 0, 1.0);
+  minuit->DefineParameter(56, "OVC 804", 3.94019e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(57, "OVC 835", 2.82631e-03, 1E-7, 0, 1.0);
+  minuit->DefineParameter(58, "OVC 1063", 5.41870e-03, 1E-7, 0, 1.0);   
 
 //////////////////////////////////////
 
    // Uncommend to fix parameters here
-   // minuit->FixParameter(0); // TeO2 2nu
-   // minuit->FixParameter(1); // CuBox+Frame co60
-   // minuit->FixParameter(2); // TeO2 th232 only
-   // minuit->FixParameter(3); // TeO2 th230 only
-   // minuit->FixParameter(4); // TeO2 Sx th232 only 0.01
-   // minuit->FixParameter(5); // TeO2 Sx ra228 to pb208 0.01 
-   // minuit->FixParameter(6); // TeO2 Sx u238 to th230 0.01  
-   // minuit->FixParameter(7); // TeO2 Sx th230 only 0.01
-   // minuit->FixParameter(8); // TeO2 Sx ra226 to pb210 0.01
-   // minuit->FixParameter(9); // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
-   // minuit->FixParameter(10); // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   // minuit->FixParameter(11); // CuBox+CuFrame Sx th232 10
-   // minuit->FixParameter(12); // CuBox+CuFrame Sx u238 10
-   // minuit->FixParameter(13); // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   // minuit->FixParameter(14); // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   // minuit->FixParameter(15); // PbRom k40 
-   // minuit->FixParameter(16); // OVC th232
-   // minuit->FixParameter(17); // OVC u238
-   // minuit->FixParameter(18); // OVC co60
-   // minuit->FixParameter(19); // OVC k40
-   // minuit->FixParameter(20); // External Lead bi210 
-   // minuit->FixParameter(21); // CuBox+Frame th232 
-   // minuit->FixParameter(22); // CuBox+Frame u238
-   // minuit->FixParameter(23); // PbRom cs137
+  // minuit->FixParameter(0); // TeO2 2nu
+  minuit->FixParameter(1); //TeO2 th232 only  
+  minuit->FixParameter(2); //TeO2 ra228-pb208 
+  minuit->FixParameter(3); //TeO2 u238-th230
+  minuit->FixParameter(4); //TeO2 th230 only
+  minuit->FixParameter(5); //TeO2 ra226-pb210
+  minuit->FixParameter(6); //TeO2 po210 
+  // minuit->FixParameter(7); //TeO2 k40 
+  // minuit->FixParameter(8); //TeO2 co60  
+  // minuit->FixParameter(9); //TeO2 sb125
 
+  // // TeO2 Surface
+  minuit->FixParameter(10); //TeO2 Sx u238 10
+  minuit->FixParameter(11); //TeO2 Sx pb210 10
+  minuit->FixParameter(12); //TeO2 Sx th232 10
+  minuit->FixParameter(13); //TeO2 Sx u238 1
+  minuit->FixParameter(14); //TeO2 Sx pb210 1
+  minuit->FixParameter(15); //TeO2 Sx th232 1
+  minuit->FixParameter(16); //TeO2 Sx th232 only 0.01
+  minuit->FixParameter(17); //TeO2 Sx ra228-pb208 0.01
+  minuit->FixParameter(18); //TeO2 Sx u238-th230 0.01
+  minuit->FixParameter(19); //TeO2 Sx th230 only 0.01
+  minuit->FixParameter(20); //TeO2 Sx ra226-pb210 0.01
+  minuit->FixParameter(21); //TeO2 Sx pb210 0.01
 
-  // Fixed: 25, 26, 27, 28, 29, 30, 32, 34, 36
-   // minuit->FixParameter(24); // TeO2 Sx th232 1
-   // minuit->FixParameter(25); // TeO2 Sx th232 10 
-   // minuit->FixParameter(26); // TeO2 Sx u238 1
-   // minuit->FixParameter(27); // TeO2 Sx u238 10
-   // minuit->FixParameter(28); // TeO2 Sx pb210 10
+  // Cu Holder Surface
+  minuit->FixParameter(22); //CuBox+CuFrame Sx u238 100
+  minuit->FixParameter(23); //CuBox+CuFrame Sx pb210 100
+  minuit->FixParameter(24); //CuBox+CuFrame Sx th232 100
+  minuit->FixParameter(25); //CuBox+CuFrame Sx u238 10
+  minuit->FixParameter(26); //CuBox+CuFrame Sx pb210 10
+  minuit->FixParameter(27); //CuBox+CuFrame Sx th232 10
+  minuit->FixParameter(28); //CuBox+CuFrame Sx u238 1
+  minuit->FixParameter(29); //CuBox+CuFrame Sx pb210 1
+  minuit->FixParameter(30); //CuBox+CuFrame Sx th232 1
+  minuit->FixParameter(31); //CuBox+CuFrame Sx u238 0.1
+  minuit->FixParameter(32); //CuBox+CuFrame Sx pb210 0.1
+  minuit->FixParameter(33); //CuBox+CuFrame SX th232 0.1  
+  minuit->FixParameter(34); //CuBox+CuFrame Sx u238 0.01
+  minuit->FixParameter(35); //CuBox+CuFrame Sx pb210 0.01
+  minuit->FixParameter(36); //CuBox+CuFrame Sx th232 0.01
 
-   // minuit->FixParameter(29); // CuBox + CuFrame Sx th232 1
-   // minuit->FixParameter(30); // CuBox + CuFrame Sx th232 0.1 
-   // minuit->FixParameter(31); // CuBox + CuFrame Sx th232 0.01
-   // minuit->FixParameter(32); // CuBox + CuFrame Sx u238 1
-   // minuit->FixParameter(33); // CuBox + CuFrame Sx u238 0.1
-   // minuit->FixParameter(34); // CuBox + CuFrame Sx u238 0.01
-   // minuit->FixParameter(35); // CuBox + CuFrame Sx pb210 10
-   // minuit->FixParameter(36); // CuBox + CuFrame Sx pb210 1
+  // // Bulk Contamination
+  // minuit->FixParameter(37); //CuBox+CuFrame u238
+  // minuit->FixParameter(38); //CuBox+CuFrame th232
+  // minuit->FixParameter(39); //CuBox+CuFrame k40
+  // minuit->FixParameter(40); //CuBox+CuFrame co60
+  // minuit->FixParameter(41); //Internal Shields u238
+  // minuit->FixParameter(42); //Internal Shields th232
+  // minuit->FixParameter(43); //Internal Shields k40
+  // minuit->FixParameter(44); //Internal Shields co60
+  // minuit->FixParameter(45); //PbRom u238
+  // minuit->FixParameter(46); //PbRom th232
+  // minuit->FixParameter(47); //PbRom k40
+  // minuit->FixParameter(48); //PbRom co60
+  // minuit->FixParameter(49); //PbRom cs137
+  // minuit->FixParameter(50); //50mK cs137
 
-   // minuit->FixParameter(37); // 
-   // minuit->FixParameter(38); // 
-   // minuit->FixParameter(39); //
-   // minuit->FixParameter(40); //
+  // minuit->FixParameter(51); //OVC u238
+  // minuit->FixParameter(52); //OVC th232
+  // minuit->FixParameter(53); //OVC k40
+  // minuit->FixParameter(54); //OVC co60
 
-   // minuit->FixParameter(41); // 
-   // minuit->FixParameter(42); //
-   // minuit->FixParameter(43); //
+  // minuit->FixParameter(55); //External Lead bi210
+  // minuit->FixParameter(56); //OVC 804
+  // minuit->FixParameter(57); //OVC 835
+  // minuit->FixParameter(58); //OVC 1063
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
    dNumFreeParameters = minuit->GetNumPars() - minuit->GetNumFixedPars();
@@ -6257,16 +6281,16 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   {
     dResidualRMSM2 += hResidualDistM2->GetBinContent(i)*hResidualDistM2->GetBinContent(i);
   }
-  for (int i = dFitMinBinM2Sum; i < dFitMaxBinM2Sum; i++)
-  {
-    dResidualRMSM2Sum += hResidualDistM2Sum->GetBinContent(i)*hResidualDistM2Sum->GetBinContent(i);
-  }
+  // for (int i = dFitMinBinM2Sum; i < dFitMaxBinM2Sum; i++)
+  // {
+    // dResidualRMSM2Sum += hResidualDistM2Sum->GetBinContent(i)*hResidualDistM2Sum->GetBinContent(i);
+  // }
 
   dResidualRMSTot = TMath::Sqrt( (dResidualRMSM1 + dResidualRMSM2)/ (dNDF + dNumFreeParameters) );
 
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/(dFitMaxBinM1-dFitMinBinM1));
   dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/(dFitMaxBinM2-dFitMinBinM2));
-  dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/(dFitMaxBinM2Sum-dFitMinBinM2Sum));
+  // dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/(dFitMaxBinM2Sum-dFitMinBinM2Sum));
 
   //
   double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2470)); 
@@ -6293,8 +6317,8 @@ bool TBackgroundModel::DoTheFitAdaptive(double f2nuValue, double fVariableValue)
   cout << "Integral Total PDF in ROI (counts/keV/y): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   // cout << "Integral Total Po-210 PDF in ROI (counts/keV): " << fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt(fModelTotAdapSpoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;  
   // cout << "Integral Total 0NDBD PDF in ROI (counts/keV/y): " << fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt(fModelTotAdapNDBDM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
-  cout << "Number of 2nbb: " << fParameters[0]*dDataIntegralM1 << " +/- " << fParError[0]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << " +/- " << (fParError[0]/fParameters[0]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << endl;
-  cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
+  // cout << "Number of 2nbb: " << fParameters[0]*dDataIntegralM1 << " +/- " << fParError[0]*dDataIntegralM1 << "\t 2nbb half life: " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << " +/- " << (fParError[0]/fParameters[0]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << endl;
+  // cout << "Counts in 2nbb (M1 + M2): " << fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2 << "\t Half-Life " << (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) << endl;
   cout << endl;
   cout << endl;
   cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  

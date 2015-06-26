@@ -51,8 +51,8 @@ TBkgModelSource::TBkgModelSource(double fFitMin, double fFitMax, int fBinBase, i
 
   // Data cuts 
   qtree = new TChain("qtree");
-  // base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-  // base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
   base_cut = base_cut && "Channel != 1 && Channel != 10"; 
 
   // New PSA cuts
