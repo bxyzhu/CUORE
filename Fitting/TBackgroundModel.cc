@@ -3389,7 +3389,7 @@ void TBackgroundModel::Initialize()
   // h50mKpb210M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h50mKpb210M2Sum");
   // h50mKth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h50mKth232M2Sum");
   // h50mKu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("h50mKu238M2Sum");
-/*
+
 ///////// 600mK M1 and M2
   h600mKco60M1    = (TH1D*)fBulkOuter->Get("h600mKco60M1");
   h600mKk40M1     = (TH1D*)fBulkOuter->Get("h600mKk40M1");
@@ -3447,7 +3447,7 @@ void TBackgroundModel::Initialize()
   hMBk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hMBk40M2Sum");
   hMBth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hMBth232M2Sum");
   hMBu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hMBu238M2Sum");
-*/
+
 ////// Internal Shields M1 and M2
   // hInternalco60M1 = (TH1D*)fBulkInnerOld->Get("hInternalco60M1");
   // hInternalk40M1 = (TH1D*)fBulkOuter->Get("hInternalk40M1");
