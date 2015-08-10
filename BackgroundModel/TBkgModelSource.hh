@@ -2,8 +2,8 @@
 // This class loads the data, takes care of binning, and all of the PDFs from data
 // Classes that inherit from this class get all of the source histograms
 
-#ifndef __TBkgModelParameters__
-#define __TBkgModelParameters__
+#ifndef __TBkgModelSource__
+#define __TBkgModelSource__
 #include "TObject.h"
 #include "TH1D.h"
 #include "TFile.h"
