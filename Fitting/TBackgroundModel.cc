@@ -1932,76 +1932,70 @@ void TBackgroundModel::Initialize()
 
   fBulkInner = new TFile(Form("%s/OldProd/MCProduction_BulkInner_1keV.root", dMCDir.c_str()));
   fBulkInnerOld = new TFile(Form("%s/OldProd/MCProduction_BulkInner_1keV.root", dMCDir.c_str()));
-  fBulkInnerM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkInnerM2Sum_1keV.root", dMCDir.c_str()));
-
   fBulkOuter = new TFile(Form("%s/OldProd/MCProduction_BulkOuter_1keV.root", dMCDir.c_str()));
   fBulkOuterOld = new TFile(Form("%s/OldProd/MCProduction_BulkOuter_1keV.root", dMCDir.c_str()));
-  fBulkOuterM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
-
   fSurfaceCrystal = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str())); // Has more PDFs
   fSurfaceCrystalOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceCrystal_1keV_new.root", dMCDir.c_str())); // Has more PDFs
   fSurfaceOther = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
   fSurfaceOtherOld = new TFile(Form("%s/OldProd/MCProduction_SurfaceOther_1keV.root", dMCDir.c_str()));
 
+  fBulk = new TFile(Form("%s/MCProduction_Bulk_1keV.root", dMCDir.c_str()));
+  fSurface = new TFile(Form("%s/MCProduction_Surface_1keV.root", dMCDir.c_str()));
+
+
+
+  fBulkInnerM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkInnerM2Sum_1keV.root", dMCDir.c_str()));
+  fBulkOuterM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
+
   fFudge = new TFile(Form("%s/MCProduction_FudgeFactor_1keV.root", dMCDir.c_str()));
-
-  // hTeO2k40M1         = (TH1D*)fFudge->Get("hTeO2k40M1");
-  // hInternalk40M1     = (TH1D*)fFudge->Get("hInternalk40M1");
-  // hOVCk40M1          = (TH1D*)fFudge->Get("hOVCk40M1");
-  // hPbRomk40M1        = (TH1D*)fFudge->Get("hPbRomk40M1");
-
-  // hTeO2k40M2         = (TH1D*)fFudge->Get("hTeO2k40M2");
-  // hInternalk40M2     = (TH1D*)fFudge->Get("hInternalk40M2");
-  // hOVCk40M2          = (TH1D*)fFudge->Get("hOVCk40M2");
-  // hPbRomk40M2        = (TH1D*)fFudge->Get("hPbRomk40M2");
 
 
 ///////////// Bulk Histograms
 /////// Crystal M1 and M2
-  hTeO20nuM1     = (TH1D*)fBulkInnerOld->Get("hTeO20nuM1");
-  hTeO22nuM1     = (TH1D*)fBulkInnerOld->Get("hTeO22nuM1");
-  hTeO2co60M1    = (TH1D*)fBulkInnerOld->Get("hTeO2co60M1");
-  hTeO2k40M1     = (TH1D*)fBulkInnerOld->Get("hTeO2k40M1");
-  hTeO2pb210M1   = (TH1D*)fBulkInnerOld->Get("hTeO2pb210M1");
-  hTeO2po210M1   = (TH1D*)fBulkInnerOld->Get("hTeO2po210M1");
-  hTeO2te125M1   = (TH1D*)fBulkInnerOld->Get("hTeO2te125M1");
-  hTeO2th232M1   = (TH1D*)fBulkInnerOld->Get("hTeO2th232M1");
-  // hTeO2th228M1   = (TH1D*)fBulkInner->Get("hTeO2th228M1");
-  // hTeO2ra226M1   = (TH1D*)fBulkInner->Get("hTeO2ra226M1");
-  // hTeO2rn222M1   = (TH1D*)fBulkInner->Get("hTeO2rn222M1");
-  hTeO2u238M1    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M1");
-  // hTeO2th230M1   = (TH1D*)fBulkInner->Get("hTeO2th230M1");
-  // hTeO2u234M1    = (TH1D*)fBulkInner->Get("hTeO2u234M1");
-  hTeO2sb125M1   = (TH1D*)fBulkInnerOld->Get("hTeO2sb125M1");
+  hTeO20nuM1     = (TH1D*)fBulk->Get("hTeO20nuM1");
+  hTeO22nuM1     = (TH1D*)fBulk->Get("hTeO22nuM1");
+  hTeO2co60M1    = (TH1D*)fBulk->Get("hTeO2co60M1");
+  hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
+  hTeO2pb210M1   = (TH1D*)fBulk->Get("hTeO2pb210M1");
+  hTeO2po210M1   = (TH1D*)fBulk->Get("hTeO2po210M1");
+  hTeO2te125M1   = (TH1D*)fBulk->Get("hTeO2te125M1");
+  hTeO2th232M1   = (TH1D*)fBulk->Get("hTeO2th232M1");
+  // hTeO2th228M1   = (TH1D*)fBulk->Get("hTeO2th228M1");
+  // hTeO2ra226M1   = (TH1D*)fBulk->Get("hTeO2ra226M1");
+  // hTeO2rn222M1   = (TH1D*)fBulk->Get("hTeO2rn222M1");
+  hTeO2u238M1    = (TH1D*)fBulk->Get("hTeO2u238M1");
+  // hTeO2th230M1   = (TH1D*)fBulk->Get("hTeO2th230M1");
+  // hTeO2u234M1    = (TH1D*)fBulk->Get("hTeO2u234M1");
+  hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
 
-  hTeO2th232onlyM1 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM1");
-  hTeO2ra228pb208M1 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M1");
-  hTeO2th230onlyM1 = (TH1D*)fBulkInnerOld->Get("hTeO2th230onlyM1");
-  hTeO2u238th230M1 = (TH1D*)fBulkInnerOld->Get("hTeO2u238th230M1");
-  hTeO2ra226pb210M1 = (TH1D*)fBulkInnerOld->Get("hTeO2ra226pb210M1");
+  hTeO2th232onlyM1 = (TH1D*)fBulk->Get("hTeO2th232onlyM1");
+  hTeO2ra228pb208M1 = (TH1D*)fBulk->Get("hTeO2ra228pb208M1");
+  hTeO2th230onlyM1 = (TH1D*)fBulk->Get("hTeO2th230onlyM1");
+  hTeO2u238th230M1 = (TH1D*)fBulk->Get("hTeO2u238th230M1");
+  hTeO2ra226pb210M1 = (TH1D*)fBulk->Get("hTeO2ra226pb210M1");
 
-  hTeO20nuM2     = (TH1D*)fBulkInnerOld->Get("hTeO20nuM2");
-  hTeO22nuM2     = (TH1D*)fBulkInnerOld->Get("hTeO22nuM2");
-  hTeO2co60M2    = (TH1D*)fBulkInnerOld->Get("hTeO2co60M2");
-  hTeO2k40M2     = (TH1D*)fBulkInnerOld->Get("hTeO2k40M2");
-  hTeO2pb210M2   = (TH1D*)fBulkInnerOld->Get("hTeO2pb210M2");
-  hTeO2po210M2   = (TH1D*)fBulkInnerOld->Get("hTeO2po210M2");
-  hTeO2te125M2   = (TH1D*)fBulkInnerOld->Get("hTeO2te125M2");
-  hTeO2th232M2   = (TH1D*)fBulkInnerOld->Get("hTeO2th232M2");
-  // hTeO2th228M2   = (TH1D*)fBulkInner->Get("hTeO2th228M2");
-  // hTeO2ra226M2   = (TH1D*)fBulkInner->Get("hTeO2ra226M2");
-  // hTeO2rn222M2   = (TH1D*)fBulkInner->Get("hTeO2rn222M2");
-  hTeO2u238M2    = (TH1D*)fBulkInnerOld->Get("hTeO2u238M2");
-  // hTeO2th230M2   = (TH1D*)fBulkInner->Get("hTeO2th230M2");
-  // hTeO2u234M2    = (TH1D*)fBulkInner->Get("hTeO2u234M2");
-  hTeO2sb125M2   = (TH1D*)fBulkInnerOld->Get("hTeO2sb125M2");
-  hTeO2u238th230M2 = (TH1D*)fBulkInnerOld->Get("hTeO2u238th230M2");
+  hTeO20nuM2     = (TH1D*)fBulk->Get("hTeO20nuM2");
+  hTeO22nuM2     = (TH1D*)fBulk->Get("hTeO22nuM2");
+  hTeO2co60M2    = (TH1D*)fBulk->Get("hTeO2co60M2");
+  hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
+  hTeO2pb210M2   = (TH1D*)fBulk->Get("hTeO2pb210M2");
+  hTeO2po210M2   = (TH1D*)fBulk->Get("hTeO2po210M2");
+  hTeO2te125M2   = (TH1D*)fBulk->Get("hTeO2te125M2");
+  hTeO2th232M2   = (TH1D*)fBulk->Get("hTeO2th232M2");
+  // hTeO2th228M2   = (TH1D*)fBulk->Get("hTeO2th228M2");
+  // hTeO2ra226M2   = (TH1D*)fBulk->Get("hTeO2ra226M2");
+  // hTeO2rn222M2   = (TH1D*)fBulk->Get("hTeO2rn222M2");
+  hTeO2u238M2    = (TH1D*)fBulk->Get("hTeO2u238M2");
+  // hTeO2th230M2   = (TH1D*)fBulk->Get("hTeO2th230M2");
+  // hTeO2u234M2    = (TH1D*)fBulk->Get("hTeO2u234M2");
+  hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
+  hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
 
-  hTeO2th232onlyM2 = (TH1D*)fBulkInnerOld->Get("hTeO2th232onlyM2");
-  hTeO2ra228pb208M2 = (TH1D*)fBulkInnerOld->Get("hTeO2ra228pb208M2");
-  hTeO2th230onlyM2 = (TH1D*)fBulkInnerOld->Get("hTeO2th230onlyM2");
-  hTeO2u238th230M2 = (TH1D*)fBulkInnerOld->Get("hTeO2u238th230M2");
-  hTeO2ra226pb210M2 = (TH1D*)fBulkInnerOld->Get("hTeO2ra226pb210M2");
+  hTeO2th232onlyM2 = (TH1D*)fBulk->Get("hTeO2th232onlyM2");
+  hTeO2ra228pb208M2 = (TH1D*)fBulk->Get("hTeO2ra228pb208M2");
+  hTeO2th230onlyM2 = (TH1D*)fBulk->Get("hTeO2th230onlyM2");
+  hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
+  hTeO2ra226pb210M2 = (TH1D*)fBulk->Get("hTeO2ra226pb210M2");
 
   hTeO20nuM2Sum     = (TH1D*)fBulkInnerM2Sum->Get("hTeO20nuM2Sum");
   hTeO22nuM2Sum     = (TH1D*)fBulkInnerM2Sum->Get("hTeO22nuM2Sum");
@@ -2025,15 +2019,15 @@ void TBackgroundModel::Initialize()
   hTeO2ra226pb210M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hTeO2ra226pb210M2Sum");
 
 ///////// CuBox + CuFrame M1 and M2
-  hCuBox_CuFrameco60M1 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameco60M1");
-  hCuBox_CuFramek40M1 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFramek40M1");
-  hCuBox_CuFrameth232M1 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameth232M1");
-  hCuBox_CuFrameu238M1 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameu238M1");
+  hCuBox_CuFrameco60M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M1");
+  hCuBox_CuFramek40M1 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M1");
+  hCuBox_CuFrameth232M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameth232M1");
+  hCuBox_CuFrameu238M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameu238M1");
 
-  hCuBox_CuFrameco60M2 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameco60M2");
-  hCuBox_CuFramek40M2 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFramek40M2");
-  hCuBox_CuFrameth232M2 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameth232M2");
-  hCuBox_CuFrameu238M2 = (TH1D*)fBulkInnerOld->Get("hCuBox_CuFrameu238M2");
+  hCuBox_CuFrameco60M2 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M2");
+  hCuBox_CuFramek40M2 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M2");
+  hCuBox_CuFrameth232M2 = (TH1D*)fBulk->Get("hCuBox_CuFrameth232M2");
+  hCuBox_CuFrameu238M2 = (TH1D*)fBulk->Get("hCuBox_CuFrameu238M2");
 
   hCuBox_CuFrameco60M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hCuBox_CuFrameco60M2Sum");
   hCuBox_CuFramek40M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hCuBox_CuFramek40M2Sum");
@@ -2047,38 +2041,40 @@ void TBackgroundModel::Initialize()
   h50mKcs137M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h50mKcs137M2Sum");
 
 //////// Roman Lead M1 and M2
+  hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
+  hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
+  hPbRomk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hPbRomk40M2Sum");
+
+
   hPbRomco60M1    = (TH1D*)fBulkOuterOld->Get("hPbRomco60M1");
   hPbRomcs137M1   = (TH1D*)fBulkOuterOld->Get("hPbRomcs137M1");
-  hPbRomk40M1     = (TH1D*)fBulkOuterOld->Get("hPbRomk40M1");
   hPbRompb210M1   = (TH1D*)fBulkOuterOld->Get("hPbRompb210M1");
   hPbRomth232M1   = (TH1D*)fBulkOuterOld->Get("hPbRomth232M1");
   hPbRomu238M1    = (TH1D*)fBulkOuterOld->Get("hPbRomu238M1");
    
   hPbRomco60M2    = (TH1D*)fBulkOuterOld->Get("hPbRomco60M2");
   hPbRomcs137M2   = (TH1D*)fBulkOuterOld->Get("hPbRomcs137M2");
-  hPbRomk40M2     = (TH1D*)fBulkOuterOld->Get("hPbRomk40M2");
   hPbRompb210M2   = (TH1D*)fBulkOuterOld->Get("hPbRompb210M2");
   hPbRomth232M2   = (TH1D*)fBulkOuterOld->Get("hPbRomth232M2");
   hPbRomu238M2    = (TH1D*)fBulkOuterOld->Get("hPbRomu238M2");
 
   hPbRomco60M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hPbRomco60M2Sum");
   hPbRomcs137M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hPbRomcs137M2Sum");
-  hPbRomk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hPbRomk40M2Sum");
   hPbRompb210M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hPbRompb210M2Sum");
   hPbRomth232M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("hPbRomth232M2Sum");
   hPbRomu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hPbRomu238M2Sum");
 
 ////// Internal Shields M1 and M2
   // Old Production
-  hInternalco60M1 = (TH1D*)fBulkInnerOld->Get("hInternalco60M1");
-  hInternalk40M1 = (TH1D*)fBulkInnerOld->Get("hInternalk40M1");
-  hInternalth232M1 = (TH1D*)fBulkInnerOld->Get("hInternalth232M1");
-  hInternalu238M1 = (TH1D*)fBulkInnerOld->Get("hInternalu238M1");
+  hInternalco60M1 = (TH1D*)fBulk->Get("hInternalco60M1");
+  hInternalk40M1 = (TH1D*)fBulk->Get("hInternalk40M1");
+  hInternalth232M1 = (TH1D*)fBulk->Get("hInternalth232M1");
+  hInternalu238M1 = (TH1D*)fBulk->Get("hInternalu238M1");
 
-  hInternalco60M2 = (TH1D*)fBulkInnerOld->Get("hInternalco60M2");
-  hInternalk40M2 = (TH1D*)fBulkInnerOld->Get("hInternalk40M2");
-  hInternalth232M2 = (TH1D*)fBulkInnerOld->Get("hInternalth232M2");
-  hInternalu238M2 = (TH1D*)fBulkInnerOld->Get("hInternalu238M2");
+  hInternalco60M2 = (TH1D*)fBulk->Get("hInternalco60M2");
+  hInternalk40M2 = (TH1D*)fBulk->Get("hInternalk40M2");
+  hInternalth232M2 = (TH1D*)fBulk->Get("hInternalth232M2");
+  hInternalu238M2 = (TH1D*)fBulk->Get("hInternalu238M2");
 
   hInternalco60M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalco60M2Sum");
   hInternalk40M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalk40M2Sum");
@@ -2086,15 +2082,15 @@ void TBackgroundModel::Initialize()
   hInternalu238M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalu238M2Sum");
 
 /////// OVC M1 and M2
-  hOVCco60M1    = (TH1D*)fBulkOuterOld->Get("hOVCco60M1");
-  hOVCk40M1     = (TH1D*)fBulkOuterOld->Get("hOVCk40M1");
-  hOVCth232M1   = (TH1D*)fBulkOuterOld->Get("hOVCth232M1");
-  hOVCu238M1    = (TH1D*)fBulkOuterOld->Get("hOVCu238M1");
+  hOVCco60M1    = (TH1D*)fBulk->Get("hOVCco60M1");
+  hOVCk40M1     = (TH1D*)fBulk->Get("hOVCk40M1");
+  hOVCth232M1   = (TH1D*)fBulk->Get("hOVCth232M1");
+  hOVCu238M1    = (TH1D*)fBulk->Get("hOVCu238M1");
    
-  hOVCco60M2    = (TH1D*)fBulkOuterOld->Get("hOVCco60M2");
-  hOVCk40M2     = (TH1D*)fBulkOuterOld->Get("hOVCk40M2");
-  hOVCth232M2   = (TH1D*)fBulkOuterOld->Get("hOVCth232M2");
-  hOVCu238M2    = (TH1D*)fBulkOuterOld->Get("hOVCu238M2");
+  hOVCco60M2    = (TH1D*)fBulk->Get("hOVCco60M2");
+  hOVCk40M2     = (TH1D*)fBulk->Get("hOVCk40M2");
+  hOVCth232M2   = (TH1D*)fBulk->Get("hOVCth232M2");
+  hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
 
   hOVCco60M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hOVCco60M2Sum");
   hOVCk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hOVCk40M2Sum");
@@ -2102,9 +2098,9 @@ void TBackgroundModel::Initialize()
   hOVCu238M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hOVCu238M2Sum");
 
 /////// External Sources M1 and M2
-  hExtPbbi210M1 = (TH1D*)fBulkOuterOld->Get("hExtPbbi210M1");
+  hExtPbbi210M1 = (TH1D*)fBulk->Get("hExtPbbi210M1");
  
-  hExtPbbi210M2 = (TH1D*)fBulkOuterOld->Get("hExtPbbi210M2");
+  hExtPbbi210M2 = (TH1D*)fBulk->Get("hExtPbbi210M2");
 
   // hExtPbbi210M2Sum = (TH1D*)fBulkOuterM2Sum->Get("hExtPbbi210M2Sum");
 
@@ -2123,99 +2119,84 @@ void TBackgroundModel::Initialize()
   
 //////////// Surface PDFs
 ///// Crystal M1 and M2
-  // hTeO2Spb210M1_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M1_01");
-  // hTeO2Spo210M1_001   = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M1_001");
-  // hTeO2Spo210M1_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M1_01");
-  // hTeO2Sth232M1_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sth232M1_01");
-  // hTeO2Su238M1_01     = (TH1D*)fSurfaceCrystal->Get("hTeO2Su238M1_01");
-  hTeO2Sxpb210M1_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_001");
-  hTeO2Sxpb210M1_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_01");
-  hTeO2Sxpb210M1_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_1");
-  hTeO2Sxpb210M1_10   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_10");
-  hTeO2Sxpo210M1_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M1_001");
-  hTeO2Sxpo210M1_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M1_01");
-  hTeO2Sxpo210M1_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M1_1");
-  hTeO2Sxth232M1_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M1_001");
-  hTeO2Sxth232M1_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M1_01");
-  hTeO2Sxth232M1_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M1_1");
-  hTeO2Sxth232M1_10   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M1_10");
-  hTeO2Sxu238M1_001   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_001");
-  hTeO2Sxu238M1_01    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_01");
-  hTeO2Sxu238M1_1     = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_1");
-  hTeO2Sxu238M1_10    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M1_10");
+  hTeO2Sxpb210M1_001  = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_001");
+  hTeO2Sxpb210M1_01   = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_01");
+  hTeO2Sxpb210M1_1    = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_1");
+  hTeO2Sxpb210M1_10   = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_10");
+  hTeO2Sxpo210M1_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_001");
+  hTeO2Sxpo210M1_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_01");
+  hTeO2Sxpo210M1_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_1");
+  hTeO2Sxth232M1_001  = (TH1D*)fSurface->Get("hTeO2Sxth232M1_001");
+  hTeO2Sxth232M1_01   = (TH1D*)fSurface->Get("hTeO2Sxth232M1_01");
+  hTeO2Sxth232M1_1    = (TH1D*)fSurface->Get("hTeO2Sxth232M1_1");
+  hTeO2Sxth232M1_10   = (TH1D*)fSurface->Get("hTeO2Sxth232M1_10");
+  hTeO2Sxu238M1_001   = (TH1D*)fSurface->Get("hTeO2Sxu238M1_001");
+  hTeO2Sxu238M1_01    = (TH1D*)fSurface->Get("hTeO2Sxu238M1_01");
+  hTeO2Sxu238M1_1     = (TH1D*)fSurface->Get("hTeO2Sxu238M1_1");
+  hTeO2Sxu238M1_10    = (TH1D*)fSurface->Get("hTeO2Sxu238M1_10");
 
-  hTeO2Sxu238M1_100    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M1_100");
-  hTeO2Sxth232M1_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232M1_100");
-  hTeO2Sxpb210M1_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M1_100");
+  hTeO2Sxu238M1_100    = (TH1D*)fSurface->Get("hTeO2Sxu238M1_100");
+  hTeO2Sxth232M1_100   = (TH1D*)fSurface->Get("hTeO2Sxth232M1_100");
+  hTeO2Sxpb210M1_100   = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_100");
 
-  hTeO2Sxth232onlyM1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM1_001");
-  hTeO2Sxra228pb208M1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M1_001");
-  hTeO2Sxu238th230M1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M1_001");
-  hTeO2Sxth230onlyM1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM1_001");
-  hTeO2Sxra226pb210M1_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M1_001");
-  hTeO2Sxpb210M1_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M1_0001");
+  hTeO2Sxth232onlyM1_001 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM1_001");
+  hTeO2Sxra228pb208M1_001 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M1_001");
+  hTeO2Sxu238th230M1_001 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M1_001");
+  hTeO2Sxth230onlyM1_001 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM1_001");
+  hTeO2Sxra226pb210M1_001 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M1_001");
+  hTeO2Sxpb210M1_0001 = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_0001");
 
-  hTeO2Sxth232onlyM1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM1_01");
-  hTeO2Sxra228pb208M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M1_01");
-  hTeO2Sxu238th230M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M1_01");
-  hTeO2Sxth230onlyM1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM1_01");
-  hTeO2Sxra226pb210M1_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M1_01");
+  hTeO2Sxth232onlyM1_01 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM1_01");
+  hTeO2Sxra228pb208M1_01 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M1_01");
+  hTeO2Sxu238th230M1_01 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M1_01");
+  hTeO2Sxth230onlyM1_01 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM1_01");
+  hTeO2Sxra226pb210M1_01 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M1_01");
 
-  hTeO2Sxth232onlyM1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM1_0001");
-  hTeO2Sxra228pb208M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M1_0001");
-  hTeO2Sxu238th230M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M1_0001");
-  hTeO2Sxth230onlyM1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM1_0001");
-  hTeO2Sxra226pb210M1_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M1_0001");
+  hTeO2Sxth232onlyM1_0001 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM1_0001");
+  hTeO2Sxra228pb208M1_0001 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M1_0001");
+  hTeO2Sxu238th230M1_0001 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M1_0001");
+  hTeO2Sxth230onlyM1_0001 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM1_0001");
+  hTeO2Sxra226pb210M1_0001 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M1_0001");
 
-  // hTeO2Spb210M2_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M2_01");
-  // hTeO2Spo210M2_001   = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2_001");
-  // hTeO2Spo210M2_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2_01");
-  // hTeO2Sth232M2_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sth232M2_01");
-  // hTeO2Su238M2_01     = (TH1D*)fSurfaceCrystal->Get("hTeO2Su238M2_01");
-  hTeO2Sxpb210M2_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_001");
-  hTeO2Sxpb210M2_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_01");
-  hTeO2Sxpb210M2_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_1");
-  hTeO2Sxpb210M2_10   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_10");
-  hTeO2Sxpo210M2_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M2_001");
-  hTeO2Sxpo210M2_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M2_01");
-  hTeO2Sxpo210M2_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpo210M2_1");
-  hTeO2Sxth232M2_001  = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2_001");
-  hTeO2Sxth232M2_01   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2_01");
-  hTeO2Sxth232M2_1    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2_1");
-  hTeO2Sxth232M2_10   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232M2_10");
-  hTeO2Sxu238M2_001   = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_001");
-  hTeO2Sxu238M2_01    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_01");
-  hTeO2Sxu238M2_1     = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_1");
-  hTeO2Sxu238M2_10    = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238M2_10");
+  hTeO2Sxpb210M2_001  = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_001");
+  hTeO2Sxpb210M2_01   = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_01");
+  hTeO2Sxpb210M2_1    = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_1");
+  hTeO2Sxpb210M2_10   = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_10");
+  hTeO2Sxpo210M2_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_001");
+  hTeO2Sxpo210M2_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_01");
+  hTeO2Sxpo210M2_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_1");
+  hTeO2Sxth232M2_001  = (TH1D*)fSurface->Get("hTeO2Sxth232M2_001");
+  hTeO2Sxth232M2_01   = (TH1D*)fSurface->Get("hTeO2Sxth232M2_01");
+  hTeO2Sxth232M2_1    = (TH1D*)fSurface->Get("hTeO2Sxth232M2_1");
+  hTeO2Sxth232M2_10   = (TH1D*)fSurface->Get("hTeO2Sxth232M2_10");
+  hTeO2Sxu238M2_001   = (TH1D*)fSurface->Get("hTeO2Sxu238M2_001");
+  hTeO2Sxu238M2_01    = (TH1D*)fSurface->Get("hTeO2Sxu238M2_01");
+  hTeO2Sxu238M2_1     = (TH1D*)fSurface->Get("hTeO2Sxu238M2_1");
+  hTeO2Sxu238M2_10    = (TH1D*)fSurface->Get("hTeO2Sxu238M2_10");
 
-  hTeO2Sxu238M2_100    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238M2_100");
-  hTeO2Sxth232M2_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232M2_100");
-  hTeO2Sxpb210M2_100   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2_100");
+  hTeO2Sxu238M2_100    = (TH1D*)fSurface->Get("hTeO2Sxu238M2_100");
+  hTeO2Sxth232M2_100   = (TH1D*)fSurface->Get("hTeO2Sxth232M2_100");
+  hTeO2Sxpb210M2_100   = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_100");
 
-  hTeO2Sxth232onlyM2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth232onlyM2_001");
-  hTeO2Sxra228pb208M2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra228pb208M2_001");
-  hTeO2Sxu238th230M2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxu238th230M2_001");
-  hTeO2Sxth230onlyM2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxth230onlyM2_001");
-  hTeO2Sxra226pb210M2_001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxra226pb210M2_001");
-  hTeO2Sxpb210M2_0001 = (TH1D*)fSurfaceCrystalOld->Get("hTeO2Sxpb210M2_0001");
+  hTeO2Sxth232onlyM2_001 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM2_001");
+  hTeO2Sxra228pb208M2_001 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M2_001");
+  hTeO2Sxu238th230M2_001 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M2_001");
+  hTeO2Sxth230onlyM2_001 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM2_001");
+  hTeO2Sxra226pb210M2_001 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M2_001");
+  hTeO2Sxpb210M2_0001 = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_0001");
 
-  hTeO2Sxth232onlyM2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2_01");
-  hTeO2Sxra228pb208M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2_01");
-  hTeO2Sxu238th230M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2_01");
-  hTeO2Sxth230onlyM2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2_01");
-  hTeO2Sxra226pb210M2_01 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2_01");
+  hTeO2Sxth232onlyM2_01 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM2_01");
+  hTeO2Sxra228pb208M2_01 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M2_01");
+  hTeO2Sxu238th230M2_01 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M2_01");
+  hTeO2Sxth230onlyM2_01 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM2_01");
+  hTeO2Sxra226pb210M2_01 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M2_01");
 
-  hTeO2Sxth232onlyM2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth232onlyM2_0001");
-  hTeO2Sxra228pb208M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra228pb208M2_0001");
-  hTeO2Sxu238th230M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxu238th230M2_0001");
-  hTeO2Sxth230onlyM2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxth230onlyM2_0001");
-  hTeO2Sxra226pb210M2_0001 = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxra226pb210M2_0001");
+  hTeO2Sxth232onlyM2_0001 = (TH1D*)fSurface->Get("hTeO2Sxth232onlyM2_0001");
+  hTeO2Sxra228pb208M2_0001 = (TH1D*)fSurface->Get("hTeO2Sxra228pb208M2_0001");
+  hTeO2Sxu238th230M2_0001 = (TH1D*)fSurface->Get("hTeO2Sxu238th230M2_0001");
+  hTeO2Sxth230onlyM2_0001 = (TH1D*)fSurface->Get("hTeO2Sxth230onlyM2_0001");
+  hTeO2Sxra226pb210M2_0001 = (TH1D*)fSurface->Get("hTeO2Sxra226pb210M2_0001");
 
-  // hTeO2Spb210M2Sum_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spb210M2Sum_01");
-  // hTeO2Spo210M2Sum_001   = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2Sum_001");
-  // hTeO2Spo210M2Sum_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Spo210M2Sum_01");
-  // hTeO2Sth232M2Sum_01    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sth232M2Sum_01");
-  // hTeO2Su238M2Sum_01     = (TH1D*)fSurfaceCrystal->Get("hTeO2Su238M2Sum_01");
   hTeO2Sxpb210M2Sum_001  = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_001");
   hTeO2Sxpb210M2Sum_01   = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_01");
   hTeO2Sxpb210M2Sum_1    = (TH1D*)fSurfaceCrystal->Get("hTeO2Sxpb210M2Sum_1");
@@ -2257,54 +2238,54 @@ void TBackgroundModel::Initialize()
 
 /////// CuBox + CuFrame
 
-  hCuBox_CuFrameth232M1_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_10");
-  hCuBox_CuFrameu238M1_10 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_10");
-  hCuBox_CuFramepb210M1_10 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_10");
-  hCuBox_CuFramepb210M1_1 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_1");
-  hCuBox_CuFramepb210M1_01 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_01");
-  hCuBox_CuFramepb210M1_001 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_001");
+  hCuBox_CuFrameth232M1_10 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_10");
+  hCuBox_CuFrameu238M1_10 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_10");
+  hCuBox_CuFramepb210M1_10 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_10");
+  hCuBox_CuFramepb210M1_1 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_1");
+  hCuBox_CuFramepb210M1_01 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_01");
+  hCuBox_CuFramepb210M1_001 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_001");
 
-  hCuBox_CuFrameth232M1_1 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_1");
-  hCuBox_CuFrameu238M1_1 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_1");
-  hCuBox_CuFrameth232M1_01 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_01");
-  hCuBox_CuFrameu238M1_01 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_01");
-  hCuBox_CuFrameth232M1_001 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_001");
-  hCuBox_CuFrameu238M1_001 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_001");  
+  hCuBox_CuFrameth232M1_1 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_1");
+  hCuBox_CuFrameu238M1_1 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_1");
+  hCuBox_CuFrameth232M1_01 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_01");
+  hCuBox_CuFrameu238M1_01 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_01");
+  hCuBox_CuFrameth232M1_001 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_001");
+  hCuBox_CuFrameu238M1_001 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_001");  
 
 
-  hCuBox_CuFrameth232M1_100 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_100");
-  hCuBox_CuFrameu238M1_100 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_100");
-  hCuBox_CuFramepb210M1_100 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_100");
-  hCuBox_CuFrameth232M1_50 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_50");
-  hCuBox_CuFrameu238M1_50 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_50");
-  hCuBox_CuFramepb210M1_50 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_50");
-  hCuBox_CuFrameth232M1_5 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M1_5");
-  hCuBox_CuFrameu238M1_5 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M1_5");
-  hCuBox_CuFramepb210M1_5 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M1_5");
+  hCuBox_CuFrameth232M1_100 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_100");
+  hCuBox_CuFrameu238M1_100 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_100");
+  hCuBox_CuFramepb210M1_100 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_100");
+  hCuBox_CuFrameth232M1_50 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_50");
+  hCuBox_CuFrameu238M1_50 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_50");
+  hCuBox_CuFramepb210M1_50 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_50");
+  hCuBox_CuFrameth232M1_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M1_5");
+  hCuBox_CuFrameu238M1_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M1_5");
+  hCuBox_CuFramepb210M1_5 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M1_5");
 
-  hCuBox_CuFrameth232M2_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_10");
-  hCuBox_CuFrameu238M2_10 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_10");
-  hCuBox_CuFramepb210M2_10 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_10");
-  hCuBox_CuFramepb210M2_1 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_1");
-  hCuBox_CuFramepb210M2_01 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_01");
-  hCuBox_CuFramepb210M2_001 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_001");
+  hCuBox_CuFrameth232M2_10 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_10");
+  hCuBox_CuFrameu238M2_10 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_10");
+  hCuBox_CuFramepb210M2_10 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_10");
+  hCuBox_CuFramepb210M2_1 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_1");
+  hCuBox_CuFramepb210M2_01 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_01");
+  hCuBox_CuFramepb210M2_001 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_001");
 
-  hCuBox_CuFrameth232M2_1 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_1");
-  hCuBox_CuFrameu238M2_1 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_1");
-  hCuBox_CuFrameth232M2_01 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_01");
-  hCuBox_CuFrameu238M2_01 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_01");
-  hCuBox_CuFrameth232M2_001 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_001");
-  hCuBox_CuFrameu238M2_001 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_001"); 
+  hCuBox_CuFrameth232M2_1 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_1");
+  hCuBox_CuFrameu238M2_1 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_1");
+  hCuBox_CuFrameth232M2_01 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_01");
+  hCuBox_CuFrameu238M2_01 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_01");
+  hCuBox_CuFrameth232M2_001 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_001");
+  hCuBox_CuFrameu238M2_001 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_001"); 
 
-  hCuBox_CuFrameth232M2_100 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_100");
-  hCuBox_CuFrameu238M2_100 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_100");
-  hCuBox_CuFramepb210M2_100 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_100");
-  hCuBox_CuFrameth232M2_50 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_50");
-  hCuBox_CuFrameu238M2_50 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_50");
-  hCuBox_CuFramepb210M2_50 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_50");
-  hCuBox_CuFrameth232M2_5 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2_5");
-  hCuBox_CuFrameu238M2_5 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFrameu238M2_5");
-  hCuBox_CuFramepb210M2_5 = (TH1D*)fSurfaceOtherOld->Get("hCuBox_CuFramepb210M2_5");
+  hCuBox_CuFrameth232M2_100 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_100");
+  hCuBox_CuFrameu238M2_100 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_100");
+  hCuBox_CuFramepb210M2_100 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_100");
+  hCuBox_CuFrameth232M2_50 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_50");
+  hCuBox_CuFrameu238M2_50 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_50");
+  hCuBox_CuFramepb210M2_50 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_50");
+  hCuBox_CuFrameth232M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_5");
+  hCuBox_CuFrameu238M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_5");
+  hCuBox_CuFramepb210M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_5");
 
   hCuBox_CuFrameth232M2Sum_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameth232M2Sum_10");
   hCuBox_CuFrameu238M2Sum_10 = (TH1D*)fSurfaceOther->Get("hCuBox_CuFrameu238M2Sum_10");
@@ -2349,11 +2330,6 @@ void TBackgroundModel::Initialize()
   hnewTeO2u238th230M1 = hTeO2u238th230M1->Rebin(dAdaptiveBinsM1, "hnewTeO2u238th230M1", dAdaptiveArrayM1);
   hnewTeO2ra226pb210M1 = hTeO2ra226pb210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2ra226pb210M1", dAdaptiveArrayM1);
 
-  // hnewTeO2Spb210M1_01 = hTeO2Spb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spb210M1_01", dAdaptiveArrayM1);
-  // hnewTeO2Spo210M1_001 = hTeO2Spo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_001", dAdaptiveArrayM1);
-  // hnewTeO2Spo210M1_01 = hTeO2Spo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Spo210M1_01", dAdaptiveArrayM1);
-  // hnewTeO2Sth232M1_01 = hTeO2Sth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sth232M1_01", dAdaptiveArrayM1);
-  // hnewTeO2Su238M1_01 = hTeO2Su238M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Su238M1_01", dAdaptiveArrayM1);
   hnewTeO2Sxpb210M1_001 = hTeO2Sxpb210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_001", dAdaptiveArrayM1);
   hnewTeO2Sxpb210M1_01 = hTeO2Sxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_01", dAdaptiveArrayM1);
   hnewTeO2Sxpb210M1_1 = hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
@@ -2415,11 +2391,6 @@ void TBackgroundModel::Initialize()
   hnewTeO2u238th230M2 = hTeO2u238th230M2->Rebin(dAdaptiveBinsM2, "hnewTeO2u238th230M2", dAdaptiveArrayM2);
   hnewTeO2ra226pb210M2 = hTeO2ra226pb210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2ra226pb210M2", dAdaptiveArrayM2);
 
-  // hnewTeO2Spb210M2_01 = hTeO2Spb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spb210M2_01", dAdaptiveArrayM2);
-  // hnewTeO2Spo210M2_001 = hTeO2Spo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_001", dAdaptiveArrayM2);
-  // hnewTeO2Spo210M2_01 = hTeO2Spo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Spo210M2_01", dAdaptiveArrayM2);
-  // hnewTeO2Sth232M2_01 = hTeO2Sth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sth232M2_01", dAdaptiveArrayM2);
-  // hnewTeO2Su238M2_01 = hTeO2Su238M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Su238M2_01", dAdaptiveArrayM2);
   hnewTeO2Sxpb210M2_001 = hTeO2Sxpb210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_001", dAdaptiveArrayM2);
   hnewTeO2Sxpb210M2_01 = hTeO2Sxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_01", dAdaptiveArrayM2);
   hnewTeO2Sxpb210M2_1 = hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
@@ -2479,11 +2450,6 @@ void TBackgroundModel::Initialize()
   hnewTeO2u238th230M2Sum = hTeO2u238th230M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2u238th230M2Sum", dAdaptiveArrayM2Sum);
   hnewTeO2ra226pb210M2Sum = hTeO2ra226pb210M2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2ra226pb210M2Sum", dAdaptiveArrayM2Sum);
 
-  // hnewTeO2Spb210M2Sum_01 = hTeO2Spb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spb210M2Sum_01", dAdaptiveArrayM2Sum);
-  // hnewTeO2Spo210M2Sum_001 = hTeO2Spo210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_001", dAdaptiveArrayM2Sum);
-  // hnewTeO2Spo210M2Sum_01 = hTeO2Spo210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Spo210M2Sum_01", dAdaptiveArrayM2Sum);
-  // hnewTeO2Sth232M2Sum_01 = hTeO2Sth232M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sth232M2Sum_01", dAdaptiveArrayM2Sum);
-  // hnewTeO2Su238M2Sum_01 = hTeO2Su238M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Su238M2Sum_01", dAdaptiveArrayM2Sum);
   hnewTeO2Sxpb210M2Sum_001 = hTeO2Sxpb210M2Sum_001->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_001", dAdaptiveArrayM2Sum);
   hnewTeO2Sxpb210M2Sum_01 = hTeO2Sxpb210M2Sum_01->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_01", dAdaptiveArrayM2Sum);
   hnewTeO2Sxpb210M2Sum_1 = hTeO2Sxpb210M2Sum_1->Rebin(dAdaptiveBinsM2Sum, "hnewTeO2Sxpb210M2Sum_1", dAdaptiveArrayM2Sum);
@@ -2736,11 +2702,6 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxth230onlyM1_0001->SetBinContent(i, hnewTeO2Sxth230onlyM1_0001->GetBinContent(i)/hnewTeO2Sxth230onlyM1_0001->GetBinWidth(i));
     hAdapTeO2Sxra226pb210M1_0001->SetBinContent(i, hnewTeO2Sxra226pb210M1_0001->GetBinContent(i)/hnewTeO2Sxra226pb210M1_0001->GetBinWidth(i));
 
-    // hAdapTeO2Spb210M1_01->SetBinContent(i, hnewTeO2Spb210M1_01->GetBinContent(i)/hnewTeO2Spb210M1_01->GetBinWidth(i));
-    // hAdapTeO2Spo210M1_001->SetBinContent(i, hnewTeO2Spo210M1_001->GetBinContent(i)/hnewTeO2Spo210M1_001->GetBinWidth(i));
-    // hAdapTeO2Spo210M1_01->SetBinContent(i, hnewTeO2Spo210M1_01->GetBinContent(i)/hnewTeO2Spo210M1_01->GetBinWidth(i));
-    // hAdapTeO2Sth232M1_01->SetBinContent(i, hnewTeO2Sth232M1_01->GetBinContent(i)/hnewTeO2Sth232M1_01->GetBinWidth(i));
-    // hAdapTeO2Su238M1_01->SetBinContent(i, hnewTeO2Su238M1_01->GetBinContent(i)/hnewTeO2Su238M1_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_001->SetBinContent(i, hnewTeO2Sxpb210M1_001->GetBinContent(i)/hnewTeO2Sxpb210M1_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_01->SetBinContent(i, hnewTeO2Sxpb210M1_01->GetBinContent(i)/hnewTeO2Sxpb210M1_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_1->SetBinContent(i, hnewTeO2Sxpb210M1_1->GetBinContent(i)/hnewTeO2Sxpb210M1_1->GetBinWidth(i));
@@ -2835,11 +2796,6 @@ void TBackgroundModel::Initialize()
     // hAdapTeO2u234M2->SetBinContent(i, hnewTeO2u234M2->GetBinContent(i)/hnewTeO2u234M2->GetBinWidth(i));
     hAdapTeO2sb125M2->SetBinContent(i, hnewTeO2sb125M2->GetBinContent(i)/hnewTeO2sb125M2->GetBinWidth(i));
 
-    // hAdapTeO2Spb210M2_01->SetBinContent(i, hnewTeO2Spb210M2_01->GetBinContent(i)/hnewTeO2Spb210M2_01->GetBinWidth(i));
-    // hAdapTeO2Spo210M2_001->SetBinContent(i, hnewTeO2Spo210M2_001->GetBinContent(i)/hnewTeO2Spo210M2_001->GetBinWidth(i));
-    // hAdapTeO2Spo210M2_01->SetBinContent(i, hnewTeO2Spo210M2_01->GetBinContent(i)/hnewTeO2Spo210M2_01->GetBinWidth(i));
-    // hAdapTeO2Sth232M2_01->SetBinContent(i, hnewTeO2Sth232M2_01->GetBinContent(i)/hnewTeO2Sth232M2_01->GetBinWidth(i));
-    // hAdapTeO2Su238M2_01->SetBinContent(i, hnewTeO2Su238M2_01->GetBinContent(i)/hnewTeO2Su238M2_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_001->SetBinContent(i, hnewTeO2Sxpb210M2_001->GetBinContent(i)/hnewTeO2Sxpb210M2_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_01->SetBinContent(i, hnewTeO2Sxpb210M2_01->GetBinContent(i)/hnewTeO2Sxpb210M2_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_1->SetBinContent(i, hnewTeO2Sxpb210M2_1->GetBinContent(i)/hnewTeO2Sxpb210M2_1->GetBinWidth(i));
@@ -2959,11 +2915,6 @@ void TBackgroundModel::Initialize()
     // hAdapTeO2th230M2Sum->SetBinContent(i, hnewTeO2th230M2Sum->GetBinContent(i)/hnewTeO2th230M2Sum->GetBinWidth(i));
     // hAdapTeO2u234M2Sum->SetBinContent(i, hnewTeO2u234M2Sum->GetBinContent(i)/hnewTeO2u234M2Sum->GetBinWidth(i));
 
-    // hAdapTeO2Spb210M2Sum_01->SetBinContent(i, hnewTeO2Spb210M2Sum_01->GetBinContent(i)/hnewTeO2Spb210M2Sum_01->GetBinWidth(i));
-    // hAdapTeO2Spo210M2Sum_001->SetBinContent(i, hnewTeO2Spo210M2Sum_001->GetBinContent(i)/hnewTeO2Spo210M2Sum_001->GetBinWidth(i));
-    // hAdapTeO2Spo210M2Sum_01->SetBinContent(i, hnewTeO2Spo210M2Sum_01->GetBinContent(i)/hnewTeO2Spo210M2Sum_01->GetBinWidth(i));
-    // hAdapTeO2Sth232M2Sum_01->SetBinContent(i, hnewTeO2Sth232M2Sum_01->GetBinContent(i)/hnewTeO2Sth232M2Sum_01->GetBinWidth(i));
-    // hAdapTeO2Su238M2Sum_01->SetBinContent(i, hnewTeO2Su238M2Sum_01->GetBinContent(i)/hnewTeO2Su238M2Sum_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M2Sum_001->SetBinContent(i, hnewTeO2Sxpb210M2Sum_001->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_001->GetBinWidth(i));
     hAdapTeO2Sxpb210M2Sum_01->SetBinContent(i, hnewTeO2Sxpb210M2Sum_01->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M2Sum_1->SetBinContent(i, hnewTeO2Sxpb210M2Sum_1->GetBinContent(i)/hnewTeO2Sxpb210M2Sum_1->GetBinWidth(i));

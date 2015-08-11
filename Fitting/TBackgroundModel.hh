@@ -1332,6 +1332,9 @@ private:
 	std::vector<double> 	fInitValues;
 	std::vector<double> 	fInitValues2;
 
+	TFile *fBulk;
+	TFile *fSurface;
+
 	TFile *fBulkInner;
 	TFile *fBulkInnerOld;
 	TFile *fBulkInnerM2Sum;
