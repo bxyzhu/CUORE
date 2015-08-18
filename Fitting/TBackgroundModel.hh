@@ -1295,7 +1295,7 @@ private:
 
 
 ////////// Fudge Factor Models
-	TH1 		*hnewOVC804M1;
+	TH1 		*hnejuwOVC804M1;
 	TH1 		*hnewOVC835M1;
 	TH1 		*hnewOVC1063M1;
 

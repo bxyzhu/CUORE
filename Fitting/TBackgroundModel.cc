@@ -3195,11 +3195,17 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[27] = new TBkgModelParameter( "OVC 1063", 27, 5.20414e-03, 1E-7, 0, 1.0, hAdapOVC1063M1 , hAdapOVC1063M2 ); 
 
 
-  // bFixedArray[1] = true;
+  bFixedArray[1] = true;
 
   // bFixedArray[7] = true;
   // bFixedArray[8] = true;
   // bFixedArray[9] = true;
+  
+  for(int i = 4; i < 18; i ++)
+  {
+    bFixedArray[i] = true;
+  }
+
 
   // for(int i = 37; i < 59; i ++)
   // {
@@ -4278,7 +4284,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
     for(int i = 0; i < dNParam; i++)
     {
       fSaveResult->Add( BkgPar[i]->GetHistM1() );
-      fSaveResult->Add( BkgPar[i]->GetHistM1() );
+      fSaveResult->Add( BkgPar[i]->GetHistM2() );
     
     }
     // fSaveResult->Add(&mCorrMatrix);
