@@ -1025,8 +1025,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   // DoTheFitAdaptive();
 
   // Try it out
-  ProfileNLL();
-  // ProfileNLL2D(0,0,0);
+  // ProfileNLL();
+  ProfileNLL2D();
   // Number of Toy fits
   if(bToyData)ToyFit(1);
 
@@ -4324,13 +4324,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 */
 
-  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  for(int i = 0; i < dNParam; i++)
-  {
-    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  }
-
   return true;
 }
 
@@ -4387,6 +4380,13 @@ void TBackgroundModel::ProfileNLL()
   // Do the fit normally once first
   DoTheFitAdaptive();
 
+  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
+  for(int i = 0; i < dNParam; i++)
+  {
+    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  }
+
   // Fix 2nbb value now
   bFixedArray[0] = true;
   // minuit->FixParameter(0);
@@ -4419,6 +4419,14 @@ void TBackgroundModel::ProfileNLL()
     // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
     OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
 
+    // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
+    for(int i = 0; i < dNParam; i++)
+    {
+      BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+      BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+    }
+
+
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
 
@@ -4438,19 +4446,27 @@ void TBackgroundModel::ProfileNLL()
   OutPNLL.close();
 }
 
-void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq)
+void TBackgroundModel::ProfileNLL2D()
 {
   // dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   
   // Do the fit normally once first
-  DoTheFitAdaptive(0,8.48360e-02);
+  DoTheFitAdaptive();
+
+  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
+  for(int i = 0; i < dNParam; i++)
+  {
+    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  }
+
+  // Fix 2nbb value and TeO2 K-40 value
+  bFixedArray[0] = true;
+  bFixedArray[1] = true;
+
   dBestChiSq = dChiSquare;
 
-  // Fix 2nbb value now
-  minuit->FixParameter(0); 
-  // Fix for OVC K40  
-  minuit->FixParameter(19);
 
   nLoop = 0;
   for(int i = -5; i < 5; i++)
@@ -4459,11 +4475,11 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   }
   for(int j = -5; j < 5; j++)
   {
-    fInitValues2.push_back(fParameters[19] + fParameters[19]/75*j);
+    fInitValues2.push_back(fParameters[1] + fParameters[1]/75*j);
   }
 
 
-  OutPNLL.open(Form("%s/FitResults/ProfileNLL/ProfileNLL2D_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+  OutPNLL.open(Form("%s/Results/ProfileNLL2D_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
   OutPNLL << "{" << endl;
   OutPNLL << "vector<double> dX;" << endl;
   OutPNLL << "vector<double> dY;" << endl;
@@ -4474,9 +4490,18 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
     for(std::vector<double>::const_iterator iter2 = fInitValues2.begin(); iter2 != fInitValues2.end(); iter2++)
     {
     cout << "Step: " << *iter << " " << *iter2 << endl;    
-    DoTheFitAdaptive(*iter, *iter2);
+    BkgPar[0]->SetInitValue(*iter);
+    BkgPar[1]->SetInitValue(*iter2);
+
+    DoTheFitAdaptive();
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
+
+    for(int i = 0; i < dNParam; i++)
+    {
+      BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+      BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+    }
 
     nLoop++; // This is purely for file names and to keep track of number of loops
     }
@@ -4492,7 +4517,7 @@ void TBackgroundModel::ProfileNLL2D(double fBestFitInit, double fBestFitInit2, d
   OutPNLL << "g1->SetLineWidth(2);" << endl;
   OutPNLL << "g1->SetTitle(\"2#nu#beta#beta 2D Profile Negative Log-Likelihood\");" << endl;
   OutPNLL << "g1->GetZaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"OVC K-40\");" << endl;
+  OutPNLL << "g1->GetYaxis()->SetTitle(\"TeO2 K-40\");" << endl;
   OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
   // OutPNLL << "g1->Draw(\"surf1\");" << endl;
   OutPNLL << endl;

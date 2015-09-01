@@ -64,7 +64,7 @@ public:
 
 	void ProfileNLL();
 
-	void ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq);
+	void ProfileNLL2D();
 
 	void ResetParameters();
 
