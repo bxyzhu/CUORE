@@ -1022,10 +1022,10 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   nLoop = 0;
 
   GenerateParameters();
-  DoTheFitAdaptive();
+  // DoTheFitAdaptive();
 
   // Try it out
-  // ProfileNLL();
+  ProfileNLL();
   // ProfileNLL2D(0,0,0);
   // Number of Toy fits
   if(bToyData)ToyFit(1);
@@ -3879,7 +3879,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 */
 
 
-
+/*
 
   TCanvas *CanvasM1 = new TCanvas("CanvasM1", "CanvasM1", 1200, 1000);
   CanvasM1->SetLogy();
@@ -3933,6 +3933,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM2->Draw();
 
+*/
 
 /*
   TCanvas *cResidual2Sum = new TCanvas("cResidual2Sum", "cResidual2Sum", 1200, 800);
@@ -3953,6 +3954,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hResidualDistM2Sum->Draw();
 */
 
+/*
   TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
   cres1->Divide(2,1);
   cres1->cd(1);
@@ -3984,7 +3986,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   dResidualRMSM1 = TMath::Sqrt(dResidualRMSM1/(dFitMaxBinM1-dFitMinBinM1));
   dResidualRMSM2 = TMath::Sqrt(dResidualRMSM2/(dFitMaxBinM2-dFitMinBinM2));
   // dResidualRMSM2Sum = TMath::Sqrt(dResidualRMSM2Sum/(dFitMaxBinM2Sum-dFitMinBinM2Sum));
-
+*/
 
   //
   double dROIRange = fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) - fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2470)); 
@@ -4061,6 +4063,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 */
 
 
+/*
   // Correlation Matrix section
   TMatrixT<double> mCorrMatrix;
   mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
@@ -4319,7 +4322,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
     // fSaveResult->Close();
   } // end bSave
 
+*/
 
+  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
+  for(int i = 0; i < dNParam; i++)
+  {
+    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  }
 
   return true;
 }
@@ -4384,8 +4394,8 @@ void TBackgroundModel::ProfileNLL()
   dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  // for(int i = -25; i < 30; i++)
-  for(int i = -5; i < 5; i++)  
+  for(int i = -25; i < 30; i++)
+  // for(int i = -5; i < 5; i++)  
   {
     fInitValues.push_back(fParameters[0] + fParameters[0]/100*i );
     cout << "Input initial value: " << fParameters[0] + fParameters[0]/100*i << endl;
