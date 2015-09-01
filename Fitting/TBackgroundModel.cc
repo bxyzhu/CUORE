@@ -1954,8 +1954,8 @@ void TBackgroundModel::Initialize()
   hTeO20nuM1     = (TH1D*)fBulk->Get("hTeO20nuM1");
   hTeO22nuM1     = (TH1D*)fBulk->Get("hTeO22nuM1");
   hTeO2co60M1    = (TH1D*)fBulk->Get("hTeO2co60M1");
-  // hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
-  hTeO2k40M1     = (TH1D*)fBulk_CDR->Get("hTeO2k40M1");
+  hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
+  // hTeO2k40M1     = (TH1D*)fBulk_CDR->Get("hTeO2k40M1");
   hTeO2pb210M1   = (TH1D*)fBulk->Get("hTeO2pb210M1");
   hTeO2po210M1   = (TH1D*)fBulk->Get("hTeO2po210M1");
   hTeO2te125M1   = (TH1D*)fBulk->Get("hTeO2te125M1");
@@ -1966,8 +1966,8 @@ void TBackgroundModel::Initialize()
   hTeO2u238M1    = (TH1D*)fBulk->Get("hTeO2u238M1");
   // hTeO2th230M1   = (TH1D*)fBulk->Get("hTeO2th230M1");
   // hTeO2u234M1    = (TH1D*)fBulk->Get("hTeO2u234M1");
-  // hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
-  hTeO2sb125M1   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M1");
+  hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
+  // hTeO2sb125M1   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M1");
 
   hTeO2th232onlyM1 = (TH1D*)fBulk->Get("hTeO2th232onlyM1");
   hTeO2ra228pb208M1 = (TH1D*)fBulk->Get("hTeO2ra228pb208M1");
@@ -1978,8 +1978,8 @@ void TBackgroundModel::Initialize()
   hTeO20nuM2     = (TH1D*)fBulk->Get("hTeO20nuM2");
   hTeO22nuM2     = (TH1D*)fBulk->Get("hTeO22nuM2");
   hTeO2co60M2    = (TH1D*)fBulk->Get("hTeO2co60M2");
-  // hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
-  hTeO2k40M2     = (TH1D*)fBulk_CDR->Get("hTeO2k40M2");
+  hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
+  // hTeO2k40M2     = (TH1D*)fBulk_CDR->Get("hTeO2k40M2");
   hTeO2pb210M2   = (TH1D*)fBulk->Get("hTeO2pb210M2");
   hTeO2po210M2   = (TH1D*)fBulk->Get("hTeO2po210M2");
   hTeO2te125M2   = (TH1D*)fBulk->Get("hTeO2te125M2");
@@ -1990,8 +1990,8 @@ void TBackgroundModel::Initialize()
   hTeO2u238M2    = (TH1D*)fBulk->Get("hTeO2u238M2");
   // hTeO2th230M2   = (TH1D*)fBulk->Get("hTeO2th230M2");
   // hTeO2u234M2    = (TH1D*)fBulk->Get("hTeO2u234M2");
-  // hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
-  hTeO2sb125M2   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M2");
+  hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
+  // hTeO2sb125M2   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M2");
 
   hTeO2th232onlyM2 = (TH1D*)fBulk->Get("hTeO2th232onlyM2");
   hTeO2ra228pb208M2 = (TH1D*)fBulk->Get("hTeO2ra228pb208M2");
@@ -2038,18 +2038,18 @@ void TBackgroundModel::Initialize()
 
 
 ///////// 50mK M1 and M2
-  // h50mKcs137M1   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M1");
-  // h50mKcs137M2   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M2");
-  h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("h50mKcs137M1");
-  h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("h50mKcs137M2");
+  h50mKcs137M1   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M1");
+  h50mKcs137M2   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M2");
+  // h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("h50mKcs137M1");
+  // h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("h50mKcs137M2");
 
   h50mKcs137M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h50mKcs137M2Sum");
 
 //////// Roman Lead M1 and M2
-  // hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
-  // hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
-  hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
-  hPbRomk40M2     = (TH1D*)fBulk_CDR->Get("hPbRomk40M2");
+  hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
+  hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
+  // hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
+  // hPbRomk40M2     = (TH1D*)fBulk_CDR->Get("hPbRomk40M2");
   hPbRomk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hPbRomk40M2Sum");
 
 
@@ -2089,25 +2089,25 @@ void TBackgroundModel::Initialize()
   hInternalu238M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalu238M2Sum");
 
 /////// OVC M1 and M2
-//   hOVCco60M1    = (TH1D*)fBulk->Get("hOVCco60M1");
-//   hOVCk40M1     = (TH1D*)fBulk->Get("hOVCk40M1");
-//   hOVCth232M1   = (TH1D*)fBulk->Get("hOVCth232M1");
-//   hOVCu238M1    = (TH1D*)fBulk->Get("hOVCu238M1");
+  hOVCco60M1    = (TH1D*)fBulk->Get("hOVCco60M1");
+  hOVCk40M1     = (TH1D*)fBulk->Get("hOVCk40M1");
+  hOVCth232M1   = (TH1D*)fBulk->Get("hOVCth232M1");
+  hOVCu238M1    = (TH1D*)fBulk->Get("hOVCu238M1");
    
-//   hOVCco60M2    = (TH1D*)fBulk->Get("hOVCco60M2");
-//   hOVCk40M2     = (TH1D*)fBulk->Get("hOVCk40M2");
-//   hOVCth232M2   = (TH1D*)fBulk->Get("hOVCth232M2");
-//   hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
+  hOVCco60M2    = (TH1D*)fBulk->Get("hOVCco60M2");
+  hOVCk40M2     = (TH1D*)fBulk->Get("hOVCk40M2");
+  hOVCth232M2   = (TH1D*)fBulk->Get("hOVCth232M2");
+  hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
 
-  hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
-  hOVCk40M1     = (TH1D*)fBulk_CDR->Get("hOVCk40M1");
-  hOVCth232M1   = (TH1D*)fBulk_CDR->Get("hOVCth232M1");
-  hOVCu238M1    = (TH1D*)fBulk_CDR->Get("hOVCu238M1");
+  // hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
+  // hOVCk40M1     = (TH1D*)fBulk_CDR->Get("hOVCk40M1");
+  // hOVCth232M1   = (TH1D*)fBulk_CDR->Get("hOVCth232M1");
+  // hOVCu238M1    = (TH1D*)fBulk_CDR->Get("hOVCu238M1");
    
-  hOVCco60M2    = (TH1D*)fBulk_CDR->Get("hOVCco60M2");
-  hOVCk40M2     = (TH1D*)fBulk_CDR->Get("hOVCk40M2");
-  hOVCth232M2   = (TH1D*)fBulk_CDR->Get("hOVCth232M2");
-  hOVCu238M2    = (TH1D*)fBulk_CDR->Get("hOVCu238M2");
+  // hOVCco60M2    = (TH1D*)fBulk_CDR->Get("hOVCco60M2");
+  // hOVCk40M2     = (TH1D*)fBulk_CDR->Get("hOVCk40M2");
+  // hOVCth232M2   = (TH1D*)fBulk_CDR->Get("hOVCth232M2");
+  // hOVCu238M2    = (TH1D*)fBulk_CDR->Get("hOVCu238M2");
 
   hOVCco60M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hOVCco60M2Sum");
   hOVCk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hOVCk40M2Sum");
@@ -3211,7 +3211,7 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[26] = new TBkgModelParameter( "OVC 835", 26, 2.69330e-03, 1E-7, 0, 1.0, hAdapOVC835M1 , hAdapOVC835M2 );
   BkgPar[27] = new TBkgModelParameter( "OVC 1063", 27, 5.20414e-03, 1E-7, 0, 1.0, hAdapOVC1063M1 , hAdapOVC1063M2 ); 
 
-
+  // bFixedArray[0] = true;
   // bFixedArray[1] = true;
 
   // bFixedArray[7] = true;
@@ -4375,22 +4375,24 @@ void TBackgroundModel::SanityCheck()
 void TBackgroundModel::ProfileNLL()
 {
   // Do the fit normally once first
-  DoTheFitAdaptive(0,0);
+  DoTheFitAdaptive();
 
   // Fix 2nbb value now
-  minuit->FixParameter(0);
+  bFixedArray[0] = true;
+  // minuit->FixParameter(0);
   
   dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  for(int i = -25; i < 30; i++)
+  // for(int i = -25; i < 30; i++)
+  for(int i = -5; i < 5; i++)  
   {
-    fInitValues.push_back(fParameters[0] + fParameters[0]/100*i);
+    fInitValues.push_back(fParameters[0] + fParameters[0]/100*i );
+    cout << "Input initial value: " << fParameters[0] + fParameters[0]/100*i << endl;
   }
 
 
-
-  OutPNLL.open(Form("%s/FitResults/ProfileNLL/ProfileNLL_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+  OutPNLL.open(Form("%s/Results/ProfileNLL_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
   OutPNLL << "{" << endl;
   OutPNLL << "vector<double> dX;" << endl;
   OutPNLL << "vector<double> dT;" << endl;
@@ -4398,11 +4400,14 @@ void TBackgroundModel::ProfileNLL()
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
     // cout << "Loop: " << nLoop << endl;
-    DoTheFitAdaptive(*iter, 0);
-    // LatexResultTable(*iter);
+    // Set new initial value and repeat fit
+
+    BkgPar[0]->SetInitValue(*iter);
+    DoTheFitAdaptive();
+
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
-    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fModelTotAdap2NDBDM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + fModelTotAdap2NDBDM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
 
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
