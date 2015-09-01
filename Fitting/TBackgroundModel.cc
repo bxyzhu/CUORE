@@ -1025,7 +1025,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   DoTheFitAdaptive();
 
   // Try it out
-  // ProfileNLL(0,0);
+  // ProfileNLL();
   // ProfileNLL2D(0,0,0);
   // Number of Toy fits
   if(bToyData)ToyFit(1);
@@ -1941,8 +1941,7 @@ void TBackgroundModel::Initialize()
 
   fBulk = new TFile(Form("%s/MCProduction_Bulk_1keV.root", dMCDir.c_str()));
   fSurface = new TFile(Form("%s/MCProduction_Surface_1keV.root", dMCDir.c_str()));
-
-
+  fBulk_CDR = new TFile("/Users/brian/macros/Simulations/Production/FudgeModels/MCProduction_Bulk_CDR_1keV.root");
 
   fBulkInnerM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkInnerM2Sum_1keV.root", dMCDir.c_str()));
   fBulkOuterM2Sum = new TFile(Form("%s/OldProd/MCProduction_BulkOuterM2Sum_1keV.root", dMCDir.c_str()));
@@ -1955,7 +1954,8 @@ void TBackgroundModel::Initialize()
   hTeO20nuM1     = (TH1D*)fBulk->Get("hTeO20nuM1");
   hTeO22nuM1     = (TH1D*)fBulk->Get("hTeO22nuM1");
   hTeO2co60M1    = (TH1D*)fBulk->Get("hTeO2co60M1");
-  hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
+  // hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
+  hTeO2k40M1     = (TH1D*)fBulk_CDR->Get("hTeO2k40M1");
   hTeO2pb210M1   = (TH1D*)fBulk->Get("hTeO2pb210M1");
   hTeO2po210M1   = (TH1D*)fBulk->Get("hTeO2po210M1");
   hTeO2te125M1   = (TH1D*)fBulk->Get("hTeO2te125M1");
@@ -1966,7 +1966,8 @@ void TBackgroundModel::Initialize()
   hTeO2u238M1    = (TH1D*)fBulk->Get("hTeO2u238M1");
   // hTeO2th230M1   = (TH1D*)fBulk->Get("hTeO2th230M1");
   // hTeO2u234M1    = (TH1D*)fBulk->Get("hTeO2u234M1");
-  hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
+  // hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
+  hTeO2sb125M1   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M1");
 
   hTeO2th232onlyM1 = (TH1D*)fBulk->Get("hTeO2th232onlyM1");
   hTeO2ra228pb208M1 = (TH1D*)fBulk->Get("hTeO2ra228pb208M1");
@@ -1977,7 +1978,8 @@ void TBackgroundModel::Initialize()
   hTeO20nuM2     = (TH1D*)fBulk->Get("hTeO20nuM2");
   hTeO22nuM2     = (TH1D*)fBulk->Get("hTeO22nuM2");
   hTeO2co60M2    = (TH1D*)fBulk->Get("hTeO2co60M2");
-  hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
+  // hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
+  hTeO2k40M2     = (TH1D*)fBulk_CDR->Get("hTeO2k40M2");
   hTeO2pb210M2   = (TH1D*)fBulk->Get("hTeO2pb210M2");
   hTeO2po210M2   = (TH1D*)fBulk->Get("hTeO2po210M2");
   hTeO2te125M2   = (TH1D*)fBulk->Get("hTeO2te125M2");
@@ -1988,8 +1990,8 @@ void TBackgroundModel::Initialize()
   hTeO2u238M2    = (TH1D*)fBulk->Get("hTeO2u238M2");
   // hTeO2th230M2   = (TH1D*)fBulk->Get("hTeO2th230M2");
   // hTeO2u234M2    = (TH1D*)fBulk->Get("hTeO2u234M2");
-  hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
-  hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
+  // hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
+  hTeO2sb125M2   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M2");
 
   hTeO2th232onlyM2 = (TH1D*)fBulk->Get("hTeO2th232onlyM2");
   hTeO2ra228pb208M2 = (TH1D*)fBulk->Get("hTeO2ra228pb208M2");
@@ -2036,13 +2038,18 @@ void TBackgroundModel::Initialize()
 
 
 ///////// 50mK M1 and M2
-  h50mKcs137M1   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M1");
-  h50mKcs137M2   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M2");
+  // h50mKcs137M1   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M1");
+  // h50mKcs137M2   = (TH1D*)fBulkOuterOld->Get("h50mKcs137M2");
+  h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("h50mKcs137M1");
+  h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("h50mKcs137M2");
+
   h50mKcs137M2Sum   = (TH1D*)fBulkOuterM2Sum->Get("h50mKcs137M2Sum");
 
 //////// Roman Lead M1 and M2
-  hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
-  hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
+  // hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
+  // hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
+  hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
+  hPbRomk40M2     = (TH1D*)fBulk_CDR->Get("hPbRomk40M2");
   hPbRomk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hPbRomk40M2Sum");
 
 
@@ -2082,15 +2089,25 @@ void TBackgroundModel::Initialize()
   hInternalu238M2Sum = (TH1D*)fBulkInnerM2Sum->Get("hInternalu238M2Sum");
 
 /////// OVC M1 and M2
-  hOVCco60M1    = (TH1D*)fBulk->Get("hOVCco60M1");
-  hOVCk40M1     = (TH1D*)fBulk->Get("hOVCk40M1");
-  hOVCth232M1   = (TH1D*)fBulk->Get("hOVCth232M1");
-  hOVCu238M1    = (TH1D*)fBulk->Get("hOVCu238M1");
+//   hOVCco60M1    = (TH1D*)fBulk->Get("hOVCco60M1");
+//   hOVCk40M1     = (TH1D*)fBulk->Get("hOVCk40M1");
+//   hOVCth232M1   = (TH1D*)fBulk->Get("hOVCth232M1");
+//   hOVCu238M1    = (TH1D*)fBulk->Get("hOVCu238M1");
    
-  hOVCco60M2    = (TH1D*)fBulk->Get("hOVCco60M2");
-  hOVCk40M2     = (TH1D*)fBulk->Get("hOVCk40M2");
-  hOVCth232M2   = (TH1D*)fBulk->Get("hOVCth232M2");
-  hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
+//   hOVCco60M2    = (TH1D*)fBulk->Get("hOVCco60M2");
+//   hOVCk40M2     = (TH1D*)fBulk->Get("hOVCk40M2");
+//   hOVCth232M2   = (TH1D*)fBulk->Get("hOVCth232M2");
+//   hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
+
+  hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
+  hOVCk40M1     = (TH1D*)fBulk_CDR->Get("hOVCk40M1");
+  hOVCth232M1   = (TH1D*)fBulk_CDR->Get("hOVCth232M1");
+  hOVCu238M1    = (TH1D*)fBulk_CDR->Get("hOVCu238M1");
+   
+  hOVCco60M2    = (TH1D*)fBulk_CDR->Get("hOVCco60M2");
+  hOVCk40M2     = (TH1D*)fBulk_CDR->Get("hOVCk40M2");
+  hOVCth232M2   = (TH1D*)fBulk_CDR->Get("hOVCth232M2");
+  hOVCu238M2    = (TH1D*)fBulk_CDR->Get("hOVCu238M2");
 
   hOVCco60M2Sum    = (TH1D*)fBulkOuterM2Sum->Get("hOVCco60M2Sum");
   hOVCk40M2Sum     = (TH1D*)fBulkOuterM2Sum->Get("hOVCk40M2Sum");
@@ -3195,16 +3212,17 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[27] = new TBkgModelParameter( "OVC 1063", 27, 5.20414e-03, 1E-7, 0, 1.0, hAdapOVC1063M1 , hAdapOVC1063M2 ); 
 
 
-  bFixedArray[1] = true;
+  // bFixedArray[1] = true;
 
   // bFixedArray[7] = true;
   // bFixedArray[8] = true;
   // bFixedArray[9] = true;
   
-  for(int i = 4; i < 18; i ++)
-  {
-    bFixedArray[i] = true;
-  }
+  // for(int i = 4; i < 18; i ++)
+  // {
+    // bFixedArray[i] = true;
+  // }
+  // bFixedArray[18] = true;
 
 
   // for(int i = 37; i < 59; i ++)
@@ -4261,14 +4279,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // OutMatrix.close();
 
   // // Saving plots
-    // cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
-    // cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
-    // cResidual1->SaveAs(Form("%s/Results/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
-    // cResidual2->SaveAs(Form("%s/Results/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
-    // cres1->SaveAs(Form("%s/Results/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
-    // cProgress->SaveAs(Form("%s/Results/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cResidual1->SaveAs(Form("%s/Results/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cResidual2->SaveAs(Form("%s/Results/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cres1->SaveAs(Form("%s/Results/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cProgress->SaveAs(Form("%s/Results/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
     
-    // cMatrix->SaveAs(Form("%s/Results/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
+    cMatrix->SaveAs(Form("%s/Results/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), dBinBase));
  
     LatexResultTable(0);
 
@@ -4354,7 +4372,7 @@ void TBackgroundModel::SanityCheck()
 
 // Only run in batch mode and make sure to have the 2nbb normalization FIXED
 // Probably best to run Minuit in quiet mode as well
-void TBackgroundModel::ProfileNLL(double fBestFitInit, double fBestFitChiSq)
+void TBackgroundModel::ProfileNLL()
 {
   // Do the fit normally once first
   DoTheFitAdaptive(0,0);

@@ -62,7 +62,7 @@ public:
 
 	void PrintParActivity();
 
-	void ProfileNLL(double fBestFitInit, double fBestFitChiSq);
+	void ProfileNLL();
 
 	void ProfileNLL2D(double fBestFitInit, double fBestFitInit2, double fBestFitChiSq);
 
@@ -1334,6 +1334,7 @@ private:
 
 	TFile *fBulk;
 	TFile *fSurface;
+	TFile *fBulk_CDR;
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerOld;
