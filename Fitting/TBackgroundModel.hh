@@ -386,6 +386,9 @@ private:
 	TH1D			*hCuBox_CuFrameth232M1;
 	TH1D			*hCuBox_CuFrameu238M1;
 
+	TH1D			*hCuBox_CuFramemn54M1;
+	TH1D			*hCuBox_CuFramebi207M1;
+
 	TH1D			*hCuBox_CuFrameth232M1_10;
 	TH1D			*hCuBox_CuFrameu238M1_10;
 	TH1D			*hCuBox_CuFramepb210M1_10;
@@ -414,6 +417,9 @@ private:
 	TH1D			*hCuBox_CuFramek40M2;
 	TH1D			*hCuBox_CuFrameth232M2;
 	TH1D			*hCuBox_CuFrameu238M2;
+
+	TH1D			*hCuBox_CuFramemn54M2;
+	TH1D			*hCuBox_CuFramebi207M2;
 
 	TH1D			*hCuBox_CuFrameth232M2_10;
 	TH1D			*hCuBox_CuFrameu238M2_10;
@@ -527,11 +533,13 @@ private:
 	TH1D			*hOVCk40M1;
 	TH1D			*hOVCth232M1;
 	TH1D			*hOVCu238M1;		
+	TH1D			*hOVCbi207M1;
 
 	TH1D			*hOVCco60M2;
 	TH1D			*hOVCk40M2;
 	TH1D			*hOVCth232M2;
 	TH1D			*hOVCu238M2;	
+	TH1D			*hOVCbi207M2;
 
 	TH1D			*hOVCco60M2Sum;
 	TH1D			*hOVCk40M2Sum;
@@ -761,6 +769,9 @@ private:
 	TH1D			*hAdapCuBox_CuFrameth232M1;
 	TH1D			*hAdapCuBox_CuFrameu238M1;
 
+	TH1D			*hAdapCuBox_CuFramemn54M1;
+	TH1D			*hAdapCuBox_CuFramebi207M1;
+
 	TH1D			*hAdapCuBox_CuFrameth232M1_10;
 	TH1D			*hAdapCuBox_CuFrameu238M1_10;
 
@@ -790,6 +801,9 @@ private:
 	TH1D			*hAdapCuBox_CuFramek40M2;
 	TH1D			*hAdapCuBox_CuFrameth232M2;
 	TH1D			*hAdapCuBox_CuFrameu238M2;
+
+	TH1D			*hAdapCuBox_CuFramemn54M2;
+	TH1D			*hAdapCuBox_CuFramebi207M2;
 
 	TH1D			*hAdapCuBox_CuFrameth232M2_10;
 	TH1D			*hAdapCuBox_CuFrameu238M2_10;
@@ -896,11 +910,13 @@ private:
 	TH1D			*hAdapOVCk40M1;
 	TH1D			*hAdapOVCth232M1;
 	TH1D			*hAdapOVCu238M1;		
+	TH1D			*hAdapOVCbi207M1;
 
 	TH1D			*hAdapOVCco60M2;
 	TH1D			*hAdapOVCk40M2;
 	TH1D			*hAdapOVCth232M2;
 	TH1D			*hAdapOVCu238M2;	
+	TH1D			*hAdapOVCbi207M2;
 
 	TH1D			*hAdapOVCco60M2Sum;
 	TH1D			*hAdapOVCk40M2Sum;
@@ -1141,6 +1157,9 @@ private:
 	TH1			*hnewCuBox_CuFrameth232M1;
 	TH1			*hnewCuBox_CuFrameu238M1;
 
+	TH1 		*hnewCuBox_CuFramemn54M1;
+	TH1 		*hnewCuBox_CuFramebi207M1;
+
 	TH1			*hnewCuBox_CuFrameth232M1_10;
 	TH1			*hnewCuBox_CuFrameu238M1_10;
 	TH1			*hnewCuBox_CuFramepb210M1_10;
@@ -1169,6 +1188,9 @@ private:
 	TH1			*hnewCuBox_CuFramek40M2;
 	TH1			*hnewCuBox_CuFrameth232M2;
 	TH1			*hnewCuBox_CuFrameu238M2;
+
+	TH1 		*hnewCuBox_CuFramemn54M2;
+	TH1 		*hnewCuBox_CuFramebi207M2;
 
 	TH1			*hnewCuBox_CuFrameth232M2_10;
 	TH1			*hnewCuBox_CuFrameu238M2_10;
@@ -1282,11 +1304,13 @@ private:
 	TH1			*hnewOVCk40M1;
 	TH1			*hnewOVCth232M1;
 	TH1			*hnewOVCu238M1;		
+	TH1 		*hnewOVCbi207M1;
 
 	TH1			*hnewOVCco60M2;
 	TH1			*hnewOVCk40M2;
 	TH1			*hnewOVCth232M2;
 	TH1			*hnewOVCu238M2;	
+	TH1 		*hnewOVCbi207M2;
 
 	TH1			*hnewOVCco60M2Sum;
 	TH1			*hnewOVCk40M2Sum;
@@ -1295,7 +1319,7 @@ private:
 
 
 ////////// Fudge Factor Models
-	TH1 		*hnejuwOVC804M1;
+	TH1 		*hnewOVC804M1;
 	TH1 		*hnewOVC835M1;
 	TH1 		*hnewOVC1063M1;
 
