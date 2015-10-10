@@ -523,9 +523,17 @@ private:
 
 //////////// External Shield M1 and M2
 	TH1D			*hExtPbbi210M1;
+	TH1D			*hExtPbk40M1;
+	TH1D			*hExtPbth232M1;
+	TH1D			*hExtPbu238M1;
+	TH1D			*hExtPbpb210M1;
 
 	TH1D			*hExtPbbi210M2;
-	
+	TH1D			*hExtPbk40M2;
+	TH1D			*hExtPbth232M2;
+	TH1D			*hExtPbu238M2;
+	TH1D			*hExtPbpb210M2;
+
 	TH1D			*hExtPbbi210M2Sum;
 
 /////////// OVC M1 and M2
@@ -925,9 +933,17 @@ private:
 
 ///////// External Shield M1 and M2
 	TH1D			*hAdapExtPbbi210M1;
+	TH1D			*hAdapExtPbk40M1;
+	TH1D			*hAdapExtPbth232M1;
+	TH1D			*hAdapExtPbu238M1;
+	TH1D			*hAdapExtPbpb210M1;
 
 	TH1D			*hAdapExtPbbi210M2;
-	
+	TH1D			*hAdapExtPbk40M2;
+	TH1D			*hAdapExtPbth232M2;
+	TH1D			*hAdapExtPbu238M2;
+	TH1D			*hAdapExtPbpb210M2;
+
 	TH1D			*hAdapExtPbbi210M2Sum;
 
 ////////// Fudge Factor Models
@@ -1294,8 +1310,16 @@ private:
 
 //////////// External Shield M1 and M2
 	TH1			*hnewExtPbbi210M1;
+	TH1			*hnewExtPbk40M1;
+	TH1			*hnewExtPbth232M1;
+	TH1			*hnewExtPbu238M1;
+	TH1			*hnewExtPbpb210M1;
 
 	TH1			*hnewExtPbbi210M2;
+	TH1			*hnewExtPbk40M2;
+	TH1			*hnewExtPbth232M2;
+	TH1			*hnewExtPbu238M2;
+	TH1			*hnewExtPbpb210M2;
 	
 	TH1			*hnewExtPbbi210M2Sum;
 
