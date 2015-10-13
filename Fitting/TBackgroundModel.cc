@@ -524,9 +524,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hOVC1063M2Sum = new TH1D("hOVC1063M2Sum", "hOVC1063M2Sum", dNBins, dMinEnergy, dMaxEnergy);
 
 // Mess with rebinning here 
-  // fDataHistoM1->Rebin(1);
-  // fDataHistoM2->Rebin(1);
-  // fDataHistoM2Sum->Rebin(1);
+  // fDataHistoM1->Rebin(2);
+  // fDataHistoM2->Rebin(2);
+  // fDataHistoM2Sum->Rebin(2);
   dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
@@ -1049,7 +1049,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   nLoop = 0;
 
   GenerateParameters();
-  DoTheFitAdaptive();
+  // DoTheFitAdaptive();
 
   // Try it out
   // ProfileNLL();
@@ -1572,7 +1572,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
   {
     // Added per each peak
     // Pt peak 3150 - 3400
-    if(i >= h1->FindBin(3050) && i < h1->FindBin(3400))
+    if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(3050)));
      // Reset everything
@@ -1660,26 +1660,38 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
     }
 
     // 5200 - 5400
-    if(i >= h1->FindBin(5200) && i < h1->FindBin(5400))
+    if(i >= h1->FindBin(5250) && i < h1->FindBin(5400))
     // if(i >= h1->FindBin(5170) && i < h1->FindBin(5400))
     {
-     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5200)));
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5250)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(5400-5200)/dBaseBinSize;
+     i = i+(5400-5250)/dBaseBinSize;
     }
     // 5400 - 5650
-    if(i >= h1->FindBin(5400) && i < h1->FindBin(5650))
+    if(i >= h1->FindBin(5400) && i < h1->FindBin(5500))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5400)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(5650-5400)/dBaseBinSize;
+     i = i+(5500-5400)/dBaseBinSize;
     }
+
+    // 5400 - 5650
+    if(i >= h1->FindBin(5500) && i < h1->FindBin(5650))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5500)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(5650-5500)/dBaseBinSize;
+    }
+
 
     // 5650 - 5800
     if(i >= h1->FindBin(5650) && i < h1->FindBin(5780))
@@ -1693,14 +1705,24 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
     }
 
     // 5800 - 6050
-    if(i >= h1->FindBin(5780) && i < h1->FindBin(6100))
+    if(i >= h1->FindBin(5780) && i < h1->FindBin(5900))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5780)));
      // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
-     i = i+(6100-5780)/dBaseBinSize;
+     i = i+(5900-5780)/dBaseBinSize;
+    }    
+
+    if(i >= h1->FindBin(5900) && i < h1->FindBin(6100))
+    {
+     dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5900)));
+     // Reset everything
+     j = 0;
+     dDummyFill = 0;
+     dDummy = 0;
+     i = i+(6100-5900)/dBaseBinSize;
     }    
 
     // 6050 - 6350
@@ -1725,7 +1747,7 @@ vector<double> TBackgroundModel::AdaptiveBinning(TH1D *h1, int dBinBase)
      i = i+(7000-6700)/dBaseBinSize;
     }    
 
-    // 7500 - 8000
+    // 7000 - 8000
     if(i >= h1->FindBin(7000) && i < h1->FindBin(8000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(7000)));
@@ -1842,18 +1864,26 @@ void TBackgroundModel::DrawBkg()
   c1->Divide(1, 2);
   c1->cd(1);
   gPad->SetLogy();
+  fAdapDataHistoM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));
+  fAdapDataHistoM1->SetLineColor(kBlack);
+  fAdapDataHistoM1->SetFillColor(kBlue);
+  fAdapDataHistoM1->SetFillStyle(3003);
   fAdapDataHistoM1->SetTitle("M1");
   fAdapDataHistoM1->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/bin");  
-  fAdapDataHistoM1->Draw("");
+  fAdapDataHistoM1->Draw();
 
 
   c1->cd(2); 
   gPad->SetLogy();
+  fAdapDataHistoM2->GetXaxis()->SetRange(fAdapDataHistoM2->FindBin(dFitMin), fAdapDataHistoM2->FindBin(dFitMax-1));
+  fAdapDataHistoM2->SetLineColor(kBlack);
+  fAdapDataHistoM2->SetFillColor(kBlue);
+  fAdapDataHistoM2->SetFillStyle(3003);
   fAdapDataHistoM2->SetTitle("M2");
   fAdapDataHistoM2->GetXaxis()->SetTitle("Energy (keV)");
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/bin");   
-  fAdapDataHistoM2->Draw("");
+  fAdapDataHistoM2->Draw();
 
 }
 
@@ -1946,6 +1976,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
     }
   }
 */
+
 
   return chiSquare;
 }
@@ -3109,7 +3140,6 @@ void TBackgroundModel::Initialize()
     hAdapOVC1063M2Sum->SetBinContent(i, hnewOVC1063M2Sum->GetBinContent(i)/hnewOVC1063M2Sum->GetBinWidth(i));
   }
 
-  SetParEfficiency();
 }
 
 // Loads the background data
@@ -3297,23 +3327,29 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[30] = new TBkgModelParameter( "Internal Shields k40", 30, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
   BkgPar[31] = new TBkgModelParameter( "Internal Shields co60", 31, 0., 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
 
-  BkgPar[32] = new TBkgModelParameter( "OVC u238", 32, 1.41680e-01, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
-  BkgPar[33] = new TBkgModelParameter( "OVC th232", 33, 1.00966e-01, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  BkgPar[34] = new TBkgModelParameter( "OVC k40", 34, 7.11104e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
-  BkgPar[35] = new TBkgModelParameter( "OVC co60", 35, 3.30743e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
-  BkgPar[36] = new TBkgModelParameter( "OVC bi207", 36, 0., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+  // BkgPar[32] = new TBkgModelParameter( "OVC u238", 32, 1.41680e-01, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  // BkgPar[33] = new TBkgModelParameter( "OVC th232", 33, 1.00966e-01, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  // BkgPar[34] = new TBkgModelParameter( "OVC k40", 34, 7.11104e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  // BkgPar[35] = new TBkgModelParameter( "OVC co60", 35, 3.30743e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  // BkgPar[36] = new TBkgModelParameter( "OVC bi207", 36, 0., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
   
+  BkgPar[32] = new TBkgModelParameter( "OVC u238", 32, 9.55986e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  BkgPar[33] = new TBkgModelParameter( "OVC th232", 33, 3.03980e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  BkgPar[34] = new TBkgModelParameter( "OVC k40", 34, 5.48196e-07, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  BkgPar[35] = new TBkgModelParameter( "OVC co60", 35, 2.50006e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  BkgPar[36] = new TBkgModelParameter( "OVC bi207", 36, 6.46635e-03., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+
   BkgPar[37] = new TBkgModelParameter( "External Lead bi210", 37, 3.35197e-07, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
   BkgPar[38] = new TBkgModelParameter( "External Lead k40", 38, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
   BkgPar[39] = new TBkgModelParameter( "External Lead th232", 39, 0, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
   BkgPar[40] = new TBkgModelParameter( "External Lead u238", 40, 0, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
-  // BkgPar[41] = new TBkgModelParameter( "External Lead pb210", 41, 3.77822e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
+  BkgPar[41] = new TBkgModelParameter( "External Lead pb210", 41, 3.77822e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
 
-  BkgPar[41] = new TBkgModelParameter( "External Lead pb210", 41, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
+  // BkgPar[41] = new TBkgModelParameter( "External Lead pb210", 41, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
 
-  BkgPar[42] = new TBkgModelParameter( "TeO2 Sx pb210 0.01", 42, 4.86040e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
-  BkgPar[43] = new TBkgModelParameter( "TeO2 Sx pb210 1", 43, 4.86040e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
-  BkgPar[44] = new TBkgModelParameter( "TeO2 Sx pb210 10", 44, 4.86040e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
+  BkgPar[42] = new TBkgModelParameter( "TeO2 Sx pb210 0.01", 42, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
+  BkgPar[43] = new TBkgModelParameter( "TeO2 Sx pb210 1", 43, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
+  BkgPar[44] = new TBkgModelParameter( "TeO2 Sx pb210 10", 44, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
 
   BkgPar[45] = new TBkgModelParameter( "TeO2 Sx th232 10", 45, 0., 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 ); 
   BkgPar[46] = new TBkgModelParameter( "TeO2 Sx u238 10", 46, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10 , hAdapTeO2Sxu238M2_10 ); 
@@ -3344,7 +3380,9 @@ void TBackgroundModel::GenerateParameters()
   // {
     // bFixedArray[i] = true;
   // }
-  // bFixedArray[18] = true;
+
+  // bFixedArray[39] = true;
+  // bFixedArray[40] = true;
 
 
   // for(int i = 18; i < 41; i ++)
@@ -3387,85 +3425,6 @@ void TBackgroundModel::SetParameters(int index, double value)
 	// Change the index max depending on model
 	if(index > dNParam) cout << "Index too large" << endl;
 	else fParameters[index] = value;
-}
-
-void TBackgroundModel::SetParEfficiency()
-{
-   fParEfficiencyM1[0] = 0.9292826; // TeO2 2nu
-   fParEfficiencyM1[1] = 0.5614488; // CuBox+Frame co60
-   fParEfficiencyM1[2] = 0.941975; // TeO2 th232 only
-   fParEfficiencyM1[3] = 0.9419295; // TeO2 th230 only
-   fParEfficiencyM1[4] = 0.4158284; // TeO2 Sx th232 0.01
-   fParEfficiencyM1[5] = 0.3802244; // TeO2 Sx ra228 to pb208 0.01 
-   fParEfficiencyM1[6] = 0.7457738; // TeO2 Sx u238 to th230 0.01  
-   fParEfficiencyM1[7] = 0.7379278; // TeO2 Sx th230 only 0.01
-   fParEfficiencyM1[8] = 0.5154646; // TeO2 Sx ra226 to pb210 0.01
-   fParEfficiencyM1[9] = 0.4958653 ; // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
-   fParEfficiencyM1[10] = 0.4457218; // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   fParEfficiencyM1[11] = 0.1013459; // CuBox+CuFrame Sx th232 10
-   fParEfficiencyM1[12] = 0.0881936; // CuBox+CuFrame Sx u238 10
-   fParEfficiencyM1[13] = 0.0725138; // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   fParEfficiencyM1[14] = 0.0742276; // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   fParEfficiencyM1[15] = 0.00484976; // PbRom k40
-   fParEfficiencyM1[16] = 0.000465822; // OVC th232
-   fParEfficiencyM1[17] = 0.000293556; // OVC u238
-   fParEfficiencyM1[18] = 0.01430904; // OVC co60
-   fParEfficiencyM1[19] = 0.00043995; // OVC k40
-   fParEfficiencyM1[20] = 0.000191901; // External Lead bi210 
-   fParEfficiencyM1[21] = 0.0510853; // CuBox+Frame th232 
-   fParEfficiencyM1[22] = 0.0354736; // CuBox+Frame u238
-   fParEfficiencyM1[23] = 0.0237369; // PbRom cs137
-
-   fParMass[0] = 39000/1000.; // TeO2 2nu
-   fParMass[1] = (2610.04+6929.71)/1000.; // CuBox+Frame co60
-   fParMass[2] = 39000/1000.; // TeO2 th232 only
-   fParMass[3] = 39000/1000.; // TeO2 th230 only
-   fParMass[4] = 39000/1000.; // TeO2 Sx th232 0.01
-   fParMass[5] = 39000/1000.; // TeO2 Sx ra228 to pb208 0.01 
-   fParMass[6] = 39000/1000.; // TeO2 Sx u238 to th230 0.01  
-   fParMass[7] = 39000/1000.; // TeO2 Sx th230 only 0.01
-   fParMass[8] = 39000/1000.; // TeO2 Sx ra226 to pb210 0.01
-   fParMass[9] = 39000/1000. ; // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
-   fParMass[10] = 39000/1000.; // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   fParMass[11] = (2610.04+6929.71)/1000.; // CuBox+CuFrame Sx th232 10
-   fParMass[12] = (2610.04+6929.71)/1000.; // CuBox+CuFrame Sx u238 10
-   fParMass[13] = (2610.04+6929.71)/1000.; // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   fParMass[14] = (2610.04+6929.71)/1000.; // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   fParMass[15] = 202294.46/1000.; // PbRom k40
-   fParMass[16] = 180704.38/1000.; // OVC th232
-   fParMass[17] = 180704.38/1000.; // OVC u238
-   fParMass[18] = 180704.38/1000.; // OVC co60
-   fParMass[19] = 180704.38/1000.; // OVC k40
-   fParMass[20] = 24652026/1000.; // External Lead bi210 
-   fParMass[21] = (2610.04+6929.71)/1000.; // CuBox+Frame th232 
-   fParMass[22] = (2610.04+6929.71)/1000.; // CuBox+Frame u238
-   fParMass[23] = 202294.46/1000.; // PbRom cs137
-
-   // fParSurfaceArea[0] = 7800.; // TeO2 0nu
-   fParSurfaceArea[0] = 7800.; // TeO2 2nu
-   fParSurfaceArea[1] = 2314.02+9467.18; // CuBox+Frame co60
-   fParSurfaceArea[2] = 7800.; // TeO2 th232 only
-   fParSurfaceArea[3] = 7800.; // TeO2 th230 only
-   fParSurfaceArea[4] = 7800.; // TeO2 Sx th232 0.01
-   fParSurfaceArea[5] = 7800.; // TeO2 Sx ra228 to pb208 0.01 
-   fParSurfaceArea[6] = 7800.; // TeO2 Sx u238 to th230 0.01  
-   fParSurfaceArea[7] = 7800.; // TeO2 Sx th230 only 0.01
-   fParSurfaceArea[8] = 7800.; // TeO2 Sx ra226 to pb210 0.01
-   fParSurfaceArea[9] = 7800. ; // TeO2 Sx pb210 1 ==> necessary for bin below Po210 peak in M2
-   fParSurfaceArea[10] = 7800.; // TeO2 Sx pb210 0.01 ==> completely necessary for M2 spectrum
-   fParSurfaceArea[11] = 2314.02+9467.18; // CuBox+CuFrame Sx th232 10
-   fParSurfaceArea[12] = 2314.02+9467.18; // CuBox+CuFrame Sx u238 10
-   fParSurfaceArea[13] = 2314.02+9467.18; // CuBox+CuFrame Sx pb210 0.1 ==> useful for below Po210 peak in M1 but doesn't seem absolutely necessary
-   fParSurfaceArea[14] = 2314.02+9467.18; // CuBox+CuFrame Sx pb210 0.01 => necessary for below Po210 peak in M1
-   fParSurfaceArea[15] = 20898.8; // PbRom k40
-   fParSurfaceArea[16] = 87370.2; // OVC th232
-   fParSurfaceArea[17] = 87370.2; // OVC u238
-   fParSurfaceArea[18] = 87370.2; // OVC co60
-   fParSurfaceArea[19] = 87370.2; // OVC k40
-   fParSurfaceArea[20] = 2.38E+005; // External Lead bi210 
-   fParSurfaceArea[21] = 2314.02+9467.18; // CuBox+Frame th232 
-   fParSurfaceArea[22] = 2314.02+9467.18; // CuBox+Frame u238
-   fParSurfaceArea[23] = 20898.8; // PbRom cs137
 }
 
 // Creates/updates the background model
@@ -3616,21 +3575,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapM1->SetLineColor(2);
   fModelTotAdapM1->SetLineWidth(1);
 
-
-  TLegend *legfit1 = new TLegend(0.75,0.58,0.95,0.92);
-  legfit1->SetFillColor(0);
-  legfit1->SetTextSize(0.02);
-  legfit1->AddEntry(fModelTotAdapM1, "Total PDF", "l");
-  legfit1->AddEntry(hAdapTeO2Sxpb210M1_10, "TeO2 Pb210 Sx 10 #mum", "l" );
-  legfit1->AddEntry(hAdapTeO2Sxpb210M1_1, "TeO2 Pb210 Sx 1 #mum", "l" );
-  legfit1->AddEntry(hAdapTeO2Sxpb210M1_01, "TeO2 Pb210 Sx 0.1 #mum", "l" );
-  legfit1->AddEntry(hAdapCuBox_CuFramepb210M1_100, "Copper Pb210 Sx 100 #mum", "l" );
-  legfit1->AddEntry(hAdapCuBox_CuFramepb210M1_10, "Copper Pb210 Sx 10 #mum", "l" );
-  legfit1->AddEntry(hAdapCuBox_CuFramepb210M1_1, "Copper Pb210 Sx 1 #mum", "l" );
-  legfit1->AddEntry(hAdapCuBox_CuFramepb210M1_01, "Copper Pb210 Sx 0.1 #mum", "l" );
-  legfit1->AddEntry(hAdapCuBox_CuFramepb210M1_001, "Copper Pb210 Sx 0.01 #mum", "l" );
-
-
   int nHisto = 2;  
   double width1 = 0.02;
   double width2 = 0.98;
@@ -3703,6 +3647,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
   LineM1->DrawLineNDC(0.1, 0.59, 0.95, 0.59);
 
+  TLegend *legfit1 = new TLegend(0.85,0.75,0.95,1);
+  legfit1->SetFillColor(0);
+  // legfit1->SetTextSize(0.02);
+  legfit1->AddEntry(hRatioM1_1, "1 #sigma", "f");
+  legfit1->AddEntry(hRatioM1_2, "2 #sigma", "f");
+  legfit1->AddEntry(hRatioM1_3, "3 #sigma", "f");
+  legfit1->Draw();
+
   p2m1->cd();
   p2m1->SetLogy();
   
@@ -3716,6 +3668,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM1->GetYaxis()->SetTitle("Counts/Bin");
   fAdapDataHistoM1->Draw("E");
   fModelTotAdapM1->Draw("SAME");
+
+  TLegend *leg1 = new TLegend(0.78,0.75,0.95,0.92);
+  leg1->SetFillColor(0);
+  // leg1->SetTextSize(0.02);
+  leg1->AddEntry(fAdapDataHistoM1, "Data", "l");
+  leg1->AddEntry(fModelTotAdapM1, "Model", "l");
+  leg1->Draw();
 
 
   //// Draw additional histograms here
@@ -3809,19 +3768,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fModelTotAdapM2->SetLineColor(2);
   fModelTotAdapM2->SetLineWidth(1);
 
-  TLegend *legfit2 = new TLegend(0.75,0.6,0.95,0.92);
-  legfit2->SetFillColor(0);
-  legfit2->SetTextSize(0.02);
-  legfit2->AddEntry(fModelTotAdapM2, "Total PDF", "l");
-  legfit2->AddEntry(hAdapTeO2Sxpb210M2_10, "TeO2 Pb210 Sx 10 #mum", "l" );
-  legfit2->AddEntry(hAdapTeO2Sxpb210M2_1, "TeO2 Pb210 Sx 1 #mum", "l" );
-  legfit2->AddEntry(hAdapTeO2Sxpb210M2_01, "TeO2 Pb210 Sx 0.1 #mum", "l" );
-  legfit2->AddEntry(hAdapCuBox_CuFramepb210M2_100, "Copper Pb210 Sx 100 #mum", "l" );
-  legfit2->AddEntry(hAdapCuBox_CuFramepb210M2_10, "Copper Pb210 Sx 10 #mum", "l" );
-  legfit2->AddEntry(hAdapCuBox_CuFramepb210M2_1, "Copper Pb210 Sx 1 #mum", "l" );
-  legfit2->AddEntry(hAdapCuBox_CuFramepb210M2_01, "Copper Pb210 Sx 0.1 #mum", "l" );
-  legfit2->AddEntry(hAdapCuBox_CuFramepb210M2_001, "Copper Pb210 Sx 0.01 #mum", "l" );
-
   TCanvas *cadap2 = new TCanvas("cadap2", "cadap2", 1200, 800);  
   TPad* p1m2 = new TPad("p1m2","p1m2",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
   p1m2->SetTopMargin(0.);
@@ -3880,6 +3826,15 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
   LineM1->DrawLineNDC(0.1, 0.59, 0.95, 0.59);
 
+  TLegend *legfit2 = new TLegend(0.85,0.75,0.95,1);
+  legfit2->SetFillColor(0);
+  // legfit2->SetTextSize(0.02);
+  legfit2->AddEntry(hRatioM2_1, "1 #sigma", "f");
+  legfit2->AddEntry(hRatioM2_2, "2 #sigma", "f");
+  legfit2->AddEntry(hRatioM2_3, "3 #sigma", "f");
+  legfit2->Draw();
+
+
   p2m2->cd();
   p2m2->SetLogy();
   // fAdapDataHistoM2->GetXaxis()->SetRange(fAdapDataHistoM2->FindBin(1440), fAdapDataHistoM2->FindBin(1480));
@@ -3892,6 +3847,14 @@ bool TBackgroundModel::DoTheFitAdaptive()
   fAdapDataHistoM2->GetYaxis()->SetTitle("Counts/Bin");
   fAdapDataHistoM2->Draw("E");
   fModelTotAdapM2->Draw("SAME");
+  
+  TLegend *leg2 = new TLegend(0.78,0.75,0.95,0.92);
+  leg2->SetFillColor(0);
+  // leg2->SetTextSize(0.02);
+  leg2->AddEntry(fAdapDataHistoM2, "Data", "l");
+  leg2->AddEntry(fModelTotAdapM2, "Model", "l");
+  leg2->Draw();
+
   // legfit2->Draw();
   //// Draw additional histograms
   // TeO2 Surface
@@ -3932,97 +3895,18 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hAdapCuBox_CuFrameth232M2_01->Draw("SAME");
   // hAdapCuBox_CuFrameth232M2_001->Draw("SAME");
 
-/*
-  ///// Draw Data M2Sum
-  fAdapDataHistoM2Sum->SetLineColor(kBlack);
-  fAdapDataHistoM2Sum->SetLineWidth(2);
-  // fAdapDataHistoM2Sum->SetMaximum(9000);
-  // fAdapDataHistoM2Sum->GetXaxis()->SetRange(1, fAdapDataHistoM2Sum->FindBin(3000));
-  
-  fModelTotAdapM2Sum->SetLineColor(2);
-  fModelTotAdapM2Sum->SetLineWidth(1);
 
-  TCanvas *cadap2sum = new TCanvas("cadap2sum", "cadap2sum", 1200, 800);
-  TPad* p1m2sum = new TPad("p1m2sum","p1m2sum",width1,canBotMargin,width2,canBotMargin+padHeight/1.5,0,0);
-  p1m2sum->SetTopMargin(0.);
-  p1m2sum->SetBottomMargin(0.175);
-  p1m2sum->SetLeftMargin(0.1);
-  p1m2sum->SetRightMargin(0.05);
-  p1m2sum->SetFillColor(0);
-  p1m2sum->SetBorderMode(0);
-  p1m2sum->SetBorderSize(0);
-  p1m2sum->Draw();
-  
-  // p2 is on top!
-  TPad* p2m2sum = new TPad("p2m2sum","p2m2sum",width1,canBotMargin+padHeight/1.5,width2,canBotMargin+2*padHeight,0,0);
-  p2m2sum->SetBottomMargin(0.);
-  p2m2sum->SetTopMargin(0.08);
-  p2m2sum->SetLeftMargin(0.1);
-  p2m2sum->SetRightMargin(0.05);
-  p2m2sum->SetFillColor(0);
-  p2m2sum->SetBorderMode(0);
-  p2m2sum->SetBorderSize(0);
-  p2m2sum->Draw();
-
-  p1m2sum->cd();
-  TH1D *hRatioM2Sum_1 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_1");
-  TH1D *hRatioM2Sum_2 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_2");
-  TH1D *hRatioM2Sum_3 = (TH1D*)fAdapDataHistoM2Sum->Clone("hRatioM2Sum_3");
-  hRatioM2Sum_1->Divide(fModelTotAdapM2Sum);
-  hRatioM2Sum_2->Divide(fModelTotAdapM2Sum);
-  hRatioM2Sum_3->Divide(fModelTotAdapM2Sum);
-  hRatioM2Sum_3->SetMaximum(2.9);
-  hRatioM2Sum_3->SetMinimum(-0.9);
-  for(int i = 1; i <= hRatioM2Sum_1->GetNbinsX(); i++)
-  {
-    hRatioM2Sum_1->SetBinError(i, fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
-    hRatioM2Sum_2->SetBinError(i, 2*fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
-    hRatioM2Sum_3->SetBinError(i, 3*fAdapDataHistoM2Sum->GetBinError(i)/fModelTotAdapM2Sum->GetBinContent(i) );
-  }
-  hRatioM2Sum_3->GetXaxis()->SetRange(fAdapDataHistoM2Sum->FindBin(dFitMin), fAdapDataHistoM2Sum->FindBin(dFitMax-1));
-  hRatioM2Sum_3->SetMarkerStyle(6);
-  hRatioM2Sum_3->SetTitle("");
-  hRatioM2Sum_3->GetXaxis()->SetTitle("Energy (keV)");
-  hRatioM2Sum_3->GetYaxis()->SetTitle("Ratio (Data/MC)");  
-  hRatioM2Sum_3->GetXaxis()->SetLabelSize(0.07);
-  hRatioM2Sum_3->GetYaxis()->SetLabelSize(0.07);
-  hRatioM2Sum_3->GetXaxis()->SetTitleSize(0.07);
-  hRatioM2Sum_3->GetYaxis()->SetTitleSize(0.07);
-  hRatioM2Sum_3->GetYaxis()->SetTitleOffset(0.45);
-  hRatioM2Sum_1->SetFillColor(kMagenta-9);
-  hRatioM2Sum_2->SetFillColor(kGreen-8);
-  hRatioM2Sum_3->SetFillColor(kCyan+3);
-  hRatioM2Sum_3->Draw("pE2");
-  hRatioM2Sum_2->Draw("SAME e2");
-  hRatioM2Sum_1->Draw("SAME e2");
-  LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
-
-  p2m2sum->cd();
-  p2m2sum->SetLogy();
-  fAdapDataHistoM2Sum->GetXaxis()->SetRange(fAdapDataHistoM2Sum->FindBin(dFitMin), fAdapDataHistoM2Sum->FindBin(dFitMax-1));
-  // fAdapDataHistoM2Sum->SetTitleOffset(0.45);
-  // fAdapDataHistoM2Sum->SetTitleSize(0.01);
-  fAdapDataHistoM2Sum->SetTitle("Total Model (M2Sum)");
-  fAdapDataHistoM2Sum->GetXaxis()->SetTitle("Energy (keV)");
-  fAdapDataHistoM2Sum->GetYaxis()->SetTitle("Counts/Bin");
-  fAdapDataHistoM2Sum->Draw("E");
-  fModelTotAdapM2Sum->Draw("SAME");
-
-*/
+  // For just the spectra itself
+  // TCanvas *CanvasM1 = new TCanvas("CanvasM1", "CanvasM1", 1200, 800);
+  // CanvasM1->SetLogy();
+  // fAdapDataHistoM1->Draw("E");
+  // fModelTotAdapM1->Draw("SAME");
 
 
-
-
-  TCanvas *CanvasM1 = new TCanvas("CanvasM1", "CanvasM1", 1200, 1000);
-  CanvasM1->SetLogy();
-  fAdapDataHistoM1->Draw("E");
-  fModelTotAdapM1->Draw("SAME");
-
-
-  TCanvas *CanvasM2 = new TCanvas("CanvasM2", "CanvasM2", 1200, 1000);
-  CanvasM2->SetLogy();
-  fAdapDataHistoM2->Draw("E");
-  fModelTotAdapM2->Draw("SAME");
+  // TCanvas *CanvasM2 = new TCanvas("CanvasM2", "CanvasM2", 1200, 800);
+  // CanvasM2->SetLogy();
+  // fAdapDataHistoM2->Draw("E");
+  // fModelTotAdapM2->Draw("SAME");
 
 
 
@@ -4153,8 +4037,10 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << endl;
   cout << "Integral Data in ROI (counts/keV/y): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   cout << "Integral Total PDF in ROI (counts/keV/y): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
+  // cout << "Number of 2nbb: " << fParameters[0]*dDataIntegralM1 << " +/- " << fParError[0]*dDataIntegralM1 << "\t 2nbb half life (pure counting): " << (0.69314718056)*(4.726e25 * dLivetimeYr)/((hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) + (hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700), "width")) ) << " +/- " << (fParError[0]/fParameters[0]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << endl;
   // 9.5365e-01 is the efficiency
-  cout << "Counts in 2nbb (M1 + M2): " << hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) << endl;
+  double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+  cout << "Counts in 2nbb (M1 + M2): " << hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
   cout << endl;
   cout << endl;
   cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  
@@ -4303,22 +4189,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   for(int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
   {
-    if( fAdapDataHistoM1->GetBinCenter(i) >= 3050 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
-
-    // Skipping unknown peaks
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 800 && fAdapDataHistoM1->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1060 && fAdapDataHistoM1->GetBinCenter(i) <= 1068)continue; 
-
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 506 && fAdapDataHistoM1->GetBinCenter(i) <= 515)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 579 && fAdapDataHistoM1->GetBinCenter(i) <= 589)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 605 && fAdapDataHistoM1->GetBinCenter(i) <= 615)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 906 && fAdapDataHistoM1->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1445 && fAdapDataHistoM1->GetBinCenter(i) <= 1475)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 1755 && fAdapDataHistoM1->GetBinCenter(i) <= 1780)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2090 && fAdapDataHistoM1->GetBinCenter(i) <= 2130)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2200 && fAdapDataHistoM1->GetBinCenter(i) <= 2220)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2440 && fAdapDataHistoM1->GetBinCenter(i) <= 2450)continue;  
-    // if( fAdapDataHistoM1->GetBinCenter(i) >= 2600 && fAdapDataHistoM1->GetBinCenter(i) <= 2630)continue;  
+    if( fAdapDataHistoM1->GetBinCenter(i) >= 3150 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
 
     dataM1_i = fAdapDataHistoM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
     modelM1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
@@ -4327,51 +4198,12 @@ bool TBackgroundModel::DoTheFitAdaptive()
   }
   for(int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
   {
-    if( fAdapDataHistoM2->GetBinCenter(i) >= 3050 && fAdapDataHistoM2->GetBinCenter(i) <= 3400)continue;
-
-    // Skipping unknown peaks
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 800 && fAdapDataHistoM2->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1060 && fAdapDataHistoM2->GetBinCenter(i) <= 1068)continue; 
-
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 506 && fAdapDataHistoM2->GetBinCenter(i) <= 515)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 579 && fAdapDataHistoM2->GetBinCenter(i) <= 589)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 605 && fAdapDataHistoM2->GetBinCenter(i) <= 615)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 906 && fAdapDataHistoM2->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1450 && fAdapDataHistoM2->GetBinCenter(i) <= 1475)continue;  
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 1755 && fAdapDataHistoM2->GetBinCenter(i) <= 1780)continue;  
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 2090 && fAdapDataHistoM2->GetBinCenter(i) <= 2130)continue;  
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 2200 && fAdapDataHistoM2->GetBinCenter(i) <= 2220)continue;  
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 2440 && fAdapDataHistoM2->GetBinCenter(i) <= 2450)continue;  
-    // if( fAdapDataHistoM2->GetBinCenter(i) >= 2600 && fAdapDataHistoM2->GetBinCenter(i) <= 2630)continue;  
+    if( fAdapDataHistoM2->GetBinCenter(i) >= 3150 && fAdapDataHistoM2->GetBinCenter(i) <= 3400)continue;
 
     dataM2_i = fAdapDataHistoM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i);
     modelM2_i = fModelTotAdapM2->GetBinContent(i)*fAdapDataHistoM2->GetBinWidth(i);
     dProgressM2 += 2 * (modelM2_i - dataM2_i + dataM2_i * TMath::Log(dataM2_i/modelM2_i));
     hChiSquaredProgressM2->SetBinContent(i, dProgressM2);
-  }
-  for(int i = dFitMinBinM2Sum; i < dFitMaxBinM2Sum; i++)
-  {
-    if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 3050 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 3400)continue;
-
-    // Skipping unknown peaks
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 800 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 808)continue;
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 1060 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 1068)continue; 
-
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 506 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 515)continue;
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 579 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 589)continue;
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 605 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 615)continue;
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 906 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 917)continue;
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 1450 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 1475)continue;  
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 1755 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 1780)continue;  
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 2090 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 2130)continue;  
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 2200 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 2220)continue;  
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 2440 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 2450)continue;  
-    // if( fAdapDataHistoM2Sum->GetBinCenter(i) >= 2600 && fAdapDataHistoM2Sum->GetBinCenter(i) <= 2630)continue;  
-
-    dataM2Sum_i = fAdapDataHistoM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i);
-    modelM2Sum_i = fModelTotAdapM2Sum->GetBinContent(i)*fAdapDataHistoM2Sum->GetBinWidth(i);
-    dProgressM2Sum += 2 * (modelM2Sum_i - dataM2Sum_i + dataM2Sum_i * TMath::Log(dataM2Sum_i/modelM2Sum_i));
-    hChiSquaredProgressM2Sum->SetBinContent(i, dProgressM2Sum);
   }
 
   TCanvas *cProgress = new TCanvas("cProgress", "cProgress", 1600, 1600);
@@ -4388,11 +4220,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hChiSquaredProgressM2->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2->Draw();
 
-  // cProgress->cd(3);
-  // hChiSquaredProgressM2Sum->SetTitle("Increase in #chi^{2} (M2Sum)");  
-  // hChiSquaredProgressM2Sum->GetXaxis()->SetTitle("Energy (keV)");
-  // hChiSquaredProgressM2Sum->GetYaxis()->SetTitle("#chi^{2}");  
-  // hChiSquaredProgressM2Sum->Draw();
 
 
   
@@ -4465,10 +4292,10 @@ void TBackgroundModel::LatexResultTable(double fValue)
 {
 
   OutFile.open(Form("%s/Results/FitOutputTable_%d_%d.txt", dSaveDir.c_str(), tTime->GetDate(), dBinBase));
-  OutFile << "Name -- Normalization -- Normalization Err -- Percent Err (for Norm)" << endl;
+  OutFile << "Name -- Normalization -- Normalization Err -- Percent Err (for Norm) -- Integral (M1)" << endl;
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
-    OutFile << minuit->fCpnam[i] << "\t" << fParameters[i] << "\t" << fParError[i] << "\t" << fParError[i]/fParameters[i] << endl;
+    OutFile << minuit->fCpnam[i] << "\t" << fParameters[i] << "\t" << fParError[i] << "\t" << fParError[i]/fParameters[i] << "\t" << BkgPar[i]->GetHistM1()->Integral() << endl;
   }
   OutFile.close();
 
@@ -4727,7 +4554,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
     // dDataIntegralM2 = 135379;
     // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
     // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-      DoTheFitAdaptive(0,0);
+      DoTheFitAdaptive();
       // Probably need to add a way to input the best-fit half-life
       // Need to manually input best-fit value right now
 

@@ -71,8 +71,6 @@ public:
 	void SanityCheck();
 
 	void SetParameters(int index, double value);
-
-	void SetParEfficiency();
 	
 	void ToyFit(int fNumFits);
 
