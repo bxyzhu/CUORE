@@ -53,7 +53,7 @@ public:
 
 	TH1D *Kernal(TH1D *hMC, TH1D *hSMC);
 
-	void LatexResultTable(double fValue);
+	void LatexResultTable();
 
 	// Dumb to have all of these but w/e
 	void LoadData();
@@ -106,6 +106,7 @@ public:
 	int 	dDataSet;
 	double 	dLivetime;
 	double 	dLivetimeYr;
+	double 	dExposure;
 
 	double 	dChiSquare;
 	double 	dResidualRMSM1;
@@ -145,6 +146,7 @@ private:
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
 	TH1D			*fDataHistoM2Sum;
+	TH1D			*fDataHistoM3;
 
 	TH1D			*fAdapDataHistoM1;
 	TH1D			*fAdapDataHistoM2;
