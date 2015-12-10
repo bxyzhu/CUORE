@@ -22,6 +22,7 @@
 #include "TROOT.h"
 #include "TStyle.h"
 #include "TBkgModelParameter.hh"
+#include "TArrayD.h"
 
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
@@ -55,14 +56,14 @@ public:
 
 	void LatexResultTable();
 
-	// Dumb to have all of these but w/e
 	void LoadData();
 
 	void PrintParameters();
 
 	void PrintParActivity();
 
-	void ProfileNLL();
+	// Calculates ProfileNLL of parameter based off of its best fit value
+	void ProfileNLL(int fParFixed);
 
 	void ProfileNLL2D();
 
@@ -72,6 +73,8 @@ public:
 
 	void SetParameters(int index, double value);
 	
+	void SetLimit(int fParFixed);
+
 	void ToyFit(int fNumFits);
 
 	void UpdateModelAdaptive();
@@ -536,6 +539,16 @@ private:
 
 	TH1D			*hExtPbbi210M2Sum;
 
+	TH1D 			*hExtMuonM1;
+	TH1D			*hCuBox_th232spotM1;
+	TH1D			*hCuBox_k40spotM1;
+	TH1D 			*hBotExtPb_k40spotM1;
+
+	TH1D 			*hExtMuonM2;
+	TH1D			*hCuBox_th232spotM2;
+	TH1D			*hCuBox_k40spotM2;
+	TH1D 			*hBotExtPb_k40spotM2;
+
 /////////// OVC M1 and M2
 	TH1D			*hOVCco60M1;
 	TH1D			*hOVCk40M1;
@@ -946,6 +959,18 @@ private:
 
 	TH1D			*hAdapExtPbbi210M2Sum;
 
+	TH1D 			*hAdapExtMuonM1;
+	TH1D			*hAdapCuBox_th232spotM1;
+	TH1D			*hAdapCuBox_k40spotM1;
+	TH1D 			*hAdapBotExtPb_k40spotM1;
+
+	TH1D 			*hAdapExtMuonM2;
+	TH1D			*hAdapCuBox_th232spotM2;
+	TH1D			*hAdapCuBox_k40spotM2;
+	TH1D 			*hAdapBotExtPb_k40spotM2;
+
+
+
 ////////// Fudge Factor Models
 	TH1D 		*hAdapOVC804M1;
 	TH1D 		*hAdapOVC835M1;
@@ -1323,6 +1348,17 @@ private:
 	
 	TH1			*hnewExtPbbi210M2Sum;
 
+	TH1 		*hnewExtMuonM1;
+	TH1			*hnewCuBox_th232spotM1;
+	TH1			*hnewCuBox_k40spotM1;
+	TH1 		*hnewBotExtPb_k40spotM1;
+
+	TH1 		*hnewExtMuonM2;
+	TH1			*hnewCuBox_th232spotM2;
+	TH1			*hnewCuBox_k40spotM2;
+	TH1 		*hnewBotExtPb_k40spotM2;
+
+
 /////////// OVC M1 and M2
 	TH1			*hnewOVCco60M1;
 	TH1			*hnewOVCk40M1;
@@ -1414,6 +1450,8 @@ private:
 	std::string 	dMCDir;
 	std::string 	dSaveDir;
 
+	TArrayD *fParArray;
+	TArrayD *fParArrayErr;
 
 	// Error Matrix
 	// TMatrixT<double> 	*mCorrMatrix;
