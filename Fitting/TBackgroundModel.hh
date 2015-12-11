@@ -101,6 +101,7 @@ public:
 	int 	dNumFreeParameters;
 	int 	dNDF;
 
+	double			dDataIntegral;
 	double  	dDataIntegralTot;
 	double 	dDataIntegralM1;
 	double 	dDataIntegralM2;
@@ -141,7 +142,6 @@ private:
 	TCut 			base_cut;
 	TCut			ener_cut;
 
-	double			dDataIntegral;
 
 	TMinuit			*minuit;
 

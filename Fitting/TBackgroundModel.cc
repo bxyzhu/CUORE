@@ -3156,7 +3156,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   if(bSave)
   {
   // Saving plots
-
     cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
     cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
     cResidual1->SaveAs(Form("%s/Results/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
@@ -3190,21 +3189,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
     fSaveResult->Write(); 
  
     LatexResultTable();
-
-
-
-
-  // cadap1->SaveAs(Form("%s/FitResults/CovMatrix/FitM1_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cadap2->SaveAs(Form("%s/FitResults/CovMatrix/FitM2_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual1->SaveAs(Form("%s/FitResults/CovMatrix/FitM1Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cResidual2->SaveAs(Form("%s/FitResults/CovMatrix/FitM2Residual_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cres1->SaveAs(Form("%s/FitResults/CovMatrix/FitResidualDist_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-  // cMatrix->SaveAs(Form("%s/FitResults/CovMatrix/FitCovMatrix_%d_%d_%d.C", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime(), nLoop));
-
-    // fSaveResult->Close();
   } // end bSave
-
-
 
   return true;
 }
@@ -3362,7 +3347,8 @@ void TBackgroundModel::SetLimit(int fParFixed)
   DoTheFitAdaptive();
   dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
 
-  double dChiSquareDummy;
+  double  dChiSquareDummy;
+  double  dDummyIntegral;
 
   // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
   for(int i = 0; i < dNParam; i++)
@@ -3374,8 +3360,12 @@ void TBackgroundModel::SetLimit(int fParFixed)
   hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
   hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
 
+  dDummyIntegral = BkgPar[fParFixed]->GetHistM1()->Integral("width");
+
+
   // OutFile.open(Form("%s/Results/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
 
+  cout << "ChiSquare ---  delta ChiSquare ---  Parameter  --- Integral (M1)" << endl;
 
   for(int i = 0; i < 100 ; i++ )
   {
@@ -3391,14 +3381,14 @@ void TBackgroundModel::SetLimit(int fParFixed)
     // Set new value for parameter
     fParameters[fParFixed] = *iter;
 
-    BkgPar[fParFixed]->GetHistM1()->Scale( dDataIntegralM1*fParameters[fParFixed]);
+    // cout << "Integral before scaling: " << dDummyIntegral << endl;
+    // cout << "Scaling: " << *iter*dDataIntegralM1 << "\t" << "Integral: " << dDummyIntegral << endl;
 
     // Re-calculate Chi-squared
     dChiSquareDummy = GetChiSquareAdaptive();
 
-    cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << BkgPar[fParFixed]->GetHistM1()->Integral() << endl; 
+    cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
 
-    BkgPar[fParFixed]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[fParFixed]) );
 
 
   }
