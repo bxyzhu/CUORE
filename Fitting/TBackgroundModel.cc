@@ -3365,7 +3365,6 @@ void TBackgroundModel::SetLimit(int fParFixed)
 
   // OutFile.open(Form("%s/Results/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
 
-  cout << "ChiSquare ---  delta ChiSquare ---  Parameter  --- Integral (M1)" << endl;
 
   for(int i = 0; i < 100 ; i++ )
   {
@@ -3373,6 +3372,8 @@ void TBackgroundModel::SetLimit(int fParFixed)
     cout << "Input initial value: " << fParameters[fParFixed] + fParError[fParFixed]/100*i << endl;
   }
 
+  cout << "ChiSquare ---  delta ChiSquare ---  Parameter  --- Integral (M1)" << endl;
+  
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
 
