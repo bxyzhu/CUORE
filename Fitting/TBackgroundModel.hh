@@ -40,7 +40,10 @@ public:
 	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
 	virtual ~TBackgroundModel();
 
-	std::vector<double> AdaptiveBinning(TH1D *h1, int dBinBase);
+	std::vector<double> AdaptiveBinningM1(TH1D *h1, int dBinBase);
+
+	std::vector<double> AdaptiveBinningM2(TH1D *h1, int dBinBase);
+
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
