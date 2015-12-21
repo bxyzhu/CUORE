@@ -1608,14 +1608,14 @@ void TBackgroundModel::Initialize()
   hExtPbpb210M2 = (TH1D*)fBulk->Get("hExtPbpb210M2");
 
   hExtMuonM1 = (TH1D*)fBulk->Get("hExtMuonM1");
-  hCuBox_th232spotM1 = (TH1D*)fBulk->Get("hCuBox_th232spotM1");
-  hCuBox_k40spotM1 = (TH1D*)fBulk->Get("hCuBox_k40spotM1");
-  hBotExtPb_k40spotM1 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM1");
+  // hCuBox_th232spotM1 = (TH1D*)fBulk->Get("hCuBox_th232spotM1");
+  // hCuBox_k40spotM1 = (TH1D*)fBulk->Get("hCuBox_k40spotM1");
+  // hBotExtPb_k40spotM1 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM1");
 
   hExtMuonM2 = (TH1D*)fBulk->Get("hExtMuonM2");
-  hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
-  hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
-  hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
+  // hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
+  // hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
+  // hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
 
 ////////// Fudge Factors
   hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
@@ -2449,23 +2449,22 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[40] = new TBkgModelParameter( "Roman Lead K40", 40, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
   BkgPar[41] = new TBkgModelParameter( "Roman Lead Co60", 41, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
   
-  BkgPar[42] = new TBkgModelParameter( "OVC U238", 42, 9.58073e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
-  // BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 0., 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 5.61662e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  BkgPar[44] = new TBkgModelParameter( "OVC K40", 44, 5.48196e-07, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
-  BkgPar[45] = new TBkgModelParameter( "OVC Co60", 45, 2.58742e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
-  BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 6.46635e-03., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+  BkgPar[42] = new TBkgModelParameter( "OVC U238", 42, 6.59469e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 5.79542e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  BkgPar[44] = new TBkgModelParameter( "OVC K40", 44, 5.71454e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  BkgPar[45] = new TBkgModelParameter( "OVC Co60", 45, 2.20927e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 6.02215e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
   
-  BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 1.11890e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
-  BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 2.84759e-02, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
-  // BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 0., 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
-  BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 2.66891e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
-  BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 1.36996e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
+  BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 1.05169e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
+  BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 2.83941e-02, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
+  BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 2.55443e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
+  BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 4.01529e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
 
   // 803 keV, need to change the histogram
-  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.38224e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
+  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96469e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
   BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
-  BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 3.34073e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
   // BkgPar[53] = new TBkgModelParameter( "Copper Box spot Th232", 53, 0, 1E-7, 0, 1.0, hAdapCuBox_th232spotM1 , hAdapCuBox_th232spotM2 ); //
   // BkgPar[54] = new TBkgModelParameter( "Copper Box spot K40", 54, 0, 1E-7, 0, 1.0, hAdapCuBox_k40spotM1 , hAdapCuBox_k40spotM2 ); //
 
@@ -2475,7 +2474,8 @@ void TBackgroundModel::GenerateParameters()
 
 
   //////////////
-  // Don't fix parameters here when doing Profile Likelihood, fix them in the Profile Likelihood section!!
+  // Don't fix parameter here when doing Profile Likelihood (except for other parameters that need fixing)
+  // The Profile Likelihood function automatically fixes the parameter in question!!!
   //////////////
 
   // bFixedArray[0] = true;
@@ -2566,8 +2566,8 @@ void TBackgroundModel::UpdateModelAdaptive()
   fModelTotAdapM2->Add( hAdapTeO2po210M2, (1.77E+3)/dDataIntegralM1 );
 
   // Adding Muon distribution
-  // fModelTotAdapM1->Add( hAdapExtMuonM1, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
-  // fModelTotAdapM2->Add( hAdapExtMuonM2, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
+  fModelTotAdapM1->Add( hAdapExtMuonM1, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
+  fModelTotAdapM2->Add( hAdapExtMuonM2, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
 
 
 }
@@ -2608,7 +2608,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
    // Tell minuit what external function to use 
    minuit->SetFCN(myExternal_FCNAdap);
 
-   int status = minuit->Command("MINImize 1000000 0.1"); // Command that actually does the minimization
+   int status = minuit->Command("MINImize 100000 0.1"); // Command that actually does the minimization
    // int status = minuit->Command("MINImize 10000000 1"); // Command that actually does the minimization
 
   // Get final parameters from fit
@@ -2625,18 +2625,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
   // cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
-
-  // Integrals
-  for(int i = 0; i < dNParam; i++)
-  {
-    BkgPar[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]);
-    BkgPar[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]);
-    fParActivityM1[i] = BkgPar[i]->GetHistM1()->Integral("width")/dLivetimeYr;
-    fParActivityM2[i] = BkgPar[i]->GetHistM2()->Integral("width")/dLivetimeYr;    
-  }
-  // Scale Po-210 
-  hAdapTeO2po210M1->Scale( (1.77E+3) );
-  hAdapTeO2po210M2->Scale( (1.77E+3) );
 
   // ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
@@ -2935,7 +2923,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double d2nbbDataErr = TMath::Sqrt(fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
   double d2nbbModel = fModelTotAdapM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
   double d2nbbModelErr = TMath::Sqrt(fModelTotAdapM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
-  double d2nbbPDF = hAdapTeO22nuM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
+  double d2nbbPDF = dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )/(d2nbbRange*dLivetimeYr);
   double d2nbbPDFErr = TMath::Sqrt(hAdapTeO22nuM1->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" ))/(d2nbbRange*dLivetimeYr);
   double dROIData = fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr);
   double dROIDataErr = TMath::Sqrt(fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr);
@@ -2959,13 +2947,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total PDF in ROI (counts/keV/y): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   // cout << "Number of 2nbb: " << fParameters[0]*dDataIntegralM1 << " +/- " << fParError[0]*dDataIntegralM1 << "\t 2nbb half life (pure counting): " << (0.69314718056)*(4.726e25 * dLivetimeYr)/((hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) + (hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700), "width")) ) << " +/- " << (fParError[0]/fParameters[0]) * (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) << endl;
   // 9.5365e-01 is the efficiency
-  if(!bFixedArray[0])
-  {
+  // if(!bFixedArray[0])
+  // {
     // Which efficiency is correct?
-    double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+    double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     // double d2nbbHL = (0.96677)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
-    cout << "Counts in 2nbb (M1 + M2): " << hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
-  }
+    cout << "Counts in 2nbb (M1): " << dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
+  // }
   cout << endl;
   cout << endl;
   cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  
@@ -3175,6 +3163,19 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   if(bSave)
   {
+
+  // Integrals
+  for(int i = 0; i < dNParam; i++)
+  {
+    BkgPar[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]);
+    BkgPar[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]);
+    fParActivityM1[i] = BkgPar[i]->GetHistM1()->Integral("width")/dLivetimeYr;
+    fParActivityM2[i] = BkgPar[i]->GetHistM2()->Integral("width")/dLivetimeYr;    
+  }
+  // Scale Po-210 
+  hAdapTeO2po210M1->Scale( (1.77E+3) );
+  hAdapTeO2po210M2->Scale( (1.77E+3) );
+
   // Saving plots
     // cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
     // cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
@@ -3278,14 +3279,14 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   DoTheFitAdaptive();
 
   // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  for(int i = 0; i < dNParam; i++)
-  {
-    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  }
-  // For Po-210
-  hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-  hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
+  // for(int i = 0; i < dNParam; i++)
+  // {
+  //   BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+  //   BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  // }
+  // // For Po-210
+  // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
+  // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
 
   // Fix 2nbb value now
   bFixedArray[fParFixed] = true;
@@ -3297,8 +3298,8 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   // for(int i = -5; i < 5; i++)  
   {
     // if (i == 0)continue;
-    fInitValues.push_back(fParameters[fParFixed] + fParError[fParFixed]/10*i );
-    cout << "Input initial value: " << fParameters[fParFixed] + fParError[fParFixed]/10*i << endl;
+    fInitValues.push_back(fParameters[fParFixed] + fParameters[fParFixed]/50*i );
+    cout << "Input initial value: " << fParameters[fParFixed] + fParameters[fParFixed]/50*i << endl;
   }
 
 
@@ -3317,26 +3318,26 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     DoTheFitAdaptive();
 
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1) ) << endl;
-    if(fParFixed == 0)
-    {
-      OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
-    }
-    else
-    {
-      OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., *iter) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
+    // if(fParFixed == 0)
+    // {
+      // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") ) << endl;
+    // }
+    // else
+    // {
+      // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., *iter) << endl;
     // OutPNLL << "dX.push_back(" << (dChiSquare-dBestChiSq)/2. << "); dT.push_back(" << *iter << ");" << endl;
-    }
+    // }
     
 
     // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-    for(int i = 0; i < dNParam; i++)
-    {
-      BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-      BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-    }
-    hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-    hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
+    // for(int i = 0; i < dNParam; i++)
+    // {
+    //   BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    //   BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+    // }
+    // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
+    // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
 
 
     nLoop++; // This is purely for file names and to keep track of number of loops
