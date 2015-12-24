@@ -136,7 +136,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   fDataHistoM1->Divide( hEfficiency );
   fDataHistoM2->Divide( hEfficiency );
-  fDataHistoM2Sum->Divide( hEfficiency );
+  // fDataHistoM2Sum->Divide( hEfficiency );
 
 
   // Total model histograms
@@ -826,12 +826,12 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   nLoop = 0;
 
   GenerateParameters();
+  // SetParEfficiency();
 
   // DoTheFitAdaptive();
-  // ProfileNLL();
-  // ProfileNLL2D();
+
   // Number of Toy fits
-  if(bToyData)ToyFit(1);
+  if(bToyData)ToyFit();
 
 }
 
@@ -2339,7 +2339,7 @@ void TBackgroundModel::LoadData()
   break;
 
   default:   
-    // qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); // Use this or no?
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2064.root", dDataDir.c_str()));   
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2067.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2070.root", dDataDir.c_str())); 
@@ -2369,6 +2369,10 @@ void TBackgroundModel::LoadData()
 
   dLivetimeYr = 0.8738; 
   dExposure = 33.4229;
+
+  // Not using ds2061
+  // dLivetimeYr = 32.1036;
+  // dExposure = 0.839309;
 }
 
 // Prints parameters, needs update 11-06-2014
@@ -2459,6 +2463,19 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 2.83941e-02, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
   BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 2.55443e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
   BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 4.01529e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
+
+  // BkgPar[42] = new TBkgModelParameter( "OVC U238", 42, 0., 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  // BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 0., 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  // BkgPar[44] = new TBkgModelParameter( "OVC K40", 44, 0., 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  // BkgPar[45] = new TBkgModelParameter( "OVC Co60", 45, 0., 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  // BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 0., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+  
+  // BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 0., 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
+  // BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 0., 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
+  // BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 0., 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
+  // BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 0., 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
+
+
 
   // 803 keV, need to change the histogram
   // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96469e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
@@ -2553,7 +2570,7 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Create model
   for(int i = 0; i < dNParam; i++)
   {
-    if(fParameters[i] <= 0 )continue;
+    // if(fParameters[i] <= 0 )continue;
     fModelTotAdapM1->Add( BkgPar[i]->GetHistM1(),              dDataIntegralM1*fParameters[i]);
     fModelTotAdapM2->Add( BkgPar[i]->GetHistM2(),              dDataIntegralM1*fParameters[i]);
     // fModelTotAdapM2Sum->Add( BkgPar[i]->GetHistM2Sum(),        dDataIntegralM1*fParameters[i]);
@@ -2621,10 +2638,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   UpdateModelAdaptive();
   
   dChiSquare = GetChiSquareAdaptive();
-
-  // cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
-  // cout << "ChiSq = " << dChiSquare << "\t" << "NDF = " << dNDF << endl;
-  // cout << "Probability = " << TMath::Prob(dChiSquare, dNDF ) << endl;
 
   // ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
@@ -2847,8 +2860,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 
 
-
-
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
 
@@ -2950,8 +2961,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // if(!bFixedArray[0])
   // {
     // Which efficiency is correct?
-    double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
-    // double d2nbbHL = (0.96677)*(0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+    double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     cout << "Counts in 2nbb (M1): " << dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
   // }
   cout << endl;
@@ -2979,17 +2989,24 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   cout << "ChiSq = " << dChiSquare << "\t" << "NumFreeParamters = " << dNumFreeParameters << "\t" << "NDF = " << dNDF << endl;
   cout << "Probability = " << TMath::Prob(dChiSquare, dNDF) << endl;
+  // cout << "Status = " << minuit->GetStatus() << " fit status: " << status << endl;
+  cout << "Fit Status = " << status << endl;
 
 /*
     2nbb calculation:
+     - N_A = 6.0221409e+23
      - TeO2 molar mass: 159.6 g/mol
      - half life is 9.81 * 10^20 years
      - how many in Q0 data so far? 1/rate = half life/ln(2) -> rate = ln(2)/half life = 7.066*10^-22 decays/year (Laura's thesis)
      - Moles = 750g * 49 crystals * 0.3408 abundance/159.6 g/mol = 78.474 mol total
      - N_TeO2 = 78.474 * N_A = 4.726*10^25 nuclei of Te130
      - N_2nbb = N_TeO2 * rate * livetime = 1.551*10^4 events
-     - half life = rate * ln(2) = ln(2) * N_TeO2 * livetime / N_2nbb
 
+     - Moles = 750g * 51 crystals * 0.3408 abundance/159.6 g/mol = 81.677 mol total
+     - N_TeO2 = 81.677 * N_A = 4.9187e+25 nuclei of Te130
+
+     - half life = rate * ln(2) = ln(2) * N_TeO2 * livetime / N_2nbb
+     
 */
 
   // Correlation Matrix section
@@ -2997,16 +3014,16 @@ bool TBackgroundModel::DoTheFitAdaptive()
   mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
   minuit->mnemat(mCorrMatrix.GetMatrixArray(), TBackgroundModel::dNParam);
 
-  TMatrixT<double> mReducedMatrix;
-  mReducedMatrix.ResizeTo(dNumFreeParameters, dNumFreeParameters);
-
   for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
     for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
       mCorrMatrix(i,j) = mCorrMatrix(i,j)/(fParError[i]*fParError[j]);
 
-  for(int i = mReducedMatrix.GetRowLwb(); i <= mReducedMatrix.GetRowUpb(); i++)
-    for(int j = mReducedMatrix.GetColLwb(); j <= mReducedMatrix.GetColUpb(); j++)
-      mReducedMatrix(i,j) = mCorrMatrix(i,j);
+
+  // TMatrixT<double> mReducedMatrix;
+  // mReducedMatrix.ResizeTo(dNumFreeParameters, dNumFreeParameters);
+  // for(int i = mReducedMatrix.GetRowLwb(); i <= mReducedMatrix.GetRowUpb(); i++)
+  //   for(int j = mReducedMatrix.GetColLwb(); j <= mReducedMatrix.GetColUpb(); j++)
+  //     mReducedMatrix(i,j) = mCorrMatrix(i,j);
 
 
   // for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
@@ -3177,14 +3194,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hAdapTeO2po210M2->Scale( (1.77E+3) );
 
   // Saving plots
-    // cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    // cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    // cResidual1->SaveAs(Form("%s/Results/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    // cResidual2->SaveAs(Form("%s/Results/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    // cres1->SaveAs(Form("%s/Results/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    // cProgress->SaveAs(Form("%s/Results/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
-    
-    // cMatrix2->SaveAs(Form("%s/Results/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cadap1->SaveAs(Form("%s/Results/FitM1_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cadap2->SaveAs(Form("%s/Results/FitM2_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cResidual1->SaveAs(Form("%s/Results/FitM1Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cResidual2->SaveAs(Form("%s/Results/FitM2Residual_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cres1->SaveAs(Form("%s/Results/FitResidualDist_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cProgress->SaveAs(Form("%s/Results/ChiSquareProgress_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
+    cMatrix2->SaveAs(Form("%s/Results/FitCovMatrix_%d_%d_%d.pdf", dSaveDir.c_str(), tTime->GetDate(), tTime->GetTime() ));
 
 
     // Save histograms to file
@@ -3205,8 +3221,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
     fSaveResult->Add( hAdapTeO2po210M2 );
 
     fSaveResult->Add(&mCorrMatrix);
-    // fSaveResult->Add(fParArray);
-    // fSaveResult->Add(fParArrayErr);
+    fSaveResult->Add(fParArray);
+    fSaveResult->Add(fParArrayErr);
 
     fSaveResult->Write(); 
  
@@ -3514,9 +3530,29 @@ void TBackgroundModel::ProfileNLL2D()
 
 
 
-void TBackgroundModel::ToyFit(int fNumFits)
+void TBackgroundModel::ToyFit()
 {
+    // int status; 
+
+    // TTree *ToyTree = new TTree("ToyTree", "Tree with Toy Fit Results");
+
+    // ToyTree->Branch("Index", &Index, "Index/I");
+    // ToyTree->Branch("ChiSq", &ChiSq, "ChiSq/D");
+    // ToyTree->Branch("Pull", &Pull, "Pull/D");
+    // ToyTree->Branch("FitStatus", &FitStatus, "FitStatus/I");
+    // ToyTree->Branch("2nbbHL", &2nbbHL, "2nbbHL/D");
+    // ToyTree->Branch("2nbbHLErr", &2nbbHLErr, "2nbbHLErr/D");
+
+    // ToyTree->Branch("fParArray",&fParArray, "fParArray/D");
+    // ToyTree->Branch("fParArrayErr", &fParArrayErr, "fParArrayErr/D");
+
+
+
     OutToy.open(Form("%s/FitResults/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
+
+    // Initial Fit to get the rate
+    DoTheFitAdaptive();
+
 
     double dInitial2nbbRate = (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
     double dInitial2nbbRateErr = fParError[0]/fParameters[0]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
@@ -3543,7 +3579,7 @@ void TBackgroundModel::ToyFit(int fNumFits)
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
-      fToyData = new TFile(Form("%s/Toy/NoFudge/Toy_p%d.root", dMCDir.c_str(), i));
+      fToyData = new TFile(Form("%s/Toy/NoFudge/ToyData_p%d.root", dMCDir.c_str(), i));
       fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
       fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
     
@@ -3570,17 +3606,20 @@ void TBackgroundModel::ToyFit(int fNumFits)
     // dDataIntegralM2 = 135379;
     // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
     // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-      DoTheFitAdaptive();
+      status = DoTheFitAdaptive();
       // Probably need to add a way to input the best-fit half-life
       // Need to manually input best-fit value right now
+      // Test if the fit converged, 
+      if(status == 0)
+      {
+        dToy2nbbRate = (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
+        dToy2nbbRateErr = fParError[0]/fParameters[0]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
 
-      dToy2nbbRate = (0.69314718056)*(4.726e25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
-      dToy2nbbRateErr = fParError[0]/fParameters[0]*(0.69314718056)*(4.726e25*dLivetimeYr)/(fParameters[0]*dDataIntegralM1);
-
-      OutToy << Form("hToy2nbbRate->Fill(%.5e);", dToy2nbbRate ) << endl;
-      OutToy << Form("hToy2nbbError->Fill(%.5e);", dToy2nbbRateErr ) << endl;
-      OutToy << Form("hPullDist->Fill(%5e);", (dToy2nbbRate - dInitial2nbbRate)/(dToy2nbbRateErr) ) << endl;
-      OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
+        OutToy << Form("hToy2nbbRate->Fill(%.5e);", dToy2nbbRate ) << endl;
+        OutToy << Form("hToy2nbbError->Fill(%.5e);", dToy2nbbRateErr ) << endl;
+        OutToy << Form("hPullDist->Fill(%5e);", (dToy2nbbRate - dInitial2nbbRate)/(dToy2nbbRateErr) ) << endl;
+        OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
+      }
     }
     OutToy << endl;
     OutToy << endl;
@@ -3700,6 +3739,10 @@ void TBackgroundModel::SetParEfficiency()
   fParEfficiencyM1[50] = 0.000398748;
   fParEfficiencyM1[51] = 0.000309365;
   fParEfficiencyM1[52] = 0.000338529;
+
+  fParEfficiencyM1[53] = 0.5;
+  fParEfficiencyM1[54] = 0.5;
+
 }
 
 // 

@@ -76,9 +76,11 @@ public:
 
 	void SetParameters(int index, double value);
 	
+	void SetParEfficiency();
+
 	void SetLimit(int fParFixed);
 
-	void ToyFit(int fNumFits);
+	void ToyFit();
 
 	void UpdateModelAdaptive();
 
