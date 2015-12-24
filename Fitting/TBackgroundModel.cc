@@ -56,7 +56,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bToyData = false;
 
   tTime = new TDatime();
-  dNParam = 53; // number of fitting parameters (reduced)
+  dNParam = 51; // number of fitting parameters (reduced)
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
   dMass = 36.75;
@@ -2479,8 +2479,8 @@ void TBackgroundModel::GenerateParameters()
 
   // 803 keV, need to change the histogram
   // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96469e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
-  BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
-  BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 3.34073e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
+  // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 3.34073e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
   // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
   // BkgPar[53] = new TBkgModelParameter( "Copper Box spot Th232", 53, 0, 1E-7, 0, 1.0, hAdapCuBox_th232spotM1 , hAdapCuBox_th232spotM2 ); //
   // BkgPar[54] = new TBkgModelParameter( "Copper Box spot K40", 54, 0, 1E-7, 0, 1.0, hAdapCuBox_k40spotM1 , hAdapCuBox_k40spotM2 ); //
@@ -2989,8 +2989,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Total number of calls = " << dNumCalls << "\t" << "ChiSq/NDF = " << dChiSquare/dNDF << endl; // for M1 and M2
   cout << "ChiSq = " << dChiSquare << "\t" << "NumFreeParamters = " << dNumFreeParameters << "\t" << "NDF = " << dNDF << endl;
   cout << "Probability = " << TMath::Prob(dChiSquare, dNDF) << endl;
-  // cout << "Status = " << minuit->GetStatus() << " fit status: " << status << endl;
-  cout << "Fit Status = " << status << endl;
+  // cout << "Fit Status = " << status << endl;
 
 /*
     2nbb calculation:
@@ -3005,8 +3004,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
      - Moles = 750g * 51 crystals * 0.3408 abundance/159.6 g/mol = 81.677 mol total
      - N_TeO2 = 81.677 * N_A = 4.9187e+25 nuclei of Te130
 
-     - half life = rate * ln(2) = ln(2) * N_TeO2 * livetime / N_2nbb
-     
+     - half life = rate * ln(2) = ln(2) * N_TeO2 * livetime / N_2nbb   
 */
 
   // Correlation Matrix section
@@ -3024,7 +3022,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // for(int i = mReducedMatrix.GetRowLwb(); i <= mReducedMatrix.GetRowUpb(); i++)
   //   for(int j = mReducedMatrix.GetColLwb(); j <= mReducedMatrix.GetColUpb(); j++)
   //     mReducedMatrix(i,j) = mCorrMatrix(i,j);
-
 
   // for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
     // for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
@@ -3220,9 +3217,9 @@ bool TBackgroundModel::DoTheFitAdaptive()
     fSaveResult->Add( hAdapTeO2po210M1 );
     fSaveResult->Add( hAdapTeO2po210M2 );
 
-    fSaveResult->Add(&mCorrMatrix);
-    fSaveResult->Add(fParArray);
-    fSaveResult->Add(fParArrayErr);
+    // fSaveResult->Add(&mCorrMatrix);
+    // fSaveResult->Add(fParArray);
+    // fSaveResult->Add(fParArrayErr);
 
     fSaveResult->Write(); 
  
