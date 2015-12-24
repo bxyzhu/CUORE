@@ -56,7 +56,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bToyData = false;
 
   tTime = new TDatime();
-  dNParam = 51; // number of fitting parameters (reduced)
+  dNParam = 53; // number of fitting parameters (reduced)
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
   dMass = 36.75;
@@ -1608,14 +1608,14 @@ void TBackgroundModel::Initialize()
   hExtPbpb210M2 = (TH1D*)fBulk->Get("hExtPbpb210M2");
 
   hExtMuonM1 = (TH1D*)fBulk->Get("hExtMuonM1");
-  // hCuBox_th232spotM1 = (TH1D*)fBulk->Get("hCuBox_th232spotM1");
-  // hCuBox_k40spotM1 = (TH1D*)fBulk->Get("hCuBox_k40spotM1");
-  // hBotExtPb_k40spotM1 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM1");
+  hCuBox_th232spotM1 = (TH1D*)fBulk->Get("hCuBox_th232spotM1");
+  hCuBox_k40spotM1 = (TH1D*)fBulk->Get("hCuBox_k40spotM1");
+  hBotExtPb_k40spotM1 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM1");
 
   hExtMuonM2 = (TH1D*)fBulk->Get("hExtMuonM2");
-  // hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
-  // hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
-  // hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
+  hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
+  hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
+  hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
 
 ////////// Fudge Factors
   hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
@@ -2479,9 +2479,9 @@ void TBackgroundModel::GenerateParameters()
 
   // 803 keV, need to change the histogram
   // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96469e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
-  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
+  BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
   // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 3.34073e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
-  // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
   // BkgPar[53] = new TBkgModelParameter( "Copper Box spot Th232", 53, 0, 1E-7, 0, 1.0, hAdapCuBox_th232spotM1 , hAdapCuBox_th232spotM2 ); //
   // BkgPar[54] = new TBkgModelParameter( "Copper Box spot K40", 54, 0, 1E-7, 0, 1.0, hAdapCuBox_k40spotM1 , hAdapCuBox_k40spotM2 ); //
 
