@@ -1455,8 +1455,10 @@ private:
 	std::string 	dMCDir;
 	std::string 	dSaveDir;
 
-	TArrayD *fParArray;
-	TArrayD *fParArrayErr;
+	// TArrayD *fParArray;
+	// TArrayD *fParArrayErr;
+	TVectorD *fParArray;
+	TVectorD *fParArrayErr;
 
 	// Error Matrix
 	// TMatrixT<double> 	*mCorrMatrix;
@@ -1464,7 +1466,6 @@ private:
 	bool			bFixedRes;
 	bool			bAdaptiveBinning;
 	bool 			bSave;
-	bool 			bToyData;
 
 	int 			dNumCalls;
 	int 			dMult;
