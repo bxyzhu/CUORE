@@ -3509,56 +3509,67 @@ void TBackgroundModel::ProfileNLL2D()
 
 void TBackgroundModel::ToyFit()
 {
-
     cout << "Using Toy Data" << endl;
-    int status; 
+    int dStatus, dIndex; 
+    double dChiSq;
+    double dPull = 0;
+    double Toy2nbbHL, Toy2nbbHLErr;
 
     TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/ToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
     TTree *ToyTree = new TTree("ToyTree", "Tree with Toy Fit Results");
 
-    ToyTree->Branch("Index", &Index, "Index/I");
-    ToyTree->Branch("ChiSq", &ChiSq, "ChiSq/D");
-    ToyTree->Branch("Pull", &Pull, "Pull/D");
-    ToyTree->Branch("FitStatus", &FitStatus, "FitStatus/I");
-    ToyTree->Branch("2nbbHL", &2nbbHL, "2nbbHL/D");
-    ToyTree->Branch("2nbbHLErr", &2nbbHLErr, "2nbbHLErr/D");
+    ToyTree->Branch("Index", &dIndex, "Index/I");
+    ToyTree->Branch("ChiSq", &dChiSquare, "ChiSq/D");
+    ToyTree->Branch("Pull", &dPull, "Pull/D");
+    ToyTree->Branch("FitStatus", &dStatus, "FitStatus/I");
+    ToyTree->Branch("Toy2nbbHL", &Toy2nbbHL, "Toy2nbbHL/D");
+    ToyTree->Branch("Toy2nbbHLErr", &Toy2nbbHLErr, "Toy2nbbHLErr/D");
 
     ToyTree->Branch("fParameters",&fParameters, "fParameters[dNParam]/D");
     ToyTree->Branch("fParErr", &fParError, "fParErr[dNParam]/D");
 
+    ToyTree->Branch("fAdapDataHistoM1", "TH1D", &fAdapDataHistoM1, 32000, 0);
+    ToyTree->Branch("fAdapDataHistoM2", "TH1D", &fAdapDataHistoM2, 32000, 0);
+    ToyTree->Branch("fModelTotAdapM1", "TH1D", &fModelTotAdapM1, 32000, 0);
+    ToyTree->Branch("fModelTotAdapM2", "TH1D", &fModelTotAdapM2, 32000, 0);
 
 
-    OutToy.open(Form("%s/Final/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
+
+    // OutToy.open(Form("%s/Final/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
 
     // Initial Fit to get the rate
-    DoTheFitAdaptive();
+    dStatus = DoTheFitAdaptive();
+    // dChiSq = dChiSquare;
 
     double dInitial2nbbRate = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     double dInitial2nbbRateErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
 
+    dIndex = 0;
+    Toy2nbbHL = dInitial2nbbRate;
+    Toy2nbbHLErr = dInitial2nbbRateErr;
+
+    ToyTree->Fill();
+
     cout << "Initial 2nbb Rate and Error: " << dInitial2nbbRate << " +/- " <<  dInitial2nbbRateErr << endl;
 
-    OutToy << "{" << endl;
-    OutToy << endl;
+    // OutToy << "{" << endl;
+    // OutToy << endl;
 
-    OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
-    OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
-    OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
-    OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
+    // OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
+    // OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
+    // OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
+    // OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
 
     // cout << "Number of Loops " << fNumFits << endl;
-
-    double dToy2nbbRate;
-    double dToy2nbbRateErr;
-
     // Number of toy fits
-    for(int i = 1; i <= 1; i++)
+    for(int i = 1; i <= 5; i++)
     {
       cout << "Toy: " << i << endl;
+      dIndex = i;
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
-      fToyData = new TFile(Form("%s/Toy/NoFudge/ToyData_p%d.root", dMCDir.c_str(), i));
+      fToyData = new TFile(Form("%s/Toy/ToyData_p%d.root", dMCDir.c_str(), i));
       fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
       fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
     
@@ -3585,51 +3596,51 @@ void TBackgroundModel::ToyFit()
     // dDataIntegralM2 = 135379;
     // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
     // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-      status = DoTheFitAdaptive();
-      // Probably need to add a way to input the best-fit half-life
-      // Need to manually input best-fit value right now
-      // Test if the fit converged, 
-      if(status == 0)
-      {
-        dToy2nbbRate = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"))
-        dToy2nbbRateErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")));
+      dStatus = DoTheFitAdaptive();
+      // dChiSq = dChiSquare;
 
-        OutToy << Form("hToy2nbbRate->Fill(%.5e);", dToy2nbbRate ) << endl;
-        OutToy << Form("hToy2nbbError->Fill(%.5e);", dToy2nbbRateErr ) << endl;
-        OutToy << Form("hPullDist->Fill(%5e);", (dToy2nbbRate - dInitial2nbbRate)/(dToy2nbbRateErr) ) << endl;
-        OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
-      }
+      Toy2nbbHL = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+      Toy2nbbHLErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")));
+
+      dPull = (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr);
+
+      // OutToy << Form("hToy2nbbRate->Fill(%.5e);", Toy2nbbHL ) << endl;
+      // OutToy << Form("hToy2nbbError->Fill(%.5e);", Toy2nbbHLErr ) << endl;
+      // OutToy << Form("hPullDist->Fill(%5e);", (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr) ) << endl;
+      // OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
+      // }
 
       ToyTree->Fill();
     }
-    OutToy << endl;
-    OutToy << endl;
-    OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
-    OutToy << "c1->Divide(2,2);" << endl;
-    OutToy << "c1->cd(1);" << endl;
-    OutToy << "hPullDist->GetXaxis()->SetTitle(\"#Deltat_{1/2}/#sigma_{t_{1/2}}\");" << endl;
-    OutToy << "hPullDist->Draw();" << endl;
+    // OutToy << endl;
+    // OutToy << endl;
+    // OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
+    // OutToy << "c1->Divide(2,2);" << endl;
+    // OutToy << "c1->cd(1);" << endl;
+    // OutToy << "hPullDist->GetXaxis()->SetTitle(\"#Deltat_{1/2}/#sigma_{t_{1/2}}\");" << endl;
+    // OutToy << "hPullDist->Draw();" << endl;
 
-    OutToy << "c1->cd(2);" << endl;    
-    OutToy << "hToy2nbbRate->GetXaxis()->SetTitle(\"t_{1/2}\");" << endl;
-    OutToy << "hToy2nbbRate->Draw();" << endl;
+    // OutToy << "c1->cd(2);" << endl;    
+    // OutToy << "hToy2nbbRate->GetXaxis()->SetTitle(\"t_{1/2}\");" << endl;
+    // OutToy << "hToy2nbbRate->Draw();" << endl;
 
-    OutToy << "c1->cd(3);" << endl;    
-    OutToy << "hToy2nbbError->GetXaxis()->SetTitle(\"#sigma_{t_{1/2}}\");" << endl;
-    OutToy << "hToy2nbbError->Draw();" << endl;
+    // OutToy << "c1->cd(3);" << endl;    
+    // OutToy << "hToy2nbbError->GetXaxis()->SetTitle(\"#sigma_{t_{1/2}}\");" << endl;
+    // OutToy << "hToy2nbbError->Draw();" << endl;
 
-    OutToy << "c1->cd(4);" << endl;    
-    OutToy << "hChiSquared->GetXaxis()->SetTitle(\"#chi^{2}\");" << endl;
-    OutToy << "hChiSquared->Draw();" << endl;
+    // OutToy << "c1->cd(4);" << endl;    
+    // OutToy << "hChiSquared->GetXaxis()->SetTitle(\"#chi^{2}\");" << endl;
+    // OutToy << "hChiSquared->Draw();" << endl;
 
-    OutToy << endl;
-    OutToy << endl;
-    OutToy << "}" << endl;
-    OutToy << endl;
-    OutToy.close();
+    // OutToy << endl;
+    // OutToy << endl;
+    // OutToy << "}" << endl;
+    // OutToy << endl;
+    // OutToy.close();
 
-    // ToyTree->Write();
+    ToyTreeFile->Add(ToyTree);
     ToyTreeFile->Write();
+
 }
 
 TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
