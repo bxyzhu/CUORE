@@ -3515,7 +3515,7 @@ void TBackgroundModel::ToyFit()
     double dPull = 0;
     double Toy2nbbHL, Toy2nbbHLErr;
 
-    TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/ToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
+    TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/HighStatToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
     TTree *ToyTree = new TTree("ToyTree", "Tree with Toy Fit Results");
 
     ToyTree->Branch("Index", &dIndex, "Index/I");
@@ -3562,17 +3562,19 @@ void TBackgroundModel::ToyFit()
 
     // cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 5; i++)
+    for(int i = 1; i <= 1; i++)
     {
       cout << "Toy: " << i << endl;
       dIndex = i;
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
-      fToyData = new TFile(Form("%s/Toy/ToyData_p%d.root", dMCDir.c_str(), i));
+      fToyData = new TFile(Form("%s/Toy/HighStatToyData_p%d.root", dMCDir.c_str(), i));
       fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
       fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
     
+      fAdapDataHistoM1->Scale(1./5000);
+      fAdapDataHistoM2->Scale(1./5000);
     // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
     // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
       // fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
@@ -3639,6 +3641,7 @@ void TBackgroundModel::ToyFit()
     // OutToy.close();
 
     ToyTreeFile->Add(ToyTree);
+
     ToyTreeFile->Write();
 
 }
