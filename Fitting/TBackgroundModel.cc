@@ -2631,6 +2631,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double padHeight = (1.-canTopMargin-canBotMargin)/nHisto;
 
 
+
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
   cadap1->SetLogy();
   
@@ -2832,6 +2833,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // CanvasM2->SetLogy();
   // fAdapDataHistoM2->Draw("E");
   // fModelTotAdapM2->Draw("SAME");
+
 
 
 
@@ -3082,6 +3084,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 */
 
+/*
   // Just the Matrix by itself
   TCanvas *cMatrix2 = new TCanvas("cMatrix2", "cMatrix2", 1200, 1200);
   TPad* pM3 = new TPad("pM3","pM3",width1,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
@@ -3139,7 +3142,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hChiSquaredProgressM2->GetXaxis()->SetTitle("Energy (keV)");
   hChiSquaredProgressM2->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2->Draw();
-
+*/
 
   // fParArray = new TArrayD(dNParam, fParameters);
   // fParArrayErr = new TArrayD(dNParam, fParError);
@@ -3555,7 +3558,7 @@ void TBackgroundModel::ToyFit()
     // cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
     
-    for(int i = 1; i <= 250; i++)
+    for(int i = 250; i <= 1000; i++)
     {
       cout << "Toy: " << i << endl;
       dIndex = i;
