@@ -2395,34 +2395,34 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[2] = new TBkgModelParameter( "TeO2 Co60", 2, 0., 1E-7, 0, 1.0, hAdapTeO2co60M1 , hAdapTeO2co60M2 );  
   BkgPar[3] = new TBkgModelParameter( "TeO2 Sb125", 3, 0, 1E-7, 0, 1.0, hAdapTeO2sb125M1 , hAdapTeO2sb125M2 );  
 
-  BkgPar[4] = new TBkgModelParameter( "TeO2 Th232 only", 4, 1.14296e-04, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1 , hAdapTeO2th232onlyM2 ); 
+  BkgPar[4] = new TBkgModelParameter( "TeO2 Th232 only", 4, 3.85069e-05, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1 , hAdapTeO2th232onlyM2 ); 
   BkgPar[5] = new TBkgModelParameter( "TeO2 Ra228-Pb208", 5, 0., 1E-7, 0, 1.0, hAdapTeO2ra228pb208M1 , hAdapTeO2ra228pb208M2 ); 
   BkgPar[6] = new TBkgModelParameter( "TeO2 U238-Th230 ", 6, 0., 1E-7, 0, 1.0, hAdapTeO2u238th230M1 , hAdapTeO2u238th230M2 ); 
-  BkgPar[7] = new TBkgModelParameter( "TeO2 Th230 only", 7, 2.88940e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1 , hAdapTeO2th230onlyM2 ); 
+  BkgPar[7] = new TBkgModelParameter( "TeO2 Th230 only", 7, 3.45907e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1 , hAdapTeO2th230onlyM2 ); 
   BkgPar[8] = new TBkgModelParameter( "TeO2 Ra226-Pb210", 8, 0., 1E-7, 0, 1.0, hAdapTeO2ra226pb210M1 , hAdapTeO2ra226pb210M2 ); 
 
   // TeO2 Surface
-  BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 1", 9, 2.85569e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
-  BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.01 $\\mu$m", 10, 1.39386e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_001 , hAdapTeO2Sxth232M2_001 );
-  BkgPar[11] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.01 $\\mu$m", 11, 2.15768e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001 , hAdapTeO2Sxra228pb208M2_001 );
-  BkgPar[12] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.01 $\\mu$m", 12, 2.05704e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001 , hAdapTeO2Sxu238th230M2_001 );
-  BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.01 $\\mu$m", 13, 1.42958e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001 , hAdapTeO2Sxth230onlyM2_001 );
-  BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.01 $\\mu$m", 14, 3.08708e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001 , hAdapTeO2Sxra226pb210M2_001 );
-  BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 0.1 $\\mu$m", 15, 4.86040e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_01 , hAdapTeO2Sxpb210M2_01 ); // Works better than 0.01
-  BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 16, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
-  BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 17, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
+  BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 1", 9, 2.91517e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
+  BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.01 $\\mu$m", 10, 4.92192e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_001 , hAdapTeO2Sxth232M2_001 );
+  BkgPar[11] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.01 $\\mu$m", 11, 2.12906e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001 , hAdapTeO2Sxra228pb208M2_001 );
+  BkgPar[12] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.01 $\\mu$m", 12, 1.81021e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001 , hAdapTeO2Sxu238th230M2_001 );
+  BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.01 $\\mu$m", 13, 8.84829e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001 , hAdapTeO2Sxth230onlyM2_001 );
+  BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.01 $\\mu$m", 14, 3.50864e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001 , hAdapTeO2Sxra226pb210M2_001 );
+  BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 0.1 $\\mu$m", 15, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_01 , hAdapTeO2Sxpb210M2_01 ); // Works better than 0.01
+  BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 16, 4.29548e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
+  BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 17, 4.06424e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
   BkgPar[18] = new TBkgModelParameter( "TeO2 Sx Pb210 10 $\\mu$m", 18, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
   BkgPar[19] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 19, 0., 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 ); 
   BkgPar[20] = new TBkgModelParameter( "TeO2 Sx U238 10 $\\mu$m", 20, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10 , hAdapTeO2Sxu238M2_10 ); 
   
   // Cu Holder Surface
-  BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 21, 1.00599e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
-  BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 22, 4.18960e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
-  BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 23, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
-  BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 24, 2.31940e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
-  BkgPar[25] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 25, 3.50695e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
-  BkgPar[26] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 26, 2.25633e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
-  BkgPar[27] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 27, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
+  BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 21, 4.70819e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
+  BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 22, 2.18036e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
+  BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 23, 1.09059e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
+  BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 24, 1.62080e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
+  BkgPar[25] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 25, 5.11887e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
+  BkgPar[26] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 26, 1.93437e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
+  BkgPar[27] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 27, 4.67469e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
 
   // Bulk Contamination
   BkgPar[28] = new TBkgModelParameter( "Copper Holder Mn54", 28, 1.20782e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
@@ -2480,9 +2480,10 @@ void TBackgroundModel::GenerateParameters()
   // bFixedArray[13] = true;
   // bFixedArray[17] = true;
 
-  // for(int i = 4; i < 18; i ++)
+  // Fixing alphas
+  // for(int i = 4; i < 28; i ++)
   // {
-    // bFixedArray[i] = true;
+  //   bFixedArray[i] = true;
   // }
 
   // bFixedArray[39] = true;
@@ -3515,7 +3516,7 @@ void TBackgroundModel::ToyFit()
     double dPull = 0;
     double Toy2nbbHL, Toy2nbbHLErr;
 
-    TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/HighStatToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
+    TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/ToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
     TTree *ToyTree = new TTree("ToyTree", "Tree with Toy Fit Results");
 
     ToyTree->Branch("Index", &dIndex, "Index/I");
@@ -3533,16 +3534,14 @@ void TBackgroundModel::ToyFit()
     ToyTree->Branch("fModelTotAdapM1", "TH1D", &fModelTotAdapM1, 32000, 0);
     ToyTree->Branch("fModelTotAdapM2", "TH1D", &fModelTotAdapM2, 32000, 0);
 
-
-
-    // OutToy.open(Form("%s/Final/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
-
     // Initial Fit to get the rate
     dStatus = DoTheFitAdaptive();
     // dChiSq = dChiSquare;
 
-    double dInitial2nbbRate = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
-    double dInitial2nbbRateErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
+    double dInitial2nbbRate, dInitial2nbbRateErr;
+
+    dInitial2nbbRate = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+    dInitial2nbbRateErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
 
     dIndex = 0;
     Toy2nbbHL = dInitial2nbbRate;
@@ -3552,52 +3551,37 @@ void TBackgroundModel::ToyFit()
 
     cout << "Initial 2nbb Rate and Error: " << dInitial2nbbRate << " +/- " <<  dInitial2nbbRateErr << endl;
 
-    // OutToy << "{" << endl;
-    // OutToy << endl;
-
-    // OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
-    // OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
-    // OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
-    // OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
-
+    TH1::AddDirectory(kFALSE);
     // cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
-    for(int i = 1; i <= 1; i++)
+    
+    for(int i = 1; i <= 250; i++)
     {
       cout << "Toy: " << i << endl;
       dIndex = i;
+      // Reset loaded data
       fAdapDataHistoM1->Reset();
       fAdapDataHistoM2->Reset();
       
-      fToyData = new TFile(Form("%s/Toy/HighStatToyData_p%d.root", dMCDir.c_str(), i));
-      fAdapDataHistoM1 = (TH1D*)fToyData->Get("fAdapDataHistoM1");
-      fAdapDataHistoM2 = (TH1D*)fToyData->Get("fAdapDataHistoM2");
+      // Load Toy data
+      // fToyData = new TFile(Form("%s/Toy/ToyData_p%d.root", dMCDir.c_str(), i));
+      TFile *fToyDataTest = TFile::Open(Form("%s/Toy/ToyData_p%d.root", dMCDir.c_str(), i));
+      fAdapDataHistoM1 = (TH1D*)fToyDataTest->Get("fAdapDataHistoM1");
+      fAdapDataHistoM2 = (TH1D*)fToyDataTest->Get("fAdapDataHistoM2");
     
-      fAdapDataHistoM1->Scale(1./5000);
-      fAdapDataHistoM2->Scale(1./5000);
-    // fAdapDataHistoM1->Scale(1.41872984571782959e+05/fAdapDataHistoM1->Integral("width"));
-    // fAdapDataHistoM2->Scale(2.66538587693367845e+04/fAdapDataHistoM2->Integral("width"));
-      // fAdapDataHistoM1->Scale(274875./fAdapDataHistoM1->Integral());
-      // fAdapDataHistoM2->Scale(97635.6/fAdapDataHistoM2->Integral());
+      // Scaling for high statistics Toy MC
+      // fAdapDataHistoM1->Scale(1./5000);
+      // fAdapDataHistoM2->Scale(1./5000);
 
-      for(int j = 1; j <= dAdaptiveBinsM1; j++)
-      {
-        fAdapDataHistoM1->SetBinError(j, TMath::Sqrt(fAdapDataHistoM1->GetBinContent(j))/fAdapDataHistoM1->GetBinWidth(j));
-      }
-      for(int k = 1; k <= dAdaptiveBinsM2; k++)
-      {
-        fAdapDataHistoM2->SetBinError(k, TMath::Sqrt(fAdapDataHistoM2->GetBinContent(k))/fAdapDataHistoM2->GetBinWidth(k));
-      }
 
-    // M1 - 450231
-    // M2 - 135452
-    // M1 - Adap 450162
-    // M2 - Adap 135379
-    // Scale histograms to have same integral as before
-    // dDataIntegralM1 = 450162;
-    // dDataIntegralM2 = 135379;
-    // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
-    // dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
+      // for(int j = 1; j <= dAdaptiveBinsM1; j++)
+      // {
+      //   fAdapDataHistoM1->SetBinError(j, TMath::Sqrt(fAdapDataHistoM1->GetBinContent(j))/fAdapDataHistoM1->GetBinWidth(j));
+      // }
+      // for(int k = 1; k <= dAdaptiveBinsM2; k++)
+      // {
+      //   fAdapDataHistoM2->SetBinError(k, TMath::Sqrt(fAdapDataHistoM2->GetBinContent(k))/fAdapDataHistoM2->GetBinWidth(k));
+      // }
       dStatus = DoTheFitAdaptive();
       // dChiSq = dChiSquare;
 
@@ -3606,14 +3590,30 @@ void TBackgroundModel::ToyFit()
 
       dPull = (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr);
 
+      ToyTree->Fill();
+
+      delete fToyDataTest;
+    }
+    
+    ToyTreeFile->Add(ToyTree);
+    ToyTreeFile->Write();    
+
+    // OutToy.open(Form("%s/Final/ToyMC/Toy_%d.C", dSaveDir.c_str(), tTime->GetDate() ));
+
+    // OutToy << "{" << endl;
+    // OutToy << endl;
+
+    // OutToy << "hPullDist = new TH1D(\"hPullDist\", \"Pull Distribution\", 20, -5, 5);" << endl;
+    // OutToy << "hToy2nbbRate = new TH1D(\"hToy2nbbRate\", \"Toy Monte Carlo half-life fit values\", 100, 6.7e+20, 6.9e+20);" << endl;
+    // OutToy << "hToy2nbbError = new TH1D(\"hToy2nbbError\", \"Toy Monte Carlo half-life error values\", 50, 1.e+19, 1.2e+19);" << endl;
+    // OutToy << "hChiSquared = new TH1D(\"hChiSquared\", \"Distribution of Chi-Squared values\", 60, 0, 20);" << endl;
+
+
       // OutToy << Form("hToy2nbbRate->Fill(%.5e);", Toy2nbbHL ) << endl;
       // OutToy << Form("hToy2nbbError->Fill(%.5e);", Toy2nbbHLErr ) << endl;
       // OutToy << Form("hPullDist->Fill(%5e);", (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr) ) << endl;
       // OutToy << Form("hChiSquared->Fill(%f);", dChiSquare) << endl;
-      // }
 
-      ToyTree->Fill();
-    }
     // OutToy << endl;
     // OutToy << endl;
     // OutToy << "TCanvas *c1 = new TCanvas(\"c1\", \"c1\", 1600, 1200);" << endl;
@@ -3639,10 +3639,6 @@ void TBackgroundModel::ToyFit()
     // OutToy << "}" << endl;
     // OutToy << endl;
     // OutToy.close();
-
-    ToyTreeFile->Add(ToyTree);
-
-    ToyTreeFile->Write();
 
 }
 
