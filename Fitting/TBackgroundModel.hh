@@ -190,6 +190,7 @@ private:
 ////////// Crystal M1 and M2
 	TH1D			*hTeO20nuM1;
 	TH1D			*hTeO22nuM1;
+	TH1D			*hTeO22nuIKM1;
 	TH1D			*hTeO2co60M1;
 	TH1D			*hTeO2k40M1;
 	TH1D			*hTeO2pb210M1;
@@ -256,6 +257,7 @@ private:
 
 	TH1D			*hTeO20nuM2;
 	TH1D			*hTeO22nuM2;
+	TH1D			*hTeO22nuIKM2;	
 	TH1D			*hTeO2co60M2;
 	TH1D			*hTeO2k40M2;
 	TH1D			*hTeO2pb210M2;
@@ -589,6 +591,7 @@ private:
 /////////// Crystal M1 and M2
 	TH1D			*hAdapTeO20nuM1;
 	TH1D			*hAdapTeO22nuM1;
+	TH1D			*hAdapTeO22nuIKM1;
 	TH1D			*hAdapTeO2co60M1;
 	TH1D			*hAdapTeO2k40M1;
 	TH1D			*hAdapTeO2pb210M1;
@@ -656,6 +659,7 @@ private:
 
 	TH1D			*hAdapTeO20nuM2;
 	TH1D			*hAdapTeO22nuM2;
+	TH1D			*hAdapTeO22nuIKM2;	
 	TH1D			*hAdapTeO2co60M2;
 	TH1D			*hAdapTeO2k40M2;
 	TH1D			*hAdapTeO2pb210M2;
@@ -997,6 +1001,7 @@ private:
 ////////// Crystal M1 and M2
 	TH1			*hnewTeO20nuM1;
 	TH1			*hnewTeO22nuM1;
+	TH1			*hnewTeO22nuIKM1;
 	TH1			*hnewTeO2co60M1;
 	TH1			*hnewTeO2k40M1;
 	TH1			*hnewTeO2pb210M1;
@@ -1065,6 +1070,7 @@ private:
 
 	TH1			*hnewTeO20nuM2;
 	TH1			*hnewTeO22nuM2;
+	TH1			*hnewTeO22nuIKM2;	
 	TH1			*hnewTeO2co60M2;
 	TH1			*hnewTeO2k40M2;
 	TH1			*hnewTeO2pb210M2;

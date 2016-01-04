@@ -147,6 +147,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 //////////// Crystal M1 and M2
   hTeO20nuM1       = new TH1D("hTeO20nuM1",    "hTeO20nuM1",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO22nuM1       = new TH1D("hTeO22nuM1",    "hTeO22nuM1",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO22nuIKM1       = new TH1D("hTeO22nuIKM1",    "hTeO22nuIKM1",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO2co60M1      = new TH1D("hTeO2co60M1",   "hTeO2co60M1",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2k40M1       = new TH1D("hTeO2k40M1",    "hTeO2k40M1",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO2pb210M1     = new TH1D("hTeO2pb210M1",  "hTeO2pb210M1",  dNBins, dMinEnergy, dMaxEnergy);
@@ -213,6 +214,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   hTeO20nuM2       = new TH1D("hTeO20nuM2",    "hTeO20nuM2",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO22nuM2       = new TH1D("hTeO22nuM2",    "hTeO22nuM2",    dNBins, dMinEnergy, dMaxEnergy);
+  hTeO22nuIKM2       = new TH1D("hTeO22nuIKM2",    "hTeO22nuIKM2",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO2co60M2      = new TH1D("hTeO2co60M2",   "hTeO2co60M2",   dNBins, dMinEnergy, dMaxEnergy);
   hTeO2k40M2       = new TH1D("hTeO2k40M2",    "hTeO2k40M2",    dNBins, dMinEnergy, dMaxEnergy);
   hTeO2pb210M2     = new TH1D("hTeO2pb210M2",  "hTeO2pb210M2",  dNBins, dMinEnergy, dMaxEnergy);
@@ -502,6 +504,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 /////////// Crystal M1 and M2
   hAdapTeO20nuM1       = new TH1D("hAdapTeO20nuM1",    "TeO2 Bulk 0nu M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO22nuM1       = new TH1D("hAdapTeO22nuM1",    "TeO2 Bulk 2nu M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
+  hAdapTeO22nuIKM1       = new TH1D("hAdapTeO22nuIKM1",    "TeO2 Bulk 2nu M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2co60M1      = new TH1D("hAdapTeO2co60M1",   "TeO2 Bulk co60 M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2k40M1       = new TH1D("hAdapTeO2k40M1",    "TeO2 Bulk k40 M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2pb210M1     = new TH1D("hAdapTeO2pb210M1",  "TeO2 Bulk pb210 M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -569,6 +572,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   hAdapTeO20nuM2       = new TH1D("hAdapTeO20nuM2",    "TeO2 Bulk 0nu M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO22nuM2       = new TH1D("hAdapTeO22nuM2",    "TeO2 Bulk 2nu M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
+  hAdapTeO22nuIKM2       = new TH1D("hAdapTeO22nuIKM2",    "TeO2 Bulk 2nu M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2co60M2      = new TH1D("hAdapTeO2co60M2",   "TeO2 Bulk co60 M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2k40M2       = new TH1D("hAdapTeO2k40M2",    "TeO2 Bulk k40 M2",    dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapTeO2pb210M2     = new TH1D("hAdapTeO2pb210M2",  "TeO2 Bulk pb210 M2",  dAdaptiveBinsM2, dAdaptiveArrayM2);
@@ -1457,10 +1461,10 @@ void TBackgroundModel::Initialize()
   // Newer files 
   // fBulk = new TFile(Form("%s/OldProd/MCProduction_Bulk_1keV.root", dMCDir.c_str()));
   // fSurface = new TFile(Form("%s/OldProd/MCProduction_Surface_1keV.root", dMCDir.c_str()));
-  // fBulk_CDR = new TFile("/Users/brian/macros/Simulations/Production/FudgeModels/MCProduction_Bulk_CDR_1keV.root");
 
   fBulk = new TFile(Form("%s/MCProduction_Bulk_1keV.root", dMCDir.c_str()));
   fSurface = new TFile(Form("%s/MCProduction_Surface_1keV.root", dMCDir.c_str()));
+  fBulk_CDR = new TFile(Form("%s/MCProduction_BulkCDR_1keV.root", dMCDir.c_str()));
 
   fFudge = new TFile(Form("%s/OldProd/MCProduction_FudgeFactor_1keV.root", dMCDir.c_str()));
 
@@ -1469,6 +1473,7 @@ void TBackgroundModel::Initialize()
 /////// Crystal M1 and M2
   hTeO20nuM1     = (TH1D*)fBulk->Get("hTeO20nuM1");
   hTeO22nuM1     = (TH1D*)fBulk->Get("hTeO22nuM1");
+  hTeO22nuIKM1     = (TH1D*)fBulk->Get("hTeO22nuIKM1");
   hTeO2co60M1    = (TH1D*)fBulk->Get("hTeO2co60M1");
   hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
   // hTeO2k40M1     = (TH1D*)fBulk_CDR->Get("hTeO2k40M1");
@@ -1493,6 +1498,7 @@ void TBackgroundModel::Initialize()
 
   hTeO20nuM2     = (TH1D*)fBulk->Get("hTeO20nuM2");
   hTeO22nuM2     = (TH1D*)fBulk->Get("hTeO22nuM2");
+  hTeO22nuIKM2     = (TH1D*)fBulk->Get("hTeO22nuIKM2");
   hTeO2co60M2    = (TH1D*)fBulk->Get("hTeO2co60M2");
   hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
   // hTeO2k40M2     = (TH1D*)fBulk_CDR->Get("hTeO2k40M2");
@@ -1515,6 +1521,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
   hTeO2ra226pb210M2 = (TH1D*)fBulk->Get("hTeO2ra226pb210M2");
 
+
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M1");
   hCuBox_CuFramek40M1 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M1");
@@ -1533,28 +1540,18 @@ void TBackgroundModel::Initialize()
 ///////// 50mK M1 and M2
   h50mKcs137M1   = (TH1D*)fBulk->Get("hInternalcs137M1");
   h50mKcs137M2   = (TH1D*)fBulk->Get("hInternalcs137M2");
-  // h50mKcs137M1   = (TH1D*)fBulk->Get("h50mKcs137M1");
-  // h50mKcs137M2   = (TH1D*)fBulk->Get("h50mKcs137M2");
-  // h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("h50mKcs137M1");
-  // h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("h50mKcs137M2");
 
 //////// Roman Lead M1 and M2
   hPbRomk40M1     = (TH1D*)fBulk->Get("hPbRomk40M1");
   hPbRomk40M2     = (TH1D*)fBulk->Get("hPbRomk40M2");
-  // hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
-  // hPbRomk40M2     = (TH1D*)fBulk_CDR->Get("hPbRomk40M2");
-
-
   hPbRomco60M1    = (TH1D*)fBulk->Get("hPbRomco60M1");
   hPbRomth232M1   = (TH1D*)fBulk->Get("hPbRomth232M1");
   hPbRomu238M1    = (TH1D*)fBulk->Get("hPbRomu238M1");
-
   hPbRomco60M2    = (TH1D*)fBulk->Get("hPbRomco60M2");
   hPbRomth232M2   = (TH1D*)fBulk->Get("hPbRomth232M2");
   hPbRomu238M2    = (TH1D*)fBulk->Get("hPbRomu238M2");
 
 ////// Internal Shields M1 and M2
-  // Old Production
   hInternalco60M1 = (TH1D*)fBulk->Get("hInternalco60M1");
   hInternalk40M1 = (TH1D*)fBulk->Get("hInternalk40M1");
   hInternalth232M1 = (TH1D*)fBulk->Get("hInternalth232M1");
@@ -1578,16 +1575,6 @@ void TBackgroundModel::Initialize()
   hOVCu238M2    = (TH1D*)fBulk->Get("hOVCu238M2");
   hOVCbi207M2   = (TH1D*)fBulk->Get("hOVCbi207M2");
 
-  // hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
-  // hOVCk40M1     = (TH1D*)fBulk_CDR->Get("hOVCk40M1");
-  // hOVCth232M1   = (TH1D*)fBulk_CDR->Get("hOVCth232M1");
-  // hOVCu238M1    = (TH1D*)fBulk_CDR->Get("hOVCu238M1");
-   
-  // hOVCco60M2    = (TH1D*)fBulk_CDR->Get("hOVCco60M2");
-  // hOVCk40M2     = (TH1D*)fBulk_CDR->Get("hOVCk40M2");
-  // hOVCth232M2   = (TH1D*)fBulk_CDR->Get("hOVCth232M2");
-  // hOVCu238M2    = (TH1D*)fBulk_CDR->Get("hOVCu238M2");
-
 /////// External Sources M1 and M2
   hExtPbbi210M1 = (TH1D*)fBulk->Get("hExtPbbi210M1");
   hExtPbk40M1 = (TH1D*)fBulk->Get("hExtPbk40M1");
@@ -1610,6 +1597,86 @@ void TBackgroundModel::Initialize()
   hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
   hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
   hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
+
+
+/*
+////////// CDR
+///////// CuBox + CuFrame M1 and M2
+  hCuBox_CuFrameco60M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameco60M1");
+  hCuBox_CuFramek40M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFramek40M1");
+  hCuBox_CuFrameth232M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameth232M1");
+  hCuBox_CuFrameu238M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameu238M1");
+  hCuBox_CuFramebi207M1 = (TH1D*)fBulk->Get("hCuBox_CuFramebi207M1");
+  hCuBox_CuFramemn54M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFramemn54M1");
+
+  hCuBox_CuFrameco60M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameco60M2");
+  hCuBox_CuFramek40M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFramek40M2");
+  hCuBox_CuFrameth232M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameth232M2");
+  hCuBox_CuFrameu238M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameu238M2");
+  hCuBox_CuFramebi207M2 = (TH1D*)fBulk->Get("hCuBox_CuFramebi207M2");
+  hCuBox_CuFramemn54M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFramemn54M2");
+
+///////// 50mK M1 and M2
+  h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("hInternalcs137M1");
+  h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("hInternalcs137M2");
+
+//////// Roman Lead M1 and M2
+  hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
+  hPbRomk40M2     = (TH1D*)fBulk_CDR->Get("hPbRomk40M2");
+  hPbRomco60M1    = (TH1D*)fBulk_CDR->Get("hPbRomco60M1");
+  hPbRomth232M1   = (TH1D*)fBulk_CDR->Get("hPbRomth232M1");
+  hPbRomu238M1    = (TH1D*)fBulk_CDR->Get("hPbRomu238M1");
+  hPbRomco60M2    = (TH1D*)fBulk_CDR->Get("hPbRomco60M2");
+  hPbRomth232M2   = (TH1D*)fBulk_CDR->Get("hPbRomth232M2");
+  hPbRomu238M2    = (TH1D*)fBulk_CDR->Get("hPbRomu238M2");
+
+////// Internal Shields M1 and M2
+  hInternalco60M1 = (TH1D*)fBulk_CDR->Get("hInternalco60M1");
+  hInternalk40M1 = (TH1D*)fBulk_CDR->Get("hInternalk40M1");
+  hInternalth232M1 = (TH1D*)fBulk_CDR->Get("hInternalth232M1");
+  hInternalu238M1 = (TH1D*)fBulk_CDR->Get("hInternalu238M1");
+
+  hInternalco60M2 = (TH1D*)fBulk_CDR->Get("hInternalco60M2");
+  hInternalk40M2 = (TH1D*)fBulk_CDR->Get("hInternalk40M2");
+  hInternalth232M2 = (TH1D*)fBulk_CDR->Get("hInternalth232M2");
+  hInternalu238M2 = (TH1D*)fBulk_CDR->Get("hInternalu238M2");
+
+/////// OVC M1 and M2
+  hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
+  hOVCk40M1     = (TH1D*)fBulk_CDR->Get("hOVCk40M1");
+  hOVCth232M1   = (TH1D*)fBulk_CDR->Get("hOVCth232M1");
+  hOVCu238M1    = (TH1D*)fBulk_CDR->Get("hOVCu238M1");
+  hOVCbi207M1   = (TH1D*)fBulk_CDR->Get("hOVCbi207M1");
+   
+  hOVCco60M2    = (TH1D*)fBulk_CDR->Get("hOVCco60M2");
+  hOVCk40M2     = (TH1D*)fBulk_CDR->Get("hOVCk40M2");
+  hOVCth232M2   = (TH1D*)fBulk_CDR->Get("hOVCth232M2");
+  hOVCu238M2    = (TH1D*)fBulk_CDR->Get("hOVCu238M2");
+  hOVCbi207M2   = (TH1D*)fBulk_CDR->Get("hOVCbi207M2");
+
+/////// External Sources M1 and M2
+  hExtPbbi210M1 = (TH1D*)fBulk_CDR->Get("hExtPbbi210M1");
+  hExtPbk40M1 = (TH1D*)fBulk_CDR->Get("hExtPbk40M1");
+  hExtPbth232M1 = (TH1D*)fBulk_CDR->Get("hExtPbth232M1");
+  hExtPbu238M1 = (TH1D*)fBulk_CDR->Get("hExtPbu238M1");
+  hExtPbpb210M1 = (TH1D*)fBulk_CDR->Get("hExtPbpb210M1");
+ 
+  hExtPbbi210M2 = (TH1D*)fBulk_CDR->Get("hExtPbbi210M2");
+  hExtPbk40M2 = (TH1D*)fBulk_CDR->Get("hExtPbk40M2");
+  hExtPbth232M2 = (TH1D*)fBulk_CDR->Get("hExtPbth232M2");
+  hExtPbu238M2 = (TH1D*)fBulk_CDR->Get("hExtPbu238M2");
+  hExtPbpb210M2 = (TH1D*)fBulk_CDR->Get("hExtPbpb210M2");
+
+  hExtMuonM1 = (TH1D*)fBulk->Get("hExtMuonM1");
+  hCuBox_th232spotM1 = (TH1D*)fBulk->Get("hCuBox_th232spotM1");
+  hCuBox_k40spotM1 = (TH1D*)fBulk->Get("hCuBox_k40spotM1");
+  hBotExtPb_k40spotM1 = (TH1D*)fBulk_CDR->Get("hBotExtPb_k40spotM1");
+
+  hExtMuonM2 = (TH1D*)fBulk->Get("hExtMuonM2");
+  hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
+  hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
+  hBotExtPb_k40spotM2 = (TH1D*)fBulk_CDR->Get("hBotExtPb_k40spotM2");
+*/
 
 ////////// Fudge Factors
   hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
@@ -1757,6 +1824,7 @@ void TBackgroundModel::Initialize()
 //////// Crystal M1 and M2
   hnewTeO20nuM1 = hTeO20nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO20nuM1", dAdaptiveArrayM1);
   hnewTeO22nuM1 = hTeO22nuM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuM1", dAdaptiveArrayM1);
+  hnewTeO22nuIKM1 = hTeO22nuIKM1->Rebin(dAdaptiveBinsM1, "hnewTeO22nuIKM1", dAdaptiveArrayM1);
   hnewTeO2co60M1 = hTeO2co60M1->Rebin(dAdaptiveBinsM1, "hnewTeO2co60M1", dAdaptiveArrayM1);
   hnewTeO2k40M1 = hTeO2k40M1->Rebin(dAdaptiveBinsM1, "hnewTeO2k40M1", dAdaptiveArrayM1);
   hnewTeO2pb210M1 = hTeO2pb210M1->Rebin(dAdaptiveBinsM1, "hnewTeO2pb210M1", dAdaptiveArrayM1);
@@ -1818,6 +1886,7 @@ void TBackgroundModel::Initialize()
 
   hnewTeO20nuM2 = hTeO20nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO20nuM2", dAdaptiveArrayM2);
   hnewTeO22nuM2 = hTeO22nuM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuM2", dAdaptiveArrayM2);
+  hnewTeO22nuIKM2 = hTeO22nuIKM2->Rebin(dAdaptiveBinsM2, "hnewTeO22nuIKM2", dAdaptiveArrayM2); 
   hnewTeO2co60M2 = hTeO2co60M2->Rebin(dAdaptiveBinsM2, "hnewTeO2co60M2", dAdaptiveArrayM2);
   hnewTeO2k40M2 = hTeO2k40M2->Rebin(dAdaptiveBinsM2, "hnewTeO2k40M2", dAdaptiveArrayM2);
   hnewTeO2pb210M2 = hTeO2pb210M2->Rebin(dAdaptiveBinsM2, "hnewTeO2pb210M2", dAdaptiveArrayM2);
@@ -2015,6 +2084,7 @@ void TBackgroundModel::Initialize()
   {
     hAdapTeO20nuM1->SetBinContent(i, hnewTeO20nuM1->GetBinContent(i)/hnewTeO20nuM1->GetBinWidth(i));
     hAdapTeO22nuM1->SetBinContent(i, hnewTeO22nuM1->GetBinContent(i)/hnewTeO22nuM1->GetBinWidth(i));
+    hAdapTeO22nuIKM1->SetBinContent(i, hnewTeO22nuIKM1->GetBinContent(i)/hnewTeO22nuIKM1->GetBinWidth(i));
     hAdapTeO2co60M1->SetBinContent(i, hnewTeO2co60M1->GetBinContent(i)/hnewTeO2co60M1->GetBinWidth(i));
     hAdapTeO2k40M1->SetBinContent(i, hnewTeO2k40M1->GetBinContent(i)/hnewTeO2k40M1->GetBinWidth(i));
     hAdapTeO2pb210M1->SetBinContent(i, hnewTeO2pb210M1->GetBinContent(i)/hnewTeO2pb210M1->GetBinWidth(i));
@@ -2144,6 +2214,7 @@ void TBackgroundModel::Initialize()
   {
     hAdapTeO20nuM2->SetBinContent(i, hnewTeO20nuM2->GetBinContent(i)/hnewTeO20nuM2->GetBinWidth(i));
     hAdapTeO22nuM2->SetBinContent(i, hnewTeO22nuM2->GetBinContent(i)/hnewTeO22nuM2->GetBinWidth(i));
+    hAdapTeO22nuIKM2->SetBinContent(i, hnewTeO22nuIKM2->GetBinContent(i)/hnewTeO22nuIKM2->GetBinWidth(i));
     hAdapTeO2co60M2->SetBinContent(i, hnewTeO2co60M2->GetBinContent(i)/hnewTeO2co60M2->GetBinWidth(i));
     hAdapTeO2k40M2->SetBinContent(i, hnewTeO2k40M2->GetBinContent(i)/hnewTeO2k40M2->GetBinWidth(i));
     hAdapTeO2pb210M2->SetBinContent(i, hnewTeO2pb210M2->GetBinContent(i)/hnewTeO2pb210M2->GetBinWidth(i));
@@ -2390,7 +2461,8 @@ void TBackgroundModel::GenerateParameters()
 {
   // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histograms.. )
   // TeO2 Bulk
-  BkgPar[0] = new TBkgModelParameter( "TeO2 2$\\nu\\beta\\beta$", 0, 0, 1E-7, 0, 1.0, hAdapTeO22nuM1, hAdapTeO22nuM2 );
+  // BkgPar[0] = new TBkgModelParameter( "TeO2 2$\\nu\\beta\\beta$", 0, 0, 1E-7, 0, 1.0, hAdapTeO22nuM1, hAdapTeO22nuM2 );
+  BkgPar[0] = new TBkgModelParameter( "TeO2 2$\\nu\\beta\\beta$", 0, 0, 1E-7, 0, 1.0, hAdapTeO22nuIKM1, hAdapTeO22nuIKM2 );
   BkgPar[1] = new TBkgModelParameter( "TeO2 K40", 1, 0., 1E-7, 0, 1.0, hAdapTeO2k40M1, hAdapTeO2k40M2 ); 
   BkgPar[2] = new TBkgModelParameter( "TeO2 Co60", 2, 0., 1E-7, 0, 1.0, hAdapTeO2co60M1 , hAdapTeO2co60M2 );  
   BkgPar[3] = new TBkgModelParameter( "TeO2 Sb125", 3, 0, 1E-7, 0, 1.0, hAdapTeO2sb125M1 , hAdapTeO2sb125M2 );  
@@ -3084,7 +3156,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
 */
 
-/*
   // Just the Matrix by itself
   TCanvas *cMatrix2 = new TCanvas("cMatrix2", "cMatrix2", 1200, 1200);
   TPad* pM3 = new TPad("pM3","pM3",width1,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
@@ -3142,7 +3213,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hChiSquaredProgressM2->GetXaxis()->SetTitle("Energy (keV)");
   hChiSquaredProgressM2->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2->Draw();
-*/
+
 
   // fParArray = new TArrayD(dNParam, fParameters);
   // fParArrayErr = new TArrayD(dNParam, fParError);
