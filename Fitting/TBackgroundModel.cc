@@ -1521,7 +1521,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
   hTeO2ra226pb210M2 = (TH1D*)fBulk->Get("hTeO2ra226pb210M2");
 
-
+/*
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M1");
   hCuBox_CuFramek40M1 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M1");
@@ -1597,9 +1597,9 @@ void TBackgroundModel::Initialize()
   hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
   hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
   hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
+*/
 
 
-/*
 ////////// CDR
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameco60M1");
@@ -1676,7 +1676,7 @@ void TBackgroundModel::Initialize()
   hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
   hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
   hBotExtPb_k40spotM2 = (TH1D*)fBulk_CDR->Get("hBotExtPb_k40spotM2");
-*/
+
 
 ////////// Fudge Factors
   hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
@@ -3005,11 +3005,12 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << endl;
   cout << "Integral Data in ROI (counts/keV/y): " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   cout << "Integral Total PDF in ROI (counts/keV/y): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
-  // 9.5365e-01 is the efficiency
+  // 9.5365e-01 is the efficiency for Standard
+  // 9.66964e-01 => With IK spectrum
   // if(!bFixedArray[0])
   // {
     // Which efficiency is correct?
-    double d2nbbHL = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+    double d2nbbHL = fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     cout << "Counts in 2nbb (M1): " << dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
   // }
   cout << endl;
@@ -3386,7 +3387,7 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     DoTheFitAdaptive();
 
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
+    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
     // if(fParFixed == 0)
     // {
       // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.9187e+25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") ) << endl;
@@ -3614,8 +3615,8 @@ void TBackgroundModel::ToyFit()
 
     double dInitial2nbbRate, dInitial2nbbRateErr;
 
-    dInitial2nbbRate = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
-    dInitial2nbbRateErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
+    dInitial2nbbRate = fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+    dInitial2nbbRateErr = fParError[0]/fParameters[0]*(fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
 
     dIndex = 0;
     Toy2nbbHL = dInitial2nbbRate;
@@ -3629,7 +3630,7 @@ void TBackgroundModel::ToyFit()
     // cout << "Number of Loops " << fNumFits << endl;
     // Number of toy fits
     
-    for(int i = 250; i <= 1000; i++)
+    for(int i = 1; i <= 1000; i++)
     {
       cout << "Toy: " << i << endl;
       dIndex = i;
@@ -3659,8 +3660,8 @@ void TBackgroundModel::ToyFit()
       dStatus = DoTheFitAdaptive();
       // dChiSq = dChiSquare;
 
-      Toy2nbbHL = (9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
-      Toy2nbbHLErr = fParError[0]/fParameters[0]*((9.5365e-01)*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")));
+      Toy2nbbHL = fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
+      Toy2nbbHLErr = fParError[0]/fParameters[0]*(fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")));
 
       dPull = (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr);
 
@@ -3753,7 +3754,7 @@ TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
 
 void TBackgroundModel::SetParEfficiency()
 {
-  fParEfficiencyM1[0] = 9.54E-001;
+  fParEfficiencyM1[0] = 9.6696e-01;
   fParEfficiencyM1[1] = 0.892441;
   fParEfficiencyM1[2] = 0.437839;
   fParEfficiencyM1[3] = 0.924953;
