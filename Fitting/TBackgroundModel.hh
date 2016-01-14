@@ -68,7 +68,7 @@ public:
 	// Calculates ProfileNLL of parameter based off of its best fit value
 	void ProfileNLL(int fParFixed);
 
-	void ProfileNLL2D();
+	void ProfileNLL2D(int fParFixed);
 
 	void ResetParameters();
 

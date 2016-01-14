@@ -840,11 +840,9 @@ TBackgroundModel::~TBackgroundModel()
   delete fDataHistoM1;
   delete fDataHistoM2;
   delete fDataHistoM2Sum;
-
   delete fAdapDataHistoM1;
   delete fAdapDataHistoM2;
   delete fAdapDataHistoM2Sum;
-
 
   // Updated 01-20-2015
   // Total PDFs M1
@@ -1331,7 +1329,8 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
     dResidualY = (datam1_i - modelm1_i)/TMath::Sqrt(datam1_i);
 
     hOut->SetBinContent(j, dResidualY);
-    hOut->SetBinError(j, 1.0);
+    // hOut->SetBinError(j, 1.0);
+    hOut->SetBinError(j, 0);
     hResid->Fill(dResidualY);
   }
 
@@ -1465,6 +1464,7 @@ void TBackgroundModel::Initialize()
   fBulk = new TFile(Form("%s/MCProduction_Bulk_1keV.root", dMCDir.c_str()));
   fSurface = new TFile(Form("%s/MCProduction_Surface_1keV.root", dMCDir.c_str()));
   fBulk_CDR = new TFile(Form("%s/MCProduction_BulkCDR_1keV.root", dMCDir.c_str()));
+  fBulk_CDRInternal = new TFile(Form("%s/MCProduction_BulkCDRInternal_1keV.root", dMCDir.c_str()));
 
   fFudge = new TFile(Form("%s/OldProd/MCProduction_FudgeFactor_1keV.root", dMCDir.c_str()));
 
@@ -1521,7 +1521,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
   hTeO2ra226pb210M2 = (TH1D*)fBulk->Get("hTeO2ra226pb210M2");
 
-/*
+
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M1");
   hCuBox_CuFramek40M1 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M1");
@@ -1537,6 +1537,7 @@ void TBackgroundModel::Initialize()
   hCuBox_CuFramebi207M2 = (TH1D*)fBulk->Get("hCuBox_CuFramebi207M2");
   hCuBox_CuFramemn54M2 = (TH1D*)fBulk->Get("hCuBox_CuFramemn54M2");
 
+/*
 ///////// 50mK M1 and M2
   h50mKcs137M1   = (TH1D*)fBulk->Get("hInternalcs137M1");
   h50mKcs137M2   = (TH1D*)fBulk->Get("hInternalcs137M2");
@@ -1617,8 +1618,19 @@ void TBackgroundModel::Initialize()
   hCuBox_CuFramemn54M2 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFramemn54M2");
 
 ///////// 50mK M1 and M2
-  h50mKcs137M1   = (TH1D*)fBulk_CDR->Get("hInternalcs137M1");
-  h50mKcs137M2   = (TH1D*)fBulk_CDR->Get("hInternalcs137M2");
+  h50mKcs137M1   = (TH1D*)fBulk_CDRInternal->Get("hInternalcs137M1");
+  h50mKcs137M2   = (TH1D*)fBulk_CDRInternal->Get("hInternalcs137M2");
+////// Internal Shields M1 and M2
+  hInternalco60M1 = (TH1D*)fBulk_CDRInternal->Get("hInternalco60M1");
+  hInternalk40M1 = (TH1D*)fBulk_CDRInternal->Get("hInternalk40M1");
+  hInternalth232M1 = (TH1D*)fBulk_CDRInternal->Get("hInternalth232M1");
+  hInternalu238M1 = (TH1D*)fBulk_CDRInternal->Get("hInternalu238M1");
+
+  hInternalco60M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalco60M2");
+  hInternalk40M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalk40M2");
+  hInternalth232M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalth232M2");
+  hInternalu238M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalu238M2");
+
 
 //////// Roman Lead M1 and M2
   hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
@@ -1629,17 +1641,6 @@ void TBackgroundModel::Initialize()
   hPbRomco60M2    = (TH1D*)fBulk_CDR->Get("hPbRomco60M2");
   hPbRomth232M2   = (TH1D*)fBulk_CDR->Get("hPbRomth232M2");
   hPbRomu238M2    = (TH1D*)fBulk_CDR->Get("hPbRomu238M2");
-
-////// Internal Shields M1 and M2
-  hInternalco60M1 = (TH1D*)fBulk_CDR->Get("hInternalco60M1");
-  hInternalk40M1 = (TH1D*)fBulk_CDR->Get("hInternalk40M1");
-  hInternalth232M1 = (TH1D*)fBulk_CDR->Get("hInternalth232M1");
-  hInternalu238M1 = (TH1D*)fBulk_CDR->Get("hInternalu238M1");
-
-  hInternalco60M2 = (TH1D*)fBulk_CDR->Get("hInternalco60M2");
-  hInternalk40M2 = (TH1D*)fBulk_CDR->Get("hInternalk40M2");
-  hInternalth232M2 = (TH1D*)fBulk_CDR->Get("hInternalth232M2");
-  hInternalu238M2 = (TH1D*)fBulk_CDR->Get("hInternalu238M2");
 
 /////// OVC M1 and M2
   hOVCco60M1    = (TH1D*)fBulk_CDR->Get("hOVCco60M1");
@@ -2428,9 +2429,9 @@ void TBackgroundModel::LoadData()
   dLivetimeYr = 0.8738; 
   dExposure = 33.4229;
 
-  // Not using ds2061
-  // dLivetimeYr = 32.1036;
-  // dExposure = 0.839309;
+  // Not using 2061, 2076, and 2088 for Radon
+  // dExposure = 29.8967;
+  // dLivetimeYr = 0.781613;
 }
 
 // Prints parameters, needs update 11-06-2014
@@ -2519,7 +2520,7 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 6.02468e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
   
   BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 1.03086e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
-  BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 2.76019e-02, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
+  BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
   BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 2.61106e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
   BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 3.93821e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
 
@@ -2560,7 +2561,7 @@ void TBackgroundModel::GenerateParameters()
 
   // bFixedArray[39] = true;
   // bFixedArray[40] = true;
-
+  // bFixedArray[48] = true;
   // bFixedArray[52] = true;
 
 
@@ -2925,7 +2926,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM1->GetYaxis()->SetTitleSize(0.04);
   // hResidualDistM1->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
-  hResidualDistM1->Draw();
+  hResidualDistM1->Draw("P");
 
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
 
@@ -2942,7 +2943,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM2->GetYaxis()->SetTitleSize(0.04); 
   // hResidualDistM2->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
-  hResidualDistM2->Draw();
+  hResidualDistM2->Draw("P");
 
 
   TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
@@ -3007,12 +3008,12 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Integral Total PDF in ROI (counts/keV/y): " << fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )/(dROIRange*dLivetimeYr) << " +/- " << sqrt( fModelTotAdapM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ))/(dROIRange*dLivetimeYr) << endl;
   // 9.5365e-01 is the efficiency for Standard
   // 9.66964e-01 => With IK spectrum
-  // if(!bFixedArray[0])
-  // {
+  if(!bFixedArray[0])
+  {
     // Which efficiency is correct?
     double d2nbbHL = fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     cout << "Counts in 2nbb (M1): " << dDataIntegralM1*fParameters[0]*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") << "\t Half-Life " << d2nbbHL << " +/- " << d2nbbHL*fParError[0]/fParameters[0] << endl;
-  // }
+  }
   cout << endl;
   cout << endl;
   cout << "Data in 2nbb region (c/keV/y): " << d2nbbData << " $\\pm$ " << d2nbbDataErr << endl;  
@@ -3182,6 +3183,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double dataM2_i = 0, modelM2_i = 0;
   double dataM2Sum_i = 0, modelM2Sum_i = 0;
 
+  int dDummyNDFM1 = 0;
+
   for(int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
   {
     if( fAdapDataHistoM1->GetBinCenter(i) >= 3150 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
@@ -3190,6 +3193,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
     modelM1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
     dProgressM1 += 2 * (modelM1_i - dataM1_i + dataM1_i * TMath::Log(dataM1_i/modelM1_i));
     hChiSquaredProgressM1->SetBinContent(i, dProgressM1);
+    // dDummyNDFM1++;
+    // hChiSquaredProgressM1->SetBinContent(i, dProgressM1/dDummyNDFM1);
   }
   for(int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
   {
@@ -3442,19 +3447,19 @@ void TBackgroundModel::SetLimit(int fParFixed)
   double  dDummyIntegral;
 
   // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  for(int i = 0; i < dNParam; i++)
-  {
-    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  }
+  // for(int i = 0; i < dNParam; i++)
+  // {
+    // BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    // BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  // }
   // For Po-210
-  hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-  hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
+  // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
+  // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
 
   dDummyIntegral = BkgPar[fParFixed]->GetHistM1()->Integral("width");
 
 
-  // OutFile.open(Form("%s/Final/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
+  OutFile.open(Form("%s/Final/Limits/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
 
 
   for(int i = 0; i < 100 ; i++ )
@@ -3463,7 +3468,7 @@ void TBackgroundModel::SetLimit(int fParFixed)
     cout << "Input initial value: " << fParameters[fParFixed] + fParError[fParFixed]/100*i << endl;
   }
 
-  cout << "ChiSquare ---  delta ChiSquare ---  Parameter  --- Integral (M1)" << endl;
+  OutFile << "ChiSquare ---  delta ChiSquare/2 ---  Parameter  --- Integral (M1)" << endl;
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
@@ -3479,7 +3484,7 @@ void TBackgroundModel::SetLimit(int fParFixed)
     // Re-calculate Chi-squared
     dChiSquareDummy = GetChiSquareAdaptive();
 
-    cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
+    OutFile << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
 
 
 
@@ -3489,7 +3494,9 @@ void TBackgroundModel::SetLimit(int fParFixed)
 
 }
 
-void TBackgroundModel::ProfileNLL2D()
+// 2D Contour plot, only in comparison with 2nbb!
+// Try out: 38, 42, 44, 47, 50
+void TBackgroundModel::ProfileNLL2D(int fParFixed)
 {
   // dBestChiSq = fBestFitChiSq; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
@@ -3498,15 +3505,15 @@ void TBackgroundModel::ProfileNLL2D()
   DoTheFitAdaptive();
 
   // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  for(int i = 0; i < dNParam; i++)
-  {
-    BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  }
+  // for(int i = 0; i < dNParam; i++)
+  // {
+    // BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
+    // BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
+  // }
 
   // Fix 2nbb value and TeO2 K-40 value
   bFixedArray[0] = true;
-  bFixedArray[1] = true;
+  bFixedArray[fParFixed] = true;
 
   dBestChiSq = dChiSquare;
 
@@ -3518,7 +3525,7 @@ void TBackgroundModel::ProfileNLL2D()
   }
   for(int j = -15; j < 15; j++)
   {
-    fInitValues2.push_back(fParameters[1] + fParameters[1]/30*j);
+    fInitValues2.push_back(fParameters[fParFixed] + fParameters[fParFixed]/30*j);
   }
 
 
@@ -3534,7 +3541,7 @@ void TBackgroundModel::ProfileNLL2D()
     {
     cout << "Step: " << *iter << " " << *iter2 << endl;    
     BkgPar[0]->SetInitValue(*iter);
-    BkgPar[1]->SetInitValue(*iter2);
+    BkgPar[fParFixed]->SetInitValue(*iter2);
 
     DoTheFitAdaptive();
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
