@@ -1425,11 +1425,12 @@ private:
 
 	int 			nLoop;
 	std::vector<double> 	fInitValues;
-	std::vector<double> 	fInitValues2;
+	std::vector<double> 	fInitValues2;	
 
 	TFile *fBulk;
 	TFile *fSurface;
 	TFile *fBulk_CDR;
+	TFile *fBulk_Internal;
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerOld;
@@ -1480,6 +1481,8 @@ private:
 	// Parameters
 	double				fParameters[139];
 	double				fParError[139];
+	double				fParCountsM1[139]; // Integral of events in M1 spectrum
+	double 				fParCountsM2[139];
 	double 				fParActivityM1[139]; // Integral of events in M1 spectrum
 	double 				fParActivityM2[139];
 	double 				fParActivityErr[139];
