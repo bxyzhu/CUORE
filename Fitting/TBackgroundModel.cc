@@ -96,7 +96,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   fDataHistoTot     = new TH1D("fDataHistoTot",  "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM1      = new TH1D("fDataHistoM1",   "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM2      = new TH1D("fDataHistoM2",   "", dNBins, dMinEnergy, dMaxEnergy);
-  fDataHistoM2Sum   = new TH1D("fDataHistoM2Sum",   "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM3      = new TH1D("fDataHistoM3",   "", dNBins, dMinEnergy, dMaxEnergy);
 
   // Data cuts 
@@ -135,7 +134,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
   fDataHistoM1->Divide( hEfficiency );
   fDataHistoM2->Divide( hEfficiency );
-  // fDataHistoM2Sum->Divide( hEfficiency );
 
 
   // Total model histograms
@@ -404,21 +402,11 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hBotExtPb_k40spotM2 = new TH1D("hBotExtPb_k40spotM2", "hBotExtPb_k40spotM2", dNBins, dMinEnergy, dMaxEnergy);
 
 
-/////////// Fudge Factors
-  hOVC804M1 = new TH1D("hOVC804M1", "hOVC804M1", dNBins, dMinEnergy, dMaxEnergy);
-  hOVC835M1 = new TH1D("hOVC835M1", "hOVC835M1", dNBins, dMinEnergy, dMaxEnergy);
-  hOVC1063M1 = new TH1D("hOVC1063M1", "hOVC1063M1", dNBins, dMinEnergy, dMaxEnergy);
-
-  hOVC804M2 = new TH1D("hOVC804M2", "hOVC804M2", dNBins, dMinEnergy, dMaxEnergy);
-  hOVC835M2 = new TH1D("hOVC835M2", "hOVC835M2", dNBins, dMinEnergy, dMaxEnergy);
-  hOVC1063M2 = new TH1D("hOVC1063M2", "hOVC1063M2", dNBins, dMinEnergy, dMaxEnergy);
-
 // Mess with rebinning here 
   // Rebinning with 2-4 bins seems to be consistent
-  // fDataHistoM1->Rebin(5);
-  // fDataHistoM2->Rebin(5);
-  // fDataHistoM2Sum->Rebin(5);
-  dBaseBinSize = dBinSize*1;
+  fDataHistoM1->Rebin(2);
+  fDataHistoM2->Rebin(2);
+  dBaseBinSize = dBinSize*2;
 
 /////// Adaptive binning
  // Calculates adaptive binning vectors
@@ -428,19 +416,15 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   dAdaptiveVectorM2 = AdaptiveBinningM2(fDataHistoM2, dBinBase);
   dAdaptiveBinsM2 = dAdaptiveVectorM2.size() - 1;
   dAdaptiveArrayM2 = &dAdaptiveVectorM2[0];
-  dAdaptiveVectorM2Sum = AdaptiveBinningM1(fDataHistoM2Sum, dBinBase);
-  dAdaptiveBinsM2Sum = dAdaptiveVectorM2Sum.size() - 1;
-  dAdaptiveArrayM2Sum = &dAdaptiveVectorM2Sum[0];
+
 
  
   // Adaptive binning data
   fAdapDataHistoM1   = new TH1D("fAdapDataHistoM1",   "", dAdaptiveBinsM1, dAdaptiveArrayM1);
   fAdapDataHistoM2   = new TH1D("fAdapDataHistoM2",   "", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  fAdapDataHistoM2Sum   = new TH1D("fAdapDataHistoM2Sum",   "", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
   
   hnewM1 = fDataHistoM1->Rebin(dAdaptiveBinsM1, "hnewM1", dAdaptiveArrayM1);
   hnewM2 = fDataHistoM2->Rebin(dAdaptiveBinsM2, "hnewM2", dAdaptiveArrayM2);
-  hnewM2Sum = fDataHistoM2Sum->Rebin(dAdaptiveBinsM2Sum, "hnewM2Sum", dAdaptiveArrayM2Sum);
 
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
@@ -456,42 +440,29 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
     // fAdapDataHistoM2->SetBinError(i, 0); // If I don't want errors for some reason
   }
 
-  for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
-  {
-    fAdapDataHistoM2Sum->SetBinContent(i, hnewM2Sum->GetBinContent(i)/hnewM2Sum->GetBinWidth(i));
-    fAdapDataHistoM2Sum->SetBinError(i, TMath::Sqrt(hnewM2Sum->GetBinContent(i))/hnewM2Sum->GetBinWidth(i));
-    // fAdapDataHistoM2Sum->SetBinError(i, 0); // If I don't want errors for some reason
-  }
-
   // dDataIntegral = fDataHistoM1->Integral(1, dNBins);
   // dDataIntegralM1 = fDataHistoM1->Integral(1, 10000/dBinSize);
   // dDataIntegralM2 = fDataHistoM2->Integral(1, 10000/dBinSize);
-  // dDataIntegralM2Sum = fDataHistoM2Sum->Integral(1, 10000/dBinSize);
   dDataIntegralTot = qtree->GetEntries();
 
   dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
   dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-  dDataIntegralM2Sum = fAdapDataHistoM2Sum->Integral("width");
 
   // dDataIntegralM1 = dDataIntegralM1;
   // dDataIntegralM2 = dDataIntegralM2;
 
   dFitMinBinM1 = fAdapDataHistoM1->FindBin(dFitMin);
   dFitMinBinM2 = fAdapDataHistoM2->FindBin(dFitMin);
-  dFitMinBinM2Sum = fAdapDataHistoM2Sum->FindBin(dFitMin);
   dFitMaxBinM1 = fAdapDataHistoM1->FindBin(dFitMax);
   dFitMaxBinM2 = fAdapDataHistoM2->FindBin(dFitMax);
-  dFitMaxBinM2Sum = fAdapDataHistoM2Sum->FindBin(dFitMax);
 
   // Outputs on screen
   cout << "Fit M1 from bin: " << dFitMinBinM1 << " to " << dFitMaxBinM1 << endl;
   cout << "Fit M2 from bin: " << dFitMinBinM2 << " to " << dFitMaxBinM2 << endl;
-  cout << "Fit M2Sum from bin: " << dFitMinBinM2Sum << " to " << dFitMaxBinM2Sum << endl;
 
   cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
   cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
   cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
-  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
   cout << "Livetime of background: " << dLivetimeYr << endl;
 
 
@@ -499,7 +470,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 ////////// Total Adaptive binning histograms
   fModelTotAdapM1      = new TH1D("fModelTotAdapM1",      "Total PDF M1", dAdaptiveBinsM1, dAdaptiveArrayM1);  
   fModelTotAdapM2      = new TH1D("fModelTotAdapM2",      "Total PDF M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
-  fModelTotAdapM2Sum      = new TH1D("fModelTotAdapM2Sum",      "Total PDF M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);  
 
 /////////// Crystal M1 and M2
   hAdapTeO20nuM1       = new TH1D("hAdapTeO20nuM1",    "TeO2 Bulk 0nu M1",    dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -772,15 +742,6 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   hAdapCuBox_k40spotM2 = new TH1D("hAdapCuBox_k40spotM2", "hAdapCuBox_k40spotM2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   hAdapBotExtPb_k40spotM2 = new TH1D("hAdapBotExtPb_k40spotM2", "hAdapBotExtPb_k40spotM2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-/////////// Fudge Factors
-  hAdapOVC804M1 = new TH1D("hAdapOVC804M1", "hAdapOVC804M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapOVC835M1 = new TH1D("hAdapOVC835M1", "hAdapOVC835M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-  hAdapOVC1063M1 = new TH1D("hAdapOVC1063M1", "hAdapOVC1063M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
-
-  hAdapOVC804M2 = new TH1D("hAdapOVC804M2", "hAdapOVC804M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapOVC835M2 = new TH1D("hAdapOVC835M2", "hAdapOVC835M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-  hAdapOVC1063M2 = new TH1D("hAdapOVC1063M2", "hAdapOVC1063M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
-
   hEnergyScaleDummyM1 = new TH1D("hEnergyScaleDummyM1",   "Energy Scale M1",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hEnergyScaleDummyM2 = new TH1D("hEnergyScaleDummyM2",   "Energy Scale M2",   dAdaptiveBinsM2, dAdaptiveArrayM2);
 
@@ -806,20 +767,14 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
     fAdapDataHistoM2->SetBinError(i, 0);
   }
 
-  for(int i = 1; i <= dAdaptiveBinsM2Sum; i++)
-  {
-    fAdapDataHistoM2Sum->SetBinError(i, 0);
-  }
   // Recalculate integrals
   dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
   dDataIntegralM2 = fAdapDataHistoM2->Integral("width");
-  dDataIntegralM2Sum = fAdapDataHistoM2Sum->Integral("width");
 
   cout << "Recalculated integrals: " << endl;
   cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
   cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
   cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
-  cout << "Events in background spectrum (M2Sum): " << dDataIntegralM2Sum << endl;
   cout << "Livetime of background: " << dLivetimeYr << endl;
 */
 
@@ -839,10 +794,8 @@ TBackgroundModel::~TBackgroundModel()
   delete fDataHistoTot;
   delete fDataHistoM1;
   delete fDataHistoM2;
-  delete fDataHistoM2Sum;
   delete fAdapDataHistoM1;
   delete fAdapDataHistoM2;
-  delete fAdapDataHistoM2Sum;
 
   // Updated 01-20-2015
   // Total PDFs M1
@@ -1300,10 +1253,7 @@ TH1D *TBackgroundModel::CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hRe
   {
   TH1D  *hOut       = new TH1D("hOutResidualM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   }
-  if(dMult == 3)
-  {
-  TH1D  *hOut       = new TH1D("hOutResidualM2Sum", "Fit Residuals M2Sum", dAdaptiveBinsM2Sum, dAdaptiveArrayM2Sum);
-  }
+
 
   // Clone histograms for rebinning
   TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
@@ -1391,8 +1341,7 @@ double TBackgroundModel::GetChiSquareAdaptive()
   double chiSquare = 0.;
   double datam1_i, errm1_i;
   double datam2_i, errm2_i;
-  double datam2sum_i, errm2sum_i;
-  double modelm1_i, modelm2_i, modelm2sum_i;
+  double modelm1_i, modelm2_i;
 
 
   for(int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
@@ -1465,9 +1414,6 @@ void TBackgroundModel::Initialize()
   fSurface = new TFile(Form("%s/MCProduction_Surface_1keV.root", dMCDir.c_str()));
   fBulk_CDR = new TFile(Form("%s/MCProduction_BulkCDR_1keV.root", dMCDir.c_str()));
   fBulk_CDRInternal = new TFile(Form("%s/MCProduction_BulkCDRInternal_1keV.root", dMCDir.c_str()));
-
-  fFudge = new TFile(Form("%s/OldProd/MCProduction_FudgeFactor_1keV.root", dMCDir.c_str()));
-
 
 ///////////// Bulk Histograms
 /////// Crystal M1 and M2
@@ -1677,16 +1623,6 @@ void TBackgroundModel::Initialize()
   hCuBox_th232spotM2 = (TH1D*)fBulk->Get("hCuBox_th232spotM2");
   hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
   hBotExtPb_k40spotM2 = (TH1D*)fBulk_CDR->Get("hBotExtPb_k40spotM2");
-
-
-////////// Fudge Factors
-  hOVC804M1 = (TH1D*)fFudge->Get("hOVC804M1");
-  hOVC835M1 = (TH1D*)fFudge->Get("hOVC835M1");
-  hOVC1063M1 = (TH1D*)fFudge->Get("hOVC1063M1");
-
-  hOVC804M2 = (TH1D*)fFudge->Get("hOVC804M2");
-  hOVC835M2 = (TH1D*)fFudge->Get("hOVC835M2");
-  hOVC1063M2 = (TH1D*)fFudge->Get("hOVC1063M2");
   
 
 //////////// Surface PDFs
@@ -2071,15 +2007,6 @@ void TBackgroundModel::Initialize()
   hnewBotExtPb_k40spotM2 = hBotExtPb_k40spotM2->Rebin(dAdaptiveBinsM2, "hnewBotExtPb_k40spotM2", dAdaptiveArrayM2);
 
 
-  ///////// Fudge Factors
-  hnewOVC804M1 = hOVC804M1->Rebin(dAdaptiveBinsM1, "hnewOVC804M1", dAdaptiveArrayM1);
-  hnewOVC835M1 = hOVC835M1->Rebin(dAdaptiveBinsM1, "hnewOVC835M1", dAdaptiveArrayM1);
-  hnewOVC1063M1 = hOVC1063M1->Rebin(dAdaptiveBinsM1, "hnewOVC1063M1", dAdaptiveArrayM1);
-
-  hnewOVC804M2 = hOVC804M2->Rebin(dAdaptiveBinsM2, "hnewOVC804M2", dAdaptiveArrayM2);
-  hnewOVC835M2 = hOVC835M2->Rebin(dAdaptiveBinsM2, "hnewOVC835M2", dAdaptiveArrayM2);
-  hnewOVC1063M2 = hOVC1063M2->Rebin(dAdaptiveBinsM2, "hnewOVC1063M2", dAdaptiveArrayM2);
-
   // Fill adaptive binning histograms
   for(int i = 1; i <= dAdaptiveBinsM1; i++)
   {
@@ -2205,10 +2132,6 @@ void TBackgroundModel::Initialize()
     hAdapCuBox_k40spotM1->SetBinContent(i, hnewCuBox_k40spotM1->GetBinContent(i)/hnewCuBox_k40spotM1->GetBinWidth(i));
     hAdapBotExtPb_k40spotM1->SetBinContent(i, hnewBotExtPb_k40spotM1->GetBinContent(i)/hnewBotExtPb_k40spotM1->GetBinWidth(i));
 
-    // Fudge
-    hAdapOVC804M1->SetBinContent(i, hnewOVC804M1->GetBinContent(i)/hnewOVC804M1->GetBinWidth(i));
-    hAdapOVC835M1->SetBinContent(i, hnewOVC835M1->GetBinContent(i)/hnewOVC835M1->GetBinWidth(i));
-    hAdapOVC1063M1->SetBinContent(i, hnewOVC1063M1->GetBinContent(i)/hnewOVC1063M1->GetBinWidth(i));
   }
 
   for(int i = 1; i <= dAdaptiveBinsM2; i++)
@@ -2335,10 +2258,6 @@ void TBackgroundModel::Initialize()
     hAdapCuBox_k40spotM2->SetBinContent(i, hnewCuBox_k40spotM2->GetBinContent(i)/hnewCuBox_k40spotM2->GetBinWidth(i));
     hAdapBotExtPb_k40spotM2->SetBinContent(i, hnewBotExtPb_k40spotM2->GetBinContent(i)/hnewBotExtPb_k40spotM2->GetBinWidth(i));
 
-    // Fudge
-    hAdapOVC804M2->SetBinContent(i, hnewOVC804M2->GetBinContent(i)/hnewOVC804M2->GetBinWidth(i));
-    hAdapOVC835M2->SetBinContent(i, hnewOVC835M2->GetBinContent(i)/hnewOVC835M2->GetBinWidth(i));
-    hAdapOVC1063M2->SetBinContent(i, hnewOVC1063M2->GetBinContent(i)/hnewOVC1063M2->GetBinWidth(i));
   }
 
 }
@@ -2348,6 +2267,7 @@ void TBackgroundModel::LoadData()
 {
   switch(dDataSet)
   { 
+  // Livetimes not set for Case 1, 2, 3, or 4!
   case 1:
     // qtree->Add(Form("%s/Unblinded/ReducedB-ds2049.root", dDataDir.c_str()));   
     // qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); 
@@ -2383,7 +2303,7 @@ void TBackgroundModel::LoadData()
   case 4:
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2079.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2085.root", dDataDir.c_str())); 
-    // qtree->Add(Form("%s/Unblinded/ReducedB-ds2088.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/Unblinded/ReducedB-ds2088.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2091.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2097.root", dDataDir.c_str()));
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2100.root", dDataDir.c_str())); 
@@ -2423,7 +2343,6 @@ void TBackgroundModel::LoadData()
   qtree->Project("fDataHistoTot", "Energy", base_cut);
   qtree->Project("fDataHistoM1",  "Energy", base_cut && "Multiplicity_Sync == 1");
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
-  qtree->Project("fDataHistoM2Sum",  "TotalEnergy_Sync", base_cut && "Multiplicity_Sync == 2");
   qtree->Project("fDataHistoM3",  "Energy", base_cut && "Multiplicity_Sync == 3");
 
   dLivetimeYr = 0.8738; 
@@ -2599,7 +2518,7 @@ void TBackgroundModel::SetParameters(int index, double value)
 // Creates/updates the background model
 void TBackgroundModel::UpdateModelAdaptive()
 {
-  if(fModelTotAdapM1 == NULL || fModelTotAdapM2 == NULL || fModelTotAdapM2Sum == NULL) 
+  if(fModelTotAdapM1 == NULL || fModelTotAdapM2 == NULL) 
   {
     cout << "Model Histogram Not Created" << endl;
     return;
@@ -2607,7 +2526,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Reset all bins in model histograms in every loop
   fModelTotAdapM1->Reset();
   fModelTotAdapM2->Reset();
-  // fModelTotAdapM2Sum->Reset();
 
   dNumCalls++;
   if(dNumCalls%5000==0)
@@ -2620,7 +2538,6 @@ void TBackgroundModel::UpdateModelAdaptive()
     // if(fParameters[i] <= 0 )continue;
     fModelTotAdapM1->Add( BkgPar[i]->GetHistM1(),              dDataIntegralM1*fParameters[i]);
     fModelTotAdapM2->Add( BkgPar[i]->GetHistM2(),              dDataIntegralM1*fParameters[i]);
-    // fModelTotAdapM2Sum->Add( BkgPar[i]->GetHistM2Sum(),        dDataIntegralM1*fParameters[i]);
   }
   // Add in Bulk Po-210 by hand
   // 8.5885e03 counts/year
@@ -2701,8 +2618,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double canBotMargin = 0.02;
   double canTopMargin = 0.02;
   double padHeight = (1.-canTopMargin-canBotMargin)/nHisto;
-
-
 
   TCanvas *cadap1 = new TCanvas("cadap1", "cadap1", 1200, 800);
   cadap1->SetLogy();
@@ -2907,8 +2822,6 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // fModelTotAdapM2->Draw("SAME");
 
 
-
-
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
 
@@ -2944,16 +2857,13 @@ bool TBackgroundModel::DoTheFitAdaptive()
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM2->Draw("P");
 
-
+  // Draw residual distribution and fit with Gaussian
   TCanvas *cres1 = new TCanvas("cres1", "cres1", 1600, 600);
   cres1->Divide(2,1);
   cres1->cd(1);
-
-  // TCanvas *cres1 = new TCanvas("cres1", "cres1", 1200, 800);
   hResidualGausM1->Fit("gaus");
   hResidualGausM1->Draw();
   cres1->cd(2);
-  // TCanvas *cres2 = new TCanvas("cres2", "cres2", 1200, 800);
   hResidualGausM2->Fit("gaus");
   hResidualGausM2->Draw();
 
@@ -3051,7 +2961,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << endl;  
   cout << endl;  
   cout << "Residual RMS (Tot): " << dResidualRMSTot << endl;
-  cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << "\t Residual RMS (M2Sum): "  << dResidualRMSM2Sum << endl;
+  cout << "Residual RMS (M1): " << dResidualRMSM1 << "\t" << "Residual RMS (M2): " << dResidualRMSM2 << endl;
 
   dChiSquare = GetChiSquareAdaptive();
 
@@ -3197,10 +3107,8 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   double dProgressM1 = 0;
   double dProgressM2 = 0;
-  double dProgressM2Sum = 0;
   double dataM1_i = 0, modelM1_i = 0;
   double dataM2_i = 0, modelM2_i = 0;
-  double dataM2Sum_i = 0, modelM2Sum_i = 0;
 
   int dDummyNDFM1 = 0;
 
@@ -3361,7 +3269,6 @@ void TBackgroundModel::SanityCheck()
 
   fAdapDataHistoM1->Add(hAdapTeO22nuM1, 0.25*dM1);
   fAdapDataHistoM2->Add(hAdapTeO22nuM2, 0.25*dM2);
-  // fDataHistoM2Sum->Add(hTeO22nuM2Sum, 1.0*dDataIntegralM2Sum);
 
   cout << "Adding " << (0.25*dM1)*hAdapTeO22nuM1->Integral("width") + (0.25*dM2)*hAdapTeO22nuM2->Integral("width") << " 2nbb events to spectrum" << endl;
 
@@ -3415,26 +3322,6 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
 
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
     OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
-    // if(fParFixed == 0)
-    // {
-      // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., (0.69314718056)*(4.9187e+25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") ) << endl;
-    // }
-    // else
-    // {
-      // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., *iter) << endl;
-    // OutPNLL << "dX.push_back(" << (dChiSquare-dBestChiSq)/2. << "); dT.push_back(" << *iter << ");" << endl;
-    // }
-    
-
-    // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-    // for(int i = 0; i < dNParam; i++)
-    // {
-    //   BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    //   BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-    // }
-    // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-    // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
-
 
     nLoop++; // This is purely for file names and to keep track of number of loops
   }
@@ -3468,16 +3355,6 @@ void TBackgroundModel::SetLimit(int fParFixed)
   double  dChiSquareDummy;
   double  dDummyIntegral;
 
-  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  // for(int i = 0; i < dNParam; i++)
-  // {
-    // BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    // BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  // }
-  // For Po-210
-  // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-  // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
-
   dDummyIntegral = BkgPar[fParFixed]->GetHistM1()->Integral("width");
 
 
@@ -3509,11 +3386,7 @@ void TBackgroundModel::SetLimit(int fParFixed)
     OutFile << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
     cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
 
-
-
   }
-
-  // OutFile.close();
 
 }
 
@@ -3527,13 +3400,6 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
   // Do the fit normally once first
   DoTheFitAdaptive();
 
-  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  // for(int i = 0; i < dNParam; i++)
-  // {
-    // BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-    // BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  // }
-
   // Fix 2nbb value and TeO2 K-40 value
   bFixedArray[0] = true;
   bFixedArray[fParFixed] = true;
@@ -3542,17 +3408,17 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
 
 
   nLoop = 0;
-  for(int i = -8; i < 8; i++)
+  for(int i = -5; i < 5; i++)
   {
-    fInitValues.push_back(fParameters[0] + fParameters[0]/30*i);
+    fInitValues.push_back(fParameters[0] + fParameters[0]/20*i);
   }
-  for(int j = -15; j < 15; j++)
+  for(int j = -8; j < 8; j++)
   {
-    fInitValues2.push_back(fParameters[fParFixed] + fParameters[fParFixed]/30*j);
+    fInitValues2.push_back(fParameters[fParFixed] + fParameters[fParFixed]/5*j);
   }
 
 
-  OutPNLL.open(Form("%s/Final/ProfileNLL2D_%d_DR%d.C", dSaveDir.c_str(), tTime->GetDate(), dDataSet ));
+  OutPNLL.open(Form("%s/Final/ProfileNLL2D_%d_Par%d.C", dSaveDir.c_str(), tTime->GetDate(), fParFixed ));
   OutPNLL << "{" << endl;
   OutPNLL << "vector<double> dX;" << endl;
   OutPNLL << "vector<double> dY;" << endl;
@@ -3568,13 +3434,7 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
 
     DoTheFitAdaptive();
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, (0.69314718056)*(4.726e25 * dLivetimeYr)/(hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width") + hAdapTeO22nuM2->Integral(1, fAdapDataHistoM2->FindBin(2700) , "width")/2) ) << endl;
-
-    for(int i = 0; i < dNParam; i++)
-    {
-      BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-      BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-    }
+    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
 
     nLoop++; // This is purely for file names and to keep track of number of loops
     }
@@ -3696,13 +3556,14 @@ void TBackgroundModel::ToyFit()
       // delete fToyDataTest;
       fToyDataTest->Close();
     }
-    
+
     ToyTreeFile->cd();
     ToyTree->Write();
     ToyTreeFile->Close();
 
 }
 
+// Kernal calculation -- tested with Kevin
 TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
 {
   hSMC->Reset();
