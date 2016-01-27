@@ -55,7 +55,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bSave = fSave;
 
   tTime = new TDatime();
-  dNParam = 53; // number of fitting parameters (reduced)
+  // dNParam = 53; // number of fitting parameters (reduced)
+  dNParam = 50;
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
   dMass = 36.75;
@@ -404,9 +405,9 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 // Mess with rebinning here 
   // Rebinning with 2-4 bins seems to be consistent
-  fDataHistoM1->Rebin(2);
-  fDataHistoM2->Rebin(2);
-  dBaseBinSize = dBinSize*2;
+  // fDataHistoM1->Rebin(6);
+  // fDataHistoM2->Rebin(6);
+  dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
  // Calculates adaptive binning vectors
@@ -463,6 +464,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   cout << "Total Events in background spectrum: " << dDataIntegralTot << endl; 
   cout << "Events in background spectrum (M1): " << dDataIntegralM1 << endl;
   cout << "Events in background spectrum (M2): " << dDataIntegralM2 << endl;
+  cout << "Events in fitting region (M1): " << fAdapDataHistoM1->Integral(dFitMinBinM1, dFitMaxBinM1, "width") << endl;
+  cout << "Events in fitting region (M2): " << fAdapDataHistoM2->Integral(dFitMinBinM2, dFitMaxBinM2, "width") << endl;  
   cout << "Livetime of background: " << dLivetimeYr << endl;
 
 
@@ -1631,9 +1634,9 @@ void TBackgroundModel::Initialize()
   hTeO2Sxpb210M1_01   = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_01");
   hTeO2Sxpb210M1_1    = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_1");
   hTeO2Sxpb210M1_10   = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_10");
-  hTeO2Sxpo210M1_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_001");
-  hTeO2Sxpo210M1_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_01");
-  hTeO2Sxpo210M1_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_1");
+  // hTeO2Sxpo210M1_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_001");
+  // hTeO2Sxpo210M1_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_01");
+  // hTeO2Sxpo210M1_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M1_1");
   hTeO2Sxth232M1_001  = (TH1D*)fSurface->Get("hTeO2Sxth232M1_001");
   hTeO2Sxth232M1_01   = (TH1D*)fSurface->Get("hTeO2Sxth232M1_01");
   hTeO2Sxth232M1_1    = (TH1D*)fSurface->Get("hTeO2Sxth232M1_1");
@@ -1670,9 +1673,9 @@ void TBackgroundModel::Initialize()
   hTeO2Sxpb210M2_01   = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_01");
   hTeO2Sxpb210M2_1    = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_1");
   hTeO2Sxpb210M2_10   = (TH1D*)fSurface->Get("hTeO2Sxpb210M2_10");
-  hTeO2Sxpo210M2_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_001");
-  hTeO2Sxpo210M2_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_01");
-  hTeO2Sxpo210M2_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_1");
+  // hTeO2Sxpo210M2_001  = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_001");
+  // hTeO2Sxpo210M2_01   = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_01");
+  // hTeO2Sxpo210M2_1    = (TH1D*)fSurface->Get("hTeO2Sxpo210M2_1");
   hTeO2Sxth232M2_001  = (TH1D*)fSurface->Get("hTeO2Sxth232M2_001");
   hTeO2Sxth232M2_01   = (TH1D*)fSurface->Get("hTeO2Sxth232M2_01");
   hTeO2Sxth232M2_1    = (TH1D*)fSurface->Get("hTeO2Sxth232M2_1");
@@ -1781,9 +1784,9 @@ void TBackgroundModel::Initialize()
   hnewTeO2Sxpb210M1_01 = hTeO2Sxpb210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_01", dAdaptiveArrayM1);
   hnewTeO2Sxpb210M1_1 = hTeO2Sxpb210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_1", dAdaptiveArrayM1);
   hnewTeO2Sxpb210M1_10 = hTeO2Sxpb210M1_10->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpb210M1_10", dAdaptiveArrayM1);
-  hnewTeO2Sxpo210M1_001 = hTeO2Sxpo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_001", dAdaptiveArrayM1);
-  hnewTeO2Sxpo210M1_01 = hTeO2Sxpo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_01", dAdaptiveArrayM1);
-  hnewTeO2Sxpo210M1_1 = hTeO2Sxpo210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_1", dAdaptiveArrayM1);
+  // hnewTeO2Sxpo210M1_001 = hTeO2Sxpo210M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_001", dAdaptiveArrayM1);
+  // hnewTeO2Sxpo210M1_01 = hTeO2Sxpo210M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_01", dAdaptiveArrayM1);
+  // hnewTeO2Sxpo210M1_1 = hTeO2Sxpo210M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxpo210M1_1", dAdaptiveArrayM1);
   hnewTeO2Sxth232M1_001 = hTeO2Sxth232M1_001->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_001", dAdaptiveArrayM1);
   hnewTeO2Sxth232M1_01 = hTeO2Sxth232M1_01->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_01", dAdaptiveArrayM1);
   hnewTeO2Sxth232M1_1 = hTeO2Sxth232M1_1->Rebin(dAdaptiveBinsM1, "hnewTeO2Sxth232M1_1", dAdaptiveArrayM1);
@@ -1843,9 +1846,9 @@ void TBackgroundModel::Initialize()
   hnewTeO2Sxpb210M2_01 = hTeO2Sxpb210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_01", dAdaptiveArrayM2);
   hnewTeO2Sxpb210M2_1 = hTeO2Sxpb210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_1", dAdaptiveArrayM2);
   hnewTeO2Sxpb210M2_10 = hTeO2Sxpb210M2_10->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpb210M2_10", dAdaptiveArrayM2);
-  hnewTeO2Sxpo210M2_001 = hTeO2Sxpo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_001", dAdaptiveArrayM2);
-  hnewTeO2Sxpo210M2_01 = hTeO2Sxpo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_01", dAdaptiveArrayM2);
-  hnewTeO2Sxpo210M2_1 = hTeO2Sxpo210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_1", dAdaptiveArrayM2);
+  // hnewTeO2Sxpo210M2_001 = hTeO2Sxpo210M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_001", dAdaptiveArrayM2);
+  // hnewTeO2Sxpo210M2_01 = hTeO2Sxpo210M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_01", dAdaptiveArrayM2);
+  // hnewTeO2Sxpo210M2_1 = hTeO2Sxpo210M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxpo210M2_1", dAdaptiveArrayM2);
   hnewTeO2Sxth232M2_001 = hTeO2Sxth232M2_001->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_001", dAdaptiveArrayM2);
   hnewTeO2Sxth232M2_01 = hTeO2Sxth232M2_01->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_01", dAdaptiveArrayM2);
   hnewTeO2Sxth232M2_1 = hTeO2Sxth232M2_1->Rebin(dAdaptiveBinsM2, "hnewTeO2Sxth232M2_1", dAdaptiveArrayM2);
@@ -2056,9 +2059,9 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxpb210M1_01->SetBinContent(i, hnewTeO2Sxpb210M1_01->GetBinContent(i)/hnewTeO2Sxpb210M1_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_1->SetBinContent(i, hnewTeO2Sxpb210M1_1->GetBinContent(i)/hnewTeO2Sxpb210M1_1->GetBinWidth(i));
     hAdapTeO2Sxpb210M1_10->SetBinContent(i, hnewTeO2Sxpb210M1_10->GetBinContent(i)/hnewTeO2Sxpb210M1_10->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_001->SetBinContent(i, hnewTeO2Sxpo210M1_001->GetBinContent(i)/hnewTeO2Sxpo210M1_001->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_01->SetBinContent(i, hnewTeO2Sxpo210M1_01->GetBinContent(i)/hnewTeO2Sxpo210M1_01->GetBinWidth(i));
-    hAdapTeO2Sxpo210M1_1->SetBinContent(i, hnewTeO2Sxpo210M1_1->GetBinContent(i)/hnewTeO2Sxpo210M1_1->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M1_001->SetBinContent(i, hnewTeO2Sxpo210M1_001->GetBinContent(i)/hnewTeO2Sxpo210M1_001->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M1_01->SetBinContent(i, hnewTeO2Sxpo210M1_01->GetBinContent(i)/hnewTeO2Sxpo210M1_01->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M1_1->SetBinContent(i, hnewTeO2Sxpo210M1_1->GetBinContent(i)/hnewTeO2Sxpo210M1_1->GetBinWidth(i));
     hAdapTeO2Sxth232M1_001->SetBinContent(i, hnewTeO2Sxth232M1_001->GetBinContent(i)/hnewTeO2Sxth232M1_001->GetBinWidth(i));
     hAdapTeO2Sxth232M1_01->SetBinContent(i, hnewTeO2Sxth232M1_01->GetBinContent(i)/hnewTeO2Sxth232M1_01->GetBinWidth(i));
     hAdapTeO2Sxth232M1_1->SetBinContent(i, hnewTeO2Sxth232M1_1->GetBinContent(i)/hnewTeO2Sxth232M1_1->GetBinWidth(i));
@@ -2157,9 +2160,9 @@ void TBackgroundModel::Initialize()
     hAdapTeO2Sxpb210M2_01->SetBinContent(i, hnewTeO2Sxpb210M2_01->GetBinContent(i)/hnewTeO2Sxpb210M2_01->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_1->SetBinContent(i, hnewTeO2Sxpb210M2_1->GetBinContent(i)/hnewTeO2Sxpb210M2_1->GetBinWidth(i));
     hAdapTeO2Sxpb210M2_10->SetBinContent(i, hnewTeO2Sxpb210M2_10->GetBinContent(i)/hnewTeO2Sxpb210M2_10->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_001->SetBinContent(i, hnewTeO2Sxpo210M2_001->GetBinContent(i)/hnewTeO2Sxpo210M2_001->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_01->SetBinContent(i, hnewTeO2Sxpo210M2_01->GetBinContent(i)/hnewTeO2Sxpo210M2_01->GetBinWidth(i));
-    hAdapTeO2Sxpo210M2_1->SetBinContent(i, hnewTeO2Sxpo210M2_1->GetBinContent(i)/hnewTeO2Sxpo210M2_1->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M2_001->SetBinContent(i, hnewTeO2Sxpo210M2_001->GetBinContent(i)/hnewTeO2Sxpo210M2_001->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M2_01->SetBinContent(i, hnewTeO2Sxpo210M2_01->GetBinContent(i)/hnewTeO2Sxpo210M2_01->GetBinWidth(i));
+    // hAdapTeO2Sxpo210M2_1->SetBinContent(i, hnewTeO2Sxpo210M2_1->GetBinContent(i)/hnewTeO2Sxpo210M2_1->GetBinWidth(i));
     hAdapTeO2Sxth232M2_001->SetBinContent(i, hnewTeO2Sxth232M2_001->GetBinContent(i)/hnewTeO2Sxth232M2_001->GetBinWidth(i));
     hAdapTeO2Sxth232M2_01->SetBinContent(i, hnewTeO2Sxth232M2_01->GetBinContent(i)/hnewTeO2Sxth232M2_01->GetBinWidth(i));
     hAdapTeO2Sxth232M2_1->SetBinContent(i, hnewTeO2Sxth232M2_1->GetBinContent(i)/hnewTeO2Sxth232M2_1->GetBinWidth(i));
@@ -2364,15 +2367,24 @@ void TBackgroundModel::PrintParameters()
 
 void TBackgroundModel::PrintParActivity()
 { 
-  // This only gets the number of counts corrected for detector efficiency
-  cout << "Activity in Counts/Year (M1)" << endl;
+  if(!bSave)
+  {
+    for(int i = 0; i < dNParam; i++)
+    {
+      BkgPar[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]);
+      BkgPar[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]);
+      fParCountsM1[i] = BkgPar[i]->GetHistM1()->Integral("width")/dLivetimeYr;
+      fParCountsM2[i] = BkgPar[i]->GetHistM2()->Integral("width")/dLivetimeYr;    
+      // Calculate Activity in terms of Bq/Kg
+      fParActivityM1[i] = fParCountsM1[i]/fParEfficiencyM1[i]/fParMass[i]/(365*24*60*60);
+    }
+  }
+  cout << "Counts/Year (M1) --- Error --- Activity (Bq/Kg)" << endl;
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
-  // cout << i << " " << minuit->fCpnam[i] << " activity: " << fParCountsM1[i] << endl;
-  // cout << fParCountsM1[i] << "\t" <<  dDataIntegralM1*fParError[i] << endl;
     if(!bFixedArray[i])
     {
-      cout << i << " " << fParCountsM1[i] << " " << fParCountsM1[i]*fParError[i]/fParameters[i] << " " << fParCountsM2[i] <<  " " << fParCountsM2[i]*fParError[i]/fParameters[i]  << endl;
+      cout << i << " " << fParCountsM1[i] << " +/- " << fParCountsM1[i]*fParError[i]/fParameters[i] << "\t" << fParActivityM1[i] << endl;
     }
   }
 }
@@ -2387,73 +2399,124 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[2] = new TBkgModelParameter( "TeO2 Co60", 2, 0., 1E-7, 0, 1.0, hAdapTeO2co60M1 , hAdapTeO2co60M2 );  
   BkgPar[3] = new TBkgModelParameter( "TeO2 Sb125", 3, 0, 1E-7, 0, 1.0, hAdapTeO2sb125M1 , hAdapTeO2sb125M2 );  
 
-  BkgPar[4] = new TBkgModelParameter( "TeO2 Th232 only", 4, 3.85069e-05, 1E-7, 0, 1.0, hAdapTeO2th232onlyM1 , hAdapTeO2th232onlyM2 ); 
-  BkgPar[5] = new TBkgModelParameter( "TeO2 Ra228-Pb208", 5, 0., 1E-7, 0, 1.0, hAdapTeO2ra228pb208M1 , hAdapTeO2ra228pb208M2 ); 
+  BkgPar[4] = new TBkgModelParameter( "TeO2 Th232 only", 4, 0., 1E-7, 0, 1.0, hAdapTeO2th232onlyM1 , hAdapTeO2th232onlyM2 ); 
+  BkgPar[5] = new TBkgModelParameter( "TeO2 Ra228-Pb208", 5, 5.95362e-05, 1E-7, 0, 1.0, hAdapTeO2ra228pb208M1 , hAdapTeO2ra228pb208M2 ); 
   BkgPar[6] = new TBkgModelParameter( "TeO2 U238-Th230 ", 6, 0., 1E-7, 0, 1.0, hAdapTeO2u238th230M1 , hAdapTeO2u238th230M2 ); 
-  BkgPar[7] = new TBkgModelParameter( "TeO2 Th230 only", 7, 3.45907e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1 , hAdapTeO2th230onlyM2 ); 
-  BkgPar[8] = new TBkgModelParameter( "TeO2 Ra226-Pb210", 8, 0., 1E-7, 0, 1.0, hAdapTeO2ra226pb210M1 , hAdapTeO2ra226pb210M2 ); 
+  BkgPar[7] = new TBkgModelParameter( "TeO2 Th230 only", 7, 5.49412e-04, 1E-7, 0, 1.0, hAdapTeO2th230onlyM1 , hAdapTeO2th230onlyM2 ); 
+  BkgPar[8] = new TBkgModelParameter( "TeO2 Ra226-Pb210", 8, 4.39777e-04., 1E-7, 0, 1.0, hAdapTeO2ra226pb210M1 , hAdapTeO2ra226pb210M2 ); 
 
   // TeO2 Surface
-  BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 1", 9, 2.91517e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
-  BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.01 $\\mu$m", 10, 4.92192e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_001 , hAdapTeO2Sxth232M2_001 );
-  BkgPar[11] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.01 $\\mu$m", 11, 2.12906e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_001 , hAdapTeO2Sxra228pb208M2_001 );
-  BkgPar[12] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.01 $\\mu$m", 12, 1.81021e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_001 , hAdapTeO2Sxu238th230M2_001 );
-  BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.01 $\\mu$m", 13, 8.84829e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_001 , hAdapTeO2Sxth230onlyM2_001 );
-  BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.01 $\\mu$m", 14, 3.50864e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_001 , hAdapTeO2Sxra226pb210M2_001 );
-  BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 0.1 $\\mu$m", 15, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_01 , hAdapTeO2Sxpb210M2_01 ); // Works better than 0.01
-  BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 16, 4.29548e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
-  BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 17, 4.06424e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
-  BkgPar[18] = new TBkgModelParameter( "TeO2 Sx Pb210 10 $\\mu$m", 18, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
-  BkgPar[19] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 19, 0., 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 ); 
-  BkgPar[20] = new TBkgModelParameter( "TeO2 Sx U238 10 $\\mu$m", 20, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10 , hAdapTeO2Sxu238M2_10 ); 
+  BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.001 $\\mu$m", 9, 8.31726e-05, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_0001 , hAdapTeO2Sxth232onlyM2_0001 );
+  BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.001 $\\mu$m", 10, 2.47160e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_0001 , hAdapTeO2Sxra228pb208M2_0001 );
+  BkgPar[11] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.001 $\\mu$m", 11, 1.83844e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_0001 , hAdapTeO2Sxu238th230M2_0001 );
+  BkgPar[12] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.001 $\\mu$m", 12, 3.12111e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_0001 , hAdapTeO2Sxth230onlyM2_0001 );
+  BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.001 $\\mu$m", 13, 3.11301e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_0001 , hAdapTeO2Sxra226pb210M2_0001 );
   
-  // Cu Holder Surface
-  BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 21, 4.70819e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
-  BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 22, 2.18036e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
-  BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 23, 1.09059e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
-  BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 24, 1.62080e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
-  BkgPar[25] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 25, 5.11887e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
-  BkgPar[26] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 26, 1.93437e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
-  BkgPar[27] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 27, 4.67469e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
+  BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 14, 4.28515e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
+  BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 15, 4.23544e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
+  BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Th232 1", 16, 1.65735e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
+  BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 17, 1.29262e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 );   
+
+  BkgPar[18] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 18, 4.70819e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
+  BkgPar[19] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 19, 2.18036e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
+  BkgPar[20] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 20, 1.09059e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
+  BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 21, 1.62080e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
+  BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 22, 5.11887e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
+  BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 23, 1.93437e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
+  BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 24, 4.67469e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
 
   // Bulk Contamination
-  BkgPar[28] = new TBkgModelParameter( "Copper Holder Mn54", 28, 1.20782e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
-  BkgPar[29] = new TBkgModelParameter( "Copper Holder U238", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1 , hAdapCuBox_CuFrameu238M2 );
-  BkgPar[30] = new TBkgModelParameter( "Copper Holder Th232", 30, 0., 1E-7, 0., 1.0, hAdapCuBox_CuFrameth232M1 , hAdapCuBox_CuFrameth232M2 );
-  BkgPar[31] = new TBkgModelParameter( "Copper Holder K40", 31, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramek40M1 , hAdapCuBox_CuFramek40M2 );
-  BkgPar[32] = new TBkgModelParameter( "Copper Holder Co60", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameco60M1 , hAdapCuBox_CuFrameco60M2 );
-  BkgPar[33] = new TBkgModelParameter( "Internal Shields Cs137", 33, 1.88141e-03, 1E-7, 0, 1.0, hAdap50mKcs137M1 , hAdap50mKcs137M2 );
-  BkgPar[34] = new TBkgModelParameter( "Internal Shields U238", 34, 0., 1E-7, 0, 1.0, hAdapInternalu238M1 , hAdapInternalu238M2 );
-  BkgPar[35] = new TBkgModelParameter( "Internal Shields Th232", 35, 0., 1E-7, 0, 1.0, hAdapInternalth232M1 , hAdapInternalth232M2 );
-  BkgPar[36] = new TBkgModelParameter( "Internal Shields K40", 36, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
-  BkgPar[37] = new TBkgModelParameter( "Internal Shields Co60", 37, 0., 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
-  BkgPar[38] = new TBkgModelParameter( "Roman Lead U238", 38, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1 , hAdapPbRomu238M2 );
-  BkgPar[39] = new TBkgModelParameter( "Roman Lead Th232", 39, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1 , hAdapPbRomth232M2 );
-  BkgPar[40] = new TBkgModelParameter( "Roman Lead K40", 40, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
-  BkgPar[41] = new TBkgModelParameter( "Roman Lead Co60", 41, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
+  BkgPar[25] = new TBkgModelParameter( "Copper Holder Mn54", 25, 1.20782e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
+  BkgPar[26] = new TBkgModelParameter( "Copper Holder U238", 26, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1 , hAdapCuBox_CuFrameu238M2 );
+  BkgPar[27] = new TBkgModelParameter( "Copper Holder Th232", 27, 0., 1E-7, 0., 1.0, hAdapCuBox_CuFrameth232M1 , hAdapCuBox_CuFrameth232M2 );
+  BkgPar[28] = new TBkgModelParameter( "Copper Holder K40", 28, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramek40M1 , hAdapCuBox_CuFramek40M2 );
+  BkgPar[29] = new TBkgModelParameter( "Copper Holder Co60", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameco60M1 , hAdapCuBox_CuFrameco60M2 );
+  BkgPar[30] = new TBkgModelParameter( "Internal Shields Cs137", 30, 1.88141e-03, 1E-7, 0, 1.0, hAdap50mKcs137M1 , hAdap50mKcs137M2 );
+  BkgPar[31] = new TBkgModelParameter( "Internal Shields U238", 31, 0., 1E-7, 0, 1.0, hAdapInternalu238M1 , hAdapInternalu238M2 );
+  BkgPar[32] = new TBkgModelParameter( "Internal Shields Th232", 32, 0., 1E-7, 0, 1.0, hAdapInternalth232M1 , hAdapInternalth232M2 );
+  BkgPar[33] = new TBkgModelParameter( "Internal Shields K40", 33, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
+  BkgPar[34] = new TBkgModelParameter( "Internal Shields Co60", 34, 0., 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
+  BkgPar[35] = new TBkgModelParameter( "Roman Lead U238", 35, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1 , hAdapPbRomu238M2 );
+  BkgPar[36] = new TBkgModelParameter( "Roman Lead Th232", 36, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1 , hAdapPbRomth232M2 );
+  BkgPar[37] = new TBkgModelParameter( "Roman Lead K40", 37, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
+  BkgPar[38] = new TBkgModelParameter( "Roman Lead Co60", 38, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
+  BkgPar[39] = new TBkgModelParameter( "OVC U238", 39, 7.19053e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  BkgPar[40] = new TBkgModelParameter( "OVC Th232", 40, 5.61000e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  BkgPar[41] = new TBkgModelParameter( "OVC K40", 41, 5.41704e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  BkgPar[42] = new TBkgModelParameter( "OVC Co60", 42, 2.49256e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  BkgPar[43] = new TBkgModelParameter( "OVC Bi207", 43, 6.02468e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+  BkgPar[44] = new TBkgModelParameter( "External Lead Bi210", 44, 1.03086e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
+  BkgPar[45] = new TBkgModelParameter( "External Lead K40", 45, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
+  BkgPar[46] = new TBkgModelParameter( "External Lead Th232", 46, 2.61106e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
+  BkgPar[47] = new TBkgModelParameter( "External Lead U238", 47, 3.93821e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
+  BkgPar[48] = new TBkgModelParameter( "External Lead Pb210", 48, 3.96617e-03, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
+  BkgPar[49] = new TBkgModelParameter( "Bottom External Lead K40", 49, 3.69245e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
   
-  BkgPar[42] = new TBkgModelParameter( "OVC U238", 42, 7.19053e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
-  BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 5.61000e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  BkgPar[44] = new TBkgModelParameter( "OVC K40", 44, 5.41704e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
-  BkgPar[45] = new TBkgModelParameter( "OVC Co60", 45, 2.49256e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
-  BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 6.02468e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
-  
-  BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 1.03086e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
-  BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
-  BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 2.61106e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
-  BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 3.93821e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
 
-  // 803 keV, need to change the histogram
-  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96469e-03, 1E-7, 0, 1.0, hAdapOVC804M1 , hAdapOVC804M2 ); //
-  BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 3.96617e-03, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
-  BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 3.69245e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  // BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.001 $\\mu$m", 9, 8.31726e-05, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_0001 , hAdapTeO2Sxth232onlyM2_0001 );
+  // BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.001 $\\mu$m", 10, 2.47160e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_0001 , hAdapTeO2Sxra228pb208M2_0001 );
+  // BkgPar[11] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.001 $\\mu$m", 11, 1.83844e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_0001 , hAdapTeO2Sxu238th230M2_0001 );
+  // BkgPar[12] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.001 $\\mu$m", 12, 3.12111e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_0001 , hAdapTeO2Sxth230onlyM2_0001 );
+  // BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.001 $\\mu$m", 13, 3.11301e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_0001 , hAdapTeO2Sxra226pb210M2_0001 );
+  
+  // BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Pb210 0.1 $\\mu$m", 14, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_01 , hAdapTeO2Sxpb210M2_01 ); // Works better than 0.01
+  // BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 15, 4.28515e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
+  // BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 16, 4.23544e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
+  // BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Pb210 10 $\\mu$m", 17, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
+  // BkgPar[18] = new TBkgModelParameter( "TeO2 Sx Th232 1", 18, 1.65735e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
+  // BkgPar[19] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 19, 1.29262e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 );   
+  // BkgPar[20] = new TBkgModelParameter( "TeO2 Sx U238 10 $\\mu$m", 20, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10 , hAdapTeO2Sxu238M2_10 ); 
+
+  // Cu Holder Surface All
+  // BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 21, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
+  // BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 22, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
+  // BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx Pb210 100 $\\mu$m", 23, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_100 , hAdapCuBox_CuFramepb210M2_100 );
+  
+  // BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 24, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
+  // BkgPar[25] = new TBkgModelParameter( "Copper Holder Sx Th232 10 $\\mu$m", 25, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10 , hAdapCuBox_CuFrameth232M2_10 );
+  // BkgPar[26] = new TBkgModelParameter( "Copper Holder Sx Pb210 10 $\\mu$m", 26, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10 , hAdapCuBox_CuFramepb210M2_10 );
+
+  // BkgPar[27] = new TBkgModelParameter( "Copper Holder Sx U238 1 $\\mu$m", 27, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1 , hAdapCuBox_CuFrameu238M2_1 );
+  // BkgPar[28] = new TBkgModelParameter( "Copper Holder Sx Th232 1 $\\mu$m", 28, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1 , hAdapCuBox_CuFrameth232M2_1 );
+  // BkgPar[29] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
+  
+  // BkgPar[30] = new TBkgModelParameter( "Copper Holder Sx U238 0.1 $\\mu$m", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01 , hAdapCuBox_CuFrameu238M2_01 );
+  // BkgPar[31] = new TBkgModelParameter( "Copper Holder Sx Th232 0.1 $\\mu$m", 31, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01 , hAdapCuBox_CuFrameth232M2_01 );
+  // BkgPar[32] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
+
+  // BkgPar[33] = new TBkgModelParameter( "Copper Holder Sx U238 0.01 $\\mu$m", 33, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001 , hAdapCuBox_CuFrameu238M2_001 );  
+  // BkgPar[34] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
+  // BkgPar[35] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 35, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
+
+
+  // Comment more as necessary 
+  // BkgPar[28] = new TBkgModelParameter( "Copper Holder Mn54", 28, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
+  // BkgPar[29] = new TBkgModelParameter( "Copper Holder U238", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1 , hAdapCuBox_CuFrameu238M2 );
+  // BkgPar[30] = new TBkgModelParameter( "Copper Holder Th232", 30, 0., 1E-7, 0., 1.0, hAdapCuBox_CuFrameth232M1 , hAdapCuBox_CuFrameth232M2 );
+  // BkgPar[31] = new TBkgModelParameter( "Copper Holder K40", 31, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramek40M1 , hAdapCuBox_CuFramek40M2 );
+  // BkgPar[32] = new TBkgModelParameter( "Copper Holder Co60", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameco60M1 , hAdapCuBox_CuFrameco60M2 );
+  // BkgPar[33] = new TBkgModelParameter( "Internal Shields Cs137", 33, 0., 1E-7, 0, 1.0, hAdap50mKcs137M1 , hAdap50mKcs137M2 );
+  // BkgPar[34] = new TBkgModelParameter( "Internal Shields U238", 34, 0., 1E-7, 0, 1.0, hAdapInternalu238M1 , hAdapInternalu238M2 );
+  // BkgPar[35] = new TBkgModelParameter( "Internal Shields Th232", 35, 0., 1E-7, 0, 1.0, hAdapInternalth232M1 , hAdapInternalth232M2 );
+  
+  // BkgPar[36] = new TBkgModelParameter( "Internal Shields K40", 36, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
+  // BkgPar[37] = new TBkgModelParameter( "Internal Shields Co60", 37, 0., 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
+  // BkgPar[38] = new TBkgModelParameter( "Roman Lead U238", 38, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1 , hAdapPbRomu238M2 );
+  // BkgPar[39] = new TBkgModelParameter( "Roman Lead Th232", 39, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1 , hAdapPbRomth232M2 );
+  // BkgPar[40] = new TBkgModelParameter( "Roman Lead K40", 40, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
+  // BkgPar[41] = new TBkgModelParameter( "Roman Lead Co60", 41, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
+  // BkgPar[42] = new TBkgModelParameter( "OVC U238", 42, 0., 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
+  // BkgPar[43] = new TBkgModelParameter( "OVC Th232", 43, 0., 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
+  // BkgPar[44] = new TBkgModelParameter( "OVC K40", 44, 0., 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
+  // BkgPar[45] = new TBkgModelParameter( "OVC Co60", 45, 0., 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
+  // BkgPar[46] = new TBkgModelParameter( "OVC Bi207", 46, 0., 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
+  // BkgPar[47] = new TBkgModelParameter( "External Lead Bi210", 47, 0., 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
+  // BkgPar[48] = new TBkgModelParameter( "External Lead K40", 48, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
+  // BkgPar[49] = new TBkgModelParameter( "External Lead Th232", 49, 0., 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
+  // BkgPar[50] = new TBkgModelParameter( "External Lead U238", 50, 0., 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
+  // BkgPar[51] = new TBkgModelParameter( "External Lead Pb210", 51, 0., 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
   // BkgPar[52] = new TBkgModelParameter( "Bottom External Lead K40", 52, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
-  // BkgPar[53] = new TBkgModelParameter( "Copper Box spot Th232", 53, 0, 1E-7, 0, 1.0, hAdapCuBox_th232spotM1 , hAdapCuBox_th232spotM2 ); //
-  // BkgPar[54] = new TBkgModelParameter( "Copper Box spot K40", 54, 0, 1E-7, 0, 1.0, hAdapCuBox_k40spotM1 , hAdapCuBox_k40spotM2 ); //
 
-
-  // BkgPar[26] = new TBkgModelParameter( "OVC 835", 26, 2.69330e-03, 1E-7, 0, 1.0, hAdapOVC835M1 , hAdapOVC835M2 ); // Mn54 (Cosmogenic activation of copper)
-  // BkgPar[27] = new TBkgModelParameter( "OVC 1063", 27, 5.20414e-03, 1E-7, 0, 1.0, hAdapOVC1063M1 , hAdapOVC1063M2 ); // Bi207
 
 
   //////////////
@@ -2473,7 +2536,26 @@ void TBackgroundModel::GenerateParameters()
   // bFixedArray[17] = true;
 
   // Fixing alphas
-  // for(int i = 4; i < 28; i ++)
+  dStartAlpha = 4; // These are just for loops
+  dEndAlpha = 25;
+  // for(int i = dStartAlpha; i < dEndAlpha; i ++)
+  // {
+  //   bFixedArray[i] = true;
+  // }
+  // bFixedArray[14] = true;
+  // bFixedArray[17] = true;
+  // bFixedArray[20] = true;
+
+  // bFixedArray[21] = true;
+  // bFixedArray[22] = true;
+  // bFixedArray[23] = true;
+
+  // bFixedArray[27] = true;
+  // bFixedArray[28] = true;
+  // bFixedArray[29] = true;
+
+  // Fixing Gammas
+  // for(int i = dEndAlpha; i < dNParam; i ++)
   // {
   //   bFixedArray[i] = true;
   // }
@@ -2549,7 +2631,6 @@ void TBackgroundModel::UpdateModelAdaptive()
   // Adding Muon distribution
   fModelTotAdapM1->Add( hAdapExtMuonM1, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
   fModelTotAdapM2->Add( hAdapExtMuonM2, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
-
 
 }
   
@@ -2836,7 +2917,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM1->GetXaxis()->SetLabelSize(0.05);
   // hResidualDistM1->GetYaxis()->SetLabelSize(0.05);
   // hResidualDistM1->GetYaxis()->SetTitleSize(0.04);
-  // hResidualDistM1->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
+  hResidualDistM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));
   hResidualDistM1->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM1->Draw("P");
 
@@ -2853,7 +2934,7 @@ bool TBackgroundModel::DoTheFitAdaptive()
   // hResidualDistM2->GetXaxis()->SetLabelSize(0.05);
   // hResidualDistM2->GetYaxis()->SetLabelSize(0.05);
   // hResidualDistM2->GetYaxis()->SetTitleSize(0.04); 
-  // hResidualDistM2->GetXaxis()->SetRange(1, fAdapDataHistoM2->FindBin(3000));
+  hResidualDistM2->GetXaxis()->SetRange(fAdapDataHistoM2->FindBin(dFitMin), fAdapDataHistoM2->FindBin(dFitMax-1));
   hResidualDistM2->GetYaxis()->SetTitle("Residuals (#sigma)");
   hResidualDistM2->Draw("P");
 
@@ -2907,18 +2988,45 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double dAlphaModelM2 = fModelTotAdapM2->Integral( fAdapDataHistoM2->FindBin(3000), fAdapDataHistoM2->FindBin(8000), "width" )/(dAlphaRangeM2*dLivetimeYr);
   double dAlphaModelErrM2 = TMath::Sqrt(fModelTotAdapM2->Integral( fAdapDataHistoM2->FindBin(3000), fAdapDataHistoM2->FindBin(8000), "width" ))/(dAlphaRangeM2*dLivetimeYr);
 
-
-  double dDummyAlpha;
+  double dDummyAlphaRate;
+  double dDummyAlpha;  
+  double dDummyGammaRate;
   double dDummyGamma;
-  for(int i=4; i<28; i++ )
+
+  double dDummyAlpha2nRate;
+  double dDummyAlpha2n;  
+  double dDummyGamma2nRate;
+  double dDummyGamma2n;
+
+  // double dDummyAlphaTotRate;
+  // double dDummyAlphaTot;  
+  // double dDummyGammaTotRate;
+  // double dDummyGammaTot;
+
+  for(int i = dStartAlpha; i < dEndAlpha; i++ )
   {
-    dDummyAlpha += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+    dDummyAlpha += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1;
+    dDummyAlphaRate += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+  
+    dDummyAlpha2n += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[i]*dDataIntegralM1;
+    dDummyAlpha2nRate += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[i]*dDataIntegralM1/(d2nbbRange*dLivetimeYr);
+  
   }
   // Co-60 TeO2  
-  dDummyGamma += BkgPar[2]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[2]*dDataIntegralM1/(dROIRange*dLivetimeYr);
-  for(int i=28; i<53; i++ )
+  dDummyGamma += BkgPar[2]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[2]*dDataIntegralM1;
+  dDummyGammaRate += BkgPar[2]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[2]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+  
+  dDummyGamma2n += BkgPar[2]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[2]*dDataIntegralM1;
+  dDummyGamma2nRate += BkgPar[2]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[2]*dDataIntegralM1/(d2nbbRange*dLivetimeYr);
+
+
+  for(int i = dEndAlpha; i<dNParam; i++ )
   {
-    dDummyGamma += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+    dDummyGamma += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1;
+    dDummyGammaRate += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+
+    dDummyGamma2n += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[i]*dDataIntegralM1;
+    dDummyGamma2nRate += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(500), fAdapDataHistoM1->FindBin(2000), "width" )*fParameters[i]*dDataIntegralM1/(d2nbbRange*dLivetimeYr);
   }
 
 
@@ -2954,9 +3062,12 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << "Model in Alpha region M2 (c/keV/yr): " << dAlphaModelM2 << " $\\pm$ " << dAlphaModelErrM2 << endl;
   cout << endl;  
   cout << endl;    
-  cout << "0nbb ROI -- Alpha contribution (c/keV/yr): " << dDummyAlpha << endl;
-  cout << "0nbb ROI -- Gamma contribution (c/keV/yr): " << dDummyGamma << endl;
-  cout << "0nbb ROI -- 2nbb contribution (c/keV/yr): " << BkgPar[0]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[0]*dDataIntegralM1/(dROIRange*dLivetimeYr) << endl;
+  cout << "0nbb ROI -- Alpha contribution (counts) -- (c/keV/yr): " << dDummyAlpha << "\t" << dDummyAlphaRate << endl;
+  cout << "0nbb ROI -- Gamma contribution (counts) -- (c/keV/yr): " << dDummyGamma << "\t" << dDummyGammaRate << endl;
+  
+  cout << "2nbb ROI -- Alpha contribution (counts) -- (c/keV/yr): " << dDummyAlpha2n << "\t" << dDummyAlpha2nRate << endl;
+  cout << "2nbb ROI -- Gamma contribution (counts) -- (c/keV/yr): " << dDummyGamma2n << "\t" << dDummyGamma2nRate << endl;
+  // cout << "0nbb ROI -- 2nbb contribution (c/keV/yr): " << BkgPar[0]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[0]*dDataIntegralM1/(dROIRange*dLivetimeYr) << endl;
 
   cout << endl;  
   cout << endl;  
@@ -3164,20 +3275,21 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
   if(bSave)
   {
-
     // Integrals
     for(int i = 0; i < dNParam; i++)
     {
+      if(bFixedArray[i])continue;
       BkgPar[i]->GetHistM1()->Scale( dDataIntegralM1*fParameters[i]);
       BkgPar[i]->GetHistM2()->Scale( dDataIntegralM2*fParameters[i]);
       fParCountsM1[i] = BkgPar[i]->GetHistM1()->Integral("width")/dLivetimeYr;
       fParCountsM2[i] = BkgPar[i]->GetHistM2()->Integral("width")/dLivetimeYr;    
       // Calculate Activity in terms of Bq/Kg
-      fParActivityM1[i] = fParCountsM1[i]/fParEfficiencyM1[i]/fParMass[i]/(dLivetimeYr*365*24*60*60);
+      fParActivityM1[i] = fParCountsM1[i]/fParEfficiencyM1[i]/fParMass[i]/(365*24*60*60);
     }
     // Scale Po-210 
     hAdapTeO2po210M1->Scale( (1.77E+3) );
     hAdapTeO2po210M2->Scale( (1.77E+3) );
+
 
   // Saving plots
     cadap1->SaveAs(Form("%s/Final/FitM1_%d.pdf", dSaveDir.c_str(), tTime->GetDate() ));
@@ -3191,29 +3303,54 @@ bool TBackgroundModel::DoTheFitAdaptive()
 
     // Save histograms to file
     TFile *fSaveResult = new TFile(Form("%s/Final/FitResult_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
-    fSaveResult->Add(fDataHistoM1);
-    fSaveResult->Add(fDataHistoM2);
-    fSaveResult->Add(fAdapDataHistoM1);
-    fSaveResult->Add(fAdapDataHistoM2);
-    fSaveResult->Add(fModelTotAdapM1);
-    fSaveResult->Add(fModelTotAdapM2);
+    fSaveResult->cd();
+    fDataHistoM1->Write();
+    fDataHistoM2->Write();
+    fAdapDataHistoM1->Write();
+    fAdapDataHistoM2->Write();
+    fModelTotAdapM1->Write();
+    fModelTotAdapM2->Write();
     for(int i = 0; i < dNParam; i++)
     {
-      fSaveResult->Add( BkgPar[i]->GetHistM1() );
-      fSaveResult->Add( BkgPar[i]->GetHistM2() );
+      BkgPar[i]->GetHistM1()->Write();
+      BkgPar[i]->GetHistM2()->Write();
     
     }
-    fSaveResult->Add( hAdapTeO2po210M1 );
-    fSaveResult->Add( hAdapTeO2po210M2 );
+    hAdapTeO2po210M1->Write();
+    hAdapTeO2po210M2->Write();
+    mCorrMatrix.Write();
+    fParArray->Write();
+    fParArrayErr->Write();
 
-    fSaveResult->Add(&mCorrMatrix);
+    // fSaveResult->Add(fDataHistoM1);
+    // fSaveResult->Add(fDataHistoM2);
+    // fSaveResult->Add(fAdapDataHistoM1);
+    // fSaveResult->Add(fAdapDataHistoM2);
+    // fSaveResult->Add(fModelTotAdapM1);
+    // fSaveResult->Add(fModelTotAdapM2);
+    // for(int i = 0; i < dNParam; i++)
+    // {
+    //   fSaveResult->Add( BkgPar[i]->GetHistM1() );
+    //   fSaveResult->Add( BkgPar[i]->GetHistM2() );
+    
+    // }
+    // fSaveResult->Add( hAdapTeO2po210M1 );
+    // fSaveResult->Add( hAdapTeO2po210M2 );
 
-    fSaveResult->Add(fParArray);
-    fSaveResult->Add(fParArrayErr);
+    // fSaveResult->Add(&mCorrMatrix);
 
-    fSaveResult->Write(); 
+    // fSaveResult->Add(fParArray);
+    // fSaveResult->Add(fParArrayErr);
+
+    // fSaveResult->Write(); 
  
+
+
+    fSaveResult->Close();
+
+
     LatexResultTable();
+    
   } // end bSave
 
   return true;
@@ -3227,6 +3364,7 @@ void TBackgroundModel::LatexResultTable()
   OutFile << "Name -- Normalization -- Normalization Err -- Percent Err -- Integral (M1) -- Activity (Bq/Kg) -- Activity Err" << endl;
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
+    if(bFixedArray[i])continue;
     OutFile << minuit->fCpnam[i] << "\t" << fParameters[i] << "\t" << fParError[i] << "\t" << fParError[i]/fParameters[i] << "\t" << BkgPar[i]->GetHistM1()->Integral() << "\t" <<  fParActivityM1[i] << "\t"  << fParActivityM1[i]*fParError[i]/fParameters[i] <<endl;
   }
   OutFile.close();
@@ -3243,6 +3381,7 @@ void TBackgroundModel::LatexResultTable()
   OutFile << "\\hline" << endl;
   for(int i = 0; i < TBackgroundModel::dNParam; i++)
   {
+    if(bFixedArray[i])continue;
     // OutFile << Form("%d & \t %s & \t %.3f & \t %.3f & \t %.3f \\\\", i, minuit->fCpnam[i], BkgPar[i]->GetHistM1()->Integral()/(dExposure), BkgPar[i]->GetHistM1()->Integral()/(dExposure)*fParError[i]/fParameters[i]) << endl;
     // OutFile << i << "& \t " << minuit->fCpnam[i] << Form("%d & \t %s & \t %.3f & \t %.3f & \t %.3f & \t %.3f \\\\", i, minuit->fCpnam[i], fParameters[i], fParError[i], fParActivityM1[i], fParActivityM1[i]*(fParameters[i]/fParError[i]) ) << endl;
     OutFile << i << " & \t" << minuit->fCpnam[i] << " & \t" << fParameters[i] << " $\\pm$ " << fParError[i] << " & \t" << fParActivityM1[i] << " $\\pm$ " << fParActivityM1[i]*fParError[i]/fParameters[i] << "\\\\" << endl;
@@ -3361,13 +3500,13 @@ void TBackgroundModel::SetLimit(int fParFixed)
   OutFile.open(Form("%s/Final/Limits/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
 
 
-  for(int i = 0; i < 100 ; i++ )
+  for(int i = 0; i < 250 ; i++ )
   {
-    fInitValues.push_back(fParError[fParFixed]/100*i );
+    fInitValues.push_back(fParError[fParFixed]/150*i );
     // cout << "Input initial value: " << fParameters[fParFixed] + fParError[fParFixed]/200*i << endl;
   }
 
-  OutFile << "ChiSquare ---  delta ChiSquare/2 ---  Parameter  --- Integral (M1)" << endl;
+  // OutFile << "ChiSquare ---  delta ChiSquare/2 ---  Parameter  --- Activity (Bq/kg)" << endl;
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
@@ -3383,8 +3522,8 @@ void TBackgroundModel::SetLimit(int fParFixed)
     // Re-calculate Chi-squared
     dChiSquareDummy = GetChiSquareAdaptive();
 
-    OutFile << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
-    cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter) << endl; 
+    OutFile << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter)/dLivetimeYr/fParEfficiencyM1[fParFixed]/fParMass[fParFixed]/(365*24*60*60) << endl; 
+    cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter)/dLivetimeYr/fParEfficiencyM1[fParFixed]/fParMass[fParFixed]/(365*24*60*60) << endl; 
 
   }
 
@@ -3612,51 +3751,53 @@ void TBackgroundModel::SetParEfficiency()
   fParEfficiencyM1[6] = 3.35465;
   fParEfficiencyM1[7] = 0.980505;
   fParEfficiencyM1[8] = 4.35318;
-  fParEfficiencyM1[9] = 4.33309;
-  fParEfficiencyM1[10] = 0.759518;
-  fParEfficiencyM1[11] = 3.4594;
-  fParEfficiencyM1[12] = 2.30612;
-  fParEfficiencyM1[13] = 0.75669;
-  fParEfficiencyM1[14] = 3.14954;
-  fParEfficiencyM1[15] = 1.41013;
-  fParEfficiencyM1[16] = 1.36804;
-  fParEfficiencyM1[17] = 1.5236;
-  fParEfficiencyM1[18] = 1.81667;
-  fParEfficiencyM1[19] = 4.68744;
-  fParEfficiencyM1[20] = 8.99411;
-  fParEfficiencyM1[21] = 0.729299;
-  fParEfficiencyM1[22] = 0.721855;
-  fParEfficiencyM1[23] = 1.1924;
-  fParEfficiencyM1[24] = 0.335822;
-  fParEfficiencyM1[25] = 0.367055;
-  fParEfficiencyM1[26] = 0.380997;
-  fParEfficiencyM1[27] = 1.95302;
 
-  fParEfficiencyM1[28] = 0.208363;
-  fParEfficiencyM1[29] = 0.48936;
-  fParEfficiencyM1[30] = 0.540099;
-  fParEfficiencyM1[31] = 0.0389089;
-  fParEfficiencyM1[32] = 0.293154;
-  fParEfficiencyM1[33] = 0.074132;
-  fParEfficiencyM1[34] = 0.22195;
-  fParEfficiencyM1[35] = 0.258695;
-  fParEfficiencyM1[36] = 0.0127853;
-  fParEfficiencyM1[37] = 0.158158;
-  fParEfficiencyM1[38] = 0.0558653;
-  fParEfficiencyM1[39] = 0.0653826;
-  fParEfficiencyM1[40] = 0.00499584;
-  fParEfficiencyM1[41] = 0.0751074;
-  fParEfficiencyM1[42] = 0.00391235;
-  fParEfficiencyM1[43] = 0.0047853;
-  fParEfficiencyM1[44] = 0.000452146;
-  fParEfficiencyM1[45] = 0.00734568;
-  fParEfficiencyM1[46] = 0.00335353;
-  fParEfficiencyM1[47] = 0.000228305;
-  fParEfficiencyM1[48] = 0.000219387;
-  fParEfficiencyM1[49] = 0.000501857;
-  fParEfficiencyM1[50] = 0.000398748;
-  fParEfficiencyM1[51] = 0.000309365;
-  fParEfficiencyM1[52] = 0.000338529;
+  fParEfficiencyM1[9] = 0.7101714;
+  fParEfficiencyM1[10] = 3.30111;
+  fParEfficiencyM1[11] = 2.17821;
+  fParEfficiencyM1[12] = 0.6965972;
+  fParEfficiencyM1[13] = 2.82943;
+  // fParEfficiencyM1[13] = 1.41013;
+  fParEfficiencyM1[14] = 1.36804;
+  fParEfficiencyM1[15] = 1.5236;
+  // fParEfficiencyM1[15] = 1.81667;
+  
+  fParEfficiencyM1[16] = 4.33309;
+  fParEfficiencyM1[17] = 4.68744;
+  // fParEfficiencyM1[20] = 8.99411;
+  fParEfficiencyM1[18] = 0.729299;
+  fParEfficiencyM1[19] = 0.721855;
+  fParEfficiencyM1[20] = 1.1924;
+  fParEfficiencyM1[21] = 0.335822;
+  fParEfficiencyM1[22] = 0.367055;
+  fParEfficiencyM1[23] = 0.380997;
+  fParEfficiencyM1[24] = 1.95302;
+
+  fParEfficiencyM1[25] = 0.208363;
+  fParEfficiencyM1[26] = 0.48936;
+  fParEfficiencyM1[27] = 0.540099;
+  fParEfficiencyM1[28] = 0.0389089;
+  fParEfficiencyM1[29] = 0.293154;
+  fParEfficiencyM1[30] = 0.074132;
+  fParEfficiencyM1[31] = 0.22195;
+  fParEfficiencyM1[32] = 0.258695;
+  fParEfficiencyM1[33] = 0.0127853;
+  fParEfficiencyM1[34] = 0.158158;
+  fParEfficiencyM1[35] = 0.0558653;
+  fParEfficiencyM1[36] = 0.0653826;
+  fParEfficiencyM1[37] = 0.00499584;
+  fParEfficiencyM1[38] = 0.0751074;
+  fParEfficiencyM1[39] = 0.00391235;
+  fParEfficiencyM1[40] = 0.0047853;
+  fParEfficiencyM1[41] = 0.000452146;
+  fParEfficiencyM1[42] = 0.00734568;
+  fParEfficiencyM1[43] = 0.00335353;
+  fParEfficiencyM1[44] = 0.000228305;
+  fParEfficiencyM1[45] = 0.000219387;
+  fParEfficiencyM1[46] = 0.000501857;
+  fParEfficiencyM1[47] = 0.000398748;
+  fParEfficiencyM1[48] = 0.000309365;
+  fParEfficiencyM1[49] = 0.000338529;
 
   // In Kg
   fParMass[0] = 38.25;
@@ -3673,46 +3814,46 @@ void TBackgroundModel::SetParEfficiency()
   fParMass[11] = 38.25;
   fParMass[12] = 38.25;
   fParMass[13] = 38.25;
+  // fParMass[14] = 38.25;
   fParMass[14] = 38.25;
   fParMass[15] = 38.25;
+  // fParMass[17] = 38.25;
   fParMass[16] = 38.25;
   fParMass[17] = 38.25;
-  fParMass[18] = 38.25;
-  fParMass[19] = 38.25;
-  fParMass[20] = 38.25;
+  // fParMass[20] = 38.25;
+  fParMass[18] = (2610.04+6929.71)/1000;
+  fParMass[19] = (2610.04+6929.71)/1000;
+  fParMass[20] = (2610.04+6929.71)/1000;
   fParMass[21] = (2610.04+6929.71)/1000;
   fParMass[22] = (2610.04+6929.71)/1000;
   fParMass[23] = (2610.04+6929.71)/1000;
   fParMass[24] = (2610.04+6929.71)/1000;
+
   fParMass[25] = (2610.04+6929.71)/1000;
   fParMass[26] = (2610.04+6929.71)/1000;
   fParMass[27] = (2610.04+6929.71)/1000;
-
   fParMass[28] = (2610.04+6929.71)/1000;
   fParMass[29] = (2610.04+6929.71)/1000;
-  fParMass[30] = (2610.04+6929.71)/1000;
-  fParMass[31] = (2610.04+6929.71)/1000;
-  fParMass[32] = (2610.04+6929.71)/1000;
+  fParMass[30] = 82.26006;
+  fParMass[31] = 82.26006;
+  fParMass[32] = 82.26006;
   fParMass[33] = 82.26006;
   fParMass[34] = 82.26006;
-  fParMass[35] = 82.26006;
-  fParMass[36] = 82.26006;
-  fParMass[37] = 82.26006;
+  fParMass[35] = 202294.46/1000;
+  fParMass[36] = 202294.46/1000;
+  fParMass[37] = 202294.46/1000;
   fParMass[38] = 202294.46/1000;
-  fParMass[39] = 202294.46/1000;
-  fParMass[40] = 202294.46/1000;
-  fParMass[41] = 202294.46/1000;
+  fParMass[39] = 180704.38/1000;
+  fParMass[40] = 180704.38/1000;
+  fParMass[41] = 180704.38/1000;
   fParMass[42] = 180704.38/1000;
   fParMass[43] = 180704.38/1000;
-  fParMass[44] = 180704.38/1000;
-  fParMass[45] = 180704.38/1000;
-  fParMass[46] = 180704.38/1000;
+  fParMass[44] = 24693984./1000;
+  fParMass[45] = 24693984./1000;
+  fParMass[46] = 24693984./1000;
   fParMass[47] = 24693984./1000;
   fParMass[48] = 24693984./1000;
   fParMass[49] = 24693984./1000;
-  fParMass[50] = 24693984./1000;
-  fParMass[51] = 24693984./1000;
-  fParMass[52] = 24693984./1000;
 
 
 }

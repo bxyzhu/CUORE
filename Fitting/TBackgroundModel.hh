@@ -1071,6 +1071,9 @@ private:
 	int 			dMult;
 	double			dBestChiSq;
 
+	int 			dStartAlpha;
+	int 			dEndAlpha;
+
 	// Parameters
 	double				fParameters[139];
 	double				fParError[139];
