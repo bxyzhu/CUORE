@@ -55,7 +55,7 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
   bSave = fSave;
 
   tTime = new TDatime();
-  // dNParam = 53; // number of fitting parameters (reduced)
+  // dNParam = 51; // number of fitting parameters (reduced)
   dNParam = 50;
   dNumCalls = 0;
   dSecToYears = 1./(60*60*24*365);
@@ -405,8 +405,8 @@ TBackgroundModel::TBackgroundModel(double fFitMin, double fFitMax, int fBinBase,
 
 // Mess with rebinning here 
   // Rebinning with 2-4 bins seems to be consistent
-  // fDataHistoM1->Rebin(6);
-  // fDataHistoM2->Rebin(6);
+  // fDataHistoM1->Rebin(1);
+  // fDataHistoM2->Rebin(1);
   dBaseBinSize = dBinSize*1;
 
 /////// Adaptive binning
@@ -1425,19 +1425,12 @@ void TBackgroundModel::Initialize()
   hTeO22nuIKM1     = (TH1D*)fBulk->Get("hTeO22nuIKM1");
   hTeO2co60M1    = (TH1D*)fBulk->Get("hTeO2co60M1");
   hTeO2k40M1     = (TH1D*)fBulk->Get("hTeO2k40M1");
-  // hTeO2k40M1     = (TH1D*)fBulk_CDR->Get("hTeO2k40M1");
   hTeO2pb210M1   = (TH1D*)fBulk->Get("hTeO2pb210M1");
   hTeO2po210M1   = (TH1D*)fBulk->Get("hTeO2po210M1");
   hTeO2te125M1   = (TH1D*)fBulk->Get("hTeO2te125M1");
   hTeO2th232M1   = (TH1D*)fBulk->Get("hTeO2th232M1");
-  // hTeO2th228M1   = (TH1D*)fBulk->Get("hTeO2th228M1");
-  // hTeO2ra226M1   = (TH1D*)fBulk->Get("hTeO2ra226M1");
-  // hTeO2rn222M1   = (TH1D*)fBulk->Get("hTeO2rn222M1");
   hTeO2u238M1    = (TH1D*)fBulk->Get("hTeO2u238M1");
-  // hTeO2th230M1   = (TH1D*)fBulk->Get("hTeO2th230M1");
-  // hTeO2u234M1    = (TH1D*)fBulk->Get("hTeO2u234M1");
   hTeO2sb125M1   = (TH1D*)fBulk->Get("hTeO2sb125M1");
-  // hTeO2sb125M1   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M1");
 
   hTeO2th232onlyM1 = (TH1D*)fBulk->Get("hTeO2th232onlyM1");
   hTeO2ra228pb208M1 = (TH1D*)fBulk->Get("hTeO2ra228pb208M1");
@@ -1450,19 +1443,12 @@ void TBackgroundModel::Initialize()
   hTeO22nuIKM2     = (TH1D*)fBulk->Get("hTeO22nuIKM2");
   hTeO2co60M2    = (TH1D*)fBulk->Get("hTeO2co60M2");
   hTeO2k40M2     = (TH1D*)fBulk->Get("hTeO2k40M2");
-  // hTeO2k40M2     = (TH1D*)fBulk_CDR->Get("hTeO2k40M2");
   hTeO2pb210M2   = (TH1D*)fBulk->Get("hTeO2pb210M2");
   hTeO2po210M2   = (TH1D*)fBulk->Get("hTeO2po210M2");
   hTeO2te125M2   = (TH1D*)fBulk->Get("hTeO2te125M2");
   hTeO2th232M2   = (TH1D*)fBulk->Get("hTeO2th232M2");
-  // hTeO2th228M2   = (TH1D*)fBulk->Get("hTeO2th228M2");
-  // hTeO2ra226M2   = (TH1D*)fBulk->Get("hTeO2ra226M2");
-  // hTeO2rn222M2   = (TH1D*)fBulk->Get("hTeO2rn222M2");
   hTeO2u238M2    = (TH1D*)fBulk->Get("hTeO2u238M2");
-  // hTeO2th230M2   = (TH1D*)fBulk->Get("hTeO2th230M2");
-  // hTeO2u234M2    = (TH1D*)fBulk->Get("hTeO2u234M2");
   hTeO2sb125M2   = (TH1D*)fBulk->Get("hTeO2sb125M2");
-  // hTeO2sb125M2   = (TH1D*)fBulk_CDR->Get("hTeO2sb125M2");
 
   hTeO2th232onlyM2 = (TH1D*)fBulk->Get("hTeO2th232onlyM2");
   hTeO2ra228pb208M2 = (TH1D*)fBulk->Get("hTeO2ra228pb208M2");
@@ -1470,7 +1456,7 @@ void TBackgroundModel::Initialize()
   hTeO2u238th230M2 = (TH1D*)fBulk->Get("hTeO2u238th230M2");
   hTeO2ra226pb210M2 = (TH1D*)fBulk->Get("hTeO2ra226pb210M2");
 
-
+/*
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk->Get("hCuBox_CuFrameco60M1");
   hCuBox_CuFramek40M1 = (TH1D*)fBulk->Get("hCuBox_CuFramek40M1");
@@ -1486,7 +1472,7 @@ void TBackgroundModel::Initialize()
   hCuBox_CuFramebi207M2 = (TH1D*)fBulk->Get("hCuBox_CuFramebi207M2");
   hCuBox_CuFramemn54M2 = (TH1D*)fBulk->Get("hCuBox_CuFramemn54M2");
 
-/*
+
 ///////// 50mK M1 and M2
   h50mKcs137M1   = (TH1D*)fBulk->Get("hInternalcs137M1");
   h50mKcs137M2   = (TH1D*)fBulk->Get("hInternalcs137M2");
@@ -2451,7 +2437,9 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[47] = new TBkgModelParameter( "External Lead U238", 47, 3.93821e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
   BkgPar[48] = new TBkgModelParameter( "External Lead Pb210", 48, 3.96617e-03, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
   BkgPar[49] = new TBkgModelParameter( "Bottom External Lead K40", 49, 3.69245e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
-  
+  // BkgPar[49] = new TBkgModelParameter( "Bottom External Lead K40", 49, 0., 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
+  // BkgPar[50] = new TBkgModelParameter( "TeO2 Po210", 50, 0., 1E-7, 0, 1.0, hAdapTeO2po210M1 , hAdapTeO2po210M2 );
+
 
   // BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.001 $\\mu$m", 9, 8.31726e-05, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_0001 , hAdapTeO2Sxth232onlyM2_0001 );
   // BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.001 $\\mu$m", 10, 2.47160e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_0001 , hAdapTeO2Sxra228pb208M2_0001 );
@@ -2562,7 +2550,7 @@ void TBackgroundModel::GenerateParameters()
 
   // bFixedArray[39] = true;
   // bFixedArray[40] = true;
-  // bFixedArray[48] = true;
+  // bFixedArray[49] = true;
   // bFixedArray[52] = true;
 
 }
@@ -2998,11 +2986,35 @@ bool TBackgroundModel::DoTheFitAdaptive()
   double dDummyGamma2nRate;
   double dDummyGamma2n;
 
-  // double dDummyAlphaTotRate;
-  // double dDummyAlphaTot;  
-  // double dDummyGammaTotRate;
-  // double dDummyGammaTot;
+  double dDummyCoRate;
+  double dDummyCo;  
+  double dDummyThRate;
+  double dDummyTh;
+  double dDummyURate;
+  double dDummyU;
 
+  int dCoList[4] = {2, 29, 38, 42};
+  int dThList[13] = {4, 5, 9, 10, 16, 17, 19, 24, 27, 32, 36, 40, 46};
+  int dUList[18] = {6, 7, 8, 11, 12, 13, 14, 15, 18, 20, 21, 22, 23, 26, 31, 36, 39, 47};
+  // Co60: 2, 29, 38, 42, 
+  // Th232: 4, 5, 9, 10, 16, 17, 19, 24,   27, 32, 36, 40, 46
+  // U238: 6, 7, 8, 11, 12, 13, 18, 20,   26, 31, 36, 39, 47
+  // Pb210: 14, 15, 21, 22, 23, 
+  for(int i = 0; i < 4; i++)
+  {
+    dDummyCo += BkgPar[dCoList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dCoList[i]]*dDataIntegralM1;
+    dDummyCoRate += BkgPar[dCoList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dCoList[i]]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+  }
+  for(int i = 0; i < 13; i++)
+  {
+    dDummyTh += BkgPar[dThList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dThList[i]]*dDataIntegralM1;
+    dDummyThRate += BkgPar[dThList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dThList[i]]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+  }
+  for(int i = 0; i < 18; i++)
+  {
+    dDummyU += BkgPar[dUList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dUList[i]]*dDataIntegralM1;
+    dDummyURate += BkgPar[dUList[i]]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[dUList[i]]*dDataIntegralM1/(dROIRange*dLivetimeYr);
+  }
   for(int i = dStartAlpha; i < dEndAlpha; i++ )
   {
     dDummyAlpha += BkgPar[i]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[i]*dDataIntegralM1;
@@ -3064,7 +3076,11 @@ bool TBackgroundModel::DoTheFitAdaptive()
   cout << endl;    
   cout << "0nbb ROI -- Alpha contribution (counts) -- (c/keV/yr): " << dDummyAlpha << "\t" << dDummyAlphaRate << endl;
   cout << "0nbb ROI -- Gamma contribution (counts) -- (c/keV/yr): " << dDummyGamma << "\t" << dDummyGammaRate << endl;
-  
+  cout << endl;
+  cout << "0nbb ROI -- Co60 contribution (counts) -- (c/keV/yr): " << dDummyCo << "\t" << dDummyCoRate << endl;
+  cout << "0nbb ROI -- Th232 contribution (counts) -- (c/keV/yr): " << dDummyTh << "\t" << dDummyThRate << endl;
+  cout << "0nbb ROI -- U238 contribution (counts) -- (c/keV/yr): " << dDummyU << "\t" << dDummyURate << endl;
+  cout << endl;
   cout << "2nbb ROI -- Alpha contribution (counts) -- (c/keV/yr): " << dDummyAlpha2n << "\t" << dDummyAlpha2nRate << endl;
   cout << "2nbb ROI -- Gamma contribution (counts) -- (c/keV/yr): " << dDummyGamma2n << "\t" << dDummyGamma2nRate << endl;
   // cout << "0nbb ROI -- 2nbb contribution (c/keV/yr): " << BkgPar[0]->GetHistM1()->Integral( fAdapDataHistoM1->FindBin(2470), fAdapDataHistoM1->FindBin(2570), "width" )*fParameters[0]*dDataIntegralM1/(dROIRange*dLivetimeYr) << endl;
@@ -3436,12 +3452,12 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
   nLoop = 0;
-  for(int i = -12; i < 12; i++)
+  for(int i = -35; i < 35; i++)
   // for(int i = -5; i < 5; i++)  
   {
     // if (i == 0)continue;
-    fInitValues.push_back(fParameters[fParFixed] + fParameters[fParFixed]/50*i );
-    cout << "Input initial value: " << fParameters[fParFixed] + fParameters[fParFixed]/50*i << endl;
+    fInitValues.push_back(fParameters[fParFixed] + fParameters[fParFixed]/80*i );
+    cout << "Input initial value: " << fParameters[fParFixed] + fParameters[fParFixed]/80*i << endl;
   }
 
 
@@ -3476,7 +3492,7 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   OutPNLL << "g1->SetTitle(\"Profile Negative Log-Likelihood\");" << endl;
   OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}/2\");" << endl;
   // OutPNLL << "g1->GetXaxis()->SetTitle(\"Par Value)\");" << endl;
-  OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
+  OutPNLL << "g1->GetXaxis()->SetTitle(\"#tau_{1/2} (y)\");" << endl;
   OutPNLL << "g1->Draw(\"AC\");" << endl;
   OutPNLL << "}" << endl;
 
@@ -3500,9 +3516,9 @@ void TBackgroundModel::SetLimit(int fParFixed)
   OutFile.open(Form("%s/Final/Limits/Limit_Par%d_%d.txt", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
 
 
-  for(int i = 0; i < 250 ; i++ )
+  for(int i = 0; i < 300 ; i++ )
   {
-    fInitValues.push_back(fParError[fParFixed]/150*i );
+    fInitValues.push_back(fParError[fParFixed]/13000*i );
     // cout << "Input initial value: " << fParameters[fParFixed] + fParError[fParFixed]/200*i << endl;
   }
 
@@ -3742,7 +3758,8 @@ TH1D *TBackgroundModel::Kernal(TH1D *hMC, TH1D *hSMC)
 // Used to convert counting rate into activity in Bq/Kg
 void TBackgroundModel::SetParEfficiency()
 {
-  fParEfficiencyM1[0] = 9.6696e-01;
+  fParEfficiencyM1[0] = 9.6696e-01; // For IK
+  // fParEfficiencyM1[0] = 9.6677e-01; // For Primakoff Rosen => Basically the same
   fParEfficiencyM1[1] = 0.892441;
   fParEfficiencyM1[2] = 0.437839;
   fParEfficiencyM1[3] = 0.924953;
@@ -3798,6 +3815,7 @@ void TBackgroundModel::SetParEfficiency()
   fParEfficiencyM1[47] = 0.000398748;
   fParEfficiencyM1[48] = 0.000309365;
   fParEfficiencyM1[49] = 0.000338529;
+  // fParEfficiencyM1[50] = 0.000338529; // blah
 
   // In Kg
   fParMass[0] = 38.25;
@@ -3854,6 +3872,7 @@ void TBackgroundModel::SetParEfficiency()
   fParMass[47] = 24693984./1000;
   fParMass[48] = 24693984./1000;
   fParMass[49] = 24693984./1000;
+  // fParMass[50] = 24693984./1000;
 
 
 }
