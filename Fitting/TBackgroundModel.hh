@@ -47,6 +47,8 @@ public:
 
 	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
+	void CalculateRates();
+
 	bool DoTheFitAdaptive();
 
 	void DrawBkg();
@@ -80,7 +82,7 @@ public:
 
 	void SetLimit(int fParFixed);
 
-	void ToyFit();
+	void ToyFit(int fStart, int fStop);
 
 	void UpdateModelAdaptive();
 
@@ -1075,17 +1077,17 @@ private:
 	int 			dEndAlpha;
 
 	// Parameters
-	double				fParameters[139];
-	double				fParError[139];
-	double				fParCountsM1[139]; // Integral of events in M1 spectrum
-	double 				fParCountsM2[139];
-	double 				fParActivityM1[139]; // Integral of events in M1 spectrum
-	double 				fParActivityM2[139];
-	double 				fParActivityErr[139];
-	double 				fParMass[139]; // Mass of all elements
-	double 				fParSurfaceArea[139]; // Surface area of all elements
+	double				fParameters[50];
+	double				fParError[50];
+	double				fParCountsM1[50]; // Integral of events in M1 spectrum
+	double 				fParCountsM2[50];
+	double 				fParActivityM1[50]; // Integral of events in M1 spectrum
+	double 				fParActivityM2[50];
+	double 				fParActivityErr[50];
+	double 				fParMass[50]; // Mass of all elements
+	double 				fParSurfaceArea[50]; // Surface area of all elements
 	double				fResolution[52];
-	double 				fParEfficiencyM1[139]; // Efficiency of the parameters 
+	double 				fParEfficiencyM1[50]; // Efficiency of the parameters 
 	double				dSecToYears;
 	double				fMCEff[62];
 
