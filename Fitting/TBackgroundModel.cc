@@ -3323,16 +3323,6 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   // Do the fit normally once first
   DoTheFitAdaptive();
 
-  // Un-do scaling -> this is purely for re-using DoTheFitAdaptive method
-  // for(int i = 0; i < dNParam; i++)
-  // {
-  //   BkgPar[i]->GetHistM1()->Scale( 1/(dDataIntegralM1*fParameters[i]) );
-  //   BkgPar[i]->GetHistM2()->Scale( 1/(dDataIntegralM2*fParameters[i]) );
-  // }
-  // // For Po-210
-  // hAdapTeO2po210M1->Scale( 1/(1.77E+3) );
-  // hAdapTeO2po210M2->Scale( 1/(1.77E+3) );
-
   // Fix 2nbb value now
   bFixedArray[fParFixed] = true;
   

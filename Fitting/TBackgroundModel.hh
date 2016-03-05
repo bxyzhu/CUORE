@@ -9,6 +9,7 @@
 #include "TF1.h"
 #include "TChain.h"
 #include "TCut.h"
+#include "TTree.h"
 #include "TGraphErrors.h"
 #include "TMinuit.h"
 #include "TPad.h"
@@ -107,8 +108,8 @@ public:
 	int 	dNumFreeParameters;
 	int 	dNDF;
 
-	double			dDataIntegral;
-	double  	dDataIntegralTot;
+	double	dDataIntegral;
+	double  dDataIntegralTot;
 	double 	dDataIntegralM1;
 	double 	dDataIntegralM2;
 
