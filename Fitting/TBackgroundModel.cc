@@ -3559,7 +3559,8 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
 
     double dInitial2nbbRate, dInitial2nbbRateErr;
     double dInitial2nbb, dInitial2nbbErr;
-
+    dInitial2nbb = fParameters[0];
+    dInitial2nbbErr = fParError[0];
     dInitial2nbbRate = fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
     dInitial2nbbRateErr = fParError[0]/fParameters[0]*(fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) );
 
