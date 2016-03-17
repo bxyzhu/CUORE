@@ -56,6 +56,8 @@ public:
 
 	double GetChiSquareAdaptive();
 
+	void GenerateParameters();
+
 	void Initialize();
 
 	TH1D *Kernal(TH1D *hMC, TH1D *hSMC);
@@ -261,7 +263,6 @@ private:
 	TH1D			*hTeO2th230M2;
 	TH1D			*hTeO2u234M2;
 	TH1D 			*hTeO2sb125M2;
-	TH1D 			*hTeO2u238th230M2;
 
 	TH1D			*hTeO2th232onlyM2;
 	TH1D			*hTeO2ra228pb208M2;
@@ -467,7 +468,6 @@ private:
 	TH1D			*hAdapTeO2th230M1;
 	TH1D			*hAdapTeO2u234M1;
 	TH1D 			*hAdapTeO2sb125M1;
-	TH1D 			*hAdapTeO2u238th230M1;
 
 	TH1D			*hAdapTeO2th232onlyM1;
 	TH1D			*hAdapTeO2ra228pb208M1;
@@ -535,7 +535,6 @@ private:
 	TH1D			*hAdapTeO2th230M2;
 	TH1D			*hAdapTeO2u234M2;
 	TH1D 			*hAdapTeO2sb125M2;
-	TH1D 			*hAdapTeO2u238th230M2;
 
 	TH1D			*hAdapTeO2th232onlyM2;
 	TH1D			*hAdapTeO2ra228pb208M2;
@@ -744,7 +743,6 @@ private:
 	TH1			*hnewTeO2th230M1;
 	TH1			*hnewTeO2u234M1;
 	TH1 		*hnewTeO2sb125M1;
-	TH1 		*hnewTeO2u238th230M1;
 
 	TH1			*hnewTeO2th232onlyM1;
 	TH1			*hnewTeO2ra228pb208M1;
@@ -813,7 +811,6 @@ private:
 	TH1			*hnewTeO2th230M2;
 	TH1			*hnewTeO2u234M2;
 	TH1 		*hnewTeO2sb125M2;
-	TH1 		*hnewTeO2u238th230M2;
 
 	TH1			*hnewTeO2th232onlyM2;
 	TH1			*hnewTeO2ra228pb208M2;
@@ -1029,6 +1026,7 @@ private:
 	TFile *fSurface;
 	TFile *fBulk_CDR;
 	TFile *fBulk_Internal;
+	TFile *fBulk_CDRInternal;
 
 	TFile *fBulkInner;
 	TFile *fBulkInnerOld;
