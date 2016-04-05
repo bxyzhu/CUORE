@@ -41,29 +41,30 @@ public:
 	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
 	virtual ~TBackgroundModel();
 
+	// Binning for M1 and M2 spectra are separate to do some tests
+	// In reality they can probably be binned the same
 	std::vector<double> AdaptiveBinningM1(TH1D *h1, int dBinBase);
-
 	std::vector<double> AdaptiveBinningM2(TH1D *h1, int dBinBase);
 
+	// Adds Poisson constraint on ChiSquared *** Not working properly right now ***
+	double AddConstraint(int fParInput);
 
-	TH1D* CalculateResidualsAdaptive(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
+	// Calculates the residual spectrum
+	TH1D* CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
 	void CalculateRates();
 
-	bool DoTheFitAdaptive();
+	void CreateModelHistograms();
 
-	void DrawBkg();
+	bool DoTheFit();
 
-	double GetChiSquareAdaptive();
+	double GetChiSquare();
 
 	void GenerateParameters();
 
 	void Initialize();
 
-	TH1D *Kernal(TH1D *hMC, TH1D *hSMC);
-
-	void LatexResultTable();
-
+	// Loads background data
 	void LoadData();
 
 	void PrintParameters();
@@ -87,30 +88,28 @@ public:
 
 	void ToyFit(int fStart, int fStop);
 
-	void UpdateModelAdaptive();
+	void UpdateModel();
 
-	int 	dNParam;
-	int 	dBinSize;
-	int 	dBaseBinSize;
-	int 	dNBins;
+	int 	dNParam; // Number of fitting parameters
+	int 	dBinSize; // Base Bin size
+	int 	dBaseBinSize; // Rebinning the base bin size (if I want to modify the base bin size for testing)
+	int 	dNBins; // 
 	int 	dBinBase;
 
-	double 	dMass;
-	
+	double 	dMass;	
 	double	dMinEnergy;
 	double 	dMaxEnergy;
 	double	dFitMin;
 	double	dFitMax;
 	double 	dNorm;
+
 	int 	dFitMinBinM1;
 	int 	dFitMaxBinM1;
 	int 	dFitMinBinM2;
 	int 	dFitMaxBinM2;
-
 	int 	dNumFreeParameters;
 	int 	dNDF;
 
-	double	dDataIntegral;
 	double  dDataIntegralTot;
 	double 	dDataIntegralM1;
 	double 	dDataIntegralM2;
@@ -125,7 +124,6 @@ public:
 	double 	dResidualRMSM2;
 	double 	dResidualRMSTot;
 
-
 	int 	dAdaptiveBinsM1;
 	int 	dAdaptiveBinsM2;
 	std::vector<double> dAdaptiveVectorM1;
@@ -133,10 +131,7 @@ public:
 	double 	*dAdaptiveArrayM1;
 	double 	*dAdaptiveArrayM2;
 
-	std::map<std::string, int> dParMap;
-
   	TBkgModelParameter *BkgPar[100];
-
   	bool 	bFixedArray[100];
 
 private:
@@ -176,7 +171,6 @@ private:
 
 	TH1D			*hResidualGausM1;
 	TH1D			*hResidualGausM2;
-
 
 //////////////////// MC Histograms
 ////////// Crystal M1 and M2
@@ -1005,49 +999,21 @@ private:
 
 	TDatime 		*tTime;
 
-	// Smearing
-	TF1				*gaus;
-
 	// Cut Efficiency
-	// TF1 			*fEfficiency;
 	TH1D 			*hEfficiency;
 	TH1D 			*hEfficiencyM2;
-	// TH1 			*hEfficiencyM1;
 
 	ofstream 		OutFile;
 	ofstream 	 	OutPNLL;
 	ofstream 		OutToy;
 
-	int 			nLoop;
 	std::vector<double> 	fInitValues;
 	std::vector<double> 	fInitValues2;	
 
 	TFile *fBulk;
 	TFile *fSurface;
 	TFile *fBulk_CDR;
-	TFile *fBulk_Internal;
 	TFile *fBulk_CDRInternal;
-
-	TFile *fBulkInner;
-	TFile *fBulkInnerOld;
-	TFile *fBulkOuter;
-	TFile *fBulkOuterOld;
-	TFile *fSurfaceCrystal;
-	TFile *fSurfaceCrystalOld;
-	TFile *fSurfaceOther;
-	TFile *fSurfaceOtherOld;
-
-	TFile *fFudge;
-
-	TFile *fBulkSmeared;
-	TFile *fSurfaceSmeared;
-
-	// For accidental coincidence test
-	TFile *fFileCoin;
-	TFile *fFileCorrection;
-	TH1D *fCorrectionM2; // Correction spectra for M2 (for accidental coincidences)
-	TH1D *fCorrectionM2Tot;
-	TH1D *fTotCorrection;
 
 	// TFile *fSaveResult;
 	TFile *fToyData;
@@ -1056,16 +1022,9 @@ private:
 	std::string 	dMCDir;
 	std::string 	dSaveDir;
 
-	// TArrayD *fParArray;
-	// TArrayD *fParArrayErr;
 	TVectorD *fParArray;
 	TVectorD *fParArrayErr;
 
-	// Error Matrix
-	// TMatrixT<double> 	*mCorrMatrix;
-
-	bool			bFixedRes;
-	bool			bAdaptiveBinning;
 	bool 			bSave;
 
 	int 			dNumCalls;
@@ -1087,6 +1046,7 @@ private:
 	double 				fParSurfaceArea[50]; // Surface area of all elements
 	double				fResolution[52];
 	double 				fParEfficiencyM1[50]; // Efficiency of the parameters 
+	double 				fParPrior[50];
 	double				dSecToYears;
 	double				fMCEff[62];
 
