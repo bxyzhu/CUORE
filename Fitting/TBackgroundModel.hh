@@ -52,8 +52,6 @@ public:
 	// Calculates the residual spectrum
 	TH1D* CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
 
-	void CalculateRates();
-
 	void CreateModelHistograms();
 
 	bool DoTheFit();
@@ -91,6 +89,8 @@ public:
 	void UpdateModel();
 
 	int 	dNParam; // Number of fitting parameters
+
+private:
 	int 	dBinSize; // Base Bin size
 	int 	dBaseBinSize; // Rebinning the base bin size (if I want to modify the base bin size for testing)
 	int 	dNBins; // 
@@ -134,7 +134,6 @@ public:
   	TBkgModelParameter *BkgPar[100];
   	bool 	bFixedArray[100];
 
-private:
 
 	// Data
 	TChain			*qtree;

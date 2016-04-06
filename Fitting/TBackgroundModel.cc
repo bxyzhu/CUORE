@@ -188,7 +188,7 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   // Creates model histograms and then load all of the PDFs from file
   CreateModelHistograms();
   Initialize();
-
+  // Generate and initialize parameters
   GenerateParameters();
   SetParEfficiency();
 
@@ -238,7 +238,8 @@ TBackgroundModel::~TBackgroundModel()
   delete fModelTotAdapM2;
 }
 
-// Returns vector of bin low-edge for adaptive binning
+// Returns vector of bin low-edge values for adaptive binning
+// Is this the best way to bin the histograms? I don't know but it's the first way I thought up and never bothered re-thinking it
 vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
 {
   // dBinBase is the minimal number of counts per bin
@@ -258,7 +259,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(3150)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -268,7 +268,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(4050) && i < h1->FindBin(4170))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4050)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -279,7 +278,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     // if(i >= h1->FindBin(4170) && i < h1->FindBin(4400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4170)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -290,7 +288,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(4680) && i < h1->FindBin(4850))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4680)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -301,7 +298,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(4850) && i < h1->FindBin(5000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4850)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -312,7 +308,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5000) && i < h1->FindBin(5100))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -324,7 +319,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     // if(i >= h1->FindBin(5170) && i < h1->FindBin(5400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5250)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -334,7 +328,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5400) && i < h1->FindBin(5500))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5400)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -345,19 +338,16 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5500) && i < h1->FindBin(5650))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5500)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
      i = i+(5650-5500)/dBaseBinSize;
     }
 
-
     // 5650 - 5800
     if(i >= h1->FindBin(5650) && i < h1->FindBin(5780))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5650)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -368,7 +358,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5780) && i < h1->FindBin(5900))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5780)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -378,7 +367,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5900) && i < h1->FindBin(6100))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5900)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -389,7 +377,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(6100) && i < h1->FindBin(6450))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6100)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -400,7 +387,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(6700) && i < h1->FindBin(7000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6700)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -411,7 +397,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(7000) && i < h1->FindBin(8000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(7000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -422,18 +407,16 @@ vector<double> TBackgroundModel::AdaptiveBinningM1(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(8000) && i < h1->FindBin(10000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(8000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
      i = i+(10000-8000)/dBaseBinSize;
     }    
 
-
     dDummy = h1->GetBinContent(i);
     dDummyFill += dDummy;
 
-
+    // Set bin low edge if dummy counts goes above minimum bin content
     if(dDummyFill >= dBinBase)
     {
       dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(i-j));
@@ -454,6 +437,7 @@ return dBinArrayThing;
 }
 
 // Separating M1 binning from M2 binning for now
+// Really the only difference is I don't have the Pt peak in one bin for M2
 vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
 {
   // dBinBase is the minimal number of counts per bin
@@ -468,22 +452,10 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
   }
   for(int i = h1->FindBin(50); i < h1->GetNbinsX(); i++)
   {
-    // Added per each peak
-    // Pt peak 3150 - 3400
-    // if(i >= h1->FindBin(3150) && i < h1->FindBin(3400))
-    // {
-    //  dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(3150)));
-    //  // Reset everything
-    //  j = 0;
-    //  dDummyFill = 0;
-    //  dDummy = 0;
-    //  i = i+(3400-3150)/dBaseBinSize;
-    // }
     // 4050 - 4200
     if(i >= h1->FindBin(4000) && i < h1->FindBin(4150))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -494,7 +466,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     // if(i >= h1->FindBin(4170) && i < h1->FindBin(4400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4150)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -505,7 +476,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(4680) && i < h1->FindBin(4850))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4680)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -516,7 +486,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(4850) && i < h1->FindBin(5000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(4850)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -527,7 +496,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5000) && i < h1->FindBin(5100))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -539,7 +507,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     // if(i >= h1->FindBin(5170) && i < h1->FindBin(5400))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5200)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -549,30 +516,15 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5450) && i < h1->FindBin(5600))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5450)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
      i = i+(5600-5450)/dBaseBinSize;
     }
-
-    // // 5400 - 5650
-    // if(i >= h1->FindBin(5500) && i < h1->FindBin(5650))
-    // {
-    //  dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5500)));
-    //  // Reset everything
-    //  j = 0;
-    //  dDummyFill = 0;
-    //  dDummy = 0;
-    //  i = i+(5650-5500)/dBaseBinSize;
-    // }
-
-
     // 5650 - 5800
     if(i >= h1->FindBin(5650) && i < h1->FindBin(5780))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5650)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -583,7 +535,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5780) && i < h1->FindBin(5900))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5780)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -593,7 +544,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(5900) && i < h1->FindBin(6100))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(5900)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -604,7 +554,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(6100) && i < h1->FindBin(6450))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6100)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -615,7 +564,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(6700) && i < h1->FindBin(7000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(6700)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -626,7 +574,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(7000) && i < h1->FindBin(8000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(7000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -637,7 +584,6 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
     if(i >= h1->FindBin(8000) && i < h1->FindBin(10000))
     {
      dBinArrayThing.push_back(h1->GetXaxis()->GetBinLowEdge(h1->FindBin(8000)));
-     // Reset everything
      j = 0;
      dDummyFill = 0;
      dDummy = 0;
@@ -668,9 +614,9 @@ vector<double> TBackgroundModel::AdaptiveBinningM2(TH1D *h1, int dBinBase)
 return dBinArrayThing;
 }
 
+// Returns a histogram with the normalized residuals as well as fills a histogram with residual distribution
 TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult)
 {
-
   if(binMin >= binMax)
   {
     cout << " Residuals: min bin >= max bin" << endl;
@@ -678,13 +624,12 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int
 
   if(dMult == 1)
   {
-  TH1D  *hOut       = new TH1D("hOutResidualM1", "Fit Residuals M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
+    TH1D  *hOut       = new TH1D("hOutResidualM1", "Fit Residuals M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   }
   if(dMult == 2)
   {
-  TH1D  *hOut       = new TH1D("hOutResidualM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
+    TH1D  *hOut       = new TH1D("hOutResidualM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   }
-
 
   // Clone histograms for rebinning
   TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
@@ -692,7 +637,6 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int
 
   // Variables used in Residual calculations
   double dResidualX = 0, dResidualY = 0, dResidualXErr = 0, dResidualYErr = 0;
-
   double datam1_i = 0, modelm1_i = 0;
 
   // Residual plot and distribution
@@ -703,21 +647,19 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int
 
     dResidualX    = hCloneBkg->GetBinCenter(j);
 
+    // Multiply bin content by bin width (for # of counts)
     datam1_i = h1->GetBinContent(j)*h1->GetBinWidth(j);
     modelm1_i = h2->GetBinContent(j)*h1->GetBinWidth(j);
     
-    // Re-multiply bin content by bin width (for # of counts)
     dResidualY = (datam1_i - modelm1_i)/TMath::Sqrt(datam1_i);
 
     hOut->SetBinContent(j, dResidualY);
-    // hOut->SetBinError(j, 1.0);
-    hOut->SetBinError(j, 0);
-    hResid->Fill(dResidualY);
+    hOut->SetBinError(j, 0); // Just for visualization
+    hResid->Fill(dResidualY); // Fills residual distribution
   }
 
   return hOut;
 }
-
 
 double TBackgroundModel::GetChiSquare()
 {
@@ -767,8 +709,8 @@ double TBackgroundModel::GetChiSquare()
 
     }
   }
-
-  // Add Gaussian and Poisson constraints here
+  // Add Gaussian and Poisson constraints on parameters here
+  // Gaussian constraints work fine, however the Poisson limits don't seem to work (yet)
   // chiSquare += 0.5*(fParameters[28]*dDataIntegralM1/dLivetimeYr/fParEfficiencyM1[28]/fParMass[28]/(365*24*60*60) - 7.0E-4)*(fParameters[28]*dDataIntegralM1/dLivetimeYr/fParEfficiencyM1[28]/fParMass[28]/(365*24*60*60) - 7.0E-4)/2.0E-4;
   // chiSquare += 0.5*(fParameters[29]*dDataIntegralM1/dLivetimeYr/fParEfficiencyM1[29]/fParMass[28]/(365*24*60*60) - 5.0E-4)*(fParameters[29]*dDataIntegralM1/dLivetimeYr/fParEfficiencyM1[28]/fParMass[28]/(365*24*60*60) - 5.0E-4)/1.0E-4;
 
@@ -786,7 +728,6 @@ double TBackgroundModel::GetChiSquare()
 
 void TBackgroundModel::Initialize()
 {	
-
   // Loads PDFs from file
   cout << "Loading PDF Histograms from file" << endl;
   cout << "Directory " << Form("%s/", dMCDir.c_str()) << endl;
@@ -913,7 +854,6 @@ void TBackgroundModel::Initialize()
   hBotExtPb_k40spotM2 = (TH1D*)fBulk->Get("hBotExtPb_k40spotM2");
 */
 
-
 ////////// CDR
 ///////// CuBox + CuFrame M1 and M2
   hCuBox_CuFrameco60M1 = (TH1D*)fBulk_CDR->Get("hCuBox_CuFrameco60M1");
@@ -943,7 +883,6 @@ void TBackgroundModel::Initialize()
   hInternalk40M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalk40M2");
   hInternalth232M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalth232M2");
   hInternalu238M2 = (TH1D*)fBulk_CDRInternal->Get("hInternalu238M2");
-
 
 //////// Roman Lead M1 and M2
   hPbRomk40M1     = (TH1D*)fBulk_CDR->Get("hPbRomk40M1");
@@ -991,7 +930,6 @@ void TBackgroundModel::Initialize()
   hCuBox_k40spotM2 = (TH1D*)fBulk->Get("hCuBox_k40spotM2");
   hBotExtPb_k40spotM2 = (TH1D*)fBulk_CDR->Get("hBotExtPb_k40spotM2");
   
-
 //////////// Surface PDFs
 ///// Crystal M1 and M2
   hTeO2Sxpb210M1_001  = (TH1D*)fSurface->Get("hTeO2Sxpb210M1_001");
@@ -1115,7 +1053,6 @@ void TBackgroundModel::Initialize()
   hCuBox_CuFrameth232M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameth232M2_5");
   hCuBox_CuFrameu238M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFrameu238M2_5");
   hCuBox_CuFramepb210M2_5 = (TH1D*)fSurface->Get("hCuBox_CuFramepb210M2_5");
-
 
 ///////////// Get adaptive binned histograms
 //////// Crystal M1 and M2
@@ -1598,6 +1535,8 @@ void TBackgroundModel::Initialize()
   }
 }
 
+// Load background data
+// Data can be loaded in 
 void TBackgroundModel::LoadData()
 {
   switch(dDataSet)
@@ -1634,7 +1573,7 @@ void TBackgroundModel::LoadData()
     cout << "Using Data Release 3" << endl;
   break;
 
-  // Combine DR 2 and 3
+  // Combine DR 2 and 3 (the good data releases)
   case 4:
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2079.root", dDataDir.c_str())); 
     qtree->Add(Form("%s/Unblinded/ReducedB-ds2085.root", dDataDir.c_str())); 
@@ -1691,7 +1630,7 @@ void TBackgroundModel::LoadData()
 // Prints parameters, needs update 11-06-2014
 void TBackgroundModel::PrintParameters()
 {
-  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     cout << i << " " << minuit->fCpnam[i] << ": " << fParameters[i] << " +/- " << fParError[i] << endl;
   }
@@ -1712,7 +1651,7 @@ void TBackgroundModel::PrintParActivity()
     }
   }
   cout << "Counts/Year (M1) --- Error --- Activity (Bq/Kg)" << endl;
-  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     if(!bFixedArray[i])
     {
@@ -1721,6 +1660,7 @@ void TBackgroundModel::PrintParActivity()
   }
 }
 
+// Initializes the normalization values, also links the histograms to a variable index
 void TBackgroundModel::GenerateParameters()
 {
   // Initialization (Name, Index, Initial Value, Min Limit, Max Limit, pointer to histograms.. )
@@ -1730,12 +1670,6 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[1] = new TBkgModelParameter( "TeO2 K40", 1, 0., 1E-7, 0, 1.0, hAdapTeO2k40M1, hAdapTeO2k40M2, hTeO2k40M1, hTeO2k40M2 ); 
   BkgPar[2] = new TBkgModelParameter( "TeO2 Co60", 2, 0., 1E-7, 0, 1.0, hAdapTeO2co60M1 , hAdapTeO2co60M2, hTeO2co60M1, hTeO2co60M2 );  
   BkgPar[3] = new TBkgModelParameter( "TeO2 Sb125", 3, 0, 1E-7, 0, 1.0, hAdapTeO2sb125M1 , hAdapTeO2sb125M2, hTeO2sb125M1, hTeO2sb125M2 ); 
-
-  // BkgPar[0] = new TBkgModelParameter( "TeO2 2$\\nu\\beta\\beta$", 0, 6.86291e-02, 1E-7, 0, 1.0, hAdapTeO22nuIKM1, hAdapTeO22nuIKM2 );
-  // BkgPar[1] = new TBkgModelParameter( "TeO2 K40", 1, 0., 1E-7, 0, 1.0, hAdapTeO2k40M1, hAdapTeO2k40M2 ); 
-  // BkgPar[2] = new TBkgModelParameter( "TeO2 Co60", 2, 3.25635e-03, 1E-7, 0, 1.0, hAdapTeO2co60M1 , hAdapTeO2co60M2 );  
-  // BkgPar[3] = new TBkgModelParameter( "TeO2 Sb125", 3, 1.56406e-02, 1E-7, 0, 1.0, hAdapTeO2sb125M1 , hAdapTeO2sb125M2 ); 
-
   BkgPar[4] = new TBkgModelParameter( "TeO2 Th232 only", 4, 0., 1E-7, 0, 1.0, hAdapTeO2th232onlyM1 , hAdapTeO2th232onlyM2, hTeO2th232onlyM1, hTeO2th232onlyM2 ); 
   BkgPar[5] = new TBkgModelParameter( "TeO2 Ra228-Pb208", 5, 5.95362e-05, 1E-7, 0, 1.0, hAdapTeO2ra228pb208M1 , hAdapTeO2ra228pb208M2, hTeO2ra228pb208M1, hTeO2ra228pb208M2 ); 
   BkgPar[6] = new TBkgModelParameter( "TeO2 U238-Th230 ", 6, 0., 1E-7, 0, 1.0, hAdapTeO2u238th230M1 , hAdapTeO2u238th230M2, hTeO2u238th230M1, hTeO2u238th230M2 ); 
@@ -1748,12 +1682,10 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[11] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.001 $\\mu$m", 11, 1.83844e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_0001 , hAdapTeO2Sxu238th230M2_0001, hTeO2Sxu238th230M1_0001, hTeO2Sxu238th230M2_0001 );
   BkgPar[12] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.001 $\\mu$m", 12, 3.12111e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_0001 , hAdapTeO2Sxth230onlyM2_0001, hTeO2Sxth230onlyM1_0001, hTeO2Sxth230onlyM2_0001 );
   BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.001 $\\mu$m", 13, 3.11301e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_0001 , hAdapTeO2Sxra226pb210M2_0001, hTeO2Sxra226pb210M1_0001, hTeO2Sxra226pb210M2_0001  );
-  
   BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 14, 4.28515e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001, hTeO2Sxpb210M1_001, hTeO2Sxpb210M2_001 ); // Gives the peak at low energy
   BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 15, 4.23544e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1, hTeO2Sxpb210M1_1, hTeO2Sxpb210M2_1 ); 
   BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Th232 1", 16, 1.65735e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1, hTeO2Sxth232M1_1, hTeO2Sxth232M2_1 );
   BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 17, 1.29262e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10, hTeO2Sxth232M1_10, hTeO2Sxth232M2_10 );   
-
   BkgPar[18] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 18, 4.70819e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100, hCuBox_CuFrameu238M1_100, hCuBox_CuFrameu238M2_100 );
   BkgPar[19] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 19, 2.18036e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100, hCuBox_CuFrameth232M1_100, hCuBox_CuFrameth232M2_100 );
   BkgPar[20] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 20, 1.09059e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10, hCuBox_CuFrameu238M1_10, hCuBox_CuFrameu238M2_10 );
@@ -1790,116 +1722,12 @@ void TBackgroundModel::GenerateParameters()
   BkgPar[49] = new TBkgModelParameter( "Bottom External Lead K40", 49, 3.69245e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2, hBotExtPb_k40spotM1, hBotExtPb_k40spotM2 ); //
   
 
-  // BkgPar[25] = new TBkgModelParameter( "Copper Holder Mn54", 25, 1.28640e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
-  // BkgPar[26] = new TBkgModelParameter( "Copper Holder U238", 26, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1 , hAdapCuBox_CuFrameu238M2 );
-  // BkgPar[27] = new TBkgModelParameter( "Copper Holder Th232", 27, 0., 1E-7, 0., 1.0, hAdapCuBox_CuFrameth232M1 , hAdapCuBox_CuFrameth232M2 );
-  // BkgPar[28] = new TBkgModelParameter( "Copper Holder K40", 28, 4.79263e-02, 1E-7, 0, 1.0, hAdapCuBox_CuFramek40M1 , hAdapCuBox_CuFramek40M2 );
-  // BkgPar[29] = new TBkgModelParameter( "Copper Holder Co60", 29, 9.17288e-04, 1E-7, 0, 1.0, hAdapCuBox_CuFrameco60M1 , hAdapCuBox_CuFrameco60M2 );
-  // BkgPar[30] = new TBkgModelParameter( "Internal Shields Cs137", 30, 1.96716e-03, 1E-7, 0, 1.0, hAdap50mKcs137M1 , hAdap50mKcs137M2 );
-  // BkgPar[31] = new TBkgModelParameter( "Internal Shields U238", 31, 0., 1E-7, 0, 1.0, hAdapInternalu238M1 , hAdapInternalu238M2 );
-  // BkgPar[32] = new TBkgModelParameter( "Internal Shields Th232", 32, 3.05339e-02, 1E-7, 0, 1.0, hAdapInternalth232M1 , hAdapInternalth232M2 );
-  // BkgPar[33] = new TBkgModelParameter( "Internal Shields K40", 33, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
-  // BkgPar[34] = new TBkgModelParameter( "Internal Shields Co60", 34, 1.09816e-02, 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
-  // BkgPar[35] = new TBkgModelParameter( "Roman Lead U238", 35, 1.03507e-02, 1E-7, 0, 1.0, hAdapPbRomu238M1 , hAdapPbRomu238M2 );
-  // BkgPar[36] = new TBkgModelParameter( "Roman Lead Th232", 36, 7.72558e-03, 1E-7, 0, 1.0, hAdapPbRomth232M1 , hAdapPbRomth232M2 );
-  // BkgPar[37] = new TBkgModelParameter( "Roman Lead K40", 37, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
-  // BkgPar[38] = new TBkgModelParameter( "Roman Lead Co60", 38, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
-  // BkgPar[39] = new TBkgModelParameter( "OVC U238", 39, 6.26579e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
-  // BkgPar[40] = new TBkgModelParameter( "OVC Th232", 40, 3.37601e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  // BkgPar[41] = new TBkgModelParameter( "OVC K40", 41, 3.99572e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
-  // BkgPar[42] = new TBkgModelParameter( "OVC Co60", 42, 1.32649e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
-  // BkgPar[43] = new TBkgModelParameter( "OVC Bi207", 43, 5.66376e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
-  // BkgPar[44] = new TBkgModelParameter( "External Lead Bi210", 44, 9.51705e-02, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
-  // BkgPar[45] = new TBkgModelParameter( "External Lead K40", 45, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
-  // BkgPar[46] = new TBkgModelParameter( "External Lead Th232", 46, 3.61584e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
-  // BkgPar[47] = new TBkgModelParameter( "External Lead U238", 47, 4.59740e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
-  // BkgPar[48] = new TBkgModelParameter( "External Lead Pb210", 48, 3.48874e-03, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
-  // BkgPar[49] = new TBkgModelParameter( "Bottom External Lead K40", 49, 8.35720e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //  
-  // BkgPar[50] = new TBkgModelParameter( "TeO2 Po210", 50, 0., 1E-7, 0, 1.0, hAdapTeO2po210M1 , hAdapTeO2po210M2 );
-
-
-/*
-  BkgPar[9] = new TBkgModelParameter( "TeO2 Sx Th232 only 0.001 $\\mu$m", 9, 8.31726e-05, 1E-7, 0, 1.0, hAdapTeO2Sxth232onlyM1_0001 , hAdapTeO2Sxth232onlyM2_0001 );
-  BkgPar[10] = new TBkgModelParameter( "TeO2 Sx Ra228-Pb208 0.001 $\\mu$m", 10, 2.47160e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra228pb208M1_0001 , hAdapTeO2Sxra228pb208M2_0001 );
-  BkgPar[11] = new TBkgModelParameter( "TeO2 Sx U238-Th230 0.001 $\\mu$m", 11, 1.83844e-03, 1E-7, 0, 1.0, hAdapTeO2Sxu238th230M1_0001 , hAdapTeO2Sxu238th230M2_0001 );
-  BkgPar[12] = new TBkgModelParameter( "TeO2 Sx Th230 only 0.001 $\\mu$m", 12, 3.12111e-04, 1E-7, 0, 1.0, hAdapTeO2Sxth230onlyM1_0001 , hAdapTeO2Sxth230onlyM2_0001 );
-  BkgPar[13] = new TBkgModelParameter( "TeO2 Sx Ra226-pb210 0.001 $\\mu$m", 13, 3.11301e-03, 1E-7, 0, 1.0, hAdapTeO2Sxra226pb210M1_0001 , hAdapTeO2Sxra226pb210M2_0001 );
-  
-  BkgPar[14] = new TBkgModelParameter( "TeO2 Sx Pb210 0.1 $\\mu$m", 14, 0., 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_01 , hAdapTeO2Sxpb210M2_01 ); // Works better than 0.01
-  BkgPar[15] = new TBkgModelParameter( "TeO2 Sx Pb210 0.01 $\\mu$m", 15, 4.28515e-02, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_001 , hAdapTeO2Sxpb210M2_001 ); // Gives the peak at low energy
-  BkgPar[16] = new TBkgModelParameter( "TeO2 Sx Pb210 1 $\\mu$m", 16, 4.23544e-03, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_1 , hAdapTeO2Sxpb210M2_1 ); 
-  BkgPar[17] = new TBkgModelParameter( "TeO2 Sx Pb210 10 $\\mu$m", 17, 0, 1E-7, 0, 1.0, hAdapTeO2Sxpb210M1_10 , hAdapTeO2Sxpb210M2_10 ); 
-  BkgPar[18] = new TBkgModelParameter( "TeO2 Sx Th232 1", 18, 1.65735e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_1 , hAdapTeO2Sxth232M2_1 );
-  BkgPar[19] = new TBkgModelParameter( "TeO2 Sx Th232 10 $\\mu$m", 19, 1.29262e-03, 1E-7, 0, 1.0, hAdapTeO2Sxth232M1_10 , hAdapTeO2Sxth232M2_10 );   
-  BkgPar[20] = new TBkgModelParameter( "TeO2 Sx U238 10 $\\mu$m", 20, 0., 1E-7, 0, 1.0, hAdapTeO2Sxu238M1_10 , hAdapTeO2Sxu238M2_10 ); 
-
-  // Cu Holder Surface All
-  BkgPar[21] = new TBkgModelParameter( "Copper Holder Sx U238 100 $\\mu$m", 21, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_100 , hAdapCuBox_CuFrameu238M2_100 );
-  BkgPar[22] = new TBkgModelParameter( "Copper Holder Sx Th232 100 $\\mu$m", 22, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_100 , hAdapCuBox_CuFrameth232M2_100 );
-  BkgPar[23] = new TBkgModelParameter( "Copper Holder Sx Pb210 100 $\\mu$m", 23, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_100 , hAdapCuBox_CuFramepb210M2_100 );
-  
-  BkgPar[24] = new TBkgModelParameter( "Copper Holder Sx U238 10 $\\mu$m", 24, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_10 , hAdapCuBox_CuFrameu238M2_10 );
-  BkgPar[25] = new TBkgModelParameter( "Copper Holder Sx Th232 10 $\\mu$m", 25, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_10 , hAdapCuBox_CuFrameth232M2_10 );
-  BkgPar[26] = new TBkgModelParameter( "Copper Holder Sx Pb210 10 $\\mu$m", 26, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_10 , hAdapCuBox_CuFramepb210M2_10 );
-
-  BkgPar[27] = new TBkgModelParameter( "Copper Holder Sx U238 1 $\\mu$m", 27, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_1 , hAdapCuBox_CuFrameu238M2_1 );
-  BkgPar[28] = new TBkgModelParameter( "Copper Holder Sx Th232 1 $\\mu$m", 28, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_1 , hAdapCuBox_CuFrameth232M2_1 );
-  BkgPar[29] = new TBkgModelParameter( "Copper Holder Sx Pb210 1 $\\mu$m", 29, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_1 , hAdapCuBox_CuFramepb210M2_1 );
-  
-  BkgPar[30] = new TBkgModelParameter( "Copper Holder Sx U238 0.1 $\\mu$m", 30, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_01 , hAdapCuBox_CuFrameu238M2_01 );
-  BkgPar[31] = new TBkgModelParameter( "Copper Holder Sx Th232 0.1 $\\mu$m", 31, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_01 , hAdapCuBox_CuFrameth232M2_01 );
-  BkgPar[32] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.1 $\\mu$m", 32, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_01 , hAdapCuBox_CuFramepb210M2_01 );
-
-  BkgPar[33] = new TBkgModelParameter( "Copper Holder Sx U238 0.01 $\\mu$m", 33, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1_001 , hAdapCuBox_CuFrameu238M2_001 );  
-  BkgPar[34] = new TBkgModelParameter( "Copper Holder Sx Th232 0.01 $\\mu$m", 34, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameth232M1_001 , hAdapCuBox_CuFrameth232M2_001 );
-  BkgPar[35] = new TBkgModelParameter( "Copper Holder Sx Pb210 0.01 $\\mu$m", 35, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramepb210M1_001 , hAdapCuBox_CuFramepb210M2_001 );
-
-
-  // Comment more as necessary 
-  BkgPar[36] = new TBkgModelParameter( "Copper Holder Mn54", 36, 1.20782e-03, 1E-7, 0, 1.0, hAdapCuBox_CuFramemn54M1 , hAdapCuBox_CuFramemn54M2 ); // Mn54 (Cosmogenic activation of copper)
-  BkgPar[37] = new TBkgModelParameter( "Copper Holder U238", 37, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameu238M1 , hAdapCuBox_CuFrameu238M2 );
-  BkgPar[38] = new TBkgModelParameter( "Copper Holder Th232", 38, 0., 1E-7, 0., 1.0, hAdapCuBox_CuFrameth232M1 , hAdapCuBox_CuFrameth232M2 );
-  BkgPar[39] = new TBkgModelParameter( "Copper Holder K40", 39, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFramek40M1 , hAdapCuBox_CuFramek40M2 );
-  BkgPar[40] = new TBkgModelParameter( "Copper Holder Co60", 40, 0., 1E-7, 0, 1.0, hAdapCuBox_CuFrameco60M1 , hAdapCuBox_CuFrameco60M2 );
-  BkgPar[41] = new TBkgModelParameter( "Internal Shields Cs137", 41, 1.88141e-03, 1E-7, 0, 1.0, hAdap50mKcs137M1 , hAdap50mKcs137M2 );
-  BkgPar[42] = new TBkgModelParameter( "Internal Shields U238", 42, 0., 1E-7, 0, 1.0, hAdapInternalu238M1 , hAdapInternalu238M2 );
-  BkgPar[43] = new TBkgModelParameter( "Internal Shields Th232", 43, 0., 1E-7, 0, 1.0, hAdapInternalth232M1 , hAdapInternalth232M2 );
-  BkgPar[44] = new TBkgModelParameter( "Internal Shields K40", 44, 0., 1E-7, 0, 1.0, hAdapInternalk40M1 , hAdapInternalk40M2 );
-  BkgPar[45] = new TBkgModelParameter( "Internal Shields Co60", 45, 0., 1E-7, 0, 1.0, hAdapInternalco60M1 , hAdapInternalco60M2 );
-  BkgPar[46] = new TBkgModelParameter( "Roman Lead U238", 46, 0., 1E-7, 0, 1.0, hAdapPbRomu238M1 , hAdapPbRomu238M2 );
-  BkgPar[47] = new TBkgModelParameter( "Roman Lead Th232", 47, 0., 1E-7, 0, 1.0, hAdapPbRomth232M1 , hAdapPbRomth232M2 );
-  BkgPar[48] = new TBkgModelParameter( "Roman Lead K40", 48, 0., 1E-7, 0, 1.0, hAdapPbRomk40M1 , hAdapPbRomk40M2 );
-  BkgPar[49] = new TBkgModelParameter( "Roman Lead Co60", 49, 0., 1E-7, 0, 1.0, hAdapPbRomco60M1 , hAdapPbRomco60M2 );
-  BkgPar[50] = new TBkgModelParameter( "OVC U238", 50, 7.19053e-02, 1E-7, 0, 1.0, hAdapOVCu238M1 , hAdapOVCu238M2 );
-  BkgPar[51] = new TBkgModelParameter( "OVC Th232", 51, 5.61000e-02, 1E-7, 0, 1.0, hAdapOVCth232M1 , hAdapOVCth232M2 );
-  BkgPar[52] = new TBkgModelParameter( "OVC K40", 52, 5.41704e-02, 1E-7, 0, 1.0, hAdapOVCk40M1 , hAdapOVCk40M2 );
-  BkgPar[53] = new TBkgModelParameter( "OVC Co60", 53, 2.49256e-02, 1E-7, 0, 1.0, hAdapOVCco60M1 , hAdapOVCco60M2 );
-  BkgPar[54] = new TBkgModelParameter( "OVC Bi207", 54, 6.02468e-03, 1E-7, 0, 1.0, hAdapOVCbi207M1 , hAdapOVCbi207M2 );
-  BkgPar[55] = new TBkgModelParameter( "External Lead Bi210", 55, 1.03086e-01, 1E-7, 0, 1.0, hAdapExtPbbi210M1 , hAdapExtPbbi210M2 );
-  BkgPar[56] = new TBkgModelParameter( "External Lead K40", 56, 0, 1E-7, 0, 1.0, hAdapExtPbk40M1 , hAdapExtPbk40M2 );
-  BkgPar[57] = new TBkgModelParameter( "External Lead Th232", 57, 2.61106e-02, 1E-7, 0, 1.0, hAdapExtPbth232M1 , hAdapExtPbth232M2 );
-  BkgPar[58] = new TBkgModelParameter( "External Lead U238", 58, 3.93821e-02, 1E-7, 0, 1.0, hAdapExtPbu238M1 , hAdapExtPbu238M2 );
-  BkgPar[59] = new TBkgModelParameter( "External Lead Pb210", 59, 3.96617e-03, 1E-7, 0, 1.0, hAdapExtPbpb210M1 , hAdapExtPbpb210M2 );
-  BkgPar[60] = new TBkgModelParameter( "Bottom External Lead K40", 60, 3.69245e-02, 1E-7, 0, 1.0, hAdapBotExtPb_k40spotM1 , hAdapBotExtPb_k40spotM2 ); //
-*/
-
   //////////////
   // Don't fix parameter here when doing Profile Likelihood (except for other parameters that need fixing)
-  // The Profile Likelihood function automatically fixes the parameter in question!!!
+  // The Profile Likelihood function automatically fixes the parameter!
+  // This section is just for fixing parameters for debugging only
   //////////////
-
   // bFixedArray[0] = true;
-  // bFixedArray[1] = true;
-  // bFixedArray[2] = true;
-  // bFixedArray[3] = true;
-
-  // bFixedArray[7] = true;
-  // bFixedArray[8] = true;
-  // bFixedArray[9] = true;
-  // bFixedArray[13] = true;
-  // bFixedArray[17] = true;
-  // bFixedArray[45] = true;
-
   // Fixing alphas
   dStartAlpha = 4; // These are just for loops
   dEndAlpha = 25;
@@ -1909,9 +1737,8 @@ void TBackgroundModel::GenerateParameters()
   // }
 }
 
-
 // Resets all parameters to 0
-// This resets the combined histograms (the model)
+// This method only resets the combined histograms, not the individual PDFs!
 void TBackgroundModel::ResetParameters()
 {
   dNumCalls = 0;
@@ -1924,7 +1751,7 @@ void TBackgroundModel::ResetParameters()
   fModelTotM2->Reset();
   fModelTotAdapM2->Reset();
 
-  for(int i = 0; i < TBackgroundModel::dNParam; i++)
+  for(int i = 0; i < dNParam; i++)
   {
     fParameters[i] = 0;
     fParError[i] = 0;
@@ -1970,14 +1797,13 @@ void TBackgroundModel::UpdateModel()
   fModelTotAdapM1->Add( hAdapTeO2po210M1, (1.77E+3)/dDataIntegralM1 );
   fModelTotAdapM2->Add( hAdapTeO2po210M2, (1.77E+3)/dDataIntegralM1 );
 
-  // Adding Muon distribution
+  // Adding Muon distribution, normalized to livetime of exposure
   fModelTotAdapM1->Add( hAdapExtMuonM1, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
   fModelTotAdapM2->Add( hAdapExtMuonM2, (1/(7.33063e+10/(60*60*24*365))*dLivetimeYr) );
 
 }
   
 // This method sets up minuit and does the fit
-// fVariableValue is for contours
 bool TBackgroundModel::DoTheFit()
 { 
   // Reset initial parameter/error values
@@ -2072,7 +1898,6 @@ bool TBackgroundModel::DoTheFit()
   TH1D *hRatioM1_2 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1_2");
   TH1D *hRatioM1_3 = (TH1D*)fAdapDataHistoM1->Clone("hRatioM1_3");
 
-  // hRatioM1_1->Add(fModelTotAdapM1, -1);
   hRatioM1_1->Divide(fModelTotAdapM1);
   hRatioM1_2->Divide(fModelTotAdapM1);
   hRatioM1_3->Divide(fModelTotAdapM1);
@@ -2087,7 +1912,6 @@ bool TBackgroundModel::DoTheFit()
   }
   TLine *LineM1 = new TLine();
   hRatioM1_3->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));  
-  // hRatioM1_3->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(1440), fAdapDataHistoM1->FindBin(1480));
   hRatioM1_3->SetMarkerStyle(6);
   hRatioM1_3->SetTitle("");
   hRatioM1_3->GetXaxis()->SetTitle("Energy (keV)");
@@ -2103,7 +1927,6 @@ bool TBackgroundModel::DoTheFit()
   hRatioM1_3->Draw("pe2");
   hRatioM1_2->Draw("SAME e2");
   hRatioM1_1->Draw("SAME e2");
-  // LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
   LineM1->DrawLineNDC(0.1, 0.59, 0.95, 0.59);
 
   TLegend *legfit1 = new TLegend(0.85,0.75,0.95,1);
@@ -2118,8 +1941,6 @@ bool TBackgroundModel::DoTheFit()
   p2m1->SetLogy();
   
   fAdapDataHistoM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(dFitMin), fAdapDataHistoM1->FindBin(dFitMax-1));
-  // fAdapDataHistoM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(1), fAdapDataHistoM1->FindBin(dFitMax-1));
-  // fAdapDataHistoM1->GetXaxis()->SetRange(fAdapDataHistoM1->FindBin(1440), fAdapDataHistoM1->FindBin(1480));  
   fAdapDataHistoM1->SetTitle("Total Model (M1)");
   // fAdapDataHistoM1->SetTitleOffset(1.5);
   // fAdapDataHistoM1->SetTitleSize(0.005);
@@ -2199,7 +2020,6 @@ bool TBackgroundModel::DoTheFit()
   hRatioM2_3->Draw("pE2");
   hRatioM2_2->Draw("SAME e2");
   hRatioM2_1->Draw("SAME e2");
-  // LineM1->DrawLine(dFitMin, 1, dFitMax-1, 1);
   LineM1->DrawLineNDC(0.1, 0.59, 0.95, 0.59);
 
   TLegend *legfit2 = new TLegend(0.85,0.75,0.95,1);
@@ -2231,7 +2051,6 @@ bool TBackgroundModel::DoTheFit()
 
   // Residuals
   TCanvas *cResidual1 = new TCanvas("cResidual1", "cResidual1", 1200, 800);
-
   hResidualGausM1 = new TH1D("hResidualGausM1", "M1", 100, -50, 50);
   hResidualDistM1 = CalculateResiduals(fAdapDataHistoM1, fModelTotAdapM1, hResidualGausM1, dFitMinBinM1, dFitMaxBinM1, 1);
   hResidualDistM1->SetLineColor(kBlack);
@@ -2248,7 +2067,6 @@ bool TBackgroundModel::DoTheFit()
   hResidualDistM1->Draw("P");
 
   TCanvas *cResidual2 = new TCanvas("cResidual2", "cResidual2", 1200, 800);
-
   hResidualGausM2 = new TH1D("hResidualGausM2", "M2", 100, -50, 50);  
   hResidualDistM2 = CalculateResiduals(fAdapDataHistoM2, fModelTotAdapM2, hResidualGausM2, dFitMinBinM2, dFitMaxBinM2, 2);
   hResidualDistM2->SetLineColor(kBlack);
@@ -2314,7 +2132,6 @@ bool TBackgroundModel::DoTheFit()
   double dAlphaModelM2 = fModelTotAdapM2->Integral( fAdapDataHistoM2->FindBin(3000), fAdapDataHistoM2->FindBin(8000), "width" )/(dAlphaRangeM2*dLivetimeYr);
   double dAlphaModelErrM2 = TMath::Sqrt(fModelTotAdapM2->Integral( fAdapDataHistoM2->FindBin(3000), fAdapDataHistoM2->FindBin(8000), "width" ))/(dAlphaRangeM2*dLivetimeYr);
 
-
   // Output integrals of stuff for limits
   cout << "ROI range: " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2470)) << " " << fAdapDataHistoM1->GetBinLowEdge(fAdapDataHistoM1->FindBin(2570))+fAdapDataHistoM1->GetBinWidth(fAdapDataHistoM1->FindBin(2570)) << " keV" << endl; // 2470 to 2572
   cout << "Integral Data in ROI: " << fAdapDataHistoM1->Integral( fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" ) << " +/- " << sqrt( fAdapDataHistoM1->Integral(fAdapDataHistoM1->FindBin(2470),fAdapDataHistoM1->FindBin(2570), "width" )) << endl;
@@ -2374,27 +2191,15 @@ bool TBackgroundModel::DoTheFit()
 
   // Correlation Matrix section
   TMatrixT<double> mCorrMatrix;
-  mCorrMatrix.ResizeTo(TBackgroundModel::dNParam, TBackgroundModel::dNParam);
-  minuit->mnemat(mCorrMatrix.GetMatrixArray(), TBackgroundModel::dNParam);
+  mCorrMatrix.ResizeTo(dNParam, dNParam);
+  minuit->mnemat(mCorrMatrix.GetMatrixArray(), dNParam);
 
   for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
     for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
       mCorrMatrix(i,j) = mCorrMatrix(i,j)/(fParError[i]*fParError[j]);
 
-
-  // TMatrixT<double> mReducedMatrix;
-  // mReducedMatrix.ResizeTo(dNumFreeParameters, dNumFreeParameters);
-  // for(int i = mReducedMatrix.GetRowLwb(); i <= mReducedMatrix.GetRowUpb(); i++)
-  //   for(int j = mReducedMatrix.GetColLwb(); j <= mReducedMatrix.GetColUpb(); j++)
-  //     mReducedMatrix(i,j) = mCorrMatrix(i,j);
-
-  // for(int i = mCorrMatrix.GetRowLwb(); i <= mCorrMatrix.GetRowUpb(); i++)
-    // for(int j = mCorrMatrix.GetColLwb(); j <= mCorrMatrix.GetColUpb(); j++)
-      // mCorrMatrixInverse(i,j) = mCorrMatrix(TBackgroundModel::dNParam-i-1, j); 
-  gStyle->SetPalette(55);
-
-
   // Just the Matrix by itself
+  gStyle->SetPalette(55);
   TCanvas *cMatrix2 = new TCanvas("cMatrix2", "cMatrix2", 1200, 1200);
   TPad* pM3 = new TPad("pM3","pM3",width1,canBotMargin,width2,canBotMargin+2*padHeight,0,0);
   pM3->SetTopMargin(0.05);
@@ -2417,8 +2222,6 @@ bool TBackgroundModel::DoTheFit()
   double dataM1_i = 0, modelM1_i = 0;
   double dataM2_i = 0, modelM2_i = 0;
 
-  int dDummyNDFM1 = 0;
-
   for(int i = dFitMinBinM1; i < dFitMaxBinM1; i++)
   {
     if( fAdapDataHistoM1->GetBinCenter(i) >= 3150 && fAdapDataHistoM1->GetBinCenter(i) <= 3400)continue;
@@ -2427,8 +2230,6 @@ bool TBackgroundModel::DoTheFit()
     modelM1_i = fModelTotAdapM1->GetBinContent(i)*fAdapDataHistoM1->GetBinWidth(i);
     dProgressM1 += 2 * (modelM1_i - dataM1_i + dataM1_i * TMath::Log(dataM1_i/modelM1_i));
     hChiSquaredProgressM1->SetBinContent(i, dProgressM1);
-    // dDummyNDFM1++;
-    // hChiSquaredProgressM1->SetBinContent(i, dProgressM1/dDummyNDFM1);
   }
   for(int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
   {
@@ -2515,8 +2316,6 @@ bool TBackgroundModel::DoTheFit()
     // fParArrayErr->Write();
  
     fSaveResult->Close();
-
-    
   } // end bSave
 
   return true;
@@ -2551,16 +2350,14 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
   
   dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
   // Do the fit now if no other tests are needed 
-  for(int i = -50; i < 50; i++)
-  // for(int i = -5; i < 5; i++)  
+  // for(int i = -50; i < 50; i++)
+  for(int i = -5; i < 5; i++)
   {
-    // if (i == 0)continue;
     fInitValues.push_back(fParameters[fParFixed] + fParameters[fParFixed]/50*i );
     cout << "Input initial value: " << fParameters[fParFixed] + fParameters[fParFixed]/50*i << endl;
   }
 
-    int dStatus, dIndex; 
-    double dChiSq;
+    int dStatus, dIndex = 0; 
     double deltaChiSq;
     double Toy2nbbHL, Toy2nbbHLErr;
     double Toy2nbbIntegral;
@@ -2568,7 +2365,6 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     double Toy2nbbHLErr2, dPull2, Toy2nbbIntegralErr2;
 
     TFile *ProfileFile = new TFile(Form("%s/Final/ProfileNLL/ProfileNLL_Par%d_%d.root", dSaveDir.c_str(), fParFixed, tTime->GetDate() ), "RECREATE");
-    
     TTree *ProfileTree = new TTree("ProfileTree", "Tree with Profile NLL Results");
 
     ProfileTree->Branch("Index", &dIndex, "Index/I");
@@ -2590,10 +2386,13 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
 
     TH1::AddDirectory(kFALSE);
 
-  OutPNLL.open(Form("%s/Final/ProfileNLL_Par%d_%d.C", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
-  OutPNLL << "{" << endl;
-  OutPNLL << "vector<double> dX;" << endl;
-  OutPNLL << "vector<double> dT;" << endl;
+    // Write 0th entry
+    ProfileTree->Write();
+
+  // OutPNLL.open(Form("%s/Final/ProfileNLL_Par%d_%d.C", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
+  // OutPNLL << "{" << endl;
+  // OutPNLL << "vector<double> dX;" << endl;
+  // OutPNLL << "vector<double> dT;" << endl;
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
@@ -2601,32 +2400,38 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     cout << "Using Initial Value: " << *iter << endl;
     BkgPar[fParFixed]->SetInitValue(*iter);
     DoTheFit();
-
+    dIndex++;
+    
+    deltaChiSq = dChiSquare - dBestChiSq;
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
+
+    ProfileTree->Write();
+
+    // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;  
   }
 
-  OutPNLL << "int n = dX.size();" << endl;
-  OutPNLL << "double *y = &dX[0];" << endl;
-  OutPNLL << "double *x = &dT[0];" << endl;
-  OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
-  OutPNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
-  OutPNLL << "g1->SetLineColor(kBlue);" << endl;
-  OutPNLL << "g1->SetLineWidth(2);" << endl;
-  // OutPNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
-  OutPNLL << "g1->SetTitle(\"Profile Negative Log-Likelihood\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}/2\");" << endl;
-  // OutPNLL << "g1->GetXaxis()->SetTitle(\"Par Value)\");" << endl;
-  OutPNLL << "g1->GetXaxis()->SetTitle(\"#tau_{1/2} (y)\");" << endl;
-  OutPNLL << "g1->Draw(\"AC\");" << endl;
-  OutPNLL << "}" << endl;
+  ProfileTreeFile->cd();
+  ProfileTree->Write();
+  ProfileTreeFile->Close();
 
-  OutPNLL.close();
+  // OutPNLL << "int n = dX.size();" << endl;
+  // OutPNLL << "double *y = &dX[0];" << endl;
+  // OutPNLL << "double *x = &dT[0];" << endl;
+  // OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
+  // OutPNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
+  // OutPNLL << "g1->SetLineColor(kBlue);" << endl;
+  // OutPNLL << "g1->SetLineWidth(2);" << endl;
+  // // OutPNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
+  // OutPNLL << "g1->SetTitle(\"Profile Negative Log-Likelihood\");" << endl;
+  // OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}/2\");" << endl;
+  // // OutPNLL << "g1->GetXaxis()->SetTitle(\"Par Value)\");" << endl;
+  // OutPNLL << "g1->GetXaxis()->SetTitle(\"#tau_{1/2} (y)\");" << endl;
+  // OutPNLL << "g1->Draw(\"AC\");" << endl;
+  // OutPNLL << "}" << endl;
 
-
+  // OutPNLL.close();
 
 }
-
 
 // Gets limit for fitted limited parameter
 void TBackgroundModel::SetLimit(int fParFixed)
@@ -2684,7 +2489,6 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
   DoTheFit();
 
     int dStatus, dIndex; 
-    double dChiSq;
     double dPull = 0;
     double Toy2nbbHL, Toy2nbbHLErr;
     double Toy2nbbIntegral;
@@ -2705,8 +2509,6 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
   {
     fInitValues2.push_back(fParameters[fParFixed] + fParameters[fParFixed]/10*j);
   }
-
-
 
     TFile *ProfileFile = new TFile(Form("%s/Final/ProfileNLL/ProfileFile_Par%d_%d.root", dSaveDir.c_str(), fParFixed, tTime->GetDate() ), "RECREATE");
     
@@ -2789,8 +2591,6 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
     ProfileTree->Write();
     ProfileFile->Close();
 
-
-
 }
 
 
@@ -2798,7 +2598,6 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
 {
     cout << "Using Toy Data" << endl;
     int dStatus, dIndex; 
-    double dChiSq;
     double dPull = 0;
     double Toy2nbbHL, Toy2nbbHLErr;
     double Toy2nbbIntegral;
@@ -2834,7 +2633,6 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
 
     // Initial Fit to get the rate
     dStatus = DoTheFit();
-    // dChiSq = dChiSquare;
 
     double dInitial2nbbRate, dInitial2nbbRateErr;
     double dInitial2nbb, dInitial2nbbErr;
@@ -2872,18 +2670,16 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
        // fToyDataTest = new TFile(Form("%s/Toy/HighStatToyData_p%d.root", dMCDir.c_str(), i));
       // fToyDataTest = TFile::Open(Form("%s/Toy/HighStatToyData_p%d.root", dMCDir.c_str(), i));
       // TFile fToyDataTest(Form("%s/Toy/HighStatToyData_p%d.root", dMCDir.c_str(), i));
+
       fAdapDataHistoM1 = (TH1D*)fToyDataTest->Get("fAdapDataHistoM1");
       fAdapDataHistoM2 = (TH1D*)fToyDataTest->Get("fAdapDataHistoM2");
-    
-
+      
       // Scaling for high statistics Toy MC
       // fAdapDataHistoM1->Scale(1./5000);
       // fAdapDataHistoM2->Scale(1./5000);
       // dDataIntegralM1 = fAdapDataHistoM1->Integral("width");
 
       dStatus = DoTheFit();
-      // dChiSq = dChiSquare;
-
 
       Toy2nbbHL = fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width"));
       Toy2nbbHLErr = fParError[0]/fParameters[0]*(fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")));
