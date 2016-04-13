@@ -1,5 +1,18 @@
-# code
-MC data in /cuore/user/zhubrian/MC/scratch on QCC
-Reduced data in /cuore/user/zhubrian/CUORE0/scratch/v2.30 on QCC
+Notes for the background model code (sometime in April, 2016)
 
-TBackgroundModel compiles on Linux but not on Mac, currently there's a bug on ROOT version 6.XX where the code compiles but crashes when it runs (problem doesnt happen on Linux), there's also a bug on ROOT version 5.34 where the code cannot compile on Mac ("Undefined symbols for architecture x86_64").
+### General
+The fitter uses two classes:
+TBkgModelParameter -- container for background model parameters, it's primarily used to keep track of the histograms of each background model parameter and I loop through an array of these
+
+TBackgroundModel -- Class with the actual fitter, fit is performed using TMinuit.
+
+### Running the code
+I usually compile the two classes and then load the objects in a ROOT macro to run
+
+eg:
+	gSystem->Load("TBkgModelParameter_cc.so");
+	gSystem->Load("TBackgroundModel_cc.so");
+
+	TBackgroundModel *f1 = new TBackgroundModel(500, 7000, 50, 0, false);
+	f1->DoTheFit();
+
