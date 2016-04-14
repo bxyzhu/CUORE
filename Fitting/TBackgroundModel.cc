@@ -2410,9 +2410,9 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;  
   }
 
-  ProfileTreeFile->cd();
+  ProfileFile->cd();
   ProfileTree->Write();
-  ProfileTreeFile->Close();
+  ProfileFile->Close();
 
   // OutPNLL << "int n = dX.size();" << endl;
   // OutPNLL << "double *y = &dX[0];" << endl;

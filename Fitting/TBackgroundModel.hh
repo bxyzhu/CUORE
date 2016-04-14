@@ -1006,6 +1006,11 @@ private:
 	ofstream 	 	OutPNLL;
 	ofstream 		OutToy;
 
+	TTree 		*ProfileTree;
+	TTree 		*ToyTree;
+	TFile 		*ProfileFile;
+	TFile 		*ToyTreeFile;
+
 	std::vector<double> 	fInitValues;
 	std::vector<double> 	fInitValues2;	
 
