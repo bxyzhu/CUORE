@@ -1,3 +1,26 @@
+/* 
+The fitter uses two classes:
+TBkgModelParameter -- container for background model parameters. 
+	Primarily used to keep track of the histograms of each background model parameter.
+
+TBackgroundModel -- Class with the actual fitter, fit is performed using TMinuit. 
+	If I were to re-write the code, I would probably try use TMinuit2 or RooFit.
+
+
+I usually compile the two classes and then load the objects in a ROOT macro and run whatever functions I need
+
+eg:
+	.L TBkgModelParameter.cc+
+	.L TBackgroundModel.cc+
+
+Then:
+	gSystem->Load("TBkgModelParameter_cc.so");
+	gSystem->Load("TBackgroundModel_cc.so");
+	TBackgroundModel *f1 = new TBackgroundModel(500, 7000, 50, 0, false);
+	f1->DoTheFit();
+	f1->PrintParameters();
+*/
+
 #ifndef __TBackgroundModel__
 #define __TBackgroundModel__
 #include "TObject.h"
@@ -38,33 +61,44 @@ class TBackgroundModel : public TObject {
 public:
 	TBackgroundModel();
 
+	// Takes in arguments: Minimum energy for fit (fFitMin), maximum energy for fit (fFitMax)
+	// base number of counts in each bin (fBinBase), Dataset (fDataset) -- only use 0, Save plots (fSave)
 	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
 	virtual ~TBackgroundModel();
 
-	// Binning for M1 and M2 spectra are separate to do some tests
+	// Binning for M1 and M2 spectra are separated for tests
 	// In reality they can probably be binned the same
 	std::vector<double> AdaptiveBinningM1(TH1D *h1, int dBinBase);
 	std::vector<double> AdaptiveBinningM2(TH1D *h1, int dBinBase);
 
-	// Adds Poisson constraint on ChiSquared *** Not working properly right now ***
+	// Adds Poisson constraint on ChiSquared, outputs additional ChiSq to be added to ChiSq
+	// *** Not working properly right now ***
 	double AddConstraint(int fParInput);
 
-	// Calculates the residual spectrum
-	TH1D* CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult);
+	// Calculates and outputs the normalized residual spectrum, also fills the residual distribution into fResidual
+	TH1D* CalculateResiduals(TH1D *fData, TH1D *fModel, TH1D *fResidual, int binMin, int binMax, int dMult);
 
+	// Creates the histograms for all of the MC
+	// Must be used AFTER adaptive binning as the adaptive binn
 	void CreateModelHistograms();
 
+	// Main function that calls Minuit
 	bool DoTheFit();
 
+	// Calculates and returns the ChiSq
+	// You can modify how the ChiSq is calculated as well as add/remove constraints
 	double GetChiSquare();
 
+	// Initializes an array of TBkgModelParameters
 	void GenerateParameters();
 
+	// Loads all of the MC histograms from file as well as rebins them
 	void Initialize();
 
-	// Loads background data
+	// Loads CUORE-0 background data
 	void LoadData();
 
+	// Prints 
 	void PrintParameters();
 
 	void PrintParActivity();
@@ -1002,9 +1036,9 @@ private:
 	TH1D 			*hEfficiency;
 	TH1D 			*hEfficiencyM2;
 
-	ofstream 		OutFile;
-	ofstream 	 	OutPNLL;
-	ofstream 		OutToy;
+	std::ofstream 		OutFile;
+	std::ofstream 	 	OutPNLL;
+	std::ofstream 		OutToy;
 
 	TTree 		*ProfileTree;
 	TTree 		*ToyTree;

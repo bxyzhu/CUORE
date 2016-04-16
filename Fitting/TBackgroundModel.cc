@@ -71,14 +71,10 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   dBinBase = fBinBase;
   dDataSet = fDataSet;
 
-  minuit = new TMinuit(dNParam);
-
-
   if(fFitMin >= fFitMax)
   {
     cout << "Fit Min >= Fit Max!" << endl;
   }
-
   // Fitting range
   dFitMin = fFitMin;
   dFitMax = fFitMax;
@@ -110,7 +106,6 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   base_cut = base_cut && "NormTVR < 5.3 && NormTVR > -6";
 
   LoadData();
-
 
   // TF1 *fEff = new TF1("fEff", "[0]+[1]/(1+[2]*exp(-[3]*x)) + [4]/(1+[5]*exp(-[6]*x))", dMinEnergy, dMaxEnergy);
   // fEff->SetParameters(-4.71e-2, 1.12e-1, 2.29, -8.81e-5, 9.68e-1, 2.09, 1.58e-2);
@@ -184,6 +179,9 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   cout << "Events in fitting region (M1): " << fAdapDataHistoM1->Integral(dFitMinBinM1, dFitMaxBinM1, "width") << endl;
   cout << "Events in fitting region (M2): " << fAdapDataHistoM2->Integral(dFitMinBinM2, dFitMaxBinM2, "width") << endl;  
   cout << "Livetime of background: " << dLivetimeYr << endl;
+
+  // Create Minuit object with dNParam parameters
+  minuit = new TMinuit(dNParam);
 
   // Creates model histograms and then load all of the PDFs from file
   CreateModelHistograms();
@@ -615,7 +613,7 @@ return dBinArrayThing;
 }
 
 // Returns a histogram with the normalized residuals as well as fills a histogram with residual distribution
-TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int binMin, int binMax, int dMult)
+TH1D *TBackgroundModel::CalculateResiduals(TH1D *fData, TH1D *fModel, TH1D *fResidual, int binMin, int binMax, int dMult)
 {
   if(binMin >= binMax)
   {
@@ -631,11 +629,7 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int
     TH1D  *hOut       = new TH1D("hOutResidualM2", "Fit Residuals M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
   }
 
-  // Clone histograms for rebinning
-  TH1D  *hCloneBkg    = (TH1D*)h1->Clone("hCloneBkg");
-  TH1D  *hCloneMC   = (TH1D*)h2->Clone("hCloneMC");
-
-  // Variables used in Residual calculations
+  // Stuff for residual calculations
   double dResidualX = 0, dResidualY = 0, dResidualXErr = 0, dResidualYErr = 0;
   double datam1_i = 0, modelm1_i = 0;
 
@@ -643,19 +637,19 @@ TH1D *TBackgroundModel::CalculateResiduals(TH1D *h1, TH1D *h2, TH1D *hResid, int
   for(int j = binMin ; j < binMax ; j++)
   {
 
-    if( hCloneBkg->GetBinCenter(j) >= 3150 && hCloneBkg->GetBinCenter(j) <= 3400)continue;    
+    if( fData->GetBinCenter(j) >= 3150 && fData->GetBinCenter(j) <= 3400)continue;    
 
-    dResidualX    = hCloneBkg->GetBinCenter(j);
+    dResidualX    = fData->GetBinCenter(j);
 
     // Multiply bin content by bin width (for # of counts)
-    datam1_i = h1->GetBinContent(j)*h1->GetBinWidth(j);
-    modelm1_i = h2->GetBinContent(j)*h1->GetBinWidth(j);
+    datam1_i = fData->GetBinContent(j)*fData->GetBinWidth(j);
+    modelm1_i = fModel->GetBinContent(j)*fData->GetBinWidth(j);
     
     dResidualY = (datam1_i - modelm1_i)/TMath::Sqrt(datam1_i);
 
     hOut->SetBinContent(j, dResidualY);
     hOut->SetBinError(j, 0); // Just for visualization
-    hResid->Fill(dResidualY); // Fills residual distribution
+    fResidual->Fill(dResidualY); // Fills residual distribution
   }
 
   return hOut;
