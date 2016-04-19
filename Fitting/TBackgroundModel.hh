@@ -95,7 +95,7 @@ public:
 	// Loads all of the MC histograms from file as well as rebins them
 	void Initialize();
 
-	// Loads CUORE-0 background data
+	// Loads CUORE-0 background data and applies cuts
 	void LoadData();
 
 	// Prints the parameter name, normalization, and err on normalization
@@ -136,6 +136,8 @@ public:
 	// Calculates change in ChiSq, Pull, etc
 	void ToyFit(int fStart, int fStop);
 
+	// Creates and updates the model histogram
+	// Total Model PDF is first reset and then components are added to the total model as a linear combination
 	void UpdateModel();
 
 	int 	dNParam; // Number of fitting parameters
@@ -188,15 +190,12 @@ private:
 	// Data
 	TChain			*qtree;
 	TCut 			base_cut;
-	TCut			ener_cut;
-
 
 	TMinuit			*minuit;
 
 	TH1D			*fDataHistoTot;
 	TH1D			*fDataHistoM1;
 	TH1D			*fDataHistoM2;
-	TH1D			*fDataHistoM3;
 
 	TH1D			*fAdapDataHistoM1;
 	TH1D			*fAdapDataHistoM2;

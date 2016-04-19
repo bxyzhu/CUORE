@@ -85,25 +85,9 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   fDataHistoTot     = new TH1D("fDataHistoTot",  "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM1      = new TH1D("fDataHistoM1",   "", dNBins, dMinEnergy, dMaxEnergy);
   fDataHistoM2      = new TH1D("fDataHistoM2",   "", dNBins, dMinEnergy, dMaxEnergy);
-  fDataHistoM3      = new TH1D("fDataHistoM3",   "", dNBins, dMinEnergy, dMaxEnergy);
 
   // Data cuts 
   qtree = new TChain("qtree");
-  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
-  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
-  // base_cut = base_cut && "Channel != 1 && Channel != 10"; 
-
-  // Old PSA cuts
-  // base_cut = base_cut && "abs(BaselineSlope)<0.1";
-  // base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
-
-  // New PSA cuts
-  base_cut = base_cut && "NormBaselineSlope < 4.8 && NormBaselineSlope > -4";
-  base_cut = base_cut && "NormRiseTime < 4.8 && NormRiseTime > -4";
-  base_cut = base_cut && "NormDecayTime < 4.8 && NormDecayTime > -4";
-  base_cut = base_cut && "NormDelay < 4.8 && NormDelay > -4";
-  base_cut = base_cut && "NormTVL < 5.3 && NormTVL > -6";
-  base_cut = base_cut && "NormTVR < 5.3 && NormTVR > -6";
 
   LoadData();
 
@@ -1533,6 +1517,23 @@ void TBackgroundModel::Initialize()
 // Data can be loaded in 
 void TBackgroundModel::LoadData()
 {
+  // Set cuts
+  base_cut = base_cut && "(TimeUntilSignalEvent_SameChannel > 4.0 || TimeUntilSignalEvent_SameChannel < 0)";
+  base_cut = base_cut && "(TimeSinceSignalEvent_SameChannel > 3.1 || TimeSinceSignalEvent_SameChannel < 0)";
+  // base_cut = base_cut && "Channel != 1 && Channel != 10"; 
+
+  // Old PSA cuts
+  // base_cut = base_cut && "abs(BaselineSlope)<0.1";
+  // base_cut = base_cut && "OF_TVR < 1.75 && OF_TVL < 2.05";
+
+  // New PSA cuts
+  base_cut = base_cut && "NormBaselineSlope < 4.8 && NormBaselineSlope > -4";
+  base_cut = base_cut && "NormRiseTime < 4.8 && NormRiseTime > -4";
+  base_cut = base_cut && "NormDecayTime < 4.8 && NormDecayTime > -4";
+  base_cut = base_cut && "NormDelay < 4.8 && NormDelay > -4";
+  base_cut = base_cut && "NormTVL < 5.3 && NormTVL > -6";
+  base_cut = base_cut && "NormTVR < 5.3 && NormTVR > -6";
+
   switch(dDataSet)
   { 
   // Livetimes only set for default because I'm lazy!
@@ -1611,7 +1612,6 @@ void TBackgroundModel::LoadData()
   qtree->Project("fDataHistoTot", "Energy", base_cut);
   qtree->Project("fDataHistoM1",  "Energy", base_cut && "Multiplicity_Sync == 1");
   qtree->Project("fDataHistoM2",  "Energy", base_cut && "Multiplicity_Sync == 2");
-  qtree->Project("fDataHistoM3",  "Energy", base_cut && "Multiplicity_Sync == 3");
 
   dLivetimeYr = 0.8738; 
   dExposure = 33.4229;
@@ -2249,8 +2249,8 @@ bool TBackgroundModel::DoTheFit()
   hChiSquaredProgressM2->GetYaxis()->SetTitle("#chi^{2}");  
   hChiSquaredProgressM2->Draw();
 
-  fParArray = new TVectorD(dNParam, fParameters);
-  fParArrayErr = new TVectorD(dNParam, fParError);
+  // fParArray = new TVectorD(dNParam, fParameters);
+  // fParArrayErr = new TVectorD(dNParam, fParError);
 
   if(bSave)
   {
@@ -2576,7 +2576,7 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
     cout << "Initial 2nbb Rate and Error: " << dInitial2nbbRate << " +/- " <<  dInitial2nbbRateErr << endl;
 
     TH1::AddDirectory(kFALSE);
-        
+
     TFile *fToyDataTest;
 
     for(int i = fStart; i <= fStop; i++)
