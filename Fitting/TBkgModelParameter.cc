@@ -35,17 +35,6 @@ TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, doub
 }
 
 
-TBkgModelParameter::TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHist)
-{
-	dParName = fParName;
-	dParIndex = fParIndex;
-	dInitialValue = fInitialValue;
-	dInitErr = fInitErr; 
-	dMinLimit = fMinLimit;
-	dMaxLimit = fMaxLimit;	
-	dHist = fHist;
-}
-
 TBkgModelParameter::~TBkgModelParameter()
 {}
 
@@ -77,11 +66,6 @@ double TBkgModelParameter::GetParMin()
 double TBkgModelParameter::GetParMax()
 {
 	return dMaxLimit;
-}
-
-TH1D *TBkgModelParameter::GetHist()
-{
-	return dHist;
 }
 
 TH1D *TBkgModelParameter::GetHistM1(int fIndex)

@@ -13,43 +13,47 @@ class TBkgModelParameter : public TObject {
 public:
 	TBkgModelParameter();
 
+	// Constructor that includes the normal binned histograms
 	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHistM1Adap, TH1D *&fHistM2Adap, TH1D *&fHistM1, TH1D *&fHistM2);
 
-	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHistM1, TH1D *&fHistM2);
-
-	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHist);
+	// Constructor with only adaptive binned histogrmas
+	TBkgModelParameter(const char *fParName, int fParIndex, double fInitialValue, double fInitErr, double fMinLimit, double fMaxLimit, TH1D *&fHistM1Adap, TH1D *&fHistM2Adap);
 
 	virtual ~TBkgModelParameter();
 
+	// Returns parameter index
 	int GetParIndex();
 
+	// Returns parameter name
 	const char *GetParName();
 
+	// Returns initial normalization value
 	double GetParInitial();
 
+	// Returns initial error on normalization value
 	double GetParInitErr();
 
+	// Returns parameter normalization minimum
 	double GetParMin();
 
+	// Returns parameter normalization maximum
 	double GetParMax();
 
-	TH1D *GetHist();
-
+	// Returns histogram
 	// 1 for Adap, 2 for normal
 	TH1D *GetHistM1(int fIndex);
-
 	TH1D *GetHistM2(int fIndex);
 
+	// Sets initial normalization value for parameter
 	void SetInitValue(double fInitialValue);
 
-	bool 			bFixed;
+private:
 	const char 	 	*dParName;
 	int 	 		dParIndex;
 	double	 		dInitialValue;
 	double			dInitErr;
 	double	 		dMinLimit;
 	double	 		dMaxLimit;
-	TH1D 			*dHist;
 	TH1D 			*dHistM1;
 	TH1D 			*dHistM2;
 	TH1D 			*dHistM1Adap;
