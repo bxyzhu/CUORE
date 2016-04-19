@@ -19,7 +19,7 @@ Model PDFs -- model PDFs are saved as normalized histograms (with 1 keV binning)
 
 	4) MCProduction_Surface_1keV.root -- Surface histograms, using single Gaussian smearing
 
-Background Data -- I have taken the Reduced Unblinded ROOT files and reduced them further, storing only Energy, Multiplicity, and Cut information. The function "LoadData" should be edited if different data files/formats are used.
+Background Data -- I have taken the Reduced Unblinded ROOT files and reduced them further, storing only Energy, Multiplicity, and the PSA Cuts. The function "LoadData" should be edited if different data files/formats are used.
 
 ### Running the code
 I usually compile the two classes and then load the objects in a ROOT macro and run whatever functions I need
@@ -27,7 +27,6 @@ I usually compile the two classes and then load the objects in a ROOT macro and 
 eg:
 
 	gSystem->Load("TBkgModelParameter_cc.so");
-
 	gSystem->Load("TBackgroundModel_cc.so");
 
 	TBackgroundModel *f1 = new TBackgroundModel(500, 7000, 50, 0, false);
