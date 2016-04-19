@@ -9,6 +9,8 @@ TBackgroundModel -- Class with the actual fitter, fit is performed using TMinuit
 
 
 ### Required data/MC files
+If you need the MC/data files, email me.
+
 Model PDFs -- model PDFs are saved as normalized histograms (with 1 keV binning) in 4 files, the "Initialize" function loads all of the histograms from the files. Only Bulk gamma sources were generated using the double Gaussian detector response. 
 
 	1) MCProduction_Bulk_1keV.root -- Bulk histograms, using single Gaussian smearing
