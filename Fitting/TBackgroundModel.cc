@@ -37,7 +37,7 @@ void myExternal_FCNAdap(int &n, double *grad, double &fval, double x[], int code
   // implement a method in your class for setting the parameters and thus update the parameters of your fitter class 
   for(int i = 0; i < Obj->dNParam; i++ )
   {
-    Obj->SetParameters(i, x[i]);
+    Obj->SetParValue(i, x[i]);
   }
   // Implement a method in your class that calculates the quantity you want to minimize, here I call it GetChiSquare. set its output equal to fval. minuit tries to minimize fval
     Obj->UpdateModel();
@@ -1753,7 +1753,7 @@ void TBackgroundModel::ResetParameters()
 }
 
 // Set Parameters in Model
-void TBackgroundModel::SetParameters(int index, double value)
+void TBackgroundModel::SetParValue(int index, double value)
 {
 	// Change the index max depending on model
 	if(index > dNParam) cout << "Index too large" << endl;
@@ -2333,16 +2333,19 @@ void TBackgroundModel::SanityCheck()
 }
 
 // Only run in batch mode and make sure to have the 2nbb normalization FIXED
-// Probably best to run Minuit in quiet mode as well
+// Probably best to run Minuit in quiet mode as well (to avoid the output)
+// eg: minuit->SetPrintLevel(-1);
 void TBackgroundModel::ProfileNLL(int fParFixed)
 {
-  // Do the fit normally once first
+  // Do the fit normally once first to obtain best fit value
   DoTheFit();
 
   // Fix 2nbb value now
   bFixedArray[fParFixed] = true;
   
-  dBestChiSq = dChiSquare; // Chi-Squared from best fit (for ProfileNLL calculation)
+  // Chi-Squared from best fit (for ProfileNLL calculation)
+  dBestChiSq = dChiSquare; 
+
   // Do the fit now if no other tests are needed 
   // for(int i = -50; i < 50; i++)
   for(int i = -5; i < 5; i++)
@@ -2383,11 +2386,6 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
     // Write 0th entry
     ProfileTree->Write();
 
-  // OutPNLL.open(Form("%s/Final/ProfileNLL_Par%d_%d.C", dSaveDir.c_str(), fParFixed, tTime->GetDate() ));
-  // OutPNLL << "{" << endl;
-  // OutPNLL << "vector<double> dX;" << endl;
-  // OutPNLL << "vector<double> dT;" << endl;
-
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
     // Set new initial value and repeat fit
@@ -2401,29 +2399,11 @@ void TBackgroundModel::ProfileNLL(int fParFixed)
 
     ProfileTree->Write();
 
-    // OutPNLL << Form("dX.push_back(%f); dT.push_back(%f);", (dChiSquare-dBestChiSq)/2., fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;  
   }
 
   ProfileFile->cd();
   ProfileTree->Write();
   ProfileFile->Close();
-
-  // OutPNLL << "int n = dX.size();" << endl;
-  // OutPNLL << "double *y = &dX[0];" << endl;
-  // OutPNLL << "double *x = &dT[0];" << endl;
-  // OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
-  // OutPNLL << "TGraph *g1 = new TGraph(n, x, y);" << endl;
-  // OutPNLL << "g1->SetLineColor(kBlue);" << endl;
-  // OutPNLL << "g1->SetLineWidth(2);" << endl;
-  // // OutPNLL << "g1->SetTitle(\"2#nu#beta#beta Profile Negative Log-Likelihood\");" << endl;
-  // OutPNLL << "g1->SetTitle(\"Profile Negative Log-Likelihood\");" << endl;
-  // OutPNLL << "g1->GetYaxis()->SetTitle(\"#Delta#chi^{2}/2\");" << endl;
-  // // OutPNLL << "g1->GetXaxis()->SetTitle(\"Par Value)\");" << endl;
-  // OutPNLL << "g1->GetXaxis()->SetTitle(\"#tau_{1/2} (y)\");" << endl;
-  // OutPNLL << "g1->Draw(\"AC\");" << endl;
-  // OutPNLL << "}" << endl;
-
-  // OutPNLL.close();
 
 }
 
@@ -2453,23 +2433,17 @@ void TBackgroundModel::SetLimit(int fParFixed)
 
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter!=fInitValues.end(); iter++)
   {
-
-    UpdateModel();
-    
+    UpdateModel(); 
     // Set new value for parameter
     fParameters[fParFixed] = *iter;
 
     // cout << "Integral before scaling: " << dDummyIntegral << endl;
     // cout << "Scaling: " << *iter*dDataIntegralM1 << "\t" << "Integral: " << dDummyIntegral << endl;
-
     // Re-calculate Chi-squared
     dChiSquareDummy = GetChiSquare();
-
     OutFile << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter)/dLivetimeYr/fParEfficiencyM1[fParFixed]/fParMass[fParFixed]/(365*24*60*60) << endl; 
     cout << dChiSquareDummy << "\t" << (dChiSquareDummy - dBestChiSq)/2 << "\t" << *iter << "\t" << dDummyIntegral*dDataIntegralM1*(*iter)/dLivetimeYr/fParEfficiencyM1[fParFixed]/fParMass[fParFixed]/(365*24*60*60) << endl; 
-
   }
-
 }
 
 // 2D Contour plot, only in comparison with 2nbb!
@@ -2528,13 +2502,6 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
     TH1::AddDirectory(kFALSE);
 
 
-
-  OutPNLL.open(Form("%s/Final/ProfileNLL2D_%d_Par%d.C", dSaveDir.c_str(), tTime->GetDate(), fParFixed ));
-  OutPNLL << "{" << endl;
-  OutPNLL << "vector<double> dX;" << endl;
-  OutPNLL << "vector<double> dY;" << endl;
-  OutPNLL << "vector<double> dT;" << endl;
-
   for(std::vector<double>::const_iterator iter = fInitValues.begin(); iter != fInitValues.end(); iter++)
   {
     for(std::vector<double>::const_iterator iter2 = fInitValues2.begin(); iter2 != fInitValues2.end(); iter2++)
@@ -2545,48 +2512,14 @@ void TBackgroundModel::ProfileNLL2D(int fParFixed)
 
     DoTheFit();
     cout << "delta ChiSq = " << dChiSquare - dBestChiSq << endl; // Needs to be entered, otherwise just 0
-    OutPNLL << Form("dX.push_back(%f); dY.push_back(%.10f); dT.push_back(%f);", dChiSquare-dBestChiSq, *iter2, fParEfficiencyM1[0]*(0.69314718056)*(4.9187e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")) ) << endl;
     
     ProfileTree->Fill();
     }
   }
-
-  OutPNLL << "int n = dX.size();" << endl;
-  OutPNLL << "double *z = &dX[0];" << endl;
-  OutPNLL << "double *y = &dY[0];" << endl;
-  OutPNLL << "double *x = &dT[0];" << endl;
-  OutPNLL << "TCanvas *cNLL = new TCanvas(\"cNLL\", \"cNLL\", 1200, 800);" << endl;
-  OutPNLL << "TGraph2D *g1 = new TGraph2D(n, x, y, z);" << endl;
-  OutPNLL << "g1->SetLineColor(kBlue);" << endl;
-  OutPNLL << "g1->SetLineWidth(2);" << endl;
-  OutPNLL << "g1->SetTitle(\"2#nu#beta#beta 2D Profile Negative Log-Likelihood\");" << endl;
-  OutPNLL << "g1->GetZaxis()->SetTitle(\"#Delta#chi^{2}\");" << endl;
-  OutPNLL << "g1->GetYaxis()->SetTitle(\"TeO2 K-40\");" << endl;
-  OutPNLL << "g1->GetXaxis()->SetTitle(\"t_{1/2} (y)\");" << endl;
-  // OutPNLL << "g1->Draw(\"surf1\");" << endl;
-  OutPNLL << endl;
-  OutPNLL << endl;
-
-  OutPNLL << "TH2D *h1;" << endl;
-  OutPNLL << "h1 = g1->GetHistogram();" << endl;
-  OutPNLL << "double levels[] = {1, 4, 9};" << endl;
-  OutPNLL << "h1->SetContour(3, levels);" << endl;
-  OutPNLL << "int colors[] = {kGreen, kYellow, kRed};" << endl;
-  OutPNLL << "gStyle->SetPalette((sizeof(colors)/sizeof(Int_t)), colors);" << endl;
-  OutPNLL << "h1->SetLineWidth(2);" << endl;
-  OutPNLL << "h1->Draw(\"cont1\");" << endl;
-  OutPNLL << "}" << endl;
-  OutPNLL << endl;
-
-  OutPNLL.close();
-
-
     ProfileFile->cd();
     ProfileTree->Write();
     ProfileFile->Close();
-
 }
-
 
 void TBackgroundModel::ToyFit(int fStart, int fStop)
 {
@@ -2598,9 +2531,7 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
     double Toy2nbbIntegralErr;
     double Toy2nbbHLErr2, dPull2, Toy2nbbIntegralErr2;
 
-
     TFile *ToyTreeFile = new TFile(Form("%s/Final/ToyMC/ToyFile_%d.root", dSaveDir.c_str(), tTime->GetDate() ), "RECREATE");
-    
     TTree *ToyTree = new TTree("ToyTree", "Tree with Toy Fit Results");
 
     ToyTree->Branch("Index", &dIndex, "Index/I");
@@ -2618,7 +2549,6 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
     ToyTree->Branch("Pull2", &dPull2, "Pull2/D");
     ToyTree->Branch("Toy2nbbHLErr2", &Toy2nbbHLErr2, "Toy2nbbHLErr2/D");
     ToyTree->Branch("Toy2nbbIntegralErr2", &Toy2nbbIntegralErr2, "Toy2nbbIntegralErr2/D");
-
 
     ToyTree->Branch("fAdapDataHistoM1", "TH1D", &fAdapDataHistoM1, 32000, 0);
     ToyTree->Branch("fAdapDataHistoM2", "TH1D", &fAdapDataHistoM2, 32000, 0);
@@ -2646,9 +2576,7 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
     cout << "Initial 2nbb Rate and Error: " << dInitial2nbbRate << " +/- " <<  dInitial2nbbRateErr << endl;
 
     TH1::AddDirectory(kFALSE);
-    // cout << "Number of Loops " << fNumFits << endl;
-    // Number of toy fits
-    
+        
     TFile *fToyDataTest;
 
     for(int i = fStart; i <= fStop; i++)
@@ -2680,9 +2608,9 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
       Toy2nbbIntegral = fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width");
       Toy2nbbIntegralErr = fParError[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width");
 
+      // Alternate calculation, used only for the high statistics
       Toy2nbbHLErr2 = fParError[0]/fParameters[0]*(fParEfficiencyM1[0]*(0.69314718056)*(4.93124196176940785e+25 * dLivetimeYr)/(fParameters[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")))/5000;
       Toy2nbbIntegralErr2 = fParError[0]*dDataIntegralM1*hAdapTeO22nuM1->Integral(1, fAdapDataHistoM1->FindBin(2700), "width")/5000;
-
 
       dPull = (Toy2nbbHL - dInitial2nbbRate)/(Toy2nbbHLErr);
       dPull2 = (fParameters[0] - dInitial2nbb)/(fParError[0]);
@@ -2691,7 +2619,6 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
       cout << "Toy Counts: " << Toy2nbbIntegral << " +/- " <<  Toy2nbbIntegralErr << endl;
       cout << "Toy Half-Life: " << Toy2nbbHL << " +/- " <<  Toy2nbbHLErr << endl;
       cout << "Pull1 : " << dPull << "\t Pull2:" << dPull2 << endl;
-
 
       ToyTree->Fill();
 
@@ -2702,7 +2629,6 @@ void TBackgroundModel::ToyFit(int fStart, int fStop)
     ToyTreeFile->cd();
     ToyTree->Write();
     ToyTreeFile->Close();
-
 }
 
 // Add-on to the Chi-Square, more terms
@@ -2782,7 +2708,6 @@ void TBackgroundModel::SetParEfficiency()
   fParEfficiencyM1[47] = 0.000398748;
   fParEfficiencyM1[48] = 0.000309365;
   fParEfficiencyM1[49] = 0.000338529;
-  // fParEfficiencyM1[50] = 0.000338529; // blah
 
   // In Kg
   fParMass[0] = 38.25;
@@ -2839,8 +2764,6 @@ void TBackgroundModel::SetParEfficiency()
   fParMass[47] = 24693984./1000;
   fParMass[48] = 24693984./1000;
   fParMass[49] = 24693984./1000;
-  // fParMass[50] = 24693984./1000;
-
 
   // Sets Priors (in Bq/Kg)
   fParPrior[0] = 0.;
@@ -2893,7 +2816,6 @@ void TBackgroundModel::SetParEfficiency()
   fParPrior[47] = 4.1E-4;
   fParPrior[48] = 0.;
   fParPrior[49] = 9.0E-3;
-
 }
 
 
@@ -3139,7 +3061,6 @@ void TBackgroundModel::CreateModelHistograms()
   hOVCth232M2     = new TH1D("hOVCth232M2",  "hOVCth232M2",  dNBins, dMinEnergy, dMaxEnergy);  
   hOVCu238M2      = new TH1D("hOVCu238M2",   "hOVCu238M2",   dNBins, dMinEnergy, dMaxEnergy);  
 
-
 ////////// External Shields
   hExtPbbi210M1 = new TH1D("hExtPbbi210M1", "hExtPbbi210M1", dNBins, dMinEnergy, dMaxEnergy);
   hExtPbk40M1 = new TH1D("hExtPbk40M1", "hExtPbk40M1", dNBins, dMinEnergy, dMaxEnergy);
@@ -3162,7 +3083,6 @@ void TBackgroundModel::CreateModelHistograms()
   hCuBox_th232spotM2 = new TH1D("hCuBox_th232spotM2", "hCuBox_th232spotM2", dNBins, dMinEnergy, dMaxEnergy);
   hCuBox_k40spotM2 = new TH1D("hCuBox_k40spotM2", "hCuBox_k40spotM2", dNBins, dMinEnergy, dMaxEnergy);
   hBotExtPb_k40spotM2 = new TH1D("hBotExtPb_k40spotM2", "hBotExtPb_k40spotM2", dNBins, dMinEnergy, dMaxEnergy);
-
 
 //////////////// Adaptive binned histograms
 ////////// Total Adaptive binning histograms
@@ -3211,7 +3131,6 @@ void TBackgroundModel::CreateModelHistograms()
   hAdapTeO2Sxu238M1_100      = new TH1D("hAdapTeO2Sxu238M1_100",   "TeO2 Sx u238 M1 100 #mum",   dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2Sxth232M1_100     = new TH1D("hAdapTeO2Sxth232M1_100",  "TeO2 Sx th232 M1 100 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2Sxpb210M1_100     = new TH1D("hAdapTeO2Sxpb210M1_100",  "TeO2 Sx pb210 M1 100 #mum",  dAdaptiveBinsM1, dAdaptiveArrayM1);
-
 
   hAdapTeO2th232onlyM1      = new TH1D("hAdapTeO2th232onlyM1",   "TeO2 Bulk th232 only M1",  dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapTeO2ra228pb208M1     = new TH1D("hAdapTeO2ra228pb208M1",  "TeO2 Bulk ra228-pb208 M1", dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -3429,7 +3348,6 @@ void TBackgroundModel::CreateModelHistograms()
   hAdapExtPbu238M2 = new TH1D("hAdapExtPbu238M2", "External Lead Bulk u238 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);  
   hAdapExtPbpb210M2 = new TH1D("hAdapExtPbpb210M2", "External Lead Bulk pb210 M2", dAdaptiveBinsM2, dAdaptiveArrayM2);
 
-
   hAdapExtMuonM1 = new TH1D("hAdapExtMuonM1", "hAdapExtMuonM1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapCuBox_th232spotM1 = new TH1D("hAdapCuBox_th232spotM1", "hAdapCuBox_th232spotM1", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hAdapCuBox_k40spotM1 = new TH1D("hAdapCuBox_k40spotM1", "hAdapCuBox_k40spotM1", dAdaptiveBinsM1, dAdaptiveArrayM1);
@@ -3442,6 +3360,5 @@ void TBackgroundModel::CreateModelHistograms()
 
   hChiSquaredProgressM1 = new TH1D("hChiSquaredProgressM1", "Chi Squared Progress", dAdaptiveBinsM1, dAdaptiveArrayM1);
   hChiSquaredProgressM2 = new TH1D("hChiSquaredProgressM2", "Chi Squared Progress", dAdaptiveBinsM2, dAdaptiveArrayM2);
-
-
 }
+

@@ -98,26 +98,42 @@ public:
 	// Loads CUORE-0 background data
 	void LoadData();
 
-	// Prints 
+	// Prints the parameter name, normalization, and err on normalization
 	void PrintParameters();
 
+	// Prints Parameter activity in units of Bq/kg
 	void PrintParActivity();
 
-	// Calculates ProfileNLL of parameter based off of its best fit value
+	// ProfileNLL of parameter based off of its best fit value
+	// Varies a fixed parameter around best fit value and writes fits to a ROOT file
 	void ProfileNLL(int fParFixed);
 
+	// Creates contour plot of 2nbb and fixed parameter value 
 	void ProfileNLL2D(int fParFixed);
 
+	// Resets all parameters to 0
+	// Resets model histograms (only total model histograms)
 	void ResetParameters();
 
+	// Adds additional percentage of 2nbb events
+	// Was used to check if fitter can evaluate additional 2nbb events without bias
 	void SanityCheck();
 
-	void SetParameters(int index, double value);
+	// Set parameter normalization
+	// Changed from SetParameters as it overlaps with TF1 to avoid confusion
+	void SetParValue(int index, double value);
 	
+	// Sets MC efficiency of each element, mass of each element, and prior (limit)
 	void SetParEfficiency();
 
+	// Used to calculate 90% C.L limit for a parameter
+	// Does the fit (gets best fit ChiSq), calculates change in ChiSq in limited parameter
+	//    by varying the parameter normalization (amount of varying depends on parameter and error)
+	// Outputs into a text file
 	void SetLimit(int fParFixed);
 
+	// Performs Toy fits and writes to a ROOT file
+	// Calculates change in ChiSq, Pull, etc
 	void ToyFit(int fStart, int fStop);
 
 	void UpdateModel();
@@ -1037,8 +1053,6 @@ private:
 	TH1D 			*hEfficiencyM2;
 
 	std::ofstream 		OutFile;
-	std::ofstream 	 	OutPNLL;
-	std::ofstream 		OutToy;
 
 	TTree 		*ProfileTree;
 	TTree 		*ToyTree;
