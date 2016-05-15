@@ -63,7 +63,7 @@ public:
 
 	// Takes in arguments: Minimum energy for fit (fFitMin), maximum energy for fit (fFitMax)
 	// base number of counts in each bin (fBinBase), Dataset (fDataset) -- only use 0, Save plots (fSave)
-	TBackgroundModel(double fFitMin, double fFitMax, int fBinBase, int fDataset, bool fSave);
+	TBackgroundModel(double fFitMin=500, double fFitMax=7000, int fBinBase, int fDataset, bool fSave);
 	virtual ~TBackgroundModel();
 
 	// Binning for M1 and M2 spectra are separated for tests
@@ -109,6 +109,7 @@ public:
 	void ProfileNLL(int fParFixed);
 
 	// Creates contour plot of 2nbb and fixed parameter value 
+	// The problem with this currently is sometimes the fit runs into a call limit and the function terminates
 	void ProfileNLL2D(int fParFixed);
 
 	// Resets all parameters to 0
@@ -200,8 +201,6 @@ private:
 	TH1D			*fAdapDataHistoM1;
 	TH1D			*fAdapDataHistoM2;
 
-
-	// Updated 01-20-2015
 	// Total PDFs M1
 	TH1D			*fModelTotM1;
 	TH1D			*fModelTotAdapM1;
@@ -1026,7 +1025,6 @@ private:
 	TH1			*hnewCuBox_k40spotM2;
 	TH1 		*hnewBotExtPb_k40spotM2;
 
-
 /////////// OVC M1 and M2
 	TH1			*hnewOVCco60M1;
 	TH1			*hnewOVCk40M1;
@@ -1066,7 +1064,6 @@ private:
 	TFile *fBulk_CDR;
 	TFile *fBulk_CDRInternal;
 
-	// TFile *fSaveResult;
 	TFile *fToyData;
 
 	std::string		dDataDir;
@@ -1091,15 +1088,14 @@ private:
 	double				fParCountsM1[50]; // Integral of events in M1 spectrum
 	double 				fParCountsM2[50];
 	double 				fParActivityM1[50]; // Integral of events in M1 spectrum
-	double 				fParActivityM2[50];
 	double 				fParActivityErr[50];
 	double 				fParMass[50]; // Mass of all elements
 	double 				fParSurfaceArea[50]; // Surface area of all elements
-	double				fResolution[52];
+	double				fResolution[52]; // Resolution of each channel, not used currently
 	double 				fParEfficiencyM1[50]; // Efficiency of the parameters 
 	double 				fParPrior[50];
 	double				dSecToYears;
-	double				fMCEff[62];
+	double				fMCEff[50];
 
  ClassDef(TBackgroundModel,1) // 
     };
