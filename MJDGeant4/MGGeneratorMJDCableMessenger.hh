@@ -21,9 +21,9 @@
 //bb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nu//
 //---------------------------------------------------------------------------//
 /**                                                            
- * $Id: MGGeneratorMJDCalibrationMessenger.hh,v 1.1 2014-14-07 08:45:48 pandola Exp $
+ * $Id: MGGeneratorMJDCableMessenger.hh,v 1.1 2014-14-07 08:45:48 pandola Exp $
  *      
- * CLASS DECLARATION:  MGGeneratorMJDCalibrationMessenger.hh
+ * CLASS DECLARATION:  MGGeneratorMJDCableMessenger.hh
  *
  *---------------------------------------------------------------------------//
  *
@@ -57,8 +57,8 @@
  */
 // --------------------------------------------------------------------------//
 
-#ifndef _MGGENERATORMJDCALMESSENGER_HH
-#define _MGGENERATORMJDCALMESSENGER_HH
+#ifndef _MGGENERATORMJDCABLEMESSENGER_HH
+#define _MGGENERATORMJDCABLEMESSENGER_HH
 
 //---------------------------------------------------------------------------//
 
@@ -72,18 +72,18 @@ class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
 class MGGeneratorMJDCalibration;
 
-class MGGeneratorMJDCalibrationMessenger : public G4UImessenger
+class MGGeneratorMJDCableMessenger : public G4UImessenger
 {
 public:
 
   //default constructor
-  MGGeneratorMJDCalibrationMessenger(MGGeneratorMJDCalibration *generator);
+  MGGeneratorMJDCableMessenger(MGGeneratorMJDCalibration *generator);
 
   //copy constructor
-  MGGeneratorMJDCalibrationMessenger(const MGGeneratorMJDCalibrationMessenger &);
+  MGGeneratorMJDCableMessenger(const MGGeneratorMJDCableMessenger &);
 
   //destructor
-  ~MGGeneratorMJDCalibrationMessenger();
+  ~MGGeneratorMJDCableMessenger();
 
   //public interface
 

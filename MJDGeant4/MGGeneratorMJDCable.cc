@@ -21,9 +21,9 @@
 //bb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nu//
 //---------------------------------------------------------------------------//
 //                                                          
-// $Id: MGGeneratorMJDCalibration.cc,v 1.4 2014-07-14 09:24:09 mgmarino Exp $ 
+// $Id: MGGeneratorMJDCable.cc,v 1.4 2014-07-14 09:24:09 mgmarino Exp $ 
 //      
-// CLASS IMPLEMENTATION:  MGGeneratorMJDCalibration.cc
+// CLASS IMPLEMENTATION:  MGGeneratorMJDCable.cc
 //
 //---------------------------------------------------------------------------//
 /**
@@ -62,33 +62,33 @@
 #include "G4UIcommand.hh"
 #include "G4UIcommandTree.hh"
 
-#include "generators/MGGeneratorMJDCalibration.hh"
-#include "generators/MGGeneratorMJDCalibrationMessenger.hh"
+#include "generators/MGGeneratorMJDCable.hh"
+#include "generators/MGGeneratorMJDCableMessenger.hh"
 #include "io/MGLogger.hh"
 
 //---------------------------------------------------------------------------//
 
-#include "generators/MGGeneratorMJDCalibration.hh" 
+#include "generators/MGGeneratorMJDCable.hh" 
 
 //---------------------------------------------------------------------------//
 
 using namespace CLHEP;
 
-MGGeneratorMJDCalibration::MGGeneratorMJDCalibration()
+MGGeneratorMJDCable::MGGeneratorMJDCable()
 {
   fGeneratorName = "MJDCalibration";
-  fG4Messenger = new MGGeneratorMJDCalibrationMessenger(this);
+  fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 }
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCalibration::MGGeneratorMJDCalibration(const MGGeneratorMJDCalibration & other) : MGVGenerator(other)
+MGGeneratorMJDCable::MGGeneratorMJDCable(const MGGeneratorMJDCable & other) : MGVGenerator(other)
 {;}
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCalibration::~MGGeneratorMJDCalibration()
+MGGeneratorMJDCable::~MGGeneratorMJDCable()
 {
   delete fG4Messenger;
   delete fParticleGun;
@@ -96,7 +96,7 @@ MGGeneratorMJDCalibration::~MGGeneratorMJDCalibration()
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibration::BeginOfRunAction(G4Run const*)
+void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
 {
   if(MGLogger::GetSeverity() <= MGLogger::routine)
     Dump();
@@ -104,7 +104,7 @@ void MGGeneratorMJDCalibration::BeginOfRunAction(G4Run const*)
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibration::Dump()
+void MGGeneratorMJDCable::Dump()
 {
   G4cout << "  MJD Calibration Source Parameters:" << G4endl;
   G4cout << "  -----------------------------------------" << G4endl;
@@ -119,7 +119,7 @@ void MGGeneratorMJDCalibration::Dump()
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibration::SetSourcePos(std::string sourcePos)
+void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
 {
   G4UIcommandTree* cmdTree =
     G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
@@ -197,12 +197,12 @@ void MGGeneratorMJDCalibration::SetSourcePos(std::string sourcePos)
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibration::EndOfRunAction(G4Run const*)
+void MGGeneratorMJDCable::EndOfRunAction(G4Run const*)
 {;}
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibration::GeneratePrimaryVertex(G4Event *event)
+void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 {
   G4IonTable *theIonTable =
     (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());

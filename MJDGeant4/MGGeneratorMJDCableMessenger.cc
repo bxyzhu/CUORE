@@ -21,9 +21,9 @@
 //bb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nu//
 //---------------------------------------------------------------------------//
 //                                                          
-// $Id: MGGeneratorMJDCalibrationMessenger.cc,v 1.2 2007-02-21 09:31:33 mgmarino Exp $ 
+// $Id: MGGeneratorMJDCableMessenger.cc,v 1.2 2007-02-21 09:31:33 mgmarino Exp $ 
 //      
-// CLASS IMPLEMENTATION:  MGGeneratorMJDCalibrationMessenger.cc
+// CLASS IMPLEMENTATION:  MGGeneratorMJDCableMessenger.cc
 //
 //---------------------------------------------------------------------------//
 /**
@@ -53,15 +53,15 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4UIdirectory.hh"
 
-#include "generators/MGGeneratorMJDCalibration.hh"
+#include "generators/MGGeneratorMJDCable.hh"
 
 //---------------------------------------------------------------------------//
 
-#include "generators/MGGeneratorMJDCalibrationMessenger.hh"
+#include "generators/MGGeneratorMJDCableMessenger.hh"
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCalibrationMessenger::MGGeneratorMJDCalibrationMessenger(MGGeneratorMJDCalibration *generator) : fMJDCalibrationGenerator(generator)
+MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *generator) : fMJDCalibrationGenerator(generator)
 {
   // /MG/generator/MJDCalibration
   fMJDCalibrationDirectory = new G4UIdirectory("/MG/generator/MJDCalibration/");
@@ -94,12 +94,12 @@ MGGeneratorMJDCalibrationMessenger::MGGeneratorMJDCalibrationMessenger(MGGenerat
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCalibrationMessenger::MGGeneratorMJDCalibrationMessenger(const MGGeneratorMJDCalibrationMessenger & other) : G4UImessenger(other)
+MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(const MGGeneratorMJDCableMessenger & other) : G4UImessenger(other)
 {;}
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCalibrationMessenger::~MGGeneratorMJDCalibrationMessenger()
+MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 {
   delete fACmd;
   delete fZCmd;
@@ -109,7 +109,7 @@ MGGeneratorMJDCalibrationMessenger::~MGGeneratorMJDCalibrationMessenger()
 
 //---------------------------------------------------------------------------//
 
-G4String MGGeneratorMJDCalibrationMessenger::GetCurrentValue(G4UIcommand *cmd)
+G4String MGGeneratorMJDCableMessenger::GetCurrentValue(G4UIcommand *cmd)
 {
   G4String cv = " ";
   if(cmd == fDumpCmd)
@@ -120,7 +120,7 @@ G4String MGGeneratorMJDCalibrationMessenger::GetCurrentValue(G4UIcommand *cmd)
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCalibrationMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
+void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
 {
   if(cmd == fZCmd)
     fMJDCalibrationGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));

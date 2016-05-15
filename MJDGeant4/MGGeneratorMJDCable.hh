@@ -21,9 +21,9 @@
 //bb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nubb0nu//
 //---------------------------------------------------------------------------//
 /**                                                            
- * $Id: MGGeneratorMJDCalibration.hh, $
+ * $Id: MGGeneratorMJDCable.hh, $
  *      
- * CLASS DECLARATION:  MGGeneratorMJDCalibration.hh
+ * CLASS DECLARATION:  MGGeneratorMJDCable.hh
  *
  *---------------------------------------------------------------------------//
  *
@@ -64,8 +64,8 @@
  */
 // --------------------------------------------------------------------------//
 
-#ifndef _MGGENERATORMJDCAL_HH
-#define _MGGENERATORMJDCAL_HH
+#ifndef _MGGENERATORMJDCABLE_HH
+#define _MGGENERATORMJDCABLE_HH
 
 //---------------------------------------------------------------------------//
 
@@ -81,18 +81,18 @@ class G4Messenger;
 class G4ParticleGun;
 class G4Run;
 
-class MGGeneratorMJDCalibration : public MGVGenerator
+class MGGeneratorMJDCable : public MGVGenerator
 {
 public:
 
   //default constructor
-  MGGeneratorMJDCalibration();
+  MGGeneratorMJDCable();
 
   //copy constructor
-  MGGeneratorMJDCalibration(const MGGeneratorMJDCalibration &);
+  MGGeneratorMJDCable(const MGGeneratorMJDCable &);
 
   //destructor
-  ~MGGeneratorMJDCalibration();
+  ~MGGeneratorMJDCable();
 
   //public interface
   void BeginOfEventAction(G4Event *event);
