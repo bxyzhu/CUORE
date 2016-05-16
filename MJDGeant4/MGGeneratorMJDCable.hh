@@ -97,7 +97,6 @@ public:
   //public interface
   void BeginOfEventAction(G4Event *event);
   void BeginOfRunAction(G4Run const *run);
-  void Dump();
   void EndOfRunAction(G4Run const *run);
   void GeneratePrimaryVertex(G4Event *event);
 

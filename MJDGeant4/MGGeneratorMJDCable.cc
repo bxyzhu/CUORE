@@ -97,25 +97,7 @@ MGGeneratorMJDCable::~MGGeneratorMJDCable()
 //---------------------------------------------------------------------------//
 
 void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
-{
-  if(MGLogger::GetSeverity() <= MGLogger::routine)
-    Dump();
-}  
-
-//---------------------------------------------------------------------------//
-
-void MGGeneratorMJDCable::Dump()
-{
-  G4cout << "  MJD Calibration Source Parameters:" << G4endl;
-  G4cout << "  -----------------------------------------" << G4endl;
-  G4cout << "  Helix Angle (degrees): " << fHelixAngle/deg << G4endl;
-  G4cout << "  Start Angle (degrees): " << fStartAngle/deg << G4endl;
-  G4cout << "  Delta Angle (degrees: " << fTotalAngle/deg << G4endl;
-  G4cout << "  Source Track Radius (cm): " << fHelixRadius/cm << G4endl;
-  G4cout << "  Ion Z: " << fZ << G4endl;
-  G4cout << "  Ion A: " << fA << G4endl;
-  G4cout << "-------------------------------------------" << G4endl << G4endl;
-}
+{;}  
 
 //---------------------------------------------------------------------------//
 
