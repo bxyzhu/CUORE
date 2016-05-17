@@ -76,7 +76,7 @@ using namespace CLHEP;
 
 MGGeneratorMJDCable::MGGeneratorMJDCable()
 {
-  fGeneratorName = "MJDCalibration";
+  fGeneratorName = "MJDCable";
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 }
@@ -101,106 +101,28 @@ void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
-{
-  G4UIcommandTree* cmdTree =
-    G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
-  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocalsource"+sourcePos+"/"));
-  for(int i=0; i<cmdTree->GetCommandEntry(); i++){
-    if(cmdTree->GetCommand(i+1)->GetParameterEntries() == 0)
-      continue;
-    std::string val =
-      cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
-    std::string param =
-      cmdTree->GetCommand(i+1)->GetCommandName();
-    if(param == "helixRadius")
-      std::stringstream(val) >> fHelixRadius;
-    else if(param == "startAngle")
-      std::stringstream(val) >> fStartAngle;
-    else if(param == "totalAngle")
-      std::stringstream(val) >> fTotalAngle;
-    else if(param == "helixAngle")
-      std::stringstream(val) >> fHelixAngle;
-  }
-  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
-  cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
-  for(int i=0; i<cmdTree->GetCommandEntry(); i++){
-    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
-    if(param == "cryo1Pos" || param == "cryo2Pos"){
-      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
-      G4double x, y, z;
-      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
-      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
-      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      if(param == "cryo1Pos" && sourcePos == "W")
-	fOrigin = G4ThreeVector(x, y, z);
-      else if(param == "cryo2Pos" && sourcePos == "E")
-	fOrigin = G4ThreeVector(x, y, z);
-    }
-    else if(param == "cryo1Rot" && sourcePos == "W"){
-      std::string val =
-	cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
-      std::stringstream(val) >> fZrotation;
-    }
-    else if(param == "cryo2Rot" && sourcePos == "E"){
-      std::string val =
-	cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
-      std::stringstream(val) >> fZrotation;
-    }
-  }
-  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
-  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocryoassembly"+sourcePos+"/"));
-  for(int i=0; i<cmdTree->GetCommandEntry(); i++){
-    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
-    if(param == "calAssemblyPos"){
-      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
-      G4double x, y, z;
-      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
-      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
-      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fOrigin += G4ThreeVector(x, y, z);
-    }
-  }
-  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
-  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocalassembly"+sourcePos+"/"));
-  for(int i=0; i<cmdTree->GetCommandEntry(); i++){
-    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
-    if(param == "sourceOffset"){
-      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
-      G4double x, y, z;
-      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
-      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
-      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fOrigin += G4ThreeVector(x, y, z);
-    }
-  }
-  fZrotation *= -1;
-}
+void MGGeneratorMJDCable::EndOfRunAction(G4Run const*)
+{;}
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCable::EndOfRunAction(G4Run const*)
+void MGGeneratorMJDCable::SetCableDimensions()
 {;}
 
 //---------------------------------------------------------------------------//
 
 void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 {
-  G4IonTable *theIonTable =
-    (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
+  G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
+
   fParticleGun->SetParticleDefinition(aIon);
   fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
   fParticleGun->SetParticleEnergy(0.0);
-  fCurrentAngle = G4RandFlat::shoot(fStartAngle, fStartAngle + fTotalAngle);
-  G4double tempZ =
-    fHelixRadius * tan(fHelixAngle) * (fCurrentAngle - fStartAngle);
-  fCurrentAngle += fZrotation;
-  fCurrentPosition.set(fHelixRadius * cos(fCurrentAngle),
-		       fHelixRadius * sin(fCurrentAngle),
-		       -tempZ);
-  fCurrentPosition += fOrigin;
-  fParticleGun->SetParticlePosition(fCurrentPosition);
+
+  fPosition =  fStringCenter[i] + fStringOffset[j] + (1. - 2.*G4UniformRand())*fCableLength;  
+
+  fParticleGun->SetParticlePosition(fPosition);
   fParticleGun->GeneratePrimaryVertex(event);
 }
   

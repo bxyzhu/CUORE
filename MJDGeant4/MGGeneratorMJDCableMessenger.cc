@@ -61,35 +61,28 @@
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *generator) : fMJDCalibrationGenerator(generator)
+MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *generator) : fMJDCableGenerator(generator)
 {
-  // /MG/generator/MJDCalibration
-  fMJDCalibrationDirectory = new G4UIdirectory("/MG/generator/MJDCalibration/");
-  fMJDCalibrationDirectory->SetGuidance("MJD Calibration track generator control.");
+  // /MG/generator/MJDCable
+  fMJDCableDirectory = new G4UIdirectory("/MG/generator/MJDCable/");
+  fMJDCableDirectory->SetGuidance("MJD Cable generator");
 
-  // MG/generator/MJDCalibration/dump
-  fDumpCmd = new G4UIcmdWithoutParameter("/MG/generator/MJDCalibration/dump", this);
-  fDumpCmd->SetGuidance("Dump parameters of generator to screen");
+  // MG/generator/MJDCable/dump
+  // fDumpCmd = new G4UIcmdWithoutParameter("/MG/generator/MJDCable/dump", this);
+  // fDumpCmd->SetGuidance("Dump parameters of generator to screen");
 
-  // /MG/generator/MJDCalibration/setZ
-  fZCmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCalibration/setZ", this);
+  // /MG/generator/MJDCable/setZ
+  fZCmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setZ", this);
   fZCmd->SetGuidance("The Z value of the ion");
   generator->SetIonZ(90);
   fZCmd->SetDefaultValue(generator->GetIonZ());
   
-  // /MG/generator/MJDCalibration/setA
-  fACmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCalibration/setA", this);
+  // /MG/generator/MJDCable/setA
+  fACmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setA", this);
   fACmd->SetGuidance("The A value of the ion");
   generator->SetIonA(228);
   fACmd->SetDefaultValue(generator->GetIonZ());
   
-  // /MG/generator/MJDCalibration/setSourcePos
-  fSourcePosCmd =
-    new G4UIcmdWithAString("/MG/generator/MJDCalibration/setSourcePos", this);
-  fSourcePosCmd->SetGuidance("West or East cryostat position.");
-  fSourcePosCmd->SetCandidates("W E");
-  fSourcePosCmd->SetDefaultValue("W");
-  fMJDCalibrationGenerator->SetSourcePos("W");
 }
 
 //---------------------------------------------------------------------------//
@@ -104,7 +97,7 @@ MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
   delete fACmd;
   delete fZCmd;
   delete fDumpCmd;
-  delete fMJDCalibrationDirectory;
+  delete fMJDCableDirectory;
 }
 
 //---------------------------------------------------------------------------//
@@ -113,7 +106,7 @@ G4String MGGeneratorMJDCableMessenger::GetCurrentValue(G4UIcommand *cmd)
 {
   G4String cv = " ";
   if(cmd == fDumpCmd)
-    fMJDCalibrationGenerator->Dump();
+    fMJDCableGenerator->Dump();
 
   return cv;
 }
@@ -123,11 +116,11 @@ G4String MGGeneratorMJDCableMessenger::GetCurrentValue(G4UIcommand *cmd)
 void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
 {
   if(cmd == fZCmd)
-    fMJDCalibrationGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
+    fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
   else if(cmd == fACmd)
-    fMJDCalibrationGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
+    fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
   else if(cmd == fSourcePosCmd)
-    fMJDCalibrationGenerator->SetSourcePos(newValues);
+    fMJDCableGenerator->SetSourcePos(newValues);
 }
 
 //---------------------------------------------------------------------------//

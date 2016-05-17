@@ -100,19 +100,26 @@ public:
   void EndOfRunAction(G4Run const *run);
   void GeneratePrimaryVertex(G4Event *event);
 
-  G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
+  // G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
   
   //This method is not used but it is necessary 
   //because it is purely virtual in MGVGenerator
   void SetParticlePosition(G4ThreeVector) {;}
 
-  void SetOrigin(G4ThreeVector origin){fOrigin = origin;}
-  void SetZrotation(G4double zrotation){fZrotation = zrotation;}
+  // sets dimensions of cables
+  void SetCableDimensions();
+
   void SetIonZ(G4int z) {fZ = z;}
   void SetIonA(G4int a) {fA = a;}
   G4double GetIonZ() const {return fZ;}
   G4double GetIonA() const {return fA;}
-  void SetSourcePos(std::string sourcePos);
+
+  // Single particle
+  void SetParticle(G4int i) {fI = i};
+  
+  // Ion
+  void SetParticle(G4int z, G4int a) {fZ = z, fA = a;};
+
   
   //protected members
 protected:
@@ -121,17 +128,18 @@ protected:
 private:
   G4ParticleGun *fParticleGun;
 
-  G4double fCurrentAngle;
-  G4ThreeVector fCurrentPosition; // Current position of particle 
-                                  // generated.
-  G4ThreeVector fOrigin;          // Beam origin. Particles will be 
-                                  // distributed around this point.
-  G4double fZrotation;   // rotation about the z axis for the source
-  G4double fHelixRadius; // radius of the calibration source
-  G4double fHelixAngle;  // angle of the helical incline
-  G4double fStartAngle;  // start angle of the helical generator
-  G4double fTotalAngle;  // angle subtended by helix
+  // Particle types
+  G4int fI;
   G4int fZ;
   G4int fA;
+
+  // Type of source? Should be radioactive probably, maybe just leave the A and Z settings?
+  // To generate a line, find center point and half-length
+  G4ThreeVector fPosition; // position of particle generated
+
+  G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
+  G4double fStringOffset[14]; // offset of cable position from string center
+  G4double fCableLength; // cable length
+
 };
 #endif
