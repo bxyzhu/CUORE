@@ -107,7 +107,7 @@ public:
   void SetParticlePosition(G4ThreeVector) {;}
 
   // sets dimensions of cables
-  void SetCableDimensions();
+  void SetCableOffset();
 
   void SetIonZ(G4int z) {fZ = z;}
   void SetIonA(G4int a) {fA = a;}
@@ -136,10 +136,14 @@ private:
   // Type of source? Should be radioactive probably, maybe just leave the A and Z settings?
   // To generate a line, find center point and half-length
   G4ThreeVector fPosition; // position of particle generated
+  G4double fPositionZ; // z position of particle generated
 
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
-  G4double fStringOffset[14]; // offset of cable position from string center
-  G4double fCableLength; // cable length
+  G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate
+  // G4double fStringOffset[14]; // offset of cable position from string center
+  G4double fCableLength[2]; // Cable half length, one side for signal and the other for HV
+  G4double fCableCenter[2]; // Centers of cables, one side for signal and the other for HV
+  G4ThreeVector fColdPlateOffset[2]; // offset of cold plate to origin in world. 0 for Module 1, 1 for Module 2
 
 };
 #endif
