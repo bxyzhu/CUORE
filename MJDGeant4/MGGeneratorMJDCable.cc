@@ -66,11 +66,15 @@
 #include "generators/MGGeneratorMJDCableMessenger.hh"
 #include "io/MGLogger.hh"
 
+#include <math.h>
+#define pi 3.14159265358979323846
+
 //---------------------------------------------------------------------------//
 
 #include "generators/MGGeneratorMJDCable.hh" 
 
 //---------------------------------------------------------------------------//
+
 
 using namespace CLHEP;
 
@@ -144,10 +148,17 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 
   // This chooses a random cable and generates a random point along the cable (cables are infinitely thin here)
   fPositionZ =  (1. - 2.*G4UniformRand())*fCableLength[i];
-  fPosition = fColdPlateOffset[i] + fCableOffset[i] + {0., 0., fPositionZ};
   
+  // Choose a random XY point along a disk
+  fPositionX = sqrt( fCableRadius*G4UniformRand() ) * cos( 2*pi*G4UniformRand() );
+  fPositionY = sqrt( fCableRadius*G4UniformRand() ) * sin( 2*pi*G4UniformRand() );
+
+  // Set position
+  fPosition = fColdPlateOffset[i] + fCableOffset[i] + {fPositionX, fPositionY, fPositionZ};
+
   fParticleGun->SetParticlePosition(fPosition);
   fParticleGun->GeneratePrimaryVertex(event);
+
 }
 
 

@@ -106,8 +106,8 @@ public:
   //because it is purely virtual in MGVGenerator
   void SetParticlePosition(G4ThreeVector) {;}
 
-  // sets dimensions of cables
-  void SetCableOffset();
+  // Sets dimensions of cables
+  // void SetCableOffset();
 
   void SetIonZ(G4int z) {fZ = z;}
   void SetIonA(G4int a) {fA = a;}
@@ -119,7 +119,6 @@ public:
   
   // Ion
   void SetParticle(G4int z, G4int a) {fZ = z, fA = a;};
-
   
   //protected members
 protected:
@@ -136,8 +135,13 @@ private:
   // Type of source? Should be radioactive probably, maybe just leave the A and Z settings?
   // To generate a line, find center point and half-length
   G4ThreeVector fPosition; // position of particle generated
-  G4double fPositionZ; // z position of particle generated
+  
+  G4double fPositionX;
+  G4double fPositionY;
+  G4double fPositionZ; // Z position of particle generated
 
+  G4double fCableRadius; // radius of cable
+  
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
   G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate
   // G4double fStringOffset[14]; // offset of cable position from string center
