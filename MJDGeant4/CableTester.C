@@ -49,11 +49,12 @@ void CableTester()
   double fCableRadius = 0.05; // Just a placeholder so far
   double fCablePosition[4]; // Position o
   
-  double fCableCenter[4] = {-(8.952+1.514)/2,-(8.952+1.514)/2,-(8.952+1.514)/2,-(8.952+1.514)/2}; // Centers of signal cables
-  double fHVCenter[4] = {-(8.952+1.514)/2,-(8.952+1.514)/2,-(8.952+1.514)/2,-(8.952+1.514)/2}; // Centers of HV cables, assuming the same as signal for now
+  // These aren't good so far...
+  double fCableCenter[4] = {-9.0/2,-9.0/2,-9.0/2,-9.0/2}; // Centers of signal cables
+  double fHVCenter[4] = {-9.0/2,-9.0/2,-9.0/2,-9.0/2}; // Centers of HV cables, assuming the same as signal for now
   
-  // double fCableLength[4] = {}; // half length of cable... isn't this the same as the center?
-  // double fHVLength[4] = {};
+  double fCableLength[4] = {9.0/2, 9.0/2, 9.0/2, 9.0/2}; // half length of cable... isn't this the same as the center?
+  double fHVLength[4] = {9.0/2, 9.0/2, 9.0/2, 9.0/2};
 
 
   TRandom3 *fRand = new TRandom3(0);
@@ -91,7 +92,7 @@ void CableTester()
   TH3D *hTest = new TH3D("hTest", "hTest", 200, -15, 10, 200, -20, 20, 200, -10, 10); 
   TH2D *hTestXY = new TH2D("hTestXY", "hTestXY", 1000, -15, 10, 1000, -20, 20);
   TH2D *hTestXZ = new TH2D("hTestXZ", "hTestXZ", 1000, -15, 10, 200, -10, 10);
-  TH2D *hTestYZ = new TH2D("hTestYZ", "hTestYZ", 1000, -15, 10, 200, -10, 10);
+  TH2D *hTestYZ = new TH2D("hTestYZ", "hTestYZ", 1000, -15, 15, 200, -10, 10);
 
   TH1D *hTestX = new TH1D("hTestX", "hTestX", 1000, -15, 10);
   TH1D *hTestY = new TH1D("hTestY", "hTestY", 1000, -20, 20);
@@ -116,8 +117,10 @@ void CableTester()
   	// Choose a random XY point along a disk
   	fPositionX = TMath::Sqrt( randRadius ) * TMath::Cos( randAngle ) + fCableOffset[j](0);
   	fPositionY = TMath::Sqrt( randRadius ) * TMath::Sin( randAngle ) + fCableOffset[j](1);
-	fPositionZ =  (1. - 2.*fRand->Rndm())*fCableOffset[j](2);
+	
+	fPositionZ =  (1. - 2.*fRand->Rndm())*fCableLength[0] + fCableOffset[j](2);
   	
+
   	hTest->Fill(fPositionX, fPositionY, fPositionZ);
   	hTestXY->Fill(fPositionX, fPositionY);
   	hTestXZ->Fill(fPositionX, fPositionZ);
@@ -132,7 +135,7 @@ void CableTester()
   hTest->GetXaxis()->SetTitle("X");
   hTest->GetYaxis()->SetTitle("Y");
   hTest->GetZaxis()->SetTitle("Z");
-  hTest->Draw();
+  hTest->Draw("colz");
 
 
   TCanvas *cTestXY = new TCanvas("cTestXY", "cTestXY", 1200, 800);

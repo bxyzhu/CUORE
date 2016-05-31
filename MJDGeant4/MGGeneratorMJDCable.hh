@@ -139,6 +139,10 @@ private:
   G4double fPositionY;
   G4double fPositionZ; // Z position of particle generated
 
+  G4double fRandRadiusSq;
+  G4double fRandAngle;
+  G4double fRandInt; // Random integer to choose string position
+
   G4int fRandomString; // Random integer from 1 to X strings
   G4double fCableRadius; // Radius of a bundle of cables
   

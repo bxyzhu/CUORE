@@ -89,24 +89,24 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fColdPlateOffset[1] = {};
 
   // Offsets are listed with signal before HV (signal is left of string)
-  // Units are in inches?
-  fCableOffset[0] = {2.54*1.839, 2.54*0.560, fCableCenter[0]}; // P1
-  fCableOffset[1] = {2.54*1.839, -2.54*0.560, fHVCenter[0]};  
+  // Units are converted to cm
+  fCableOffset[0] = {-2.54*1.839, 2.54*0.560, fCableCenter[0]}; // P1
+  fCableOffset[1] = {-2.54*1.839, -2.54*0.560, fHVCenter[0]};  
 
   fCableOffset[2] = {2.54*3.453, 2.54*3.846, fCableCenter[0]}; // P2
   fCableOffset[3] = {2.54*2.350, 2.54*3.620, fHVCenter[0]};
 
-  fCableOffset[4] = {2.54*0.089, 2.54*5.576, fCableCenter[0]}; // P3
-  fCableOffset[5] = {2.54*1.186, 2.54*5.350, fHVCenter[0]};
+  fCableOffset[4] = {-2.54*0.089, 2.54*5.576, fCableCenter[0]}; // P3
+  fCableOffset[5] = {-2.54*1.186, 2.54*5.350, fHVCenter[0]};
 
-  fCableOffset[6] = {2.54*3.356, 2.54*3.846, fCableCenter[0]}; // P4
-  fCableOffset[7] = {2.54*4.387, 2.54*3.408, fHVCenter[0]};
+  fCableOffset[6] = {-2.54*3.356, 2.54*3.846, fCableCenter[0]}; // P4
+  fCableOffset[7] = {-2.54*4.387, 2.54*3.408, fHVCenter[0]};
 
-  fCableOffset[8] = {2.54*4.387, -2.54*3.408, fCableCenter[0]}; // P5
-  fCableOffset[9] = {2.54*3.356, -2.54*3.846, fHVCenter[0]};
+  fCableOffset[8] = {-2.54*4.387, -2.54*3.408, fCableCenter[0]}; // P5
+  fCableOffset[9] = {-2.54*3.356, -2.54*3.846, fHVCenter[0]};
 
-  fCableOffset[10] = {2.54*1.186, -2.54*5.350, fCableCenter[0]}; // P6
-  fCableOffset[11] = {2.54*0.089, -2.54*5.576, fHVCenter[0]};
+  fCableOffset[10] = {-2.54*1.186, -2.54*5.350, fCableCenter[0]}; // P6
+  fCableOffset[11] = {-2.54*0.089, -2.54*5.576, fHVCenter[0]};
 
   fCableOffset[12] = {2.54*2.350, -2.54*3.620, fCableCenter[0]}; // P7
   fCableOffset[13] = {2.54*3.453, -2.54*3.846, fHVCenter[0]};
@@ -147,15 +147,20 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
   fParticleGun->SetParticleEnergy(0.0);
 
-  // This chooses a random cable and generates a random point along the cable (cables are infinitely thin here)
-  fPositionZ =  (1. - 2.*G4UniformRand())*fCableLength[i];
+  // 
+  fRandInt = 0;
+  fRandRadiusSq = fCableRadius*fCableRadius*G4UniformRand();
+  fRandAngle = 2*pi*G4UniformRand();
   
   // Choose a random XY point along a disk
-  fPositionX = sqrt( fCableRadius*G4UniformRand() ) * cos( 2*pi*G4UniformRand() );
-  fPositionY = sqrt( fCableRadius*G4UniformRand() ) * sin( 2*pi*G4UniformRand() );
+  fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
+  fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
+  
+  // This chooses a random cable and generates a random point along the cable
+  fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandInt];
 
   // Set position
-  fPosition = fColdPlateOffset[i] + fCableOffset[i] + {fPositionX, fPositionY, fPositionZ};
+  fPosition = fColdPlateOffset[0] + fCableOffset[fRandInt] + {fPositionX, fPositionY, fPositionZ};
 
   fParticleGun->SetParticlePosition(fPosition);
   fParticleGun->GeneratePrimaryVertex(event);
