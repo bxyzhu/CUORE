@@ -143,8 +143,10 @@ private:
   G4double fCableRadius; // Radius of a bundle of cables
   
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
-  G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate
+  G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate, even is signal and odd is HV
+  
   // G4double fStringOffset[14]; // offset of cable position from string center
+  
   G4double fCableLength[4]; // Half length of signal cable, one for each detector
   G4double fCableCenter[4]; // Centers of signal cables, one for each detector
   G4double fHVLength[4]; // Half length of HV cable, one for each detector

@@ -91,25 +91,25 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   // Offsets are listed with signal before HV (signal is left of string)
   // Units are in inches?
   fCableOffset[0] = {2.54*1.839, 2.54*0.560, fCableCenter[0]}; // P1
-  fCableOffset[1] = {2.54*1.839, -2.54*0.560, fCableCenter[1]};  
+  fCableOffset[1] = {2.54*1.839, -2.54*0.560, fHVCenter[0]};  
 
   fCableOffset[2] = {2.54*3.453, 2.54*3.846, fCableCenter[0]}; // P2
-  fCableOffset[3] = {2.54*2.350, 2.54*3.620, fCableCenter[1]};
+  fCableOffset[3] = {2.54*2.350, 2.54*3.620, fHVCenter[0]};
 
-  fCableOffset[4] = {2.54*0.089, 2.54*5.576, fCableCenter[0]}; // P2
-  fCableOffset[5] = {2.54*1.186, 2.54*5.350, fCableCenter[1]};
+  fCableOffset[4] = {2.54*0.089, 2.54*5.576, fCableCenter[0]}; // P3
+  fCableOffset[5] = {2.54*1.186, 2.54*5.350, fHVCenter[0]};
 
   fCableOffset[6] = {2.54*3.356, 2.54*3.846, fCableCenter[0]}; // P4
-  fCableOffset[7] = {2.54*4.387, 2.54*3.408, fCableCenter[1]};
+  fCableOffset[7] = {2.54*4.387, 2.54*3.408, fHVCenter[0]};
 
   fCableOffset[8] = {2.54*4.387, -2.54*3.408, fCableCenter[0]}; // P5
-  fCableOffset[9] = {2.54*3.356, -2.54*3.846, fCableCenter[1]};
+  fCableOffset[9] = {2.54*3.356, -2.54*3.846, fHVCenter[0]};
 
   fCableOffset[10] = {2.54*1.186, -2.54*5.350, fCableCenter[0]}; // P6
-  fCableOffset[11] = {2.54*0.089, -2.54*5.576, fCableCenter[1]};
+  fCableOffset[11] = {2.54*0.089, -2.54*5.576, fHVCenter[0]};
 
   fCableOffset[12] = {2.54*2.350, -2.54*3.620, fCableCenter[0]}; // P7
-  fCableOffset[13] = {2.54*3.453, -2.54*3.846, fCableCenter[1]};
+  fCableOffset[13] = {2.54*3.453, -2.54*3.846, fHVCenter[0]};
 
 }
 
