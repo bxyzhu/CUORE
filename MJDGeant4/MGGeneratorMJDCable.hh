@@ -135,18 +135,21 @@ private:
   // Type of source? Should be radioactive probably, maybe just leave the A and Z settings?
   // To generate a line, find center point and half-length
   G4ThreeVector fPosition; // position of particle generated
-  
   G4double fPositionX;
   G4double fPositionY;
   G4double fPositionZ; // Z position of particle generated
 
-  G4double fCableRadius; // radius of cable
+  G4int fRandomString; // Random integer from 1 to X strings
+  G4double fCableRadius; // Radius of a bundle of cables
   
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
   G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate
   // G4double fStringOffset[14]; // offset of cable position from string center
-  G4double fCableLength[2]; // Cable half length, one side for signal and the other for HV
-  G4double fCableCenter[2]; // Centers of cables, one side for signal and the other for HV
+  G4double fCableLength[4]; // Half length of signal cable, one for each detector
+  G4double fCableCenter[4]; // Centers of signal cables, one for each detector
+  G4double fHVLength[4]; // Half length of HV cable, one for each detector
+  G4double fHVCenter[4]; // Centers of HV cables, one for each detector
+  
   G4ThreeVector fColdPlateOffset[2]; // offset of cold plate to origin in world. 0 for Module 1, 1 for Module 2
 
 };
