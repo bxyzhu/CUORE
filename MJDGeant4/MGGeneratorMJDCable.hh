@@ -141,13 +141,13 @@ private:
 
   G4double fRandRadiusSq;
   G4double fRandAngle;
-  G4double fRandInt; // Random integer to choose string position
+  G4int fRandString; // Random integer to choose string position
+  G4int fRandPos; // Random integer to choose cable position
 
-  G4int fRandomString; // Random integer from 1 to X strings
   G4double fCableRadius; // Radius of a bundle of cables
   
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
-  G4ThreeVector fCableOffset[14]; // XYZ location of cables wrt center of cold plate, even is signal and odd is HV
+  G4ThreeVector fCableOffset[14]; // XY location of cables wrt center of cold plate, even is signal and odd is HV
   
   // G4double fStringOffset[14]; // offset of cable position from string center
   

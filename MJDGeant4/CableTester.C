@@ -155,8 +155,8 @@ void CableTester()
   for(int i = 0; i < 10000000; i++)
   {
 	// Choose random integer for cable
-  	k = fRand->Integer(14);
-  	j = fRand->Integer(4);
+  	k = fRand->Integer(14); // random string position
+  	j = fRand->Integer(4); // random cable position
 
   	randRadius = fCableRadius*fCableRadius*fRand->Rndm();
   	randAngle = 2*TMath::Pi()*fRand->Rndm();
