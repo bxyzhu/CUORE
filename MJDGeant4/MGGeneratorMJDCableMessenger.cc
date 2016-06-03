@@ -96,7 +96,6 @@ MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 {
   delete fACmd;
   delete fZCmd;
-  delete fDumpCmd;
   delete fMJDCableDirectory;
 }
 
@@ -113,15 +112,15 @@ MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 
 //---------------------------------------------------------------------------//
 
-void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
-{
-  if(cmd == fZCmd)
-    fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
-  else if(cmd == fACmd)
-    fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
-  else if(cmd == fSourcePosCmd)
-    fMJDCableGenerator->SetSourcePos(newValues);
-}
+// void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
+// {
+//   if(cmd == fZCmd)
+//     fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
+//   else if(cmd == fACmd)
+//     fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
+//   else if(cmd == fSourcePosCmd)
+//     fMJDCableGenerator->SetSourcePos(newValues);
+// }
 
 //---------------------------------------------------------------------------//
 //---------------------------------------------------------------------------//

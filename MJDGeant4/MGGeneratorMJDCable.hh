@@ -151,8 +151,8 @@ private:
   
   // G4double fStringOffset[14]; // offset of cable position from string center
   
-  G4double fCableLength[4]; // Half length of signal cable, one for each detector
-  G4double fCableCenter[4]; // Centers of signal cables, one for each detector
+  G4double fCableLength[4] = {0.,0.,0.,0.}; // Half length of signal cable, one for each detector
+  G4double fCableCenter[4] = {2.54*10.0/2*cm, 2.54*8.0/2*cm, 2.54*5.0/2*cm, 2.54*2.5/2*cm}; // Centers of signal cables, one for each detector
   G4double fHVLength[4]; // Half length of HV cable, one for each detector
   G4double fHVCenter[4]; // Centers of HV cables, one for each detector
   

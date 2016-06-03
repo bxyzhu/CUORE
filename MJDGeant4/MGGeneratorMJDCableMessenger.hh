@@ -66,14 +66,14 @@ class G4UIdirectory;
 class G4UIcmdWithoutParameter;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
-class MGGeneratorMJDCalibration;
+class MGGeneratorMJDCable;
 
 class MGGeneratorMJDCableMessenger : public G4UImessenger
 {
 public:
 
   //default constructor
-  MGGeneratorMJDCableMessenger(MGGeneratorMJDCalibration *generator);
+  MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *generator);
 
   //copy constructor
   MGGeneratorMJDCableMessenger(const MGGeneratorMJDCableMessenger &);
@@ -84,7 +84,7 @@ public:
   //public interface
 
   // G4String GetCurrentValue(G4UIcommand *cmd);
-  void SetNewValue(G4UIcommand *cmd, G4String newValue);
+  // void SetNewValue(G4UIcommand *cmd, G4String newValue);
 
   //protected members
 protected:
@@ -93,11 +93,10 @@ protected:
   //private  members
 
 private:
-  MGGeneratorMJDCalibration *fMJDCalibrationGenerator;
+  MGGeneratorMJDCable *fMJDCableGenerator;
 
-  G4UIdirectory *fMJDCalibrationDirectory;
+  G4UIdirectory *fMJDCableDirectory;
 
-  G4UIcmdWithoutParameter *fDumpCmd;
   G4UIcmdWithAnInteger *fACmd;
   G4UIcmdWithAnInteger *fZCmd;
   G4UIcmdWithAString *fSourcePosCmd;
