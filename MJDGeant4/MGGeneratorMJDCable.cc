@@ -85,13 +85,39 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 
+  // Cryostat global position:
+  G4ThreeVector fCryo1Pos = G4ThreeVector(-8.1417 * 25.4 * mm, 0.0, 4.4265 * 25.4 * mm);
+  G4double fCryo1Rot = pi / 2;
+  G4ThreeVector fCryo2Pos = G4ThreeVector(-fCryo1Pos.x(), fCryo1Pos.y(), fCryo1Pos.z());
+  G4double fCryo2Rot = 0.0;
+
+  G4AffineTransform *assemAffine1 = new G4AffineTransform(fCryo1Rot,fCryo1Pos);
+  G4double eps = 0.01*mm;
+  G4AffineTransform *assemAffine2 = new G4AffineTransform(fCryo2Rot,fCryo2Pos);
+
+  // Cold plate position w.r.t Cryostat
+  G4ThreeVector *CPlocalPos = new G4ThreeVector(0, 0, -1.05*25.4*mm-eps);
+  G4RotationMatrix *CPlocalRot = new G4RotationMatrix();
+  CPlocalRot->rotateZ(pi);
+  
+  G4AffineTransform *CPaffine1 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
+  *CPaffine1 *= *assemAffine1;  
+  G4ThreeVector *CPglobalPos1 = new G4ThreeVector(CPaffine1->NetTranslation());
+  G4RotationMatrix *CPglobalRot1= new G4RotationMatrix(CPaffine1->NetRotation());
+
+  G4AffineTransform *CPaffine2 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
+  *CPaffine2 *= *assemAffine2;  
+  G4ThreeVector *CPglobalPos2 = new G4ThreeVector(CPaffine2->NetTranslation());
+  G4RotationMatrix *CPglobalRot2= new G4RotationMatrix(CPaffine2->NetRotation());
+  
+  fColdPlateOffset[0] = {};
+  fColdPlateOffset[1] = {};  
+
+
+
   fCableCenter[4] = {};
   fCableLength[4] = {};
   fHVCenter = {};
-
-  // Offset of center of coldplate to center of world
-  fColdPlateOffset[0] = {};
-  fColdPlateOffset[1] = {};
 
   // Offsets are listed with signal before HV (signal is left of string)
   // Units are converted to cm
@@ -139,12 +165,6 @@ void MGGeneratorMJDCable::EndOfRunAction(G4Run const*)
 
 void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 {
-  G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
-  G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
-
-  fParticleGun->SetParticleDefinition(aIon);
-  fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
-  fParticleGun->SetParticleEnergy(0.0);
 
   // Generate random variables
   fRandString = G4RandFlat::shootInt(14);
@@ -161,6 +181,14 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   // Set source position
   fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + {fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]};
 
+  // G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
+  // G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
+
+  // fParticleGun->SetParticleDefinition(aIon);
+  // fParticleGun->SetParticleEnergy(0.0);
+  fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
+  fParticleGun->SetParticleDefinition(G4Geantino::Geantino());
+  fParticleGun->SetParticleEnergy(1.0*GeV); 
   fParticleGun->SetParticlePosition(fPosition);
   fParticleGun->GeneratePrimaryVertex(event);
 
@@ -168,3 +196,11 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 
 
 //---------------------------------------------------------------------------//
+
+// Location
+{
+
+  // fCPPtr->Place(CPglobalPos, CPglobalRot, motherLogical);
+}
+
+

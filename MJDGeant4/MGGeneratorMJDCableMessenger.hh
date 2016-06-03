@@ -33,7 +33,7 @@
 // Begin description of class here
 /**
  *
- * Messenger for MJD Calibration generator.
+ * Messenger for Cable generator
  *
  */
 // End class description
@@ -45,15 +45,11 @@
 // 
 // --------------------------------------------------------------------------//
 /** 
- * AUTHOR: K. Vorren
+ * AUTHOR: B. Zhu
  * CONTACT: 
  * FIRST SUBMISSION:
  * 
- * REVISION:
- * 
- * 02-24-2016, Removed most commands from messenger since they are now
- *             read directly from the geometry, T. Caldwell
- * 07-14-2014, Created, K. Vorren
+ * Sometime in 6-2016, Created, B. Zhu
  */
 // --------------------------------------------------------------------------//
 
