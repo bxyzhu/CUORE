@@ -115,10 +115,10 @@ public:
   G4double GetIonA() const {return fA;}
 
   // Single particle
-  void SetParticle(G4int i) {fI = i};
+  // void SetParticle(G4int i) {fI = i};
   
   // Ion
-  void SetParticle(G4int z, G4int a) {fZ = z, fA = a;};
+  // void SetParticle(G4int z, G4int a) {fZ = z, fA = a;};
   
   //protected members
 protected:

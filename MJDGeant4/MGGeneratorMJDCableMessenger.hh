@@ -83,7 +83,7 @@ public:
 
   //public interface
 
-  G4String GetCurrentValue(G4UIcommand *cmd);
+  // G4String GetCurrentValue(G4UIcommand *cmd);
   void SetNewValue(G4UIcommand *cmd, G4String newValue);
 
   //protected members

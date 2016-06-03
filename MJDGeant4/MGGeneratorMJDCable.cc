@@ -90,9 +90,9 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   G4double fCryo1Rot = pi / 2;
   G4ThreeVector fCryo2Pos = G4ThreeVector(-fCryo1Pos.x(), fCryo1Pos.y(), fCryo1Pos.z());
   G4double fCryo2Rot = 0.0;
+  G4double eps = 0.01*mm;
 
   G4AffineTransform *assemAffine1 = new G4AffineTransform(fCryo1Rot,fCryo1Pos);
-  G4double eps = 0.01*mm;
   G4AffineTransform *assemAffine2 = new G4AffineTransform(fCryo2Rot,fCryo2Pos);
 
   // Cold plate position w.r.t Cryostat
@@ -102,22 +102,19 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   
   G4AffineTransform *CPaffine1 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
   *CPaffine1 *= *assemAffine1;  
-  G4ThreeVector *CPglobalPos1 = new G4ThreeVector(CPaffine1->NetTranslation());
+  fColdPlateOffset[0] = CPaffine1->NetTranslation();
   G4RotationMatrix *CPglobalRot1= new G4RotationMatrix(CPaffine1->NetRotation());
+  fColdPlateOffset[0] *= *CPglobalRot1;
 
   G4AffineTransform *CPaffine2 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
   *CPaffine2 *= *assemAffine2;  
-  G4ThreeVector *CPglobalPos2 = new G4ThreeVector(CPaffine2->NetTranslation());
+  fColdPlateOffset[1] = CPaffine2->NetTranslation();
   G4RotationMatrix *CPglobalRot2= new G4RotationMatrix(CPaffine2->NetRotation());
-  
-  fColdPlateOffset[0] = {};
-  fColdPlateOffset[1] = {};  
+  fColdPlateOffset[1] *= *CPglobalRot2; 
 
-
-
-  fCableCenter[4] = {};
-  fCableLength[4] = {};
-  fHVCenter = {};
+  fCableRadius = 0.5*mm;
+  fCableCenter[4] = {0.,0.,0.,0.};
+  fCableLength[4] = {2.54*10.0/2, 2.54*8.0/2, 2.54*5.0/2, 2.54*2.5/2};
 
   // Offsets are listed with signal before HV (signal is left of string)
   // Units are converted to cm
@@ -186,7 +183,7 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 
   // fParticleGun->SetParticleDefinition(aIon);
   // fParticleGun->SetParticleEnergy(0.0);
-  fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
+  fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // Geantinos for testing
   fParticleGun->SetParticleDefinition(G4Geantino::Geantino());
   fParticleGun->SetParticleEnergy(1.0*GeV); 
   fParticleGun->SetParticlePosition(fPosition);
