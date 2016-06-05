@@ -32,15 +32,13 @@
 // 
 //---------------------------------------------------------------------------//
 /**
- * AUTHOR: K. Vorren
+ * AUTHOR: B. Zhu
  * CONTACT: 
  * FIRST SUBMISSION:
  * 
  * REVISION:
  *
- * 02-24-2016, Modified generator to read calibration source parameters
- *             from messenger commands, T. Caldwell 
- * 07-14-2014, Created, K. Vorren
+ * 07-2016, Created, B. Zhu
  *
  */
 //---------------------------------------------------------------------------//
