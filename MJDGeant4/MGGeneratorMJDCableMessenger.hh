@@ -97,8 +97,8 @@ private:
 
   G4UIdirectory *fMJDCableDirectory;
 
-  G4UIcmdWithAnInteger *fACmd;
-  G4UIcmdWithAnInteger *fZCmd;
-  G4UIcmdWithAString *fSourcePosCmd;
+  // G4UIcmdWithAnInteger *fACmd;
+  // G4UIcmdWithAnInteger *fZCmd;
+  // G4UIcmdWithAString *fSourcePosCmd;
 };
 #endif
