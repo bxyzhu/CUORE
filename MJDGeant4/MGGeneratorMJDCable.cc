@@ -189,8 +189,9 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   // fParticleGun->SetParticleDefinition(aIon);
   // fParticleGun->SetParticleEnergy(0.0);
   fParticleGun->SetParticleMomentumDirection(G4RandomDirection()); // Geantinos for testing
-  fParticleGun->SetParticleDefinition(G4Geantino::Geantino());
-  fParticleGun->SetParticleEnergy(1.0*GeV); 
+  // fParticleGun->SetParticleDefinition(G4Geantino::Geantino());
+  fParticleGun->SetParticleDefinition(G4Gamma::GammaDefinition());
+  fParticleGun->SetParticleEnergy(2000.0*MeV); 
   fParticleGun->SetParticlePosition(fPosition);
   fParticleGun->GeneratePrimaryVertex(event);
 }

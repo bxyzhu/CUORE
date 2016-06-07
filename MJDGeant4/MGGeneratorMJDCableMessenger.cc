@@ -92,8 +92,8 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(const MGGeneratorMJDC
 
 MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 {
-  delete fACmd;
-  delete fZCmd;
+  // delete fACmd;
+  // delete fZCmd;
   delete fMJDCableDirectory;
 }
 
