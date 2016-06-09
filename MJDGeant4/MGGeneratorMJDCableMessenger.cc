@@ -34,15 +34,13 @@
 // 
 //---------------------------------------------------------------------------//
 /**
- * AUTHOR: K. Vorren
+ * AUTHOR: B. Zhu
  * CONTACT: 
  * FIRST SUBMISSION:
  * 
  * REVISION:
  *
- * 02-24-2016, Removed most commands from messenger since they are now
- *             read directly from the geometry, T. Caldwell
- * 07-14-2014, Created, K. Vorren
+ * 06-2016, Created, B. Zhu
  */
 //---------------------------------------------------------------------------//
 //

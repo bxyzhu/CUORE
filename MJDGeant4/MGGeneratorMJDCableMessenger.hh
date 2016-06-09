@@ -49,7 +49,7 @@
  * CONTACT: 
  * FIRST SUBMISSION:
  * 
- * Sometime in 6-2016, Created, B. Zhu
+ * 06-2016, Created, B. Zhu
  */
 // --------------------------------------------------------------------------//
 
