@@ -103,6 +103,7 @@ public:
   //This method is not used but it is necessary 
   //because it is purely virtual in MGVGenerator
   void SetParticlePosition(G4ThreeVector) {;}
+  void SetSourcePos();
 
   // Sets dimensions of cables
   // void SetCableOffset();
@@ -136,6 +137,8 @@ private:
   G4double fPositionX;
   G4double fPositionY;
   G4double fPositionZ; // Z position of particle generated
+  G4double fZrotation;   // rotation about the z axis for the source
+
 
   G4double fRandRadiusSq;
   G4double fRandAngle;

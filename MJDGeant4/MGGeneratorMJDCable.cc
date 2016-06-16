@@ -85,6 +85,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 
+/*
   // Cryostat global position, from MJGeometryDemonstrator
   G4ThreeVector fCryo1Pos = G4ThreeVector(-8.1417 * 25.4 * mm, 0.0, 4.4265 * 25.4 * mm);
   G4double fCryo1Rot = pi / 2;
@@ -98,7 +99,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   G4double eps = 0.01*mm;
 
   G4AffineTransform *assemAffine1 = new G4AffineTransform(rotationC,fCryo1Pos);
-  G4AffineTransform *assemAffine2 = new G4AffineTransform(rotationD,fCryo2Pos);
+  // G4AffineTransform *assemAffine2 = new G4AffineTransform(rotationD,fCryo2Pos);
 
   // Cold plate position w.r.t Cryostat
   G4ThreeVector *CPlocalPos = new G4ThreeVector(0, 0, -1.05*25.4*mm-eps);
@@ -107,17 +108,97 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   
   G4AffineTransform *CPaffine1 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
   *CPaffine1 *= *assemAffine1;  
-  fColdPlateOffset[0] = CPaffine1->NetTranslation();
+  // fColdPlateOffset[0] = CPaffine1->NetTranslation();
   G4RotationMatrix *CPglobalRot1= new G4RotationMatrix(CPaffine1->NetRotation());
-  fColdPlateOffset[0] *= *CPglobalRot1;
+  // fColdPlateOffset[0] *= *CPglobalRot1;
 
-  G4AffineTransform *CPaffine2 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
-  *CPaffine2 *= *assemAffine2;  
-  fColdPlateOffset[1] = CPaffine2->NetTranslation();
-  G4RotationMatrix *CPglobalRot2= new G4RotationMatrix(CPaffine2->NetRotation());
-  fColdPlateOffset[1] *= *CPglobalRot2; 
+  G4ThreeVector *CPglobalpos = new G4ThreeVector(CPaffine1->NetTranslation());
+
+  // G4AffineTransform *CPaffine2 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
+  // *CPaffine2 *= *assemAffine2;  
+  // fColdPlateOffset[1] = CPaffine2->NetTranslation();
+  // G4RotationMatrix *CPglobalRot2= new G4RotationMatrix(CPaffine2->NetRotation());
+  // fColdPlateOffset[1] *= *CPglobalRot2; 
+
+  G4AffineTransform *CPassemAffine = new G4AffineTransform(CPglobalRot1, *CPglobalpos);
+  G4ThreeVector *CPlocalPos2 = new G4ThreeVector(0, 0, 0);
+  G4RotationMatrix *CPlocalRot_final = new G4RotationMatrix();
+  CPlocalRot_final->rotateX(pi);
+  CPlocalRot_final->rotateZ(pi/2);
+  G4AffineTransform *CPGlobalaffine = new G4AffineTransform(CPlocalRot_final,*CPlocalPos2);
+  *CPGlobalaffine*=*CPassemAffine;  
+  fColdPlateOffset[0] = CPGlobalaffine->NetTranslation();
+  G4RotationMatrix *CPglobalRot_final1 = new G4RotationMatrix(CPGlobalaffine->NetRotation());
+  fColdPlateOffset[0] *= *CPglobalRot_final1;
+*/
+
+  std::string sourcePos = "W";
+  G4UIcommandTree* cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  // cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "cryo1Pos" || param == "cryo2Pos")
+    {
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      if(param == "cryo1Pos" && sourcePos == "W")
+  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+      else if(param == "cryo2Pos" && sourcePos == "E")
+  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+    }
+    else if(param == "cryo1Rot" && sourcePos == "W")
+    {
+      std::string val =
+  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      // std::stringstream(val) >> fZrotation;
+    }
+    else if(param == "cryo2Rot" && sourcePos == "E")
+    {
+      std::string val =
+  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      // std::stringstream(val) >> fZrotation;
+    }
+  }
+  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocryoassembly"+sourcePos+"/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "calAssemblyPos"){
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z);
+    }
+  }
+  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocalassembly"+sourcePos+"/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "sourceOffset")
+    {
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z);
+    }
+  }
+  // fZrotation *= -1;
+
+  // fColdPlateOffset[0].rotateZ(pi/2);
 
   fCableRadius = 0.5*mm;
+
   // fCableCenter[4] = {0.,0.,0.,0.};
   // fCableLength[4] = {2.54*10.0/2*cm, 2.54*8.0/2*cm, 2.54*5.0/2*cm, 2.54*2.5/2*cm};
 
@@ -181,7 +262,7 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
 
   // Set source position
-  fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  fPosition = fColdPlateOffset[0] + fCableOffset[fRandString].rotateZ(pi/2) + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
 
   // G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   // G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
@@ -197,3 +278,93 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 }
 
 //---------------------------------------------------------------------------//
+
+/*
+void MGGeneratorMJDCable::SetSourcePos()
+{
+
+  std::string sourcePos = "W";
+  
+  G4UIcommandTree* cmdTree =
+    G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  // cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocalsource"+sourcePos+"/"));
+  // for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  // {
+  //   if(cmdTree->GetCommand(i+1)->GetParameterEntries() == 0)
+  //     continue;
+  //   std::string val =
+  //     cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+  //   std::string param =
+  //     cmdTree->GetCommand(i+1)->GetCommandName();
+  //   if(param == "helixRadius")
+  //     std::stringstream(val) >> fHelixRadius;
+  //   else if(param == "startAngle")
+  //     std::stringstream(val) >> fStartAngle;
+  //   else if(param == "totalAngle")
+  //     std::stringstream(val) >> fTotalAngle;
+  //   else if(param == "helixAngle")
+  //     std::stringstream(val) >> fHelixAngle;
+  // }
+
+  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "cryo1Pos" || param == "cryo2Pos")
+    {
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      if(param == "cryo1Pos" && sourcePos == "W")
+  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+      else if(param == "cryo2Pos" && sourcePos == "E")
+  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+    }
+    else if(param == "cryo1Rot" && sourcePos == "W")
+    {
+      std::string val =
+  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      std::stringstream(val) >> fZrotation;
+    }
+    else if(param == "cryo2Rot" && sourcePos == "E")
+    {
+      std::string val =
+  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      std::stringstream(val) >> fZrotation;
+    }
+  }
+  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocryoassembly"+sourcePos+"/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "calAssemblyPos"){
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z);
+    }
+  }
+  cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
+  cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocalassembly"+sourcePos+"/"));
+  for(int i=0; i<cmdTree->GetCommandEntry(); i++)
+  {
+    std::string param = cmdTree->GetCommand(i+1)->GetCommandName();
+    if(param == "sourceOffset")
+    {
+      G4UIcommand* cmd = cmdTree->GetCommand(i+1);
+      G4double x, y, z;
+      std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
+      std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
+      std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z);
+    }
+  }
+  fZrotation *= -1;
+}
+*/
