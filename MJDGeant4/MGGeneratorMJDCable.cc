@@ -128,7 +128,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
       std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fColdPlateOffset[0] += G4ThreeVector(x, y, z/2); // use 0 here
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z/3); // use 0 here
     }
   }
   cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
@@ -174,7 +174,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
     for(int i = 0; i < 14; i++)
     {
       // Rotate for cryo 1
-      fCableOffset[i].rotateZ(pi/2);
+      fCableOffset[i].rotateZ(-pi/2);
     }
   }
 
