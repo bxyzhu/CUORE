@@ -150,24 +150,34 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
 
   // fColdPlateOffset[0].rotateZ(pi/2);
 
-  fCableRadius = 0.5*mm;
+  fCableRadius = 0.05*mm;
 
   // Offsets are listed with signal before HV (signal is left of string)
   // Units are converted to cm
   fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
   fCableOffset[1] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
-  fCableOffset[2] = G4ThreeVector(2.54*3.453*cm, 2.54*3.846*cm, 0.); // P2
+
+  // fCableOffset[2] = G4ThreeVector(2.54*3.453*cm, 2.54*3.846*cm, 0.); // P2
+  fCableOffset[2] = G4ThreeVector(2.54*3.445*cm, 2.54*3.814*cm, 0.); // P2
   fCableOffset[3] = G4ThreeVector(2.54*2.350*cm, 2.54*3.620*cm, 0.);
-  fCableOffset[4] = G4ThreeVector(-2.54*0.089*cm, 2.54*5.576*cm, 0.); // P3
-  fCableOffset[5] = G4ThreeVector(-2.54*1.186*cm, 2.54*5.350*cm, 0.);
-  fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.846*cm, 0.); // P4
+  // fCableOffset[4] = G4ThreeVector(-2.54*0.089*cm, 2.54*5.576*cm, 0.); // P3
+  fCableOffset[4] = G4ThreeVector(-2.54*0.089*cm, 2.54*5.58*cm, 0.); // P3
+  // fCableOffset[5] = G4ThreeVector(-2.54*1.186*cm, 2.54*5.350*cm, 0.);
+  fCableOffset[5] = G4ThreeVector(-2.54*1.186*cm, 2.54*5.34*cm, 0.);
+
+  // fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.846*cm, 0.); // P4
+  fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.814*cm, 0.); // P4
   fCableOffset[7] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
   fCableOffset[8] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
-  fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.846*cm, 0.);
-  fCableOffset[10] = G4ThreeVector(-2.54*1.186*cm, -2.54*5.350*cm, 0.); // P6
-  fCableOffset[11] = G4ThreeVector(-2.54*0.089*cm, -2.54*5.576*cm, 0.);
+  // fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.846*cm, 0.);
+  fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.814*cm, 0.);
+  // fCableOffset[10] = G4ThreeVector(-2.54*1.186*cm, -2.54*5.350*cm, 0.); // P6
+  fCableOffset[10] = G4ThreeVector(-2.54*1.186*cm, -2.54*5.34*cm, 0.); // P6
+  // fCableOffset[11] = G4ThreeVector(-2.54*0.089*cm, -2.54*5.576*cm, 0.);
+  fCableOffset[11] = G4ThreeVector(-2.54*0.089*cm, -2.54*5.58*cm, 0.);
   fCableOffset[12] = G4ThreeVector(2.54*2.350*cm, -2.54*3.620*cm, 0.); // P7
-  fCableOffset[13] = G4ThreeVector(2.54*3.453*cm, -2.54*3.846*cm, 0.);
+  // fCableOffset[13] = G4ThreeVector(2.54*3.453*cm, -2.54*3.846*cm, 0.);
+  fCableOffset[13] = G4ThreeVector(2.54*3.445*cm, -2.54*3.814*cm, 0.);
 
   if(sourcePos == "W")
   {
@@ -237,55 +247,4 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 }
 
 //---------------------------------------------------------------------------//
-
-/*
-void MGGeneratorMJDCable::SetSourcePos()
-{
-  // Doesn't work
-  // Cryostat global position, from MJGeometryDemonstrator
-  G4ThreeVector fCryo1Pos = G4ThreeVector(-8.1417 * 25.4 * mm, 0.0, 4.4265 * 25.4 * mm);
-  G4double fCryo1Rot = pi / 2;
-  G4RotationMatrix* rotationC = new G4RotationMatrix();
-  rotationC->rotateZ(fCryo1Rot);
-
-  G4ThreeVector fCryo2Pos = G4ThreeVector(-fCryo1Pos.x(), fCryo1Pos.y(), fCryo1Pos.z());
-  G4double fCryo2Rot = 0.0;
-  G4RotationMatrix* rotationD = new G4RotationMatrix();
-  rotationD->rotateZ(fCryo2Rot);
-  G4double eps = 0.01*mm;
-
-  G4AffineTransform *assemAffine1 = new G4AffineTransform(rotationC,fCryo1Pos);
-  // G4AffineTransform *assemAffine2 = new G4AffineTransform(rotationD,fCryo2Pos);
-
-  // Cold plate position w.r.t Cryostat
-  G4ThreeVector *CPlocalPos = new G4ThreeVector(0, 0, -1.05*25.4*mm-eps);
-  G4RotationMatrix *CPlocalRot = new G4RotationMatrix();
-  CPlocalRot->rotateZ(pi);
-  
-  G4AffineTransform *CPaffine1 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
-  *CPaffine1 *= *assemAffine1;  
-  // fColdPlateOffset[0] = CPaffine1->NetTranslation();
-  G4RotationMatrix *CPglobalRot1= new G4RotationMatrix(CPaffine1->NetRotation());
-  // fColdPlateOffset[0] *= *CPglobalRot1;
-
-  G4ThreeVector *CPglobalpos = new G4ThreeVector(CPaffine1->NetTranslation());
-
-  // G4AffineTransform *CPaffine2 = new G4AffineTransform(CPlocalRot,*CPlocalPos);
-  // *CPaffine2 *= *assemAffine2;  
-  // fColdPlateOffset[1] = CPaffine2->NetTranslation();
-  // G4RotationMatrix *CPglobalRot2= new G4RotationMatrix(CPaffine2->NetRotation());
-  // fColdPlateOffset[1] *= *CPglobalRot2; 
-
-  G4AffineTransform *CPassemAffine = new G4AffineTransform(CPglobalRot1, *CPglobalpos);
-  G4ThreeVector *CPlocalPos2 = new G4ThreeVector(0, 0, 0);
-  G4RotationMatrix *CPlocalRot_final = new G4RotationMatrix();
-  CPlocalRot_final->rotateX(pi);
-  CPlocalRot_final->rotateZ(pi/2);
-  G4AffineTransform *CPGlobalaffine = new G4AffineTransform(CPlocalRot_final,*CPlocalPos2);
-  *CPGlobalaffine*=*CPassemAffine;  
-  fColdPlateOffset[0] = CPGlobalaffine->NetTranslation();
-  G4RotationMatrix *CPglobalRot_final1 = new G4RotationMatrix(CPGlobalaffine->NetRotation());
-  fColdPlateOffset[0] *= *CPglobalRot_final1;
-*/
-
 
