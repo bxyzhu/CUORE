@@ -158,26 +158,32 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fCableOffset[1] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
 
   // fCableOffset[2] = G4ThreeVector(2.54*3.453*cm, 2.54*3.846*cm, 0.); // P2
-  fCableOffset[2] = G4ThreeVector(2.54*3.445*cm, 2.54*3.814*cm, 0.); // P2
-  fCableOffset[3] = G4ThreeVector(2.54*2.350*cm, 2.54*3.620*cm, 0.);
+  fCableOffset[2] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
+  // fCableOffset[3] = G4ThreeVector(2.54*2.350*cm, 2.54*3.620*cm, 0.);
+  fCableOffset[3] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
+
   // fCableOffset[4] = G4ThreeVector(-2.54*0.089*cm, 2.54*5.576*cm, 0.); // P3
-  fCableOffset[4] = G4ThreeVector(-2.54*0.089*cm, 2.54*5.58*cm, 0.); // P3
+  fCableOffset[4] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
   // fCableOffset[5] = G4ThreeVector(-2.54*1.186*cm, 2.54*5.350*cm, 0.);
-  fCableOffset[5] = G4ThreeVector(-2.54*1.186*cm, 2.54*5.34*cm, 0.);
+  fCableOffset[5] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
 
   // fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.846*cm, 0.); // P4
-  fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.814*cm, 0.); // P4
+  fCableOffset[6] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
   fCableOffset[7] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
+  
   fCableOffset[8] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
   // fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.846*cm, 0.);
-  fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.814*cm, 0.);
+  fCableOffset[9] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
+
   // fCableOffset[10] = G4ThreeVector(-2.54*1.186*cm, -2.54*5.350*cm, 0.); // P6
-  fCableOffset[10] = G4ThreeVector(-2.54*1.186*cm, -2.54*5.34*cm, 0.); // P6
+  fCableOffset[10] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
   // fCableOffset[11] = G4ThreeVector(-2.54*0.089*cm, -2.54*5.576*cm, 0.);
-  fCableOffset[11] = G4ThreeVector(-2.54*0.089*cm, -2.54*5.58*cm, 0.);
-  fCableOffset[12] = G4ThreeVector(2.54*2.350*cm, -2.54*3.620*cm, 0.); // P7
+  fCableOffset[11] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
+  
+  // fCableOffset[12] = G4ThreeVector(2.54*2.350*cm, -2.54*3.620*cm, 0.); // P7
+  fCableOffset[12] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
   // fCableOffset[13] = G4ThreeVector(2.54*3.453*cm, -2.54*3.846*cm, 0.);
-  fCableOffset[13] = G4ThreeVector(2.54*3.445*cm, -2.54*3.814*cm, 0.);
+  fCableOffset[13] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
 
   if(sourcePos == "W")
   {
