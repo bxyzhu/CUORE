@@ -150,7 +150,7 @@ private:
   G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
   G4ThreeVector fCableOffset[14]; // XY location of cables wrt center of cold plate, even is signal and odd is HV
     
-  G4double fCableLength[4] = {2.54*11.5/2*cm, 2.54*9.5/2*cm, 2.54*6.5/2*cm, 2.54*4.0/2*cm}; // Half length of signal cable, one for each detector
+  G4double fCableLength[4] = {2.54*11.3/2*cm, 2.54*9.3/2*cm, 2.54*6.3/2*cm, 2.54*3.8/2*cm}; // Half length of signal cable, one for each detector
   G4double fCableCenter[4] = {-2.54*9.5/2*cm, -2.54*7.5/2*cm, -2.54*4.5/2*cm, -2.54*2.0/2*cm}; // Centers of signal cables, one for each detector
   G4double fHVLength[4]; // Half length of HV cable, one for each detector
   G4double fHVCenter[4]; // Centers of HV cables, one for each detector

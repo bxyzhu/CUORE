@@ -83,8 +83,7 @@ public:
 
   //public interface
 
-  // G4String GetCurrentValue(G4UIcommand *cmd);
-  // void SetNewValue(G4UIcommand *cmd, G4String newValue);
+  void SetNewValue(G4UIcommand *cmd, G4String newValue);
 
   //protected members
 protected:
@@ -97,8 +96,8 @@ private:
 
   G4UIdirectory *fMJDCableDirectory;
 
-  // G4UIcmdWithAnInteger *fACmd;
-  // G4UIcmdWithAnInteger *fZCmd;
+  G4UIcmdWithAnInteger *fACmd;
+  G4UIcmdWithAnInteger *fZCmd;
   // G4UIcmdWithAString *fSourcePosCmd;
 };
 #endif

@@ -172,6 +172,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fCableOffset[12] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
   fCableOffset[13] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
 
+  // Haven't fixed for E yet
   if(sourcePos == "W")
   {
     for(int i = 0; i < 14; i++)

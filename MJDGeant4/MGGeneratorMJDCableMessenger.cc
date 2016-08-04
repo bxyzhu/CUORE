@@ -79,7 +79,7 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
 
   // fParticleCmd = new G4UIcmdWithAString("/MG/generator/MJDCable/setParticle", this);
   // fParticleCmd->SetGuidance("Set input particle");
-  // generator->SetParticle();
+// generator->SetParticle();
   
 }
 
@@ -92,8 +92,8 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(const MGGeneratorMJDC
 
 MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 {
-  // delete fACmd;
-  // delete fZCmd;
+  delete fACmd;
+  delete fZCmd;
   delete fMJDCableDirectory;
 }
 
@@ -110,15 +110,13 @@ MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
 
 //---------------------------------------------------------------------------//
 
-// void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
-// {
-//   if(cmd == fZCmd)
-//     fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
-//   else if(cmd == fACmd)
-//     fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
-//   else if(cmd == fSourcePosCmd)
-//     fMJDCableGenerator->SetSourcePos(newValues);
-// }
+void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
+{
+  if(cmd == fZCmd)
+    fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
+  else if(cmd == fACmd)
+    fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
+}
 
 //---------------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
