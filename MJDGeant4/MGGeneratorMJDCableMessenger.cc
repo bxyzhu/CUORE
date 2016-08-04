@@ -66,16 +66,16 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
   fMJDCableDirectory->SetGuidance("MJD Cable generator");
 
   // /MG/generator/MJDCable/setZ
-  // fZCmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setZ", this);
-  // fZCmd->SetGuidance("The Z value of the ion");
-  // generator->SetIonZ(90);
-  // fZCmd->SetDefaultValue(generator->GetIonZ());
+  fZCmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setZ", this);
+  fZCmd->SetGuidance("The Z value of the ion");
+  generator->SetIonZ(90);
+  fZCmd->SetDefaultValue(generator->GetIonZ());
   
   // /MG/generator/MJDCable/setA
-  // fACmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setA", this);
-  // fACmd->SetGuidance("The A value of the ion");
-  // generator->SetIonA(228);
-  // fACmd->SetDefaultValue(generator->GetIonZ());
+  fACmd = new G4UIcmdWithAnInteger("/MG/generator/MJDCable/setA", this);
+  fACmd->SetGuidance("The A value of the ion");
+  generator->SetIonA(228);
+  fACmd->SetDefaultValue(generator->GetIonZ());
 
   // fParticleCmd = new G4UIcmdWithAString("/MG/generator/MJDCable/setParticle", this);
   // fParticleCmd->SetGuidance("Set input particle");
