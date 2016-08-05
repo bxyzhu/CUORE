@@ -63,6 +63,9 @@ class MGWFCFStartTime : public MGVWaveformParameterCalculator
 
     virtual inline MGWFExtremumFinder& GetExtremumFinder() { return fExtFinder; }
 
+    /// Set the threshold for the t0 search, optionally as nSigma*fBLR->GetBaselineRMS()
+    virtual inline void SetThreshold(double threshold) { fThreshold = threshold;}
+
     /// Restring to a region within the waveform. Set to (0,0) to un-restrict.
     virtual inline void RestrictToRegion(size_t beg, size_t end) { fRegion.SetBeginning(beg); fRegion.SetEnd(end); }
 
@@ -70,6 +73,7 @@ class MGWFCFStartTime : public MGVWaveformParameterCalculator
 
   protected:
     double fRatio; // Ratio of the delayed waveform
+    double fThreshold; // 
     size_t fOffset; // Time delay in samples
     std::vector<double> fScaledInput; // Internal vector for inverted + scaled waveform
     std::vector<double> fSummedVector; // Internal vector for summing and evaluating t0

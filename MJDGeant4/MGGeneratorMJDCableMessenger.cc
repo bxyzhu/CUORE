@@ -76,10 +76,6 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
   fACmd->SetGuidance("The A value of the ion");
   generator->SetIonA(228);
   fACmd->SetDefaultValue(generator->GetIonZ());
-
-  // fParticleCmd = new G4UIcmdWithAString("/MG/generator/MJDCable/setParticle", this);
-  // fParticleCmd->SetGuidance("Set input particle");
-// generator->SetParticle();
   
 }
 
@@ -96,17 +92,6 @@ MGGeneratorMJDCableMessenger::~MGGeneratorMJDCableMessenger()
   delete fZCmd;
   delete fMJDCableDirectory;
 }
-
-//---------------------------------------------------------------------------//
-
-// G4String MGGeneratorMJDCableMessenger::GetCurrentValue(G4UIcommand *cmd)
-// {
-//   G4String cv = " ";
-//   if(cmd == fDumpCmd)
-//     fMJDCableGenerator->Dump();
-
-//   return cv;
-// }
 
 //---------------------------------------------------------------------------//
 

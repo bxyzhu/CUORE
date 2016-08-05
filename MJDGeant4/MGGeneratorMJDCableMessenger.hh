@@ -82,15 +82,12 @@ public:
   ~MGGeneratorMJDCableMessenger();
 
   //public interface
-
   void SetNewValue(G4UIcommand *cmd, G4String newValue);
 
   //protected members
 protected:
 
-
   //private  members
-
 private:
   MGGeneratorMJDCable *fMJDCableGenerator;
 

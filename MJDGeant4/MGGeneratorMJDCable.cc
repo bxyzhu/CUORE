@@ -85,6 +85,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 
+  // No implementation for "E" yet
   std::string sourcePos = "W";
   G4UIcommandTree* cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
@@ -175,11 +176,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   // Haven't fixed for E yet
   if(sourcePos == "W")
   {
-    for(int i = 0; i < 14; i++)
-    {
-      // Rotate for cryo 1
-      fCableOffset[i].rotateZ(-pi/2);
-    }
+    for(int i = 0; i < 14; i++) fCableOffset[i].rotateZ(-pi/2);
   }
 
 }
@@ -226,9 +223,6 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 
   // Set source position
   fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
-
-  // fParticleGun->SetParticleDefinition(G4Gamma::GammaDefinition()); // Gamma for testing
-  // fParticleGun->SetParticleEnergy(1500.0*MeV); 
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);

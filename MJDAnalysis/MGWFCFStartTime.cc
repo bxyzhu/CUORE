@@ -3,7 +3,7 @@
 using namespace std;
 
 MGWFCFStartTime::MGWFCFStartTime(const string& aName) :
-  MGVWaveformParameterCalculator(aName)
+  MGVWaveformParameterCalculator(aName), fThreshold(0)
 {
   AddParameter("CFt0");
 }
@@ -12,13 +12,13 @@ void MGWFCFStartTime::CalculateParameters(const MGWaveform& anInput)
 {
   // Create the delayed + inverted pulse
   // Scale down by some fraction and invert
-  // for(size_t i = iOffset; i < anInput.GetLength(); i++) fScaledInput.push_back(-fRatio*anInput[i]);
   for(size_t i = 0; i < anInput.GetLength(); i++) fScaledInput.push_back(-fRatio*anInput[i]);
 
   // Sum together the inverted and delayed waveform with the original, vector length is reduced by iOffset samples
-  // for(size_t i = 0; i < anInput.GetLength()-iOffset; i++) fSummedVector.push_back( anInput[i] + fScaledInput[i] );
   for(size_t i = fOffset; i < anInput.GetLength(); i++) fSummedVector.push_back( anInput[i - fOffset] + fScaledInput[i] );
 
+  double threshold = fThreshold;
+  
   // Start at offset sample and then walk foward until reaching 0 crossing
   // size_t iRef = fOffset;
   // while(fSummedVector[iRef] < 0.) iRef++;
@@ -37,8 +37,10 @@ void MGWFCFStartTime::CalculateParameters(const MGWaveform& anInput)
 
 
   // Start at maximum of trapezoidal filter and walk backwards until crossing 0
-  while(iRef > iStart && fSummedVector[iRef] > 0.) iRef--;
+  if(iRef >= iStop) iRef = iStop-1;
+  while(iRef > iStart && fSummedVector[iRef] > threshold) iRef--;
   
-  if(iRef > iStart) SetParameterValue(0, anInput.InterpolateForTLocal(0., iRef, iRef+1));
+  // Interpolate to find zero crossing (if within good region)
+  if(iRef > iStart) SetParameterValue(0, anInput.InterpolateForTLocal(threshold, iRef, iRef+1));
   else SetParameterValue(0, anInput.GetTLocal(iRef));
 }

@@ -98,7 +98,7 @@ public:
   void EndOfRunAction(G4Run const *run);
   void GeneratePrimaryVertex(G4Event *event);
 
-  // G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
+  G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
   
   //This method is not used but it is necessary 
   //because it is purely virtual in MGVGenerator
@@ -112,12 +112,6 @@ public:
   void SetIonA(G4int a) {fA = a;}
   G4double GetIonZ() const {return fZ;}
   G4double GetIonA() const {return fA;}
-
-  // Single particle
-  // void SetParticle(G4int i) {fI = i};
-  
-  // Ion
-  // void SetParticle(G4int z, G4int a) {fZ = z, fA = a;};
   
   //protected members
 protected:
@@ -127,7 +121,6 @@ private:
   G4ParticleGun *fParticleGun;
 
   // Particle types
-  G4int fI;
   G4int fZ;
   G4int fA;
 
