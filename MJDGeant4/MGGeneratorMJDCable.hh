@@ -98,7 +98,7 @@ public:
   void EndOfRunAction(G4Run const *run);
   void GeneratePrimaryVertex(G4Event *event);
 
-  G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
+  // G4ThreeVector GetCurrentPosition() { return fCurrentPosition; }
   
   //This method is not used but it is necessary 
   //because it is purely virtual in MGVGenerator
