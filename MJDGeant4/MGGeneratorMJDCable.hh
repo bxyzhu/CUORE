@@ -107,7 +107,7 @@ public:
   // Sets dimensions of cables
   // void SetCableOffset();
   void SetSourcePos(std::string sourcePos);
-  void SetSourceType(std::string sourceType);
+  void SetSourceType(std::string sourceType) {fSourceType = sourceType;}
   void SetIonZ(G4int z) {fZ = z;}
   void SetIonA(G4int a) {fA = a;}
 
@@ -124,6 +124,8 @@ private:
   // Particle types
   G4int fZ;
   G4int fA;
+
+  std::string fSourceType;
 
   // Type of source? Should be radioactive probably, maybe just leave the A and Z settings?
   // To generate a line, find center point and half-length

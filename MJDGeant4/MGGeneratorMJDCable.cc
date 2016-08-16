@@ -92,25 +92,18 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
   fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
   fHVOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
-
   fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
   fHVOffset[1] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
-
   fCableOffset[2] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
   fHVOffset[2] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
-
   fCableOffset[3] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
   fHVOffset[3] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
-  
   fCableOffset[4] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
   fHVOffset[4] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
-
   fCableOffset[5] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
   fHVOffset[5] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
-  
   fCableOffset[6] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
   fHVOffset[6] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
-
 }
 
 //---------------------------------------------------------------------------//
@@ -198,35 +191,10 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
   // Haven't fixed for E yet
   if(sourcePos == "W")
   {
-    for(int i = 0; i < 14; i++) fCableOffset[i].rotateZ(-pi/2);
+    for(int i = 0; i < 7; i++) fCableOffset[i].rotateZ(-pi/2);
   }
 
 }
-
-//---------------------------------------------------------------------------//
-
-void MGGeneratorMJDCable::SetSourceType(std::string sourceType)
-{
-	if(sourceType = "S") {
-		fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
-		fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
-		fCableOffset[2] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
-		fCableOffset[3] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
-		fCableOffset[4] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
-		fCableOffset[5] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
-		fCableOffset[6] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
-	}
-	if(sourceType = "H") {
-		fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
-		fCableOffset[1] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
-		fCableOffset[2] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
-		fCableOffset[3] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
-		fCableOffset[4] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
-		fCableOffset[5] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
-		fCableOffset[6] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
-	}
-}
-
 
 //---------------------------------------------------------------------------//
 
@@ -251,7 +219,8 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
 
   // Set source position
-  fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  if(fSourceType = "S") fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  if(fSourceType = "H") fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
