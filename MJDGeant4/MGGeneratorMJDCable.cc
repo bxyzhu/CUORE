@@ -85,8 +85,57 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 
+  // Estimated rough radius of cables
+  fCableRadius = 0.02*mm;
+
+  // Units were originally in inches and then converted to cm
+  // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
+  fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
+  fHVOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
+
+  fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
+  fHVOffset[1] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
+
+  fCableOffset[2] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
+  fHVOffset[2] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
+
+  fCableOffset[3] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
+  fHVOffset[3] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
+  
+  fCableOffset[4] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
+  fHVOffset[4] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
+
+  fCableOffset[5] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
+  fHVOffset[5] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
+  
+  fCableOffset[6] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
+  fHVOffset[6] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
+
+}
+
+//---------------------------------------------------------------------------//
+
+MGGeneratorMJDCable::MGGeneratorMJDCable(const MGGeneratorMJDCable & other) : MGVGenerator(other)
+{;}
+
+//---------------------------------------------------------------------------//
+
+MGGeneratorMJDCable::~MGGeneratorMJDCable()
+{
+  delete fG4Messenger;
+  delete fParticleGun;
+}
+
+//---------------------------------------------------------------------------//
+
+void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
+{;}  
+
+//---------------------------------------------------------------------------//
+
+void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
+{
   // No implementation for "E" yet
-  std::string sourcePos = "W";
   G4UIcommandTree* cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
   for(int i=0; i<cmdTree->GetCommandEntry(); i++)
@@ -128,7 +177,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
       std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fColdPlateOffset[0] += G4ThreeVector(x, y, z/3); // use 0 here
+      fColdPlateOffset[0] += G4ThreeVector(x, y, z/3); // rough estimate for Z positioning
     }
   }
   cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
@@ -146,33 +195,6 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
       fColdPlateOffset[0] += G4ThreeVector(x, y, z);
     }
   }
-
-  fCableRadius = 0.05*mm;
-
-  // Offsets are listed with signal before HV (signal is left of string)
-  // Units were originally in inches and then converted to cm
-  // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
-  fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
-  fHVOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
-
-  fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
-  fHVOffset[1] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
-
-  fCableOffset[2] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
-  fHVOffset[2] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
-
-  fCableOffset[3] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
-  fHVOffset[3] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
-  
-  fCableOffset[4] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
-  fHVOffset[4] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
-
-  fCableOffset[5] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
-  fHVOffset[5] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
-  
-  fCableOffset[6] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
-  fHVOffset[6] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
-
   // Haven't fixed for E yet
   if(sourcePos == "W")
   {
@@ -183,21 +205,28 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorMJDCable::MGGeneratorMJDCable(const MGGeneratorMJDCable & other) : MGVGenerator(other)
-{;}
-
-//---------------------------------------------------------------------------//
-
-MGGeneratorMJDCable::~MGGeneratorMJDCable()
+void MGGeneratorMJDCable::SetSourceType(std::string sourceType)
 {
-  delete fG4Messenger;
-  delete fParticleGun;
+	if(sourceType = "S") {
+		fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
+		fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
+		fCableOffset[2] = G4ThreeVector(-2.54*0.090*cm, 2.54*5.59*cm, 0.); // P3
+		fCableOffset[3] = G4ThreeVector(-2.54*3.356*cm, 2.54*3.81*cm, 0.); // P4
+		fCableOffset[4] = G4ThreeVector(-2.54*4.387*cm, -2.54*3.408*cm, 0.); // P5
+		fCableOffset[5] = G4ThreeVector(-2.54*1.15 *cm, -2.54*5.25*cm, 0.); // P6
+		fCableOffset[6] = G4ThreeVector(2.54*2.350*cm, -2.54*3.6*cm, 0.); // P7
+	}
+	if(sourceType = "H") {
+		fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
+		fCableOffset[1] = G4ThreeVector(2.54*2.350*cm, 2.54*3.6*cm, 0.);
+		fCableOffset[2] = G4ThreeVector(-2.54*1.15*cm, 2.54*5.25*cm, 0.);
+		fCableOffset[3] = G4ThreeVector(-2.54*4.387*cm, 2.54*3.408*cm, 0.);
+		fCableOffset[4] = G4ThreeVector(-2.54*3.356*cm, -2.54*3.81*cm, 0.);
+		fCableOffset[5] = G4ThreeVector(-2.54*0.090*cm, -2.54*5.59*cm, 0.);
+		fCableOffset[6] = G4ThreeVector(2.54*3.425*cm, -2.54*3.75*cm, 0.);
+	}
 }
 
-//---------------------------------------------------------------------------//
-
-void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
-{;}  
 
 //---------------------------------------------------------------------------//
 

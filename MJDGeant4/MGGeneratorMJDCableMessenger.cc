@@ -77,6 +77,22 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
   generator->SetIonA(228);
   fACmd->SetDefaultValue(generator->GetIonZ());
   
+  // /MG/generator/MJDCable/setSourceType
+  fSourceTypeCmd =
+    new G4UIcmdWithAString("/MG/generator/MJDCable/setSourceType", this);
+  fSourceTypeCmd->SetGuidance("H or S");
+  fSourceTypeCmd->SetCandidates("H S");
+  fSourceTypeCmd->SetDefaultValue("S");
+  fMJDCableGenerator->SetSourceType("S");
+
+  // /MG/generator/MJDCable/setSourcePos
+  fSourcePosCmd =
+    new G4UIcmdWithAString("/MG/generator/MJDCable/setSourcePos", this);
+  fSourcePosCmd->SetGuidance("West or East cryostat position.");
+  fSourcePosCmd->SetCandidates("W E");
+  fSourcePosCmd->SetDefaultValue("W");
+  fMJDCableGenerator->SetSourcePos("W");
+
 }
 
 //---------------------------------------------------------------------------//

@@ -95,6 +95,7 @@ private:
 
   G4UIcmdWithAnInteger *fACmd;
   G4UIcmdWithAnInteger *fZCmd;
-  // G4UIcmdWithAString *fSourcePosCmd;
+  G4UIcmdWithAString *fSourcePosCmd;
+  G4UIcmdWithAString *fSourceTypeCmd;
 };
 #endif
