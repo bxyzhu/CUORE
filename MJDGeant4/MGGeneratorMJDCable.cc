@@ -227,6 +227,14 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
     fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
   	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
   }
+  else if(fSourceType == "P") { // Dummy for now - cold plate
+	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
+  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  }
+  else if(fSourceType == "C") { // Dummy for now - crossarm
+	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
+  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
