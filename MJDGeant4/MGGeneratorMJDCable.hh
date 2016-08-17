@@ -142,15 +142,26 @@ private:
   G4int fRandPos; // Random integer to choose cable position
 
   G4double fCableRadius; // Radius of a bundle of cables
-  
-  G4ThreeVector fStringCenter[14]; // center of strings, 7 strings per module
   G4ThreeVector fCableOffset[7]; // XY location of cables wrt center of cold plate, even is signal and odd is HV
+  G4ThreeVector fHVOffset[7]; // XY location of cables wrt center of cold plate, even is signal and odd is HV
     
-  G4double fCableLength[4] = {2.54*11.3/2*cm, 2.54*9.3/2*cm, 2.54*6.3/2*cm, 2.54*3.8/2*cm}; // Half length of signal cable, one for each detector
-  G4double fCableCenter[4] = {-2.54*9.5/2*cm, -2.54*7.5/2*cm, -2.54*4.5/2*cm, -2.54*2.0/2*cm}; // Centers of signal cables, one for each detector
-  G4double fHVLength[4] = {2.54*11.3/2*cm, 2.54*9.3/2*cm, 2.54*6.3/2*cm, 2.54*3.8/2*cm}; // Half length of HV cable, one for each detector
-  G4double fHVCenter[4] = {-2.54*9.5/2*cm, -2.54*7.5/2*cm, -2.54*4.5/2*cm, -2.54*2.0/2*cm}; // Centers of HV cables, one for each detector
+  // 99 to -187 => Middle = -44 (simulation) = -120 (real) => Add 76
+  // 287.0 mm total length currently => 280
+  // Signal
+  // 91+189, -126 center;  91+117, -89 center; 91+50, -56 center; 91+15, -38 => For the 4 detectors
+  // 91+183, 91+128, 91+77, 91+24, 91-27 => For the 5 detectors, P
+  // HV
+  // 91+139, -100 center; 91+74, -67.5; 91+14, -37.5, 91-58, -1.5 => For the 4 detectors
+  // 91+143, 91+91, 91+39, 91-5, 91-56 => For the 5 detectors
+  G4double fCableLength[4] = {28.0/2*cm, 20.8/2*cm, 14.1/2*cm, 10.6/2*cm}; // Half length of signal cable, one for each detector 
+  G4double fCableCenter[4] = {-12.6*cm, -8.9*cm, -5.6*cm, -3.8*cm}; // Centers of signal cables, one for each detector
+  G4double fHVLength[4] = {23.0/2*cm, 16.5/2*cm, 10.5/2*cm, 3.3/2*cm}; // Half length of HV cable, one for each detector
+  G4double fHVCenter[4] = {-10.0*cm, -6.75*cm, -3.75*cm, -0.15*cm}; // Centers of HV cables, one for each detector
 
+  // G4double fCableLength[4] = {2.54*11.3/2*cm, 2.54*9.3/2*cm, 2.54*6.3/2*cm, 2.54*3.8/2*cm}; // Half length of signal cable, one for each detector 
+  // G4double fCableCenter[4] = {-2.54*9.5/2*cm, -2.54*7.5/2*cm, -2.54*4.5/2*cm, -2.54*2.0/2*cm}; // Centers of signal cables, one for each detector
+  // G4double fHVLength[4] = {2.54*11.3/2*cm, 2.54*9.3/2*cm, 2.54*6.3/2*cm, 2.54*3.8/2*cm}; // Half length of HV cable, one for each detector
+  // G4double fHVCenter[4] = {-2.54*9.5/2*cm, -2.54*7.5/2*cm, -2.54*4.5/2*cm, -2.54*2.0/2*cm}; // Centers of HV cables, one for each detector
   G4ThreeVector fColdPlateOffset[2]; // offset of cold plate to origin in world. 0 for Module 1, 1 for Module 2
 
 };

@@ -80,7 +80,7 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
   // /MG/generator/MJDCable/setSourceType
   fSourceTypeCmd =
     new G4UIcmdWithAString("/MG/generator/MJDCable/setSourceType", this);
-  fSourceTypeCmd->SetGuidance("H or S");
+  fSourceTypeCmd->SetGuidance("Set source type: H or S");
   fSourceTypeCmd->SetCandidates("H S");
   fSourceTypeCmd->SetDefaultValue("S");
   fMJDCableGenerator->SetSourceType("S");
@@ -117,6 +117,10 @@ void MGGeneratorMJDCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newVal
     fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
   else if(cmd == fACmd)
     fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
+  else if(cmd == fSourcePosCmd)
+    fMJDCableGenerator->SetSourcePos(newValues);
+  else if(cmd == fSourceTypeCmd)
+    fMJDCableGenerator->SetSourceType(newValues);
 }
 
 //---------------------------------------------------------------------------//

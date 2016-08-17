@@ -189,9 +189,11 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
     }
   }
   // Haven't fixed for E yet
-  if(sourcePos == "W")
-  {
-    for(int i = 0; i < 7; i++) fCableOffset[i].rotateZ(-pi/2);
+  if(sourcePos == "W") {
+    for(int i = 0; i < 7; i++) {
+    	fCableOffset[i].rotateZ(-pi/2);
+  		fHVOffset[i].rotateZ(-pi/2);
+  	}
   }
 
 }
@@ -207,20 +209,24 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 {
 
   // Generate random variables
-  fRandString = G4RandFlat::shootInt(7);
-  fRandPos = G4RandFlat::shootInt(4);
+  fRandString = G4RandFlat::shootInt(7); // String position
+  fRandPos = G4RandFlat::shootInt(4); // Detector position
   fRandRadiusSq = fCableRadius*fCableRadius*G4UniformRand();
   fRandAngle = 2*pi*G4UniformRand();
   
   // Choose a random XY point along a disk
   fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
-  // Choose a random cable and generate a random point along the cable
-  fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
 
-  // Set source position
-  if(fSourceType = "S") fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
-  if(fSourceType = "H") fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  // Set source position depending on source type
+  if(fSourceType == "S") {
+  	fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
+  	fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  }
+  else if(fSourceType == "H") {
+    fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
+  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
   G4ParticleDefinition *aIon = theIonTable->GetIon(fZ, fA);
