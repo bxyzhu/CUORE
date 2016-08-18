@@ -226,7 +226,7 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   		fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
   		fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
   	}
-  	else if(fSourceType == "H") 
+  	else if(fSourceType == "H")
   	{
     	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
   		fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
@@ -238,9 +238,9 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
 	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
-  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ);
   }
-  else if(fSourceType == "C") 
+  else if(fSourceType == "C")
   {
 	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
   	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
