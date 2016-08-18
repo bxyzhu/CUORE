@@ -87,6 +87,8 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
 
   // Estimated rough radius of cables
   fCableRadius = 0.02*mm;
+  fColdPlateRadius = 300./2*mm;
+  fColdPlateZ = 10.*mm;
 
   // Units were originally in inches and then converted to cm
   // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
@@ -189,13 +191,14 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
     }
   }
   // Haven't fixed for E yet
-  if(sourcePos == "W") {
-    for(int i = 0; i < 7; i++) {
+  if(sourcePos == "W") 
+  {
+    for(int i = 0; i < 7; i++) 
+    {
     	fCableOffset[i].rotateZ(-pi/2);
   		fHVOffset[i].rotateZ(-pi/2);
   	}
   }
-
 }
 
 //---------------------------------------------------------------------------//
@@ -207,31 +210,38 @@ void MGGeneratorMJDCable::EndOfRunAction(G4Run const*)
 
 void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 {
-
   // Generate random variables
-  fRandString = G4RandFlat::shootInt(7); // String position
-  fRandPos = G4RandFlat::shootInt(4); // Detector position
-  fRandRadiusSq = fCableRadius*fCableRadius*G4UniformRand();
   fRandAngle = 2*pi*G4UniformRand();
-  
-  // Choose a random XY point along a disk
-  fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
-  fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
-
-  // Set source position depending on source type
-  if(fSourceType == "S") {
-  	fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
-  	fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  if(fSourceType == "S" || fSourceType == "H")
+  {
+  	fRandString = G4RandFlat::shootInt(7); // String position
+  	fRandPos = G4RandFlat::shootInt(4); // Detector position
+  	// Choose a random XY point along a disk
+  	fRandRadiusSq = fCableRadius*fCableRadius*G4UniformRand();
+  	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
+  	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
+  	// Set source position depending on source type
+  	if(fSourceType == "S") 
+  	{
+  		fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
+  		fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  	}
+  	else if(fSourceType == "H") 
+  	{
+    	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
+  		fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  	}
   }
-  else if(fSourceType == "H") {
-    fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
+  else if(fSourceType == "P") 
+  {
+	fRandRadiusSq = fColdPlateRadius*fColdPlateRadius*G4UniformRand();
+  	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
+  	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
+	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
   	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
   }
-  else if(fSourceType == "P") { // Dummy for now - cold plate
-	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
-  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
-  }
-  else if(fSourceType == "C") { // Dummy for now - crossarm
+  else if(fSourceType == "C") 
+  {
 	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
   	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
   }
