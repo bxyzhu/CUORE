@@ -88,7 +88,7 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   // Estimated rough radius of cables
   fCableRadius = 0.02*mm;
   fColdPlateRadius = 300./2*mm;
-  fColdPlateZ = 10.*mm;
+  fColdPlateZ = 5.*mm;
 
   // Units were originally in inches and then converted to cm
   // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
@@ -238,7 +238,7 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
 	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
-  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ);
+  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + 20.0*mm);
   }
   else if(fSourceType == "C")
   {

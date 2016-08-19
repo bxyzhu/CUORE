@@ -81,7 +81,7 @@ MGGeneratorMJDCableMessenger::MGGeneratorMJDCableMessenger(MGGeneratorMJDCable *
   fSourceTypeCmd =
     new G4UIcmdWithAString("/MG/generator/MJDCable/setSourceType", this);
   fSourceTypeCmd->SetGuidance("Set source type: H(igh voltage), S(ignal), (Cold) P(late), or C(ross arm)");
-  fSourceTypeCmd->SetCandidates("H S P C");
+  fSourceTypeCmd->SetCandidates("H S C P");
   fSourceTypeCmd->SetDefaultValue("S");
   fMJDCableGenerator->SetSourceType("S");
 
