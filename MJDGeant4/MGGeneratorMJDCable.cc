@@ -131,6 +131,7 @@ void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
 void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
 {
   // No implementation for "E" yet
+
   G4UIcommandTree* cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
   for(int i=0; i<cmdTree->GetCommandEntry(); i++)
@@ -144,23 +145,26 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
       if(param == "cryo1Pos" && sourcePos == "W")
-  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+  		fColdPlateOffset[0] = G4ThreeVector(x, y, z);
       else if(param == "cryo2Pos" && sourcePos == "E")
-  fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+  		fColdPlateOffset[0] = G4ThreeVector(x, y, z);
     }
     else if(param == "cryo1Rot" && sourcePos == "W")
     {
       std::string val =
-  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
-      // std::stringstream(val) >> fZrotation;
+  		cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      std::stringstream(val) >> fZrotation;
     }
     else if(param == "cryo2Rot" && sourcePos == "E")
     {
       std::string val =
   cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
-      // std::stringstream(val) >> fZrotation;
+      std::stringstream(val) >> fZrotation;
     }
   }
+  
+  if(fSourceType == "S" || fSourceType == "H" || fSourceType == "P")
+  {
   cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocryoassembly"+sourcePos+"/"));
   for(int i=0; i<cmdTree->GetCommandEntry(); i++)
@@ -191,14 +195,22 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
     }
   }
   // Haven't fixed for E yet
-  if(sourcePos == "W") 
-  {
     for(int i = 0; i < 7; i++) 
     {
-    	fCableOffset[i].rotateZ(-pi/2);
-  		fHVOffset[i].rotateZ(-pi/2);
+    	// fCableOffset[i].rotateZ(-pi/2);
+  		// fHVOffset[i].rotateZ(-pi/2);
+  	    fCableOffset[i].rotateZ(-fZrotation);
+  		fHVOffset[i].rotateZ(-fZrotation);
   	}
   }
+  else if(fSourceType == "C")
+  {
+  	// CryostatAssembly_001_VacuumVessel_001_CrossArmTube_001
+
+
+  }
+
+
 }
 
 //---------------------------------------------------------------------------//
