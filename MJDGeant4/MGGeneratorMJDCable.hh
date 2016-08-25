@@ -147,6 +147,8 @@ private:
 
   G4double fColdPlateRadius;
   G4double fColdPlateZ;    
+  G4double fCrossArmLength;
+  G4double fCrossArmWidth;
 
   // 99 to -187 => Middle = -44 (simulation) = -120 (real) => Add 76
   // 287.0 mm total length currently => 280

@@ -85,13 +85,15 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fG4Messenger = new MGGeneratorMJDCableMessenger(this);
   fParticleGun = new G4ParticleGun(1);
 
-  // Estimated rough radius of cables
   fCableRadius = 0.02*mm;
-  fColdPlateRadius = 300./2*mm;
+  fColdPlateRadius = 317.5/2*mm;
   fColdPlateZ = 5.*mm;
+  fCrossArmLength = 27.13*25.4/2*mm;
+  fCrossArmWidth = 5./2*mm;
 
   // Units were originally in inches and then converted to cm
   // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
+  // to make sure all the cables are inside the holes of the cable guides
   fCableOffset[0] = G4ThreeVector(-2.54*1.839*cm, 2.54*0.560*cm, 0.); // P1
   fHVOffset[0] = G4ThreeVector(-2.54*1.839*cm, -2.54*0.560*cm, 0.);  
   fCableOffset[1] = G4ThreeVector(2.54*3.425*cm, 2.54*3.75*cm, 0.); // P2
@@ -130,8 +132,6 @@ void MGGeneratorMJDCable::BeginOfRunAction(G4Run const*)
 
 void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
 {
-  // No implementation for "E" yet
-
   G4UIcommandTree* cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/demonstrator/"));
   for(int i=0; i<cmdTree->GetCommandEntry(); i++)
@@ -158,13 +158,11 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
     else if(param == "cryo2Rot" && sourcePos == "E")
     {
       std::string val =
-  cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
+      	cmdTree->GetCommand(i+1)->GetParameter(0)->GetDefaultValue();
       std::stringstream(val) >> fZrotation;
     }
   }
   
-  if(fSourceType == "S" || fSourceType == "H" || fSourceType == "P")
-  {
   cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
   cmdTree = cmdTree->GetTree(G4String("/MG/mjdemocryoassembly"+sourcePos+"/"));
   for(int i=0; i<cmdTree->GetCommandEntry(); i++)
@@ -194,23 +192,12 @@ void MGGeneratorMJDCable::SetSourcePos(std::string sourcePos)
       fColdPlateOffset[0] += G4ThreeVector(x, y, z);
     }
   }
-  // Haven't fixed for E yet
-    for(int i = 0; i < 7; i++) 
-    {
-    	// fCableOffset[i].rotateZ(-pi/2);
-  		// fHVOffset[i].rotateZ(-pi/2);
-  	    fCableOffset[i].rotateZ(-fZrotation);
-  		fHVOffset[i].rotateZ(-fZrotation);
-  	}
-  }
-  else if(fSourceType == "C")
+
+  for(int i = 0; i < 7; i++) 
   {
-  	// CryostatAssembly_001_VacuumVessel_001_CrossArmTube_001
-
-
+	fCableOffset[i].rotateZ(-fZrotation);
+  	fHVOffset[i].rotateZ(-fZrotation);
   }
-
-
 }
 
 //---------------------------------------------------------------------------//
@@ -233,18 +220,18 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
   	// Set source position depending on source type
-  	if(fSourceType == "S") 
+  	if(fSourceType == "S") // Signal
   	{
   		fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
   		fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
   	}
-  	else if(fSourceType == "H")
+  	else if(fSourceType == "H") // HV
   	{
     	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
   		fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
   	}
   }
-  else if(fSourceType == "P") 
+  else if(fSourceType == "P") // Cold plate
   {
 	fRandRadiusSq = fColdPlateRadius*fColdPlateRadius*G4UniformRand();
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
@@ -252,10 +239,12 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
 	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
   	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + 20.0*mm);
   }
-  else if(fSourceType == "C")
-  {
-	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
-  	fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  else if(fSourceType == "C") // Cross arm
+  { // Right now this is just a bar
+  	fPositionY = (1. - 2.*G4UniformRand())*fCrossArmLength;
+  	fPositionX = (1. - 2.*G4UniformRand())*fCrossArmWidth;
+	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
+  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius*fColdPlateRadius, fPositionZ + 20.0*mm );
   }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
