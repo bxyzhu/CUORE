@@ -240,11 +240,12 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + 20.0*mm);
   }
   else if(fSourceType == "C") // Cross arm
-  { // Right now this is just a bar
+  { // Right now this is just a cylinder
+  	fRandRadiusSq = fColdPlateZ*fColdPlateZ*G4UniformRand();
   	fPositionY = (1. - 2.*G4UniformRand())*fCrossArmLength;
-  	fPositionX = (1. - 2.*G4UniformRand())*fCrossArmWidth;
-	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
-  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius*fColdPlateRadius, fPositionZ + 20.0*mm );
+  	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
+	fPositionZ = sqrt( fRandRadiusSq ) * sin( fRandAngle );
+  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius - fCrossArmLength, fPositionZ + 20.0*mm );
   }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
