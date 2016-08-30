@@ -90,6 +90,8 @@ MGGeneratorMJDCable::MGGeneratorMJDCable()
   fColdPlateZ = 5.*mm;
   fCrossArmLength = 27.13*25.4/2*mm;
   fCrossArmWidth = 5./2*mm;
+  fCrossArmIRadius = 35.5/2*mm;
+  fCrossArmT = 25.4*0.25*mm;
 
   // Units were originally in inches and then converted to cm
   // The drawing and simulation geometries aren't one-to-one so I made some slight adjustments
@@ -241,11 +243,11 @@ void MGGeneratorMJDCable::GeneratePrimaryVertex(G4Event *event)
   }
   else if(fSourceType == "C") // Cross arm
   { // Right now this is just a cylinder
-  	fRandRadiusSq = fColdPlateZ*fColdPlateZ*G4UniformRand();
+  	fRandRadiusSq = fCrossArmIRadius*fCrossArmIRadius + (fCrossArmT*fCrossArmT)*G4UniformRand();
   	fPositionY = (1. - 2.*G4UniformRand())*fCrossArmLength;
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
 	fPositionZ = sqrt( fRandRadiusSq ) * sin( fRandAngle );
-  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius - fCrossArmLength, fPositionZ + 20.0*mm );
+  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius - fCrossArmLength, fPositionZ + 37.0*mm );
   }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());
