@@ -51,7 +51,7 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4UIdirectory.hh"
 
-#include "generators/MGGeneratorMJDCable.hh"
+#include "generators/MGGeneratorCable.hh"
 
 //---------------------------------------------------------------------------//
 
@@ -59,7 +59,7 @@
 
 //---------------------------------------------------------------------------//
 
-MGGeneratorCableMessenger::MGGeneratorCableMessenger(MGGeneratorMJDCable *generator) : fMJDCableGenerator(generator)
+MGGeneratorCableMessenger::MGGeneratorCableMessenger(MGGeneratorCable *generator) : fCableGenerator(generator)
 {
   // /MG/generator/Cable
   fCableDirectory = new G4UIdirectory("/MG/generator/Cable/");
@@ -91,7 +91,7 @@ MGGeneratorCableMessenger::MGGeneratorCableMessenger(MGGeneratorMJDCable *genera
   fSourcePosCmd->SetGuidance("West or East cryostat position.");
   fSourcePosCmd->SetCandidates("W E");
   fSourcePosCmd->SetDefaultValue("W");
-  fMJDCableGenerator->SetSourcePos("W");
+  fCableGenerator->SetSourcePos("W");
 
 }
 
@@ -106,7 +106,9 @@ MGGeneratorCableMessenger::~MGGeneratorCableMessenger()
 {
   delete fACmd;
   delete fZCmd;
-  delete fMJDCableDirectory;
+  delete fSourcePosCmd;
+  delete fSourceTypeCmd;
+  delete fCableDirectory;
 }
 
 //---------------------------------------------------------------------------//
@@ -114,13 +116,13 @@ MGGeneratorCableMessenger::~MGGeneratorCableMessenger()
 void MGGeneratorCableMessenger::SetNewValue(G4UIcommand *cmd, G4String newValues)
 {
   if(cmd == fZCmd)
-    fMJDCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
+    fCableGenerator->SetIonZ(fZCmd->GetNewIntValue(newValues));
   else if(cmd == fACmd)
-    fMJDCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
+    fCableGenerator->SetIonA(fACmd->GetNewIntValue(newValues));
   else if(cmd == fSourcePosCmd)
-    fMJDCableGenerator->SetSourcePos(newValues);
+    fCableGenerator->SetSourcePos(newValues);
   else if(cmd == fSourceTypeCmd)
-    fMJDCableGenerator->SetSourceType(newValues);
+    fCableGenerator->SetSourceType(newValues);
 }
 
 //---------------------------------------------------------------------------//

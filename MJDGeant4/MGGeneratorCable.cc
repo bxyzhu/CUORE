@@ -38,7 +38,7 @@
  * 
  * REVISION:
  *
- * 07-2016, Created, B. Zhu
+ * 09-2016, Created, B. Zhu
  *
  */
 //---------------------------------------------------------------------------//
@@ -147,9 +147,9 @@ void MGGeneratorCable::SetSourcePos(std::string sourcePos)
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
       if(param == "cryo1Pos" && sourcePos == "W")
-  		fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+  		fColdPlateOffset = G4ThreeVector(x, y, z);
       else if(param == "cryo2Pos" && sourcePos == "E")
-  		fColdPlateOffset[0] = G4ThreeVector(x, y, z);
+  		fColdPlateOffset = G4ThreeVector(x, y, z);
     }
     else if(param == "cryo1Rot" && sourcePos == "W")
     {
@@ -176,7 +176,7 @@ void MGGeneratorCable::SetSourcePos(std::string sourcePos)
       std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fColdPlateOffset[0] += G4ThreeVector(x, y, z/3); // rough estimate for Z positioning
+      fColdPlateOffset += G4ThreeVector(x, y, z/3); // rough estimate for Z positioning
     }
   }
   cmdTree = G4UImanager::GetUIpointer()->GetTree()->GetTree("/MG/");
@@ -191,13 +191,13 @@ void MGGeneratorCable::SetSourcePos(std::string sourcePos)
       std::stringstream(cmd->GetParameter(0)->GetDefaultValue()) >> x;
       std::stringstream(cmd->GetParameter(1)->GetDefaultValue()) >> y;
       std::stringstream(cmd->GetParameter(2)->GetDefaultValue()) >> z;
-      fColdPlateOffset[0] += G4ThreeVector(x, y, z);
+      fColdPlateOffset += G4ThreeVector(x, y, z);
     }
   }
 
   for(int i = 0; i < 7; i++) 
   {
-	fCableOffset[i].rotateZ(-fZrotation);
+	  fCableOffset[i].rotateZ(-fZrotation);
   	fHVOffset[i].rotateZ(-fZrotation);
   }
 }
@@ -217,20 +217,18 @@ void MGGeneratorCable::GeneratePrimaryVertex(G4Event *event)
   {
   	fRandString = G4RandFlat::shootInt(7); // String position
   	fRandPos = G4RandFlat::shootInt(4); // Detector position
-  	// Choose a random XY point along a disk
   	fRandRadiusSq = fCableRadius*fCableRadius*G4UniformRand();
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
-  	// Set source position depending on source type
   	if(fSourceType == "S") // Signal
   	{
   		fPositionZ = (1. - 2.*G4UniformRand())*fCableLength[fRandPos];
-  		fPosition = fColdPlateOffset[0] + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
+  		fPosition = fColdPlateOffset + fCableOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fCableCenter[fRandPos]);
   	}
   	else if(fSourceType == "H") // HV
   	{
     	fPositionZ = (1. - 2.*G4UniformRand())*fHVLength[fRandPos];
-  		fPosition = fColdPlateOffset[0] + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
+  		fPosition = fColdPlateOffset + fHVOffset[fRandString] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + fHVCenter[fRandPos]);
   	}
   }
   else if(fSourceType == "P") // Cold plate
@@ -239,15 +237,15 @@ void MGGeneratorCable::GeneratePrimaryVertex(G4Event *event)
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
   	fPositionY = sqrt( fRandRadiusSq ) * sin( fRandAngle );
 	fPositionZ = (1. - 2.*G4UniformRand())*fColdPlateZ;
-  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY, fPositionZ + 20.0*mm);
+  	fPosition = fColdPlateOffset + G4ThreeVector(fPositionX, fPositionY, fPositionZ + 20.0*mm);
   }
   else if(fSourceType == "C") // Cross arm
-  { // Right now this is just a cylinder
+  { 
   	fRandRadiusSq = fCrossArmIRadius*fCrossArmIRadius + (fCrossArmT*fCrossArmT)*G4UniformRand();
   	fPositionY = (1. - 2.*G4UniformRand())*fCrossArmLength;
   	fPositionX = sqrt( fRandRadiusSq ) * cos( fRandAngle );
-	fPositionZ = sqrt( fRandRadiusSq ) * sin( fRandAngle );
-  	fPosition = fColdPlateOffset[0] + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius - fCrossArmLength, fPositionZ + 37.0*mm );
+	  fPositionZ = sqrt( fRandRadiusSq ) * sin( fRandAngle );
+  	fPosition = fColdPlateOffset + G4ThreeVector(fPositionX, fPositionY - fColdPlateRadius - fCrossArmLength, fPositionZ + 36.75*mm );
   }
 
   G4IonTable *theIonTable = (G4IonTable*)(G4ParticleTable::GetParticleTable()->GetIonTable());

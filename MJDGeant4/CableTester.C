@@ -2,6 +2,16 @@
 // Instead of using G4UniformRand, use TRandom3 here
 // Using TVector3 here instead of G4ThreeVector
 
+  // Calculating cable locations:
+  // 99 to -187 => Middle = -44 (simulation) = -120 (real) => Add 76
+  // 287.0 mm total length currently => 280
+  // Signal
+  // 91+189, -126 center;  91+117, -89 center; 91+50, -56 center; 91+15, -38 => For the 4 detectors
+  // 91+183, 91+128, 91+77, 91+24, 91-27 => For the 5 detectors, P
+  // HV
+  // 91+139, -100 center; 91+74, -67.5; 91+14, -37.5, 91-58, -1.5 => For the 4 detectors
+  // 91+143, 91+91, 91+39, 91-5, 91-56 => For the 5 detectors
+
 void Test()
 {
 	gStyle->SetOptStat(0);

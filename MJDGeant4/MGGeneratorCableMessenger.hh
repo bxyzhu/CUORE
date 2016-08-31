@@ -49,7 +49,7 @@
  * CONTACT: 
  * FIRST SUBMISSION:
  * 
- * 06-2016, Created, B. Zhu
+ * 09-2016, Created, B. Zhu
  */
 // --------------------------------------------------------------------------//
 
@@ -66,14 +66,14 @@ class G4UIdirectory;
 class G4UIcmdWithoutParameter;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
-class MGGeneratorMJDCable;
+class MGGeneratorCable;
 
 class MGGeneratorCableMessenger : public G4UImessenger
 {
 public:
 
   //default constructor
-  MGGeneratorCableMessenger(MGGeneratorMJDCable *generator);
+  MGGeneratorCableMessenger(MGGeneratorCable *generator);
 
   //copy constructor
   MGGeneratorCableMessenger(const MGGeneratorCableMessenger &);
@@ -89,9 +89,9 @@ protected:
 
   //private  members
 private:
-  MGGeneratorMJDCable *fMJDCableGenerator;
+  MGGeneratorCable *fCableGenerator;
 
-  G4UIdirectory *fMJDCableDirectory;
+  G4UIdirectory *fCableDirectory;
 
   G4UIcmdWithAnInteger *fACmd;
   G4UIcmdWithAnInteger *fZCmd;
