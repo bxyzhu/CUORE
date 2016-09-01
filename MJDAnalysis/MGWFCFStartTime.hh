@@ -28,12 +28,13 @@
  * A simple start time (t0) estimator using the constant fraction (CF) timing method.
  * The premise of CF timing is to evaluate the t0 at a time after the leading edge 
  * of the pulse has reached a constant fraction of the peak pulse amplitude. 
- * In principle, the CF timing method should have little to no amplitude-related trigger walk.
+ * In principle, the CF timing method should have little to no amplitude-related trigger walk,
+ * the primary form of trigger walk mostly comes from the shape of the input pulse. 
  * 
  * The procedure is:
  * 1) The original signal is inverted and multiplied by a fraction (representing the evaluation point)
  * 2) The original signal is delayed (typically by a time larger than the rise-time) 
- * 3) The two signals are summed together and the zero point crossing represents the time at which the pulse reaches the fraction
+ * 3) Steps (1) and (2) are summed together, the zero point crossing represents the time where the pulse reaches the fraction
  *
  * As the rise-time and shape of the waveform can vary, trigger walk is reduced by 
  * reducing the delay time (also known as amplitude and rise-time compensated (ARC) timing)
@@ -73,7 +74,7 @@ class MGWFCFStartTime : public MGVWaveformParameterCalculator
 
   protected:
     double fRatio; // Ratio of the delayed waveform
-    double fThreshold; // 
+    double fThreshold; // Threshold for evaluating t0, usually set to 0 but can be non-zero
     size_t fOffset; // Time delay in samples
     std::vector<double> fScaledInput; // Internal vector for inverted + scaled waveform
     std::vector<double> fSummedVector; // Internal vector for summing and evaluating t0

@@ -19,17 +19,17 @@ void MGWFCFStartTime::CalculateParameters(const MGWaveform& anInput)
 
   double threshold = fThreshold;
 
-  // Start at maximum of trapezoidal filter
   fExtFinder.FindExtremum(anInput);
   size_t iRef = fExtFinder.GetTheExtremumPoint();
   
-  // cout << "Extremum point: " << iRef << endl; 
   size_t iStart = fRegion.GetBeginning();
   size_t iStop = fRegion.GetEnd();
   if(iStop == 0 || iStop > anInput.GetLength()) iStop = anInput.GetLength();
 
-
   // Start at maximum of trapezoidal filter and walk backwards until crossing 0
+  // This is probably not the smartest way to do evaluate the zero crossing, since I'm starting from a sample on the trap filter
+  // but finding a sample on the summed vector. Another way I tried was starting from the fOffset sample and walking forwards 
+  // however this seemed more consistent when there was noise. 
   if(iRef >= iStop) iRef = iStop-1;
   while(iRef > iStart && fSummedVector[iRef] > threshold) iRef--;
   
