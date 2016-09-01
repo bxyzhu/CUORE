@@ -10,21 +10,14 @@ MGWFCFStartTime::MGWFCFStartTime(const string& aName) :
 
 void MGWFCFStartTime::CalculateParameters(const MGWaveform& anInput)
 {
-  // Create the delayed + inverted pulse
+  // Create the inverted pulse
   // Scale down by some fraction and invert
   for(size_t i = 0; i < anInput.GetLength(); i++) fScaledInput.push_back(-fRatio*anInput[i]);
 
-  // Sum together the inverted and delayed waveform with the original, vector length is reduced by iOffset samples
+  // Sum together the inverted with the original waveform delayed by fOffset, vector length is reduced by fOffset samples
   for(size_t i = fOffset; i < anInput.GetLength(); i++) fSummedVector.push_back( anInput[i - fOffset] + fScaledInput[i] );
 
   double threshold = fThreshold;
-  
-  // Start at offset sample and then walk foward until reaching 0 crossing
-  // size_t iRef = fOffset;
-  // while(fSummedVector[iRef] < 0.) iRef++;
-
-  // Interpolate with previous sample for t0
-  // SetParameterValue(0, anInput.InterpolateForTLocal(0., iRef-1, iRef));
 
   // Start at maximum of trapezoidal filter
   fExtFinder.FindExtremum(anInput);
