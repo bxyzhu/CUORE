@@ -55,17 +55,19 @@ dNParam(50), dNumCalls(0), dMass(36.75), dMinEnergy(0.), dMaxEnergy(10000.), dBi
   tTime = new TDatime();
 
   // Data directories depending on QCC/local
-  dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
+  // dDataDir =  "/Users/brian/macros/CUOREZ/Bkg";
    // dDataDir = "/cuore/user/zhubrian/CUORE0/scratch/";
-  // dDataDir = "/home/zhubrian/data/CUORE0";
+  dDataDir = "/Users/brianzhu/CUORE/data/CUORE0/";
 
-  dMCDir = "/Users/brian/macros/Simulations/Production";
+  // dMCDir = "/Users/brian/macros/Simulations/Production";
    // dMCDir = "/cuore/user/zhubrian/MC/Bkg";
   // dMCDir = "/home/zhubrian/data/Simulations";
-  
-  dSaveDir = "/Users/brian/Dropbox/code/Fitting";
+  dMCDir = "/Users/brianzhu/CUORE/MC";
+
+  // dSaveDir = "/Users/brian/Dropbox/code/Fitting";
    // dSaveDir = "/cuore/user/zhubrian/";
   // dSaveDir = "/home/zhubrian/code/Fitting";
+  dSaveDir = "/Users/brianzhu/macros/code/Fitting/Output";
 
   // Base number of counts
   dBinBase = fBinBase;
@@ -666,6 +668,7 @@ double TBackgroundModel::GetChiSquare()
       // Neyman chi-squared
       // chiSquare += (datam1_i - modelm1_i)*(datam1_i - modelm1_i)/modelm1_i;
     }
+    else if(datam1_i == 0 && modelm1_i != 0) chiSquare += 2 * (modelm1_i);
   }
   for(int i = dFitMinBinM2; i < dFitMaxBinM2; i++)
   {
@@ -686,6 +689,7 @@ double TBackgroundModel::GetChiSquare()
       // chiSquare += (datam2_i - modelm2_i)*(datam2_i - modelm2_i)/modelm2_i;
 
     }
+    else if(datam2_i == 0 && modelm2_i != 0) chiSquare += 2 * (modelm2_i);
   }
   // Add Gaussian and Poisson constraints on parameters here
   // Gaussian constraints work fine, however the Poisson limits don't seem to work (yet)
@@ -1538,74 +1542,74 @@ void TBackgroundModel::LoadData()
   { 
   // Livetimes only set for default because I'm lazy!
   case 1:
-    // qtree->Add(Form("%s/Unblinded/ReducedB-ds2049.root", dDataDir.c_str()));   
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2064.root", dDataDir.c_str()));   
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2067.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2070.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2073.root", dDataDir.c_str())); 
+    // qtree->Add(Form("%s/ReducedB-ds2049.root", dDataDir.c_str()));   
+    qtree->Add(Form("%s/ReducedB-ds2061.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2064.root", dDataDir.c_str()));   
+    qtree->Add(Form("%s/ReducedB-ds2067.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2070.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2073.root", dDataDir.c_str())); 
     cout << "Using Data Release 1" << endl;
   break;
 
   case 2:
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2079.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2085.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2088.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2091.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2097.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2100.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2079.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2085.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2088.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2091.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2097.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2100.root", dDataDir.c_str())); 
     cout << "Using Data Release 2" << endl;
   break;
 
   case 3:
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2103.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2109.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2118.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2124.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2130.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2133.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2139.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2103.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2109.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2118.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2124.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2130.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2133.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2139.root", dDataDir.c_str()));
     cout << "Using Data Release 3" << endl;
   break;
 
   // Combine DR 2 and 3 (the good data releases)
   case 4:
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2079.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2085.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2088.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2091.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2097.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2100.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2103.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2109.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2118.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2124.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2130.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2133.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2139.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2079.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2085.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2088.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2091.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2097.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2100.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2103.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2109.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2118.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2124.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2130.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2133.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2139.root", dDataDir.c_str()));
     cout << "Using Data Release 2+3" << endl;
   break;
 
   default:   
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2061.root", dDataDir.c_str())); // Use this or no?
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2064.root", dDataDir.c_str()));   
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2067.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2070.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2073.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2076.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2079.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2085.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2088.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2091.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2097.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2100.root", dDataDir.c_str())); 
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2103.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2109.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2118.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2124.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2130.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2133.root", dDataDir.c_str()));
-    qtree->Add(Form("%s/Unblinded/ReducedB-ds2139.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2061.root", dDataDir.c_str())); // Use this or no?
+    qtree->Add(Form("%s/ReducedB-ds2064.root", dDataDir.c_str()));   
+    qtree->Add(Form("%s/ReducedB-ds2067.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2070.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2073.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2076.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2079.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2085.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2088.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2091.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2097.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2100.root", dDataDir.c_str())); 
+    qtree->Add(Form("%s/ReducedB-ds2103.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2109.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2118.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2124.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2130.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2133.root", dDataDir.c_str()));
+    qtree->Add(Form("%s/ReducedB-ds2139.root", dDataDir.c_str()));
     cout << "Using Total Dataset" << endl;
   }
 
@@ -1813,17 +1817,17 @@ bool TBackgroundModel::DoTheFit()
   minuit->Command("SET STRategy 2"); // Sets strategy of fit: 0, 1, or 2; 2 is the slowest but best  
   minuit->SetMaxIterations(100000);
   minuit->SetObjectFit(this); //see the external FCN  above
-
+  // minuit->SetErrorEf(0.5); // Sets up()
   // Create and fix parameters
   for(int i = 0; i < dNParam; i++)
   {
     minuit->DefineParameter(BkgPar[i]->GetParIndex(), BkgPar[i]->GetParName(), BkgPar[i]->GetParInitial(), BkgPar[i]->GetParInitErr(), BkgPar[i]->GetParMin(), BkgPar[i]->GetParMax());
-    if(bFixedArray[i]) 
-    {
-      minuit->FixParameter(i);
+    // if(bFixedArray[i]) 
+    // {
+      // minuit->FixParameter(i);
     // For debugging purposes only
     // cout << "Parameter " << fParameterName[i] << " is fixed" << endl; 
-    }
+    // }
   }
 
    // Number of free Parameters (for Chi-squared/NDF calculation only)
@@ -1843,8 +1847,13 @@ bool TBackgroundModel::DoTheFit()
 
   // Update model with final parameters
   UpdateModel();
-  
   dChiSquare = GetChiSquare();
+
+  cout << "ChiSquare Before MINOS: " << dChiSquare << endl;
+
+  // minuit->mnmnos();
+  // UpdateModel();
+  // dChiSquare = GetChiSquare();
 
   // ///// Draw Data M1
   fAdapDataHistoM1->SetLineColor(kBlack);
