@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 	if(argc <= 2)
 	{
 		std::cout << "Usage: " << argv[0] << " [Fit Min] [Fit Max]" << std::endl;
+		return 0;
 	}
 	int fitMin = atoi(argv[1]);
 	int fitMax = atoi(argv[2]);
@@ -36,7 +37,7 @@ int main(int argc, char** argv)
     theCut += "&& isEnr && threshkeV > 0.5 && (threshkeV+threshSig) < 2.";
 
 	WenqinFitter *fitter = new WenqinFitter(fitMin, fitMax);
-	fitter->SetSavePrefix(Form("DS1_Enr_Test_%d_%d", fitMin, fitMax));
+	fitter->SetSavePrefix(Form("DS1_Enr_%d_%d", fitMin, fitMax));
 	
 	// Load data from TChain with a cut string
 	TChain *skimTree = new TChain("skimTree");
@@ -44,11 +45,11 @@ int main(int argc, char** argv)
 	fitter->LoadChainData(skimTree, theCut);
 
 	// Construct PDF and do fit
-	fitter->ConstructPDF();
-	fitter->DoFit();
+	// fitter->ConstructPDF();
+	// fitter->DoFit();
 
 	// Output stuff
-	fitter->DrawBasicShit();
+	// fitter->DrawBasicShit();
 
 	//// Both of these take a long time!
 	//// Will literally run forever if the parameter is close to 0 or limited
@@ -69,9 +70,9 @@ int main(int argc, char** argv)
 	// RooWorkspace *fitWorkspace = fitter->GetWorkspace();
 	// fitWorkspace->Print();
 
-	RooFitResult *fitResult = fitter->GetFitResult();
-	std::cout << "Fit Range: " << fitMin <<  " " << fitMax << std::endl;
-	fitResult->Print();
+	// RooFitResult *fitResult = fitter->GetFitResult();
+	// std::cout << "Fit Range: " << fitMin <<  " " << fitMax << std::endl;
+	// fitResult->Print();
 
 	return 0;
 }

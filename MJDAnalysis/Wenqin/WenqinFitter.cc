@@ -258,6 +258,7 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
 }
 
 // Use after constructing the model and minimization!
+// How useful is this when there's RooMCStudy?
 void WenqinFitter::GenerateToyMC(std::string fileName)
 {
     std::shared_ptr<TFile> fOut( std::make_shared<TFile>( Form("./Data/%s_%s.root", fSavePrefix.c_str(), fileName.c_str()), "RECREATE" ) );
@@ -290,8 +291,7 @@ void WenqinFitter::LoadData(std::string fileName, std::string treeName, std::str
 
     // Can and perhaps should split the data up by channel in a more complicated fit
     fEnergy = new RooRealVar(Form("%s", parName.c_str()), Form("%s", parName.c_str()), fFitMin, fFitMax, "keV");
-    // Stupid constructor of RooDataSet needs pointer
-    fRealData = new RooDataSet("data", "data", skimTree.get(), RooArgSet(*fEnergy));
+    fRealData = new RooDataSet("data", "data", &*skimTree, RooArgSet(*fEnergy));
 }
 
 // Assumes standard skim format -- converts stuff from vector<double> to scalar
@@ -301,7 +301,8 @@ void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
     // First get TEntryList with TCut
     skimTree->Draw(">> elist", Form("%s", theCut.c_str()), "entrylist goff");
     std::shared_ptr<TEntryList> elist( dynamic_cast<TEntryList*>(gDirectory->Get("elist")) );
-    skimTree->SetEntryList(elist.get());
+    // This works
+    skimTree->SetEntryList(&*elist);
 
     // I found it easier to work like this rather than with a TTreeReader... Ian probably hates me
     std::vector<double> *ftrapENFCal = nullptr;
