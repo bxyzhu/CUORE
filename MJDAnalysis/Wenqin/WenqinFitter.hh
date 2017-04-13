@@ -85,6 +85,8 @@ class WenqinFitter {
         // String to append to beginning of saved files
         std::string fSavePrefix;
 
+        double fChiSquare;
+
 	private:
                 // Fit range -- in keV
 		double fFitMin;

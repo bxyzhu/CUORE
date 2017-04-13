@@ -19,6 +19,11 @@
 #include "RooWorkspace.h"
 #include "RooDataHist.h"
 #include "RooMCStudy.h"
+#include "RooHist.h"
+
+#include "RooStats/ProfileLikelihoodCalculator.h"
+#include "RooStats/LikelihoodInterval.h"
+#include "RooStats/LikelihoodIntervalPlot.h"
 
 #include "TAxis.h"
 #include "TCanvas.h"
@@ -26,11 +31,14 @@
 #include "TChain.h"
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TF1.h"
 #include "TString.h"
+#include "TLine.h"
 #include "TTree.h"
 #include "TStyle.h"
 #include "TEntryList.h"
 #include "TBranch.h"
+#include "TPaveText.h"
 #include <iostream>
 
 using namespace RooFit;
@@ -45,6 +53,7 @@ WenqinFitter::WenqinFitter() :
     fModelPDF(nullptr),
     fNLL(nullptr),
     fProfileNLL(nullptr),
+    fChiSquare(0),
     fMinimizer(nullptr),
     fFitResult(nullptr),
     fFitWorkspace(nullptr),
@@ -106,10 +115,10 @@ void WenqinFitter::ConstructPDF()
     fEnergy->setRange(fFitMin, fFitMax);
     RooHistPdf tritPdf("tritPdf", "TritiumPdf", *fEnergy, tritRooHist, 1);
 
-    RooRealVar polySlope("polySlope", "Background Slope", 0.00002, -0.2, 0.2);
-    RooArgList polyList(polySlope);
-    RooPolynomial BkgPoly("Background", "Linear Background function", *fEnergy, polyList);
-    // RooPolynomial BkgPoly("Background", "Linear Background function", *fEnergy, RooArgList() );
+    // RooRealVar polySlope("polySlope", "Background Slope", 0.00002, -0.2, 0.2);
+    // RooArgList polyList(polySlope);
+    // RooPolynomial BkgPoly("Background", "Linear Background function", *fEnergy, polyList);
+    RooPolynomial BkgPoly("Background", "Linear Background function", *fEnergy, RooArgList() );
 
     RooRealVar Mn54_mean("Mn54_mean", "Mn54_mean", 5.99 + fDeltaE);
     RooRealVar Mn54_sigma("Mn54_sigma", "Mn54_sigma", GetSigma(5.99 + fDeltaE));
@@ -130,6 +139,11 @@ void WenqinFitter::ConstructPDF()
     RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE, 10.2, 10.5);
     RooRealVar Ge68_sigma("Ge68_sigma", "Ge68_sigma", GetSigma(10.37 + fDeltaE));
     RooGaussian Ge68_gauss("Ge68_gauss", "Ge68 Gaussian", *fEnergy, Ge68_mean, Ge68_sigma);
+    
+    RooRealVar Pb210_mean("Pb210_mean", "Pb210_mean", 46.54 + fDeltaE);
+    RooRealVar Pb210_sigma("Pb210_sigma", "Pb210_sigma", GetSigma(46.54 + fDeltaE));
+    RooGaussian Pb210_gauss("Pb210_gauss", "Pb210 Gaussian", *fEnergy, Pb210_mean, Pb210_sigma);
+
 
     // Normalization parameters
     // Make names pretty for plots
@@ -140,7 +154,7 @@ void WenqinFitter::ConstructPDF()
     RooRealVar num_Co57("Co57", "Co57", 1.0, 0.0, 5000.);
     RooRealVar num_Zn65("Zn65", "Zn65", 1.0, 0.0, 5000.);
     RooRealVar num_Ge68("Ge68", "Ge68", 1.0, 0.0, 5000.);
-
+    RooRealVar num_Pb210("Pb210", "Pb210", 1.0, 0.0, 5000.);
     // Non-extended model
     // RooArgList shapes(tritPdf, BkgPoly, Mn54_gauss, Fe55_gauss, Co57_gauss, Zn65_gauss, Ge68_gauss);
     // RooArgList yields(num_trit, num_bkg, num_Mn54, num_Fe55, num_Co57, num_Zn65, num_Ge68);
@@ -154,8 +168,9 @@ void WenqinFitter::ConstructPDF()
     RooExtendPdf Co57_gausse("Co57_gausse", "Extended Co57_gauss", Co57_gauss, num_Co57);
     RooExtendPdf Zn65_gausse("Zn65_gausse", "Extended Zn65_gauss", Zn65_gauss, num_Zn65);
     RooExtendPdf Ge68_gausse("Ge68_gausse", "Extended Ge68_gauss", Ge68_gauss, num_Ge68);
+    RooExtendPdf Pb210_gausse("Pb210_gausse", "Extended Pb210_gauss", Pb210_gauss, num_Pb210);
 
-    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Co57_gausse, Zn65_gausse, Ge68_gausse);
+    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Co57_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     RooAddPdf model("model", "total pdf", shapes);
 
     // RooWorkspace is necessary for the model and parameters to be persistent
@@ -194,6 +209,17 @@ void WenqinFitter::DrawBasicShit(double binSize)
     fRealData->plotOn(frameFit);
     fModelPDF->plotOn(frameFit, LineColor(kRed));
 	frameFit->SetTitle("");
+    
+    // Add chi-square to the plot
+    // The chi-square is fairly meaningless as it's an unbinned fit...
+    fChiSquare = frameFit->chiSquare(9);
+    TPaveText *leg = new TPaveText(0.65, 0.78, 0.88, .88, "NDC");
+    leg->SetTextFont(133);
+    leg->SetFillColor(0);
+    leg->SetBorderSize(1);
+    leg->SetTextSize(22);
+    leg->AddText(Form("#chi^{2}/NDF = %.3f" ,fChiSquare ) );
+    frameFit->addObject(leg);
     frameFit->Draw();
 
     std::shared_ptr<TCanvas> cMatrix( std::make_shared<TCanvas>("cMatrix", "cMatrix", 1100, 800) );
@@ -202,7 +228,7 @@ void WenqinFitter::DrawBasicShit(double binSize)
     
     // Save plots into workspace and pdf
     cSpec->SaveAs(Form("./Results/%s_Spec.pdf", fSavePrefix.c_str()) );
-    // cMatrix->SaveAs(Form("./Results/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
+    cMatrix->SaveAs(Form("./Results/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
     fFitWorkspace->import(*fCorrMatrix);
     fFitWorkspace->import(*frameFit);
 }
@@ -235,26 +261,70 @@ void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
 // This is a simple MC study only generating parameter information and pulls, the toy MC data can be saved
 void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
 {
-    fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), FitOptions(Save()) );
-    // Generate 2000 
+    // Right now I'm saving the fit output
+    fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), Silence(), FitOptions(Save()));
     fMCStudy->generateAndFit(nMC);
+
+    // Get parameter values from first fit... these methods suck
+    double parVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
+    double parErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getError();
 
     // Make test plots
     std::shared_ptr<TCanvas> cMCStudy( std::make_shared<TCanvas>("cMCStudy", "cMCStudy", 1100, 800) );
-    RooPlot *frame1 = fMCStudy->plotParam( *fFitWorkspace->var(Form("%s", argN.c_str())), Bins(40) );
-    RooPlot *frame2 = fMCStudy->plotError( *fFitWorkspace->var(Form("%s", argN.c_str())), Bins(40) );
-    RooPlot *frame3 = fMCStudy->plotPull( *fFitWorkspace->var(Form("%s", argN.c_str())), Bins(40), FitGauss() );
-    RooPlot* frame4 = fMCStudy->plotNLL(Bins(40)) ;
+    RooPlot *frame1 = fMCStudy->plotParam( *fFitWorkspace->var(Form("%s", argN.c_str())), Bins(50) );
+    RooPlot *frame2 = fMCStudy->plotError( *fFitWorkspace->var(Form("%s", argN.c_str())), FrameRange(parErr-0.5*parErr, parErr+0.5*parErr), Bins(50));
+    RooPlot *frame3 = fMCStudy->plotPull( *fFitWorkspace->var(Form("%s", argN.c_str())), FrameRange(-5, 5), Bins(50));
+    RooPlot *frame4 = fMCStudy->plotNLL(Bins(50));
 
-   cMCStudy->Divide(2,2) ;
-   cMCStudy->cd(1) ; gPad->SetLeftMargin(0.15) ; frame1->GetYaxis()->SetTitleOffset(1.4) ; frame1->Draw() ;
-   cMCStudy->cd(2) ; gPad->SetLeftMargin(0.15) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
-   cMCStudy->cd(3) ; gPad->SetLeftMargin(0.15) ; frame3->GetYaxis()->SetTitleOffset(1.4) ; frame3->Draw() ;
-   cMCStudy->cd(4) ; gPad->SetLeftMargin(0.15) ; frame4->GetYaxis()->SetTitleOffset(1.4) ; frame4->Draw() ;
-   cMCStudy->SaveAs(Form("./Results/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
+    // Add PaveTexts with values and such
+    TPaveText *legParam = new TPaveText(0.60, 0.78, 0.89, 0.89, "NDC");
+    legParam->SetTextFont(133);
+    legParam->SetFillColor(0);
+    legParam->SetBorderSize(1);
+    legParam->SetTextSize(14);
+    legParam->AddText(Form("Best Fit: %.3f #pm %.3f", parVal, parErr));
+    frame1->addObject(legParam);
 
-    // Save MC Study to workspace
+    // Workaround because fitting built into plotPull is terrible...
+    RooHist *hist = frame3->getHist();
+    hist->Fit("gaus", "ME");
+    TF1 *gaus = hist->GetFunction("gaus");
+    TPaveText *legpull = new TPaveText(0.60, 0.75, 0.89, 0.89, "NDC");
+    legpull->SetTextFont(133);
+    legpull->SetFillColor(0);
+    legpull->SetBorderSize(1);
+    legpull->SetTextSize(14);
+    legpull->AddText(Form("Pull Mean: %.3f #pm %.3f", gaus->GetParameter(1), gaus->GetParError(1)) );
+    legpull->AddText(Form("Pull Sigma: %.3f #pm %.3f", gaus->GetParameter(2), gaus->GetParError(2)) );
+    frame3->addObject(legpull);
+
+    TPaveText *legNLL = new TPaveText(0.60, 0.78, 0.89, 0.89, "NDC");
+    legNLL->SetTextFont(133);
+    legNLL->SetFillColor(0);
+    legNLL->SetBorderSize(1);
+    legNLL->SetTextSize(14);
+    legNLL->AddText(Form("Best Fit NLL: %.3f", fFitResult->minNll()));
+    frame4->addObject(legNLL);
+
+    TLine l1;
+    l1.SetLineColor(kBlue);
+    l1.SetLineWidth(2);
+    l1.SetLineStyle(3);
+
+    cMCStudy->Divide(2,2);
+    cMCStudy->cd(1); gPad->SetLeftMargin(0.15); frame1->GetYaxis()->SetTitleOffset(1.4); frame1->Draw();
+    // Draw a line at best fit position
+    l1.DrawLine(parVal, frame1->GetMinimum(), parVal, frame1->GetMaximum());
+    cMCStudy->cd(2); gPad->SetLeftMargin(0.15); frame2->GetYaxis()->SetTitleOffset(1.4); frame2->Draw();
+    l1.DrawLine(parErr, frame2->GetMinimum(), parErr, frame2->GetMaximum());
+    cMCStudy->cd(3); gPad->SetLeftMargin(0.15); frame3->GetYaxis()->SetTitleOffset(1.4); frame3->Draw();
+    cMCStudy->cd(4); gPad->SetLeftMargin(0.15); frame4->GetYaxis()->SetTitleOffset(1.4); frame4->Draw();
+    // Draw a line at minimum NLL position
+    l1.DrawLine(fFitResult->minNll(), frame4->GetMinimum(), fFitResult->minNll(), frame4->GetMaximum());
+    
+    // Save MC Study to plot and workspace
     // fFitWorkspace->import(*fMCStudy);
+    cMCStudy->SaveAs(Form("./Results/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
 }
 
 // Use after constructing the model and minimization!
@@ -275,6 +345,7 @@ void WenqinFitter::GenerateToyMC(std::string fileName)
 
 // Gets resolution, function and parameters from BDM PRL paper
 // https://arxiv.org/abs/1612.00886
+// In the future it should just be a convolution with all the other PDFs
 double WenqinFitter::GetSigma(double energy)
 {
   	double sig0 = 0.16, F=0.11, eps=0.00296;
@@ -337,28 +408,27 @@ void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
     fRealData = new RooDataSet("data", "data", dummyTree, RooArgSet(*fEnergy));
 }
 
-
+// Implemented now in RooStats rather than RooFit
 void WenqinFitter::ProfileNLL(std::string argN)
 {
-    // Create Profile NLL (This should take a while since the actual profiling goes on here)
-    // Variable name here must match name in "ConstructPDF()"
-    fProfileNLL = fNLL->createProfile(RooArgSet(*fFitWorkspace->var(Form("%s", argN.c_str()) )));
-
     // Draw both NLL and Profile NLL and save as PDF
     std::shared_ptr<TCanvas> cNLL( std::make_shared<TCanvas>("cNLL", "cNLL", 900, 600) );
-    RooPlot* frameProfileNLL = fFitWorkspace->var(Form("%s", argN.c_str()))->frame(Title(Form("%s Profile Likelihood", argN.c_str()) ));
-    fProfileNLL->plotOn(frameProfileNLL, LineColor(kRed));
-    double mean = fFitWorkspace->var(Form("%s", argN.c_str()))->getValV();
-    double uperr = fFitWorkspace->var(Form("%s", argN.c_str()))->getErrorHi();
-    double lowerr = fFitWorkspace->var(Form("%s", argN.c_str()))->getErrorLo(); // This value is negative!
-    frameProfileNLL->GetXaxis()->SetRangeUser(mean + 10*lowerr, mean + 10*uperr);
-    frameProfileNLL->GetYaxis()->SetRangeUser(0, 50); // 0 to 50 should be enough for profile likelihood
-    frameProfileNLL->Draw();
 
-    // Save plot into workspace and pdf
+    // Best fit value -- just using this to set range
+    double parVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
+
+    RooStats::ProfileLikelihoodCalculator plc(*fRealData, *fModelPDF, RooArgSet(*fFitWorkspace->var(Form("%s", argN.c_str()))) );
+    // Set 1 sigma interval
+    plc.SetConfidenceLevel(0.683);
+
+    RooStats::LikelihoodInterval *interval = plc.GetInterval();
+    double lowerLimit = interval->LowerLimit(*fFitWorkspace->var(Form("%s", argN.c_str())));
+    double upperLimit = interval->UpperLimit(*fFitWorkspace->var(Form("%s", argN.c_str())));
+
+    RooStats::LikelihoodIntervalPlot plot(interval);
+    plot.SetRange(parVal - 1.5*(parVal - lowerLimit), parVal + 1.5*(upperLimit-parVal) );
+    plot.Draw();
     cNLL->SaveAs(Form("./Results/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
-    fFitWorkspace->import(*fProfileNLL);
-    fFitWorkspace->import(*frameProfileNLL);
 }
 
 void WenqinFitter::SaveShit(std::string outfileName)

@@ -14,7 +14,7 @@ run-wenqin: run-wenqin.cc libWenqinFitter.so
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o run-wenqin run-wenqin.cc libWenqinFitter.so
 
 libWenqinFitter.so: WenqinFitter.cc
-	$(CXX) -shared $(CXXFLAGS) $(LDFLAGS) -lRooFitCore -lRooFit -o libWenqinFitter.so WenqinFitter.cc
+	$(CXX) -shared $(CXXFLAGS) $(LDFLAGS) -lRooFitCore -lRooFit -lRooStats -o libWenqinFitter.so WenqinFitter.cc
 
 clean:
 	@echo "Cleaning ...";

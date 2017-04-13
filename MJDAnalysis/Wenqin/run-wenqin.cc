@@ -5,8 +5,33 @@
 #include "TChain.h"
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
+#include "RooAbsReal.h"
 
 using namespace RooFit;
+
+/*
+  Results (8 Mar 2016)
+  DS-0:
+  Total live time (days): 47.6217
+  Reduction from veto (sec): 3683.46
+  Reduced live time (days): 47.5791
+  Active mass:  14.6000 kg   enriched 10.6900   natural 3.9100
+  Exposure:  694.6549 kg-days total  natural 186.0343   enriched 508.6206
+  Tritium (counts):  natural: 8.9170e+02 +/-  3.84e+01  enriched: 1.5540e+02 +/- 1.92e+01
+
+  	(Lower by about 10%)
+  	Rate: natural: 4.79320 +/- 0.206414    enriched: 0.305532 +/- 0.0377492
+
+  DS-1:
+  Total live time (days): 60.1582
+  Reduction from veto (sec): 3435.08
+  Reduced live time (days): 60.1184
+  Active mass:  12.4300 kg   enriched 11.3100   natural 1.1200
+  Exposure:  747.2720 kg-days total  natural 67.3326   enriched 679.9394
+  Tritium (counts):  natural: 4.7636e+02 +/- 2.94e+01  enriched: 2.0131e+02 +/- 2.01e+01
+
+	Rate: natural: 7.07473 +/- 0.436638		enriched: 0.296071 +/- 0.0295615
+*/
 
 int main(int argc, char** argv)
 {
@@ -34,10 +59,10 @@ int main(int argc, char** argv)
     theCut += noisyRuns;
     theCut += PSACuts;
     theCut += SlowCut;
-    theCut += "&& isEnr && threshkeV > 0.5 && (threshkeV+threshSig) < 2.";
+    theCut += "&& isEnr";
 
 	WenqinFitter *fitter = new WenqinFitter(fitMin, fitMax);
-	fitter->SetSavePrefix(Form("DS1_Enr_%d_%d", fitMin, fitMax));
+	fitter->SetSavePrefix(Form("DS1_Enr_WithPb_%d_%d", fitMin, fitMax));
 	
 	// Load data from TChain with a cut string
 	TChain *skimTree = new TChain("skimTree");
@@ -45,11 +70,12 @@ int main(int argc, char** argv)
 	fitter->LoadChainData(skimTree, theCut);
 
 	// Construct PDF and do fit
-	// fitter->ConstructPDF();
-	// fitter->DoFit();
+	fitter->ConstructPDF();
+	fitter->DoFit();
 
 	// Output stuff
 	// fitter->DrawBasicShit();
+	// fitter->DrawBasicShit(1.0);
 
 	//// Both of these take a long time!
 	//// Will literally run forever if the parameter is close to 0 or limited
@@ -59,12 +85,12 @@ int main(int argc, char** argv)
 	// fitter->DrawContour("Tritium", "Co57");
 	// fitter->DrawContour("Tritium", "Mn54");
 	// fitter->ProfileNLL();
-	// fitter->ProfileNLL("Bkg");
+	fitter->ProfileNLL("Ge68");
 	// fitter->ProfileNLL("Co57");
 	// fitter->ProfileNLL("Mn54");
 
 	// Generate Toy MC study
-	// fitter->GenerateMCStudy("Tritium", 5000);
+	fitter->GenerateMCStudy("Ge68", 5000);
 
 	//// Print fit result again at the end
 	// RooWorkspace *fitWorkspace = fitter->GetWorkspace();
@@ -73,6 +99,7 @@ int main(int argc, char** argv)
 	// RooFitResult *fitResult = fitter->GetFitResult();
 	// std::cout << "Fit Range: " << fitMin <<  " " << fitMax << std::endl;
 	// fitResult->Print();
+	// std::cout << "Chi Square: " << fitter->fChiSquare << std::endl;
 
 	return 0;
 }
