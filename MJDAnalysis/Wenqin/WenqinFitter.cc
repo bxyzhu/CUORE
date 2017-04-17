@@ -144,7 +144,6 @@ void WenqinFitter::ConstructPDF()
     RooRealVar Pb210_sigma("Pb210_sigma", "Pb210_sigma", GetSigma(46.54 + fDeltaE));
     RooGaussian Pb210_gauss("Pb210_gauss", "Pb210 Gaussian", *fEnergy, Pb210_mean, Pb210_sigma);
 
-
     // Normalization parameters
     // Make names pretty for plots
     RooRealVar num_trit("Tritium", "Tritium", 20.0, 0.0, 10000.);
