@@ -113,7 +113,9 @@ void WenqinFitter::ConstructPDF()
     // Because of Steve's histogram
     // The range of the histogram is maxed out at 50 keV, so need to reset range after loading histogram
     fEnergy->setRange(fFitMin, fFitMax);
-    RooHistPdf tritPdf("tritPdf", "TritiumPdf", *fEnergy, tritRooHist, 1);
+    RooHistPdf tritPdf("tritPdf", "TritiumPdf", *fEnergy, tritRooHist, 2);
+
+    // fRealData = new RooDataSet("data", "data", &*skimTree, RooArgSet(*fEnergy));
 
     // RooRealVar polySlope("polySlope", "Background Slope", 0.00002, -0.2, 0.2);
     // RooArgList polyList(polySlope);
@@ -136,7 +138,8 @@ void WenqinFitter::ConstructPDF()
     RooRealVar Zn65_sigma("Zn65_sigma", "Zn65_sigma", GetSigma(8.98 + fDeltaE));
     RooGaussian Zn65_gauss("Zn65_gauss", "Zn65 Gaussian", *fEnergy, Zn65_mean, Zn65_sigma);
 
-    RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE, 10.2, 10.5);
+    // RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE, 10.2, 10.5);
+    RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE);
     RooRealVar Ge68_sigma("Ge68_sigma", "Ge68_sigma", GetSigma(10.37 + fDeltaE));
     RooGaussian Ge68_gauss("Ge68_gauss", "Ge68 Gaussian", *fEnergy, Ge68_mean, Ge68_sigma);
     
@@ -144,16 +147,24 @@ void WenqinFitter::ConstructPDF()
     RooRealVar Pb210_sigma("Pb210_sigma", "Pb210_sigma", GetSigma(46.54 + fDeltaE));
     RooGaussian Pb210_gauss("Pb210_gauss", "Pb210 Gaussian", *fEnergy, Pb210_mean, Pb210_sigma);
 
+    // RooRealVar Ga_mean("Ga_mean", "Ga_mean", 8.0 + fDeltaE);
+    // RooRealVar Ga_sigma("Ga_sigma", "Ga_sigma", GetSigma(8.0 + fDeltaE));
+    // RooGaussian Ga_gauss("Ga_gauss", "Ga Gaussian", *fEnergy, Ga_mean, Ga_sigma);
+
     // Normalization parameters
     // Make names pretty for plots
-    RooRealVar num_trit("Tritium", "Tritium", 20.0, 0.0, 10000.);
-    RooRealVar num_bkg("Bkg", "Background", 20.0, 0.0, 10000.);
-    RooRealVar num_Mn54("Mn54", "Mn54", 1.0, 0.0, 5000.);
-    RooRealVar num_Fe55("Fe55", "Fe55", 1.0, 0.0, 5000.);
-    RooRealVar num_Co57("Co57", "Co57", 1.0, 0.0, 5000.);
-    RooRealVar num_Zn65("Zn65", "Zn65", 1.0, 0.0, 5000.);
-    RooRealVar num_Ge68("Ge68", "Ge68", 1.0, 0.0, 5000.);
-    RooRealVar num_Pb210("Pb210", "Pb210", 1.0, 0.0, 5000.);
+    RooRealVar num_trit("Tritium", "Tritium", 20.0, 0.0, 1000000.);
+    RooRealVar num_bkg("Bkg", "Background", 50.0, 0.0, 10000.);
+    RooRealVar num_Mn54("Mn54", "Mn54", 5.0, 0.0, 5000.);
+    RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 5000.);
+    // RooRealVar frac_Ga("Ga", "Ga", 0.1, 0.0, 1.0);
+    RooRealVar num_Co57("Co57", "Co57", 5.0, 0.0, 5000.);
+    RooRealVar num_Zn65("Zn65", "Zn65", 5.0, 0.0, 5000.);
+    RooRealVar num_Ge68("Ge68", "Ge68", 10.0, 0.0, 5000.);
+    RooRealVar num_Pb210("Pb210", "Pb210", 5.0, 0.0, 5000.);
+    
+
+    // RooAddPdf sum_Fe55("sum_Fe55", "Fe55 + Ga", RooArgList(Fe55_gauss, Ga_gauss), RooArgList(frac_Ga));
     // Non-extended model
     // RooArgList shapes(tritPdf, BkgPoly, Mn54_gauss, Fe55_gauss, Co57_gauss, Zn65_gauss, Ge68_gauss);
     // RooArgList yields(num_trit, num_bkg, num_Mn54, num_Fe55, num_Co57, num_Zn65, num_Ge68);
@@ -163,15 +174,20 @@ void WenqinFitter::ConstructPDF()
     RooExtendPdf tritPdfe("tritPdfe", "Extended trit", tritPdf, num_trit);
     RooExtendPdf BkgPolye("BkgPolye", "Extended BkgPoly", BkgPoly, num_bkg);
     RooExtendPdf Mn54_gausse("Mn54_gausse", "Extended Mn54_gauss", Mn54_gauss, num_Mn54);
+    // RooExtendPdf Fe55_gausse("Fe55_gausse", "Extended Fe55_gauss", sum_Fe55, num_Fe55);
     RooExtendPdf Fe55_gausse("Fe55_gausse", "Extended Fe55_gauss", Fe55_gauss, num_Fe55);
     RooExtendPdf Co57_gausse("Co57_gausse", "Extended Co57_gauss", Co57_gauss, num_Co57);
     RooExtendPdf Zn65_gausse("Zn65_gausse", "Extended Zn65_gauss", Zn65_gauss, num_Zn65);
     RooExtendPdf Ge68_gausse("Ge68_gausse", "Extended Ge68_gauss", Ge68_gauss, num_Ge68);
     RooExtendPdf Pb210_gausse("Pb210_gausse", "Extended Pb210_gauss", Pb210_gauss, num_Pb210);
 
-    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Co57_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
+    // RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Co57_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
+    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
+    // RooArgList shapes(tritPdfe, BkgPolye);
     RooAddPdf model("model", "total pdf", shapes);
 
+    // fRealData = model.generate(*fEnergy, 500);
+    
     // RooWorkspace is necessary for the model and parameters to be persistent
     // this is necessary because we created a bunch of objects that aren't persistent here
     fFitWorkspace = new RooWorkspace("fFitWorkspace", "Fit Workspace");
@@ -198,6 +214,9 @@ void WenqinFitter::DoFit(std::string Minimizer)
     fMinimizer->minos();
 
     fFitResult = fMinimizer->save();
+    // RooArgList floatPars = fFitResult->floatParsFinal();
+    // floatPars.Print();
+    // std::cout << "Tritium Index: " << floatPars.index("Tritium") << std::endl;
     fFitWorkspace->import(*fFitResult);
 }
 
@@ -224,12 +243,24 @@ void WenqinFitter::DrawBasicShit(double binSize)
     std::shared_ptr<TCanvas> cMatrix( std::make_shared<TCanvas>("cMatrix", "cMatrix", 1100, 800) );
     TH2D *fCorrMatrix = dynamic_cast<TH2D*>(fFitResult->correlationHist("Correlation Matrix"));
     fCorrMatrix->Draw("colz");
+
     
     // Save plots into workspace and pdf
     cSpec->SaveAs(Form("./Results/%s_Spec.pdf", fSavePrefix.c_str()) );
     cMatrix->SaveAs(Form("./Results/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
     fFitWorkspace->import(*fCorrMatrix);
     fFitWorkspace->import(*frameFit);
+
+
+    // std::shared_ptr<TCanvas> cResidual( std::make_shared<TCanvas>("cResidual", "cResidual", 1100, 800) );
+    TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1100, 800);
+    RooHist *hresid = frameFit->pullHist();
+    RooPlot *frameResid = fEnergy->frame(Title("Normalized Fit Residuals"));
+    frameResid->addPlotable(hresid, "P");
+    frameResid->GetYaxis()->SetTitle("Normalized Residuals (#sigma)");
+    frameResid->Draw();
+    cResidual->SaveAs(Form("./Results/%s_Residual.pdf", fSavePrefix.c_str()) );
+
 }
 
 void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
@@ -261,7 +292,8 @@ void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
 void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
 {
     // Right now I'm saving the fit output
-    fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), Silence(), FitOptions(Save()));
+    fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), Silence(), FitOptions(Save()) );
+    // fMCStudy->generateAndFit(nMC, 15000);
     fMCStudy->generateAndFit(nMC);
 
     // Get parameter values from first fit... these methods suck
@@ -305,6 +337,7 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
     legNLL->AddText(Form("Best Fit NLL: %.3f", fFitResult->minNll()));
     frame4->addObject(legNLL);
 
+    // Draw pretty lines
     TLine l1;
     l1.SetLineColor(kBlue);
     l1.SetLineWidth(2);
@@ -321,9 +354,67 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
     // Draw a line at minimum NLL position
     l1.DrawLine(fFitResult->minNll(), frame4->GetMinimum(), fFitResult->minNll(), frame4->GetMaximum());
     
+
+    double parVal0 = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
+    double parErrHi0 = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorHi();
+    double parErrLo0 = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorLo();
+
+    TH1D *hMean = new TH1D("hMean", "Tritium Mean", 200, parVal0+2.5*parErrLo0, parVal0+2.5*parErrHi0);
+    TH1D *hErrLo = new TH1D("hErrLo", "Tritium Error Low", 200, parErrLo0+parErrLo0/4, parErrLo0+parErrHi0/4);
+    TH1D *hErrHi = new TH1D("hErrHi", "Tritium Error High", 200, parErrHi0+parErrLo0/4, parErrHi0+parErrHi0/4);
+
+    for(int i = 0; i < nMC; i++)
+    {
+        const RooFitResult *fFitMCResult = fMCStudy->fitResult(i);
+        double parVal2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
+        double parErrHi2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorHi();
+        double parErrLo2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorLo();
+        
+        hMean->Fill(parVal2);
+        hErrLo->Fill(parErrLo2);
+        hErrHi->Fill(parErrHi2);
+    }
+
+    TCanvas *cM = new TCanvas("cM", "cM", 800, 600);
+    hMean->Draw();
+    l1.DrawLine(parVal0, 0, parVal0, hMean->GetBinContent(hMean->GetMaximumBin()) );
+    cM->SaveAs("MeanTest.pdf");
+
+    TCanvas *cLo = new TCanvas("cLo", "cLo", 800, 600);
+    hErrLo->Draw();
+    l1.DrawLine(parErrLo0, 0, parErrLo0, hErrLo->GetBinContent(hErrLo->GetMaximumBin()));
+    cLo->SaveAs("MeanTest_Low.pdf");
+
+    TCanvas *cHi = new TCanvas("cHi", "cHi", 800, 600);
+    hErrHi->Draw();
+    l1.DrawLine(parErrHi0, 0, parErrHi0, hErrHi->GetBinContent(hErrHi->GetMaximumBin()));
+    cHi->SaveAs("MeanTest_High.pdf");
+
+    // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getValV();
+    // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getError();
+
+
+/*
+    // Try to extract nLL variables from MCStudy
+    RooDataSet MCFitData = fMCStudy->fitParDataSet();
+    // RooDataSet *NLL = static_cast<RooDataSet*>(MCFitData.reduce(RooArgSet()));
+    MCFitData.Print("v");
+    const RooArgSet* row = MCFitData.get();
+    row->Print("v");
+    std::shared_ptr<TCanvas> cMCNLL( std::make_shared<TCanvas>("cMCNLL", "cMCNLL", 1100, 800) );
+    RooRealVar *NLL = static_cast<RooRealVar*>(row->find("NLL"));
+    RooFormulaVar sNLL("sNLL", "Shifted NLL", Form("NLL - %f", fFitResult->minNll()), *NLL);
+    RooRealVar *SNLL = static_cast<RooRealVar*>(MCFitData.addColumn(sNLL));
+
+    RooPlot* frameMC = SNLL->frame(Range((0.2*fFitResult->minNll()), -(0.2*fFitResult->minNll()) ));
+    MCFitData.plotOn(frameMC);
+    frameMC->Draw();
+    cMCNLL->SaveAs("Test.pdf");
+*/
+
     // Save MC Study to plot and workspace
     // fFitWorkspace->import(*fMCStudy);
-    cMCStudy->SaveAs(Form("./Results/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
+    // cMCStudy->SaveAs(Form("./Results/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
 }
 
 // Use after constructing the model and minimization!
@@ -428,6 +519,7 @@ void WenqinFitter::ProfileNLL(std::string argN)
     plot.SetRange(parVal - 1.5*(parVal - lowerLimit), parVal + 1.5*(upperLimit-parVal) );
     plot.Draw();
     cNLL->SaveAs(Form("./Results/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
+    std::cout << "Limits: " << lowerLimit << "\t" << upperLimit << std::endl;
 }
 
 void WenqinFitter::SaveShit(std::string outfileName)

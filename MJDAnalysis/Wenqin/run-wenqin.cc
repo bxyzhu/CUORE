@@ -6,6 +6,8 @@
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
 #include "RooAbsReal.h"
+#include "RooArgList.h"
+#include "RooAbsArg.h"
 
 using namespace RooFit;
 /*
@@ -38,9 +40,14 @@ using namespace RooFit;
   Active mass:  9.4212 kg   enriched 5.4712   natural 3.9500
   Exposure:  222.1064 kg-days total  natural 93.1219   enriched 128.9845
 
+  DS-5:
+  Total live time (days): 122.5
+  Active mass: m1Total = 15.39; m1Enr = 12.04; m1Nat = 3.35
+               m2Total = 9.67; m2Enr = 5.71; m2Nat = 3.96
+  Exposure: 3069.85 kg-days enriched 2174.4
 
 	Note: DS-0 might be lower by about 10% due to 60 hours of data being incorrect
-	DS0 Enriched:				Counts 							Rate (Counts/kg/year)
+	DS0 Enriched:				Counts 							             Rate (Counts/kg/year)
                    Bkg    1.2645e+03 +/-  3.75e+01			2.48614 +/- 0.0737288
                   Co57    4.4537e-06 +/-  6.59e+00			8.756e-09 +/- 0.01295
                   Fe55    2.5077e-06 +/-  6.22e+00			4.930e-09 +/- 0.01223
@@ -50,7 +57,7 @@ using namespace RooFit;
                Tritium    1.5544e+02 +/-  1.92e+01			0.305532 +/- 0.037749
                   Zn65    2.2986e+00 +/-  4.72e+00			0.004519 +/- 0.009280
 
-	DS1 Enriched:				Counts 							Rate (Counts/kg/year)
+	DS1 Enriched:				Counts 							             Rate (Counts/kg/year)
                    Bkg    6.2617e+02 +/-  2.66e+01			0.920920 +/- 0.0391211
                   Co57    3.5904e+00 +/-  5.28e+00			0.005280 +/- 0.0077654
                   Fe55    1.6264e+01 +/-  6.70e+00			0.023919 +/- 0.0098538
@@ -60,7 +67,7 @@ using namespace RooFit;
                Tritium    2.0133e+02 +/-  2.01e+01			0.296071 +/- 0.0295615
                   Zn65    5.8570e+00 +/-  4.98e+00			0.008614 +/- 0.0073242
 	
-	DS0 Natural:				Counts 							Rate (Counts/kg/year)
+	DS0 Natural:				Counts 							             Rate (Counts/kg/year)
                    Bkg    6.6178e+02 +/-  2.75e+01			3.55730 +/- 0.147822
                   Co57    8.8618e-08 +/-  7.37e+00			4.76e-10 +/- 0.0396164
                   Fe55    1.1705e+02 +/-  1.52e+01			0.62919 +/- 0.081705
@@ -70,7 +77,7 @@ using namespace RooFit;
                Tritium    8.9171e+02 +/-  3.84e+01			4.79320 +/- 0.206414
                   Zn65    4.3513e+01 +/-  1.08e+01			0.23389 +/- 0.058054
 
-	DS1 Natural:				Counts 							Rate (Counts/kg/year)
+	DS1 Natural:				Counts 							             Rate (Counts/kg/year)
                    Bkg    1.6964e+02 +/-  1.41e+01			2.51943 +/- 0.209408
                   Co57    1.0509e+00 +/-  1.31e+01			0.01561 +/- 0.194557
                   Fe55    6.1692e+01 +/-  1.12e+01			0.91623 +/- 0.166338
@@ -105,19 +112,20 @@ int main(int argc, char** argv)
     // ToE for DS1
     // std::string SlowCut = "&& (((kvorrT/trapENFCal) >= 1.2 && (kvorrT/trapENFCal) <= 2.1) || (channel==580 && ((kvorrT/trapENFCal) >= 0.9 && (kvorrT/trapENFCal) <= 2.1)) || (channel==664 && ((kvorrT/trapENFCal) >= 1.1 && (kvorrT/trapENFCal) <= 2.1)))";
     // ToE for DS0
-    // std::string SlowCut = "&& ( ((kvorrT/trapENFCal) >= 1.2) && ((kvorrT/trapENFCal) <= 2.1) )"; // DS0 ToE
+    std::string SlowCut = "&& ( ((kvorrT/trapENFCal) >= 1.2) && ((kvorrT/trapENFCal) <= 2.1) )"; // DS0 ToE
 
     //// Add all the cuts to "theCut"
     // theCut += noiseTime;
     // theCut += noisyRuns;
     theCut += PSACuts;
-    // theCut += SlowCut;
-    theCut += "&& isEnr"; // Set Enriched or Natural
+    theCut += SlowCut;
+    theCut += "&& isNat"; // Set Enriched or Natural
 
 	WenqinFitter *fitter = new WenqinFitter(fitMin, fitMax);
 	// This is just a string for output files
-	fitter->SetSavePrefix(Form("DS0_Enr_WithPb_%d_%d", fitMin, fitMax));
-	
+	fitter->SetSavePrefix(Form("TEST_%d_%d", fitMin, fitMax));
+	// fitter->SetSavePrefix(Form("Test_150000_%d_%d", fitMin, fitMax));
+
 	// Load data from TChain with a cut string
 	TChain *skimTree = new TChain("skimTree");
 	skimTree->Add("~/project/wavelet-skim/waveletSkimDS0_*.root");
@@ -148,14 +156,18 @@ int main(int argc, char** argv)
 	// fitter->ProfileNLL("Fe55");
 
 	// Generate Toy MC study -- this shit takes a long time
-	// fitter->GenerateMCStudy("Ge68", 5000);
+	// fitter->GenerateMCStudy("Tritium", 5000);
+  // fitter->GenerateMCStudy("Co57", 5000);
 
 	//// Print fit result again at the end
 	// RooWorkspace *fitWorkspace = fitter->GetWorkspace();
 	// fitWorkspace->Print();
-	RooFitResult *fitResult = fitter->GetFitResult();
+	// RooFitResult *fitResult = fitter->GetFitResult();
 	// std::cout << "Fit Range: " << fitMin <<  " " << fitMax << std::endl;
-	fitResult->Print();
+	// fitResult->Print();
+	// RooArgList floatPars = fitResult->floatParsFinal();
+	// floatPars.Print();
+
 	// std::cout << "Chi Square: " << fitter->fChiSquare << std::endl;
 
 	return 0;
