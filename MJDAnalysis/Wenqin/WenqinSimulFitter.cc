@@ -20,6 +20,7 @@
 #include "RooDataHist.h"
 #include "RooMCStudy.h"
 #include "RooHist.h"
+#include "RooSimultaneous.h"
 
 #include "RooStats/ProfileLikelihoodCalculator.h"
 #include "RooStats/LikelihoodInterval.h"
@@ -185,6 +186,7 @@ void WenqinSimulFitter::ConstructPDF()
     RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     // RooArgList shapes(tritPdfe, BkgPolye);
     RooAddPdf model("model", "total pdf", shapes);
+    // RooSimultaneous model("model", "total pdf", shapes);
 
     // fRealData = model.generate(*fEnergy, 500);
     

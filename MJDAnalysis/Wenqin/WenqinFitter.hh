@@ -28,9 +28,11 @@ class WenqinFitter {
         // Constructs model PDF -- MUST be called after LoadData()!
         virtual void ConstructPDF();
         
-        // Do da fit
+        // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more
-        virtual void DoFit(std::string Minimizer = "Minuit2");
+        // Honestly Minuit2 and Minuit are the same shit, one's just potentially slightly faster
+        // virtual void DoFit(std::string Minimizer = "Minuit2");
+        virtual void DoFit(std::string Minimizer = "Minuit");
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
         // Binning is simply for visualization! 
@@ -55,11 +57,6 @@ class WenqinFitter {
 
         // Get Workspace
         RooWorkspace *GetWorkspace() {return fFitWorkspace;}
-
-        // Load data -- data from file must be scalar (eg: cannot be vector<double>)
-        // The skim data must be changed to load it here
-        // Can change the name of the input TTree or parameter name if you're an asshole and you change the names
-        void LoadData(std::string fileName, std::string treeName = "skimTree", std::string parName = "trapENFCal");
 
         // Load data from skim TChain with a TCut
         // This assumes standard skimTree format

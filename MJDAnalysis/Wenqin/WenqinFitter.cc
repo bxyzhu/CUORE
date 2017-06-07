@@ -106,17 +106,20 @@ void WenqinFitter::ConstructPDF()
     double fDeltaE = -0.05;
 
 	std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
-    std::shared_ptr<TFile> tritFile( std::make_shared<TFile>(Form("%s/TritSpec.root", tritDir.c_str())) );
-    std::shared_ptr<TH1D> tritSpec(dynamic_cast<TH1D*>(tritFile->Get("tritHist")));
+    // std::shared_ptr<TFile> tritFile( std::make_shared<TFile>(Form("%s/TritSpec.root", tritDir.c_str())) );
+    // std::shared_ptr<TH1D> tritSpec(dynamic_cast<TH1D*>(tritFile->Get("tritHist")));
+    TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
+    TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
 
     RooDataHist tritRooHist("trit", "Tritium Histogram", *fEnergy, Import(*tritSpec));
-    // Because of Steve's histogram
+    // Because Steve's histogram sucks
     // The range of the histogram is maxed out at 50 keV, so need to reset range after loading histogram
     fEnergy->setRange(fFitMin, fFitMax);
     RooHistPdf tritPdf("tritPdf", "TritiumPdf", *fEnergy, tritRooHist, 2);
 
     // fRealData = new RooDataSet("data", "data", &*skimTree, RooArgSet(*fEnergy));
 
+    // Change this for polynomial background or linear
     // RooRealVar polySlope("polySlope", "Background Slope", 0.00002, -0.2, 0.2);
     // RooArgList polyList(polySlope);
     // RooPolynomial BkgPoly("Background", "Linear Background function", *fEnergy, polyList);
@@ -193,7 +196,7 @@ void WenqinFitter::ConstructPDF()
     fFitWorkspace = new RooWorkspace("fFitWorkspace", "Fit Workspace");
     
     // Add model to workspace -- also adds all of the normalization constants
-    // If this step isn't done, a lot of the later functions won't work!
+    // If this step isn't done, a lot of the later functions won`'t work!
     fFitWorkspace->import(RooArgSet(model));
     fModelPDF = fFitWorkspace->pdf("model");
 }
@@ -222,8 +225,8 @@ void WenqinFitter::DoFit(std::string Minimizer)
 
 void WenqinFitter::DrawBasicShit(double binSize)
 {
-    std::shared_ptr<TCanvas> cSpec( std::make_shared<TCanvas>("cSpec", "cSpec", 1100, 800) );
-	RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
+	TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
+    RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
     fRealData->plotOn(frameFit);
     fModelPDF->plotOn(frameFit, LineColor(kRed));
 	frameFit->SetTitle("");
@@ -240,7 +243,7 @@ void WenqinFitter::DrawBasicShit(double binSize)
     frameFit->addObject(leg);
     frameFit->Draw();
 
-    std::shared_ptr<TCanvas> cMatrix( std::make_shared<TCanvas>("cMatrix", "cMatrix", 1100, 800) );
+    TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1100, 800);
     TH2D *fCorrMatrix = dynamic_cast<TH2D*>(fFitResult->correlationHist("Correlation Matrix"));
     fCorrMatrix->Draw("colz");
 
@@ -251,8 +254,6 @@ void WenqinFitter::DrawBasicShit(double binSize)
     fFitWorkspace->import(*fCorrMatrix);
     fFitWorkspace->import(*frameFit);
 
-
-    // std::shared_ptr<TCanvas> cResidual( std::make_shared<TCanvas>("cResidual", "cResidual", 1100, 800) );
     TCanvas *cResidual = new TCanvas("cResidual", "cResidual", 1100, 800);
     RooHist *hresid = frameFit->pullHist();
     RooPlot *frameResid = fEnergy->frame(Title("Normalized Fit Residuals"));
@@ -265,7 +266,7 @@ void WenqinFitter::DrawBasicShit(double binSize)
 
 void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
 {
-    std::shared_ptr<TCanvas> cContour( std::make_shared<TCanvas>("cContour", "cContour", 1100, 800) );
+    TCanvas *cContour = new TCanvas("cContour", "cContour", 1100, 800);
     RooPlot *frameContour = fMinimizer->contour( *fFitWorkspace->var(Form("%s", argN1.c_str())), *fFitWorkspace->var(Form("%s", argN2.c_str())), 1, 2, 3);
     frameContour->SetTitle(Form("Contour of %s vs %s", argN2.c_str(), argN1.c_str()) );
     
@@ -289,11 +290,12 @@ void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
 
 // Use after constructing the model and minimization!
 // This is a simple MC study only generating parameter information and pulls, the toy MC data can be saved
+// I forget a lot of the crap I did here, a lot of it was for boring tests Jason and Reyco wanted
+// Also this can totally be improved... you really only need to generate toy MC once and then evaluate all parameters
 void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
 {
     // Right now I'm saving the fit output
     fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), Silence(), FitOptions(Save()) );
-    // fMCStudy->generateAndFit(nMC, 15000);
     fMCStudy->generateAndFit(nMC);
 
     // Get parameter values from first fit... these methods suck
@@ -301,7 +303,7 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
     double parErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getError();
 
     // Make test plots
-    std::shared_ptr<TCanvas> cMCStudy( std::make_shared<TCanvas>("cMCStudy", "cMCStudy", 1100, 800) );
+    TCanvas *cMCStudy = new TCanvas("cMCStudy", "cMCStudy", 1100, 800);
     RooPlot *frame1 = fMCStudy->plotParam( *fFitWorkspace->var(Form("%s", argN.c_str())), Bins(50) );
     RooPlot *frame2 = fMCStudy->plotError( *fFitWorkspace->var(Form("%s", argN.c_str())), FrameRange(parErr-0.5*parErr, parErr+0.5*parErr), Bins(50));
     RooPlot *frame3 = fMCStudy->plotPull( *fFitWorkspace->var(Form("%s", argN.c_str())), FrameRange(-5, 5), Bins(50));
@@ -317,6 +319,7 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
     frame1->addObject(legParam);
 
     // Workaround because fitting built into plotPull is terrible...
+    // Get the histogram from the frame and then fit it myself
     RooHist *hist = frame3->getHist();
     hist->Fit("gaus", "ME");
     TF1 *gaus = hist->GetFunction("gaus");
@@ -393,7 +396,6 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getValV();
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getError();
 
-
 /*
     // Try to extract nLL variables from MCStudy
     RooDataSet MCFitData = fMCStudy->fitParDataSet();
@@ -421,7 +423,7 @@ void WenqinFitter::GenerateMCStudy(std::string argN, int nMC)
 // How useful is this when there's RooMCStudy?
 void WenqinFitter::GenerateToyMC(std::string fileName)
 {
-    std::shared_ptr<TFile> fOut( std::make_shared<TFile>( Form("./Data/%s_%s.root", fSavePrefix.c_str(), fileName.c_str()), "RECREATE" ) );
+    TFile *fOut = new TFile( Form("./Data/%s_%s.root", fSavePrefix.c_str(), fileName.c_str()), "RECREATE" );
     fMCData = fModelPDF->generate( RooArgSet(*fEnergy), Name("Toy_dataset"), Extended());
 
     // Save data to workspace and write to a file
@@ -432,10 +434,10 @@ void WenqinFitter::GenerateToyMC(std::string fileName)
     fOut->Close();
 }
 
-
 // Gets resolution, function and parameters from BDM PRL paper
 // https://arxiv.org/abs/1612.00886
-// In the future it should just be a convolution with all the other PDFs
+// This function should probably change slightly for future datasets
+// Also in the future it should just be a convolution with all the other PDFs
 double WenqinFitter::GetSigma(double energy)
 {
   	double sig0 = 0.16, F=0.11, eps=0.00296;
@@ -444,34 +446,26 @@ double WenqinFitter::GetSigma(double energy)
 	return sig;
 }
 
-// Load data from file
-void WenqinFitter::LoadData(std::string fileName, std::string treeName, std::string parName)
-{
-    std::shared_ptr<TFile> input_file( std::make_shared<TFile>(fileName.c_str()));
-    std::shared_ptr<TTree> skimTree( dynamic_cast<TTree*>(input_file->Get(Form("%s", treeName.c_str()) )) );
-
-    // Can and perhaps should split the data up by channel in a more complicated fit
-    fEnergy = new RooRealVar(Form("%s", parName.c_str()), Form("%s", parName.c_str()), fFitMin, fFitMax, "keV");
-    fRealData = new RooDataSet("data", "data", &*skimTree, RooArgSet(*fEnergy));
-}
-
 // Assumes standard skim format -- converts stuff from vector<double> to scalar
-// Also assumes trapENFCal is the parameter of choice
+// Also assumes trapENFCal is the energy parameter of choice
 void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
 {
     // First get TEntryList with TCut
     skimTree->Draw(">> elist", Form("%s", theCut.c_str()), "entrylist goff");
-    std::shared_ptr<TEntryList> elist( dynamic_cast<TEntryList*>(gDirectory->Get("elist")) );
+    TEntryList *elist = dynamic_cast<TEntryList*>(gDirectory->Get("elist"));
     // This works
     skimTree->SetEntryList(&*elist);
+    std::cout << Form("Using cut: %s", theCut.c_str()) << std::endl;
+    std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
 
-    // I found it easier to work like this rather than with a TTreeReader... Ian probably hates me
+    // I found it easier to work like this rather than with a TTreeReader... 
     std::vector<double> *ftrapENFCal = nullptr;
     std::vector<int> *fchannel = nullptr;
     skimTree->SetBranchAddress("trapENFCal", &ftrapENFCal);
     skimTree->SetBranchAddress("channel", &fchannel);
 
     // Create and fill a dummy TTree to load into the RooDataSet
+    // I've only saved energy and channel so far... there's probably more useful parameters to keep around
     double trapENFCal = 0;
     int channel = 0;
     int treeNum = 0;
@@ -482,13 +476,14 @@ void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
     {
         int treeEntry = elist->GetEntryAndTree(i, treeNum);
         skimTree->GetEntry( treeEntry + skimTree->GetTreeOffset()[treeNum] );
+        if(i%5000==0) std::cout << "Processing event: " << i << std::endl;
         
         for(int j = 0; j < ftrapENFCal->size(); j++)
         {
             trapENFCal = ftrapENFCal->at(j);
             channel = fchannel->at(j);
+            dummyTree->Fill();
         }
-        dummyTree->Fill();
     }
 
     std::cout << "Dummy Tree filled entries: " << dummyTree->GetEntries() << std::endl;
@@ -502,8 +497,8 @@ void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
 void WenqinFitter::ProfileNLL(std::string argN)
 {
     // Draw both NLL and Profile NLL and save as PDF
-    std::shared_ptr<TCanvas> cNLL( std::make_shared<TCanvas>("cNLL", "cNLL", 900, 600) );
-
+    TCanvas *cNLL = new TCanvas("cNLL", "cNLL", 900, 600);
+    
     // Best fit value -- just using this to set range
     double parVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
 
@@ -524,7 +519,8 @@ void WenqinFitter::ProfileNLL(std::string argN)
 
 void WenqinFitter::SaveShit(std::string outfileName)
 {
-    std::shared_ptr<TFile> fOut( std::make_shared<TFile>( Form("./Results/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" ) );
+    // std::shared_ptr<TFile> fOut( std::make_shared<TFile>( Form("./Results/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" ) );
+    TFile *fOut = new TFile( Form("./Results/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
     fOut->cd();
     fFitWorkspace->Write();
     fOut->Close();

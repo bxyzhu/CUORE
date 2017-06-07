@@ -2,6 +2,7 @@
 #define _WENQIN_SIMUL_FITTER_HH_
 
 // Class that fits low energy crap
+// Except this one is simultaneous fits
 
 #include <string>
 
@@ -14,6 +15,7 @@ class RooWorkspace;
 class RooAbsPdf;
 class RooMinimizer;
 class RooMCStudy;
+class RooSimultaneous;
 class TChain;
 
 class WenqinSimulFitter {
@@ -102,7 +104,8 @@ class WenqinSimulFitter {
         RooDataSet *fMCData;
         RooMCStudy *fMCStudy;
 
-        // Total PDF -- should change to RooSimultaneous for simultaneous fits
+        // Total PDF
+        // RooSimultaneous *fModelPDF;
         RooAbsPdf *fModelPDF;
 
         // Minimizer

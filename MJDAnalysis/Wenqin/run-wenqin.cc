@@ -10,6 +10,7 @@
 #include "RooAbsArg.h"
 
 using namespace RooFit;
+
 /*
   Results (8 Mar 2016)
   DS-0:
@@ -95,41 +96,47 @@ int main(int argc, char** argv)
 		std::cout << "Usage: " << argv[0] << " [Fit Min] [Fit Max]" << std::endl;
 		return 0;
 	}
-	int fitMin = atoi(argv[1]);
-	int fitMax = atoi(argv[2]);
+	float fitMin = atof(argv[1]);
+	float fitMax = atof(argv[2]);
 
 	//// For drawing pretty shit
 	gStyle->SetOptStat(0);
 	gStyle->SetPalette(kRainBow);
 
 	//// Set cuts here
-    std::string theCut = "trapENFCal > 0.8 && gain==0 && mHClean==1 && isGood && !muVeto && !wfDCBits && !isLNFill1 && !isLNFill2 && trapETailMin < 0 && D != 0";
+  std::string theCut = "gain==0 && mH==1 && isGood && !muVeto && !wfDCBits && !isLNFill1 && !isLNFill2 && trapETailMin<0.5 && P!=0 && D!=0";
     
-    // Noisy cuts for DS1
-    std::string noiseTime = "&& !(time_s > 2192e3 && time_s < 2195e3) && !(time_s > 7370e3 && time_s < 7371e3) && !(time_s > 7840e3 && time_s < 7860e3) && !(time_s > 8384e3 && time_s < 8387e3) && !(time_s > 8984e3 && time_s < 8985e3) && !(time_s > 9002e3 && time_s < 9005e3)";
-    std::string noisyRuns = "&& run!=9648 && run!=10663 && run!=10745 && run!=11175 && run!=12445 && run!=12723 && run!=12735 && run!=12745 && run!=12746 && run!=12765 && run!=12766 && run!=12767 && run!=13004";
-    std::string PSACuts = "&& waveS5/TMath::Power(trapENFCal, 1/4) < 1200 && tOffset < 10 && (waveS3-waveS2)/trapENFCal > 100 && (waveS3-waveS2)/trapENFCal < 320";
-    // ToE for DS1
-    // std::string SlowCut = "&& (((kvorrT/trapENFCal) >= 1.2 && (kvorrT/trapENFCal) <= 2.1) || (channel==580 && ((kvorrT/trapENFCal) >= 0.9 && (kvorrT/trapENFCal) <= 2.1)) || (channel==664 && ((kvorrT/trapENFCal) >= 1.1 && (kvorrT/trapENFCal) <= 2.1)))";
-    // ToE for DS0
-    std::string SlowCut = "&& ( ((kvorrT/trapENFCal) >= 1.2) && ((kvorrT/trapENFCal) <= 2.1) )"; // DS0 ToE
+  // Noisy cuts for DS1
+  std::string noiseTime = "&& !(time_s > 2192e3 && time_s < 2195e3) && !(time_s > 7370e3 && time_s < 7371e3) && !(time_s > 7840e3 && time_s < 7860e3) && !(time_s > 8384e3 && time_s < 8387e3) && !(time_s > 8984e3 && time_s < 8985e3) && !(time_s > 9002e3 && time_s < 9005e3)";
+  std::string noisyRuns = "&& run!=9648 && run!=10663 && run!=10745 && run!=11175 && run!=12445 && run!=12723 && run!=12735 && run!=12745 && run!=12746 && run!=12765 && run!=12766 && run!=12767 && run!=13004";
+  std::string PSACuts = "&& waveS5/TMath::Power(trapENFCal, 1/4) < 3000";
+  // ToE for DS1
+  // std::string SlowCut = "&& (((kvorrT/trapENFCal) >= 1.2 && (kvorrT/trapENFCal) <= 2.1) || (channel==580 && ((kvorrT/trapENFCal) >= 0.9 && (kvorrT/trapENFCal) <= 2.1)) || (channel==664 && ((kvorrT/trapENFCal) >= 1.1 && (kvorrT/trapENFCal) <= 2.1)))";
+  std::string SlowCut = "&& fitSlo<25";
+  std::string ThreshCut = "&& threshKeV > 0 && threshKeV < 1.5";
+  // ToE for DS0
+  // std::string SlowCut = "&& ( ((kvorrT/trapENFCal) >= 1.2) && ((kvorrT/trapENFCal) <= 2.1) )"; // DS0 ToE
 
-    //// Add all the cuts to "theCut"
-    // theCut += noiseTime;
-    // theCut += noisyRuns;
-    theCut += PSACuts;
-    theCut += SlowCut;
-    theCut += "&& isNat"; // Set Enriched or Natural
+  //// Add all the cuts to "theCut"
+  theCut += noiseTime;
+  theCut += noisyRuns;
+  theCut += PSACuts;
+  theCut += SlowCut;
+  theCut += ThreshCut;
+  theCut += "&& isNat"; // Set Enriched or Natural
+  theCut += Form("&& trapENFCal >= %.2f && trapENFCal <= %.2f", fitMin, fitMax); // Energy cut for fit range
 
 	WenqinFitter *fitter = new WenqinFitter(fitMin, fitMax);
 	// This is just a string for output files
-	fitter->SetSavePrefix(Form("TEST_%d_%d", fitMin, fitMax));
-	// fitter->SetSavePrefix(Form("Test_150000_%d_%d", fitMin, fitMax));
+	fitter->SetSavePrefix("DS4Test");
 
 	// Load data from TChain with a cut string
 	TChain *skimTree = new TChain("skimTree");
-	skimTree->Add("~/project/wavelet-skim/waveletSkimDS0_*.root");
-	fitter->LoadChainData(skimTree, theCut);
+	// skimTree->Add("~/project/lat/latSkimDS0_*.root");
+  // skimTree->Add("~/project/lat/latSkimDS1_*.root");
+  // skimTree->Add("~/project/lat/latSkimDS3_*.root");
+  skimTree->Add("~/project/lat/latSkimDS4_*.root");
+  fitter->LoadChainData(skimTree, theCut);
 
 	// Construct PDF and do fit
 	fitter->ConstructPDF();
@@ -138,7 +145,6 @@ int main(int argc, char** argv)
 	// Output stuff -- argument sets the bin size for the output files
 	// This draws the spectrum as well as the covariance matrix
 	fitter->DrawBasicShit();
-	// fitter->DrawBasicShit(1.0);
 
 	//// Both of these take a long time!
 	// The contour plot is kinda fked up, 
