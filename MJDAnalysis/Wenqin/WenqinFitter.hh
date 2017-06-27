@@ -4,6 +4,8 @@
 // Class that fits low energy crap
 
 #include <string>
+#include <vector>
+#include <map>
 
 class RooDataSet;
 class RooFitResult;
@@ -36,7 +38,7 @@ class WenqinFitter {
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
         // Binning is simply for visualization! 
-        void DrawBasicShit(double binSize = 0.2);
+        void DrawBasicShit(double binSize = 0.2, bool drawResid = true, bool drawMatrix = true);
         
         // Draws and saves contour plot -- arguments must have same name as in ConstructPDF()!
         // Parameters that become limited will take forever (as in never finish)
@@ -44,10 +46,10 @@ class WenqinFitter {
 
         // This function calculates the energy resolution as a function of energy
         // According to the BDM PRL paper -- https://arxiv.org/abs/1612.00886
-        double GetSigma(double energy);
+        double GetSigma(double energy, double p0 = 0.147, double p1=0.0173, double p2=0.0003);
 
         // This function uses RooMCStudy to generate toy MC and then fit the results
-        void GenerateMCStudy(std::string argN = "Tritium", int nMC = 1000);
+        void GenerateMCStudy(std::vector<std::string> argS = {"Tritium"}, int nMC = 5000);
 
         // This function generates Toy MC data according to the best fit model and saves to a file
         void GenerateToyMC(std::string fileName);
@@ -64,7 +66,7 @@ class WenqinFitter {
 
         // Creates, draws, and saves Profile Likelihood -- argument must have same name as in ConstructPDF()!
         // This is the ProfileNLL built into RooFit
-        void ProfileNLL(std::string argN = "Tritium");
+        std::map<std::string, std::vector<double>> ProfileNLL(std::vector<std::string> argS = {"Tritium"});
 
         // Creates, draws, and saves Profile Likelihood
         // This is a custom one to get a finer scan, probably takes much longer

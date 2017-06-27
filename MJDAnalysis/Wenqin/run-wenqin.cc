@@ -1,6 +1,5 @@
 // Run the low energy fitter... do whatever
 #include "WenqinFitter.hh"
-
 #include "TStyle.h"
 #include "TChain.h"
 #include "RooFitResult.h"
@@ -12,41 +11,7 @@
 using namespace RooFit;
 
 /*
-  Results (8 Mar 2016)
-  DS-0:
-  Total live time (days): 47.6217
-  Reduction from veto (sec): 3683.46
-  Reduced live time (days): 47.5791
-  Active mass:  14.6000 kg   enriched 10.6900   natural 3.9100
-  Exposure:  694.6549 kg-days total  natural 186.0343   enriched 508.6206
-
-  DS-1:
-  Total live time (days): 60.1582
-  Reduction from veto (sec): 3435.08
-  Reduced live time (days): 60.1184
-  Active mass:  12.4300 kg   enriched 11.3100   natural 1.1200
-  Exposure:  747.2720 kg-days total  natural 67.3326   enriched 679.9394
-
-  DS-3:
-  Total live time (days): 29.9128
-  Reduction from veto (sec): 1117.99
-  Reduced live time (days): 29.8999
-  Active mass:  15.4120 kg   enriched 12.6310   natural 2.7810
-  Exposure:  460.8174 kg-days total  natural 83.1516   enriched 377.6657
-  
-  DS-4:
-  Total live time (days): 23.6908
-  Reduction from veto (sec): 9986.62
-  Reduced live time (days): 23.5752
-  Active mass:  9.4212 kg   enriched 5.4712   natural 3.9500
-  Exposure:  222.1064 kg-days total  natural 93.1219   enriched 128.9845
-
-  DS-5:
-  Total live time (days): 122.5
-  Active mass: m1Total = 15.39; m1Enr = 12.04; m1Nat = 3.35
-               m2Total = 9.67; m2Enr = 5.71; m2Nat = 3.96
-  Exposure: 3069.85 kg-days enriched 2174.4
-
+  Old Results For Comparison (8 Mar 2016)
 	Note: DS-0 might be lower by about 10% due to 60 hours of data being incorrect
 	DS0 Enriched:				Counts 							             Rate (Counts/kg/year)
                    Bkg    1.2645e+03 +/-  3.75e+01			2.48614 +/- 0.0737288
@@ -88,82 +53,84 @@ using namespace RooFit;
                Tritium    4.7636e+02 +/-  2.94e+01			7.07473 +/- 0.436638
                   Zn65    1.4089e+01 +/-  7.27e+00			0.20925 +/- 0.107971
 */
-
 int main(int argc, char** argv)
 {
-	if(argc <= 2)
+	if(argc <= 3)
 	{
-		std::cout << "Usage: " << argv[0] << " [Fit Min] [Fit Max]" << std::endl;
+		std::cout << "Usage: " << argv[0] << " [DS] [Fit Min] [Fit Max]" << std::endl;
 		return 0;
 	}
-	float fitMin = atof(argv[1]);
-	float fitMax = atof(argv[2]);
+	int fDS = atoi(argv[1]);
+  float fitMin = atof(argv[2]);
+	float fitMax = atof(argv[3]);
 
 	//// For drawing pretty shit
 	gStyle->SetOptStat(0);
 	gStyle->SetPalette(kRainBow);
 
 	//// Set cuts here
-  std::string theCut = "gain==0 && mH==1 && isGood && !muVeto && !wfDCBits && !isLNFill1 && !isLNFill2 && trapETailMin<0.5 && P!=0 && D!=0";
-    
+  // std::string theCut = "gain==0 && mH==1 && isGood && !muVeto && !wfDCBits && !isLNFill1 && !isLNFill2 && trapETailMin<0. && P!=0 && D!=0";
+  // std::string DS0runCut = "&& run!=3341 && run!=3523 && run!=3524 && run!=3529 && run!=3530 && run!=4057 && run!=4125 && run!=4473 && run!=4554 && run!=5248 && run!=5249 && run!=5889 && run!=5890 && run!=5894 && run!=5895 && run!=6775";
   // Noisy cuts for DS1
-  std::string noiseTime = "&& !(time_s > 2192e3 && time_s < 2195e3) && !(time_s > 7370e3 && time_s < 7371e3) && !(time_s > 7840e3 && time_s < 7860e3) && !(time_s > 8384e3 && time_s < 8387e3) && !(time_s > 8984e3 && time_s < 8985e3) && !(time_s > 9002e3 && time_s < 9005e3)";
-  std::string noisyRuns = "&& run!=9648 && run!=10663 && run!=10745 && run!=11175 && run!=12445 && run!=12723 && run!=12735 && run!=12745 && run!=12746 && run!=12765 && run!=12766 && run!=12767 && run!=13004";
-  std::string PSACuts = "&& waveS5/TMath::Power(trapENFCal, 1/4) < 3000";
+  // std::string noiseTime = "&& !(time_s > 2192e3 && time_s < 2195e3) && !(time_s > 7370e3 && time_s < 7371e3) && !(time_s > 7840e3 && time_s < 7860e3) && !(time_s > 8384e3 && time_s < 8387e3) && !(time_s > 8984e3 && time_s < 8985e3) && !(time_s > 9002e3 && time_s < 9005e3)";
+  // std::string noisyRuns = "&& run!=9648 && run!=10663 && run!=10745 && run!=11175 && run!=12445 && run!=12723 && run!=12735 && run!=12745 && run!=12746 && run!=12765 && run!=12766 && run!=12767 && run!=13004";
+  // std::string PSACuts = "&& bcMax < 599";
   // ToE for DS1
   // std::string SlowCut = "&& (((kvorrT/trapENFCal) >= 1.2 && (kvorrT/trapENFCal) <= 2.1) || (channel==580 && ((kvorrT/trapENFCal) >= 0.9 && (kvorrT/trapENFCal) <= 2.1)) || (channel==664 && ((kvorrT/trapENFCal) >= 1.1 && (kvorrT/trapENFCal) <= 2.1)))";
-  std::string SlowCut = "&& fitSlo<25";
-  std::string ThreshCut = "&& threshKeV > 0 && threshKeV < 1.5";
+  // std::string SlowCut = "&& fitSlo<20";
+  // std::string SlowCut = "&& ( (channel==640 && fitSlo < 11.17) || (channel==688 && fitSlo < 10.87) || (channel==674 && fitSlo < 16.72) || (channel==644 && fitSlo < 12.82) || (channel==598 && fitSlo < 10.57) || (channel==646 && fitSlo < 11.17) || (channel==600 && fitSlo < 9.97) || (channel==626 && fitSlo < 10.87) || (channel==594 && fitSlo < 8.62) || (channel==656 && fitSlo < 11.77) || (channel==696 && fitSlo < 14.47) || (channel==690 && fitSlo < 13.27) || (channel==692 && fitSlo < 10.27) || (channel==610 && fitSlo < 14.77) || (channel==662 && fitSlo < 12.82) || (channel==608 && fitSlo < 11.62) || (channel==664 && fitSlo < 12.67) || (channel==576 && fitSlo < 12.67) || (channel==624 && fitSlo < 11.62) || (channel==592 && fitSlo < 9.67))";
+  // std::string ThreshCut = "&& threshKeV > 0 && threshKeV < 1.5";
   // ToE for DS0
   // std::string SlowCut = "&& ( ((kvorrT/trapENFCal) >= 1.2) && ((kvorrT/trapENFCal) <= 2.1) )"; // DS0 ToE
+  
+    // bkg = ROOT.TChain("skimTree")
+    // ignoreList = [(0,656),(3,592),(3,692),(4,1332)]
+    // for ch in chList:
+    //     if (dsNum,ch) not in ignoreList:
+    //         f = "~/project/latskim/latSkimDS%d_ch%d.root" % (dsNum,ch)
+    //         bkg.Add(f)
 
-  //// Add all the cuts to "theCut"
-  theCut += noiseTime;
-  theCut += noisyRuns;
-  theCut += PSACuts;
-  theCut += SlowCut;
-  theCut += ThreshCut;
-  theCut += "&& isNat"; // Set Enriched or Natural
-  theCut += Form("&& trapENFCal >= %.2f && trapENFCal <= %.2f", fitMin, fitMax); // Energy cut for fit range
+  std::string theCut = "";
+  if(fDS == 0) theCut += "!(run==3523 && (channel==690)) && channel!=656";
+  
+  else if(fDS == 1) theCut += "!(run==10663 && (channel==578)) && !(run==11175 && (channel==578)) && !(run==12746 && (channel==692)) && !(run==12765 && (channel==692)) && !(run==12766 && (channel==692)) && !(run==13004 && (channel==598|| channel==600))";
+  
+  else if(fDS == 3) theCut += "!(run==17169 && (channel==614)) && !(run==17178 && (channel==614)) && !(run==17505 && (channel==598)) && !(run==17875 && (channel==614)) && !(run==17878 && (channel==614)) && !(run==17935 && (channel==614)) && !(run==17936 && (channel==614)) && !(run==17940 && (channel==614)) && !(run==17971 && (channel==614)) && !(run==17978 && (channel==614)) && channel!=592";
+  
+  else if(fDS == 4) theCut += "!(run==60001001 && (channel==1106)) && !(run==60001002 && (channel==1106)) && !(run==60001003 && (channel==1106)) && !(run==60001011 && (channel==1106)) && !(run==60001078 && (channel==1144)) && !(run==60001121 && (channel==1144)) && !(run==60001171 && (channel==1106)) && !(run==60001177 && (channel==1144)) && !(run==60001178 && (channel==1106|| channel==1144)) && !(run==60001184 && (channel==1144)) && !(run==60001463 && (channel==1106)) && !(run==60001469 && (channel==1106)) && !(run==60001471 && (channel==1106)) && !(run==60001477 && (channel==1106)) && !(run==60001492 && (channel==1106)) && !(run==60001498 && (channel==1106|| channel==1298)) && !(run==60001692 && (channel==1144)) && !(run==60001698 && (channel==1106)) && !(run==60001797 && (channel==1144)) && !(run==60001827 && (channel==1144)) && !(run==60001838 && (channel==1106)) && !(run==60001847 && (channel==1106)) && !(run==60001848 && (channel==1106)) && !(run==60001881 && (channel==1106)) && !(run==60001882 && (channel==1106)) && channel!=1332";
+
+  else if(fDS == 5) theCut += "!(run==22326&&(channel==614))&&!(run==22328 && (channel==1124))&&!(run==22406&&(channel==614))&&!(run==22428&&(channel==1124))&&!(run==22444&&(channel==614))&&!(run==22461 && (channel==1124)) && !(run==22462 && (channel==1124)) && !(run==22480 && (channel==614)) && !(run==22493 && (channel==1124)) && !(run==22494 && (channel==1124)) && !(run==22666 && (channel==614)) && !(run==22667 && (channel==614)) && !(run==22939 && (channel==614)) && !(run==23533 && (channel==614)) && !(run==23705 && (channel==1298|| channel==1302)) && !(run==23706 && (channel==1302)) && !(run==23707 && (channel==1302)) && !(run==23708 && (channel==1298|| channel==1302)) && !(run==23709 && (channel==1298|| channel==1302)) && !(run==23710 && (channel==1298|| channel==1302)) && !(run==23711 && (channel==1298|| channel==1302)) && !(run==23712 && (channel==1298|| channel==1302)) && !(run==23713 && (channel==1298|| channel==1302)) && !(run==23714 && (channel==1298|| channel==1302)) && !(run==23715 && (channel==1298|| channel==1302)) && !(run==23718 && (channel==1302)) && !(run==23719 && (channel==1298|| channel==1302)) && !(run==23721 && (channel==1298|| channel==1302)) && !(run==23725 && (channel==1330|| channel==1332)) && !(run==23726 && (channel==1330|| channel==1332)) && !(run==23728 && (channel==1330|| channel==1332)) && !(run==23729 && (channel==1330|| channel==1332)) && !(run==23730 && (channel==1330|| channel==1332)) && !(run==23731 && (channel==1330|| channel==1332)) && !(run==23732 && (channel==1330|| channel==1332)) && !(run==23733 && (channel==1330|| channel==1332)) && !(run==23734 && (channel==1330|| channel==1332)) && !(run==23735 && (channel==1330|| channel==1332)) && !(run==23736 && (channel==1330|| channel==1332)) && !(run==23737 && (channel==1330|| channel==1332)) && !(run==23738 && (channel==1330|| channel==1332)) && !(run==23739 && (channel==1330|| channel==1332)) && !(run==23740 && (channel==1330|| channel==1332)) && !(run==23741 && (channel==1330|| channel==1332)) && !(run==23742 && (channel==1330|| channel==1332)) && !(run==23743 && (channel==1330|| channel==1332)) && !(run==23744 && (channel==1330|| channel==1332)) && !(run==23745 && (channel==1330|| channel==1332)) && !(run==23746 && (channel==1330|| channel==1332)) && !(run==23747 && (channel==1330|| channel==1332)) && !(run==23748 && (channel==1330|| channel==1332)) && !(run==23749 && (channel==1330|| channel==1332)) && !(run==23750 && (channel==1330|| channel==1332)) && !(run==23751 && (channel==1330|| channel==1332)) && !(run==23752 && (channel==1330|| channel==1332)) && !(run==23753 && (channel==1330|| channel==1332)) && !(run==23754 && (channel==1330|| channel==1332)) && !(run==23755 && (channel==1330|| channel==1332)) && !(run==23756 && (channel==1330|| channel==1332)) && !(run==23757 && (channel==1332)) && !(run==23758 && (channel==1330|| channel==1332)) && !(run==23759 && (channel==1330|| channel==1332))";
+
+  theCut += "&&isNat"; // Set Enriched or Natural
+  theCut += Form("&& trapENFCal>=%.2f && trapENFCal<=%.2f", fitMin, fitMax); // Energy cut for fit range
 
 	WenqinFitter *fitter = new WenqinFitter(fitMin, fitMax);
 	// This is just a string for output files
-	fitter->SetSavePrefix("DS4Test");
+	fitter->SetSavePrefix(Form("LowE_DS%d_Nat_%.1f_%.1f", fDS, fitMin, fitMax));
 
 	// Load data from TChain with a cut string
 	TChain *skimTree = new TChain("skimTree");
-	// skimTree->Add("~/project/lat/latSkimDS0_*.root");
-  // skimTree->Add("~/project/lat/latSkimDS1_*.root");
-  // skimTree->Add("~/project/lat/latSkimDS3_*.root");
-  skimTree->Add("~/project/lat/latSkimDS4_*.root");
+  skimTree->Add(Form("~/project/latskim/latSkimDS%d_*.root", fDS) );
   fitter->LoadChainData(skimTree, theCut);
 
 	// Construct PDF and do fit
 	fitter->ConstructPDF();
 	fitter->DoFit();
 
-	// Output stuff -- argument sets the bin size for the output files
-	// This draws the spectrum as well as the covariance matrix
-	fitter->DrawBasicShit();
+	// This draws the spectrum as well as the covariance matrix and residuals if you want
+	fitter->DrawBasicShit(0.2, false, false);
 
-	//// Both of these take a long time!
-	// The contour plot is kinda fked up, 
-	// fitter->DrawContour();
-	// fitter->DrawContour("Tritium", "Bkg");
-	// fitter->DrawContour("Tritium", "Co57");
-	// fitter->DrawContour("Tritium", "Mn54");
-	// fitter->ProfileNLL();
-	// fitter->ProfileNLL("Ge68");
-	// fitter->ProfileNLL("Co57");
-	// fitter->ProfileNLL("Mn54");
-	// fitter->ProfileNLL("Zn65");
-	// fitter->ProfileNLL("Pb210");
-	// fitter->ProfileNLL("Bkg");
-	// fitter->ProfileNLL("Fe55");
+  // List of parameters we want to do more studies on
+  std::vector<std::string> argList = {"Tritium", "Ge68"};
+	//// Profile likelihood calculation
+	std::map<std::string, std::vector<double>> LimitMap = fitter->ProfileNLL(argList);
+	
+  // Generate Toy MC study -- input a list of parameters to look at from toy MC
+  // This shit takes a long time
+  fitter->GenerateMCStudy(argList, 1000);
 
-	// Generate Toy MC study -- this shit takes a long time
-	// fitter->GenerateMCStudy("Tritium", 5000);
-  // fitter->GenerateMCStudy("Co57", 5000);
+  // Print limits
+  for(auto &kv : LimitMap) std::cout << kv.first << " limit: " << kv.second[0] << " " << kv.second[1] << std::endl;
 
 	//// Print fit result again at the end
 	// RooWorkspace *fitWorkspace = fitter->GetWorkspace();
@@ -173,8 +140,6 @@ int main(int argc, char** argv)
 	// fitResult->Print();
 	// RooArgList floatPars = fitResult->floatParsFinal();
 	// floatPars.Print();
-
-	// std::cout << "Chi Square: " << fitter->fChiSquare << std::endl;
 
 	return 0;
 }
