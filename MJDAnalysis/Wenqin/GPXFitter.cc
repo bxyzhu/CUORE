@@ -95,7 +95,7 @@ GPXFitter::~GPXFitter()
 }
 
 // Constructs model PDF, use only after LoadData or else!
-void GPXFitter::ConstructPDF(bool bBDM)
+void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 {
 	if(fRealData == nullptr)
 	{

@@ -28,7 +28,7 @@ class WenqinFitter {
 		virtual ~WenqinFitter();
 
         // Constructs model PDF -- MUST be called after LoadData()!
-        virtual void ConstructPDF(bool bBDM = false);
+        virtual void ConstructPDF(double enVal = 0., bool bBDM = false);
         
         // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more

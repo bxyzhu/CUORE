@@ -95,7 +95,7 @@ WenqinFitter::~WenqinFitter()
 }
 
 // Constructs model PDF, use only after LoadData or else!
-void WenqinFitter::ConstructPDF(bool bBDM)
+void WenqinFitter::ConstructPDF(double enVal, bool bBDM)
 {
 	if(fRealData == nullptr)
 	{
