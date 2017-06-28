@@ -1,7 +1,12 @@
-#ifndef _WENQIN_FITTER_HH_
-#define _WENQIN_FITTER_HH_
+#ifndef _GPX_FITTER_HH_
+#define _GPX_FITTER_HH_
 
-// Class that fits low energy crap
+/*
+
+        When a Wenqin gains enough statistics experience to reach level 36, he evolves into the Great Professor X (GPX)
+        GPX is the final form of Wenqin. It can mega evolve into Mega GPX X using a Wenqinite X or Mega GPX Y using a Wenqinite Y
+
+*/
 
 #include <string>
 #include <vector>
@@ -18,14 +23,14 @@ class RooMinimizer;
 class RooMCStudy;
 class TChain;
 
-class WenqinFitter {
+class GPXFitter {
 	
 	public: 
-		WenqinFitter();
+		GPXFitter();
 		
-                WenqinFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
+                GPXFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
 
-		virtual ~WenqinFitter();
+		virtual ~GPXFitter();
 
         // Constructs model PDF -- MUST be called after LoadData()!
         virtual void ConstructPDF(bool bBDM = false);

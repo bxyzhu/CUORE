@@ -1,4 +1,4 @@
-#include "WenqinFitter.hh"
+#include "GPXFitter.hh"
 #include "RooAddPdf.h"
 #include "RooHistPdf.h"
 #include "RooConstVar.h"
@@ -43,7 +43,7 @@
 
 using namespace RooFit;
 
-WenqinFitter::WenqinFitter() : 
+GPXFitter::GPXFitter() : 
     fDS(1),
     fFitMin(2.), 
     fFitMax(100.), 
@@ -61,7 +61,7 @@ WenqinFitter::WenqinFitter() :
     fSavePrefix("FitResult")
 { }
 
-WenqinFitter::~WenqinFitter()
+GPXFitter::~GPXFitter()
 {
 	delete fEnergy;
 	fEnergy = nullptr;
@@ -95,7 +95,7 @@ WenqinFitter::~WenqinFitter()
 }
 
 // Constructs model PDF, use only after LoadData or else!
-void WenqinFitter::ConstructPDF(bool bBDM)
+void GPXFitter::ConstructPDF(bool bBDM)
 {
 	if(fRealData == nullptr)
 	{
@@ -191,7 +191,7 @@ void WenqinFitter::ConstructPDF(bool bBDM)
     fModelPDF = fFitWorkspace->pdf("model");
 }
 
-void WenqinFitter::DoFit(std::string Minimizer)
+void GPXFitter::DoFit(std::string Minimizer)
 {
     // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
     fNLL = fModelPDF->createNLL(*fRealData, Extended(), NumCPU(4));
@@ -210,7 +210,7 @@ void WenqinFitter::DoFit(std::string Minimizer)
     fFitWorkspace->import(*fFitResult);
 }
 
-void WenqinFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
+void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
 {
 	TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
@@ -267,7 +267,7 @@ void WenqinFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix
     }
 }
 
-void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
+void GPXFitter::DrawContour(std::string argN1, std::string argN2)
 {
     TCanvas *cContour = new TCanvas("cContour", "cContour", 1100, 800);
     RooPlot *frameContour = fMinimizer->contour( *fFitWorkspace->var(Form("%s", argN1.c_str())), *fFitWorkspace->var(Form("%s", argN2.c_str())), 1, 2, 3);
@@ -295,7 +295,7 @@ void WenqinFitter::DrawContour(std::string argN1, std::string argN2)
 // This is a simple MC study only generating parameter information and pulls, the toy MC data can be saved
 // I forget a lot of the crap I did here, a lot of it was for boring tests Jason and Reyco wanted
 // Also this can totally be improved... you really only need to generate toy MC once and then evaluate all parameters
-void WenqinFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
+void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
 {
     // Right now I'm saving the fit output
     fMCStudy = new RooMCStudy(*fModelPDF, *fEnergy, Extended(), Silence(), FitOptions(Save()) );
@@ -428,7 +428,7 @@ void WenqinFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
 
 // Use after constructing the model and minimization!
 // How useful is this when there's RooMCStudy?
-void WenqinFitter::GenerateToyMC(std::string fileName)
+void GPXFitter::GenerateToyMC(std::string fileName)
 {
     TFile *fOut = new TFile( Form("./Data/%s_%s.root", fSavePrefix.c_str(), fileName.c_str()), "RECREATE" );
     fMCData = fModelPDF->generate( RooArgSet(*fEnergy), Name("Toy_dataset"), Extended());
@@ -444,7 +444,7 @@ void WenqinFitter::GenerateToyMC(std::string fileName)
 // Gets resolution, function and parameters from BDM PRL paper
 // https://arxiv.org/abs/1612.00886
 // In the future it should just be a convolution with all the other PDFs?
-double WenqinFitter::GetSigma(double energy)
+double GPXFitter::GetSigma(double energy)
 {
   	// double sig0 = 0.16, F=0.11, eps=0.00296;
   	// double sig = std::sqrt(std::pow(sig0,2) + eps * F * energy);
@@ -462,7 +462,7 @@ double WenqinFitter::GetSigma(double energy)
 
 // Assumes standard skim format -- converts stuff from vector<double> to scalar
 // Also assumes trapENFCal is the energy parameter of choice
-void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
+void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
 {
     // First get TEntryList with TCut
     skimTree->Draw(">> elist", Form("%s", theCut.c_str()), "entrylist goff");
@@ -508,7 +508,7 @@ void WenqinFitter::LoadChainData(TChain *skimTree, std::string theCut)
 
 // Implemented now in RooStats rather than RooFit
 // Calculates profile likelihood and spits out limits
-std::map<std::string, std::vector<double>> WenqinFitter::ProfileNLL(std::vector<std::string> argS)
+std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std::string> argS)
 {
     std::map<std::string, std::vector<double>> LimitMap;
     for(auto &argN : argS)
@@ -538,7 +538,7 @@ std::map<std::string, std::vector<double>> WenqinFitter::ProfileNLL(std::vector<
     return LimitMap;
 }
 
-void WenqinFitter::SaveShit(std::string outfileName)
+void GPXFitter::SaveShit(std::string outfileName)
 {
     TFile *fOut = new TFile( Form("./Results/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
     fOut->cd();
@@ -546,7 +546,7 @@ void WenqinFitter::SaveShit(std::string outfileName)
     fOut->Close();
 }
 
-void WenqinFitter::SetFitRange(double fitMin, double fitMax)
+void GPXFitter::SetFitRange(double fitMin, double fitMax)
 {
     fFitMin = fitMin;
     fFitMax = fitMax;
