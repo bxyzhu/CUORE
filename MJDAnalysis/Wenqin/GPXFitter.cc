@@ -199,6 +199,7 @@ void GPXFitter::DoFit(std::string Minimizer)
     // Create minimizer, fit model to data and save result
     fMinimizer = new RooMinimizer(*fNLL);
     fMinimizer->setMinimizerType(Form("%s", Minimizer.c_str()));
+    fMinimizer->setPrintLevel(-1);
     fMinimizer->setStrategy(2);
     fMinimizer->migrad();
     fMinimizer->hesse();
@@ -294,7 +295,6 @@ void GPXFitter::DrawContour(std::string argN1, std::string argN2)
 // Use after constructing the model and minimization!
 // This is a simple MC study only generating parameter information and pulls, the toy MC data can be saved
 // I forget a lot of the crap I did here, a lot of it was for boring tests Jason and Reyco wanted
-// Also this can totally be improved... you really only need to generate toy MC once and then evaluate all parameters
 void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
 {
     // Right now I'm saving the fit output
@@ -446,9 +446,7 @@ void GPXFitter::GenerateToyMC(std::string fileName)
 // In the future it should just be a convolution with all the other PDFs?
 double GPXFitter::GetSigma(double energy)
 {
-  	// double sig0 = 0.16, F=0.11, eps=0.00296;
-  	// double sig = std::sqrt(std::pow(sig0,2) + eps * F * energy);
-    
+
     double p0, p1, p2;
     if(fDS==0) {p0 = 0.147; double p1=0.0173; double p2=0.0003;}
     else if(fDS==1) {p0 = 0.136; double p1=0.0174; double p2=0.00028;}
@@ -508,7 +506,7 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
 
 // Implemented now in RooStats rather than RooFit
 // Calculates profile likelihood and spits out limits
-std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std::string> argS)
+std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std::string> argS, double CL)
 {
     std::map<std::string, std::vector<double>> LimitMap;
     for(auto &argN : argS)
@@ -521,7 +519,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
 
         RooStats::ProfileLikelihoodCalculator plc(*fRealData, *fModelPDF, RooArgSet(*fFitWorkspace->var(Form("%s", argN.c_str()))) );
         // Set 1 sigma interval
-        plc.SetConfidenceLevel(0.683);
+        plc.SetConfidenceLevel(CL);
 
         RooStats::LikelihoodInterval *interval = plc.GetInterval();
         double lowerLimit = interval->LowerLimit(*fFitWorkspace->var(Form("%s", argN.c_str())));

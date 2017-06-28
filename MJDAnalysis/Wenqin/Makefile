@@ -8,7 +8,10 @@ CXXFLAGS += -fPIC
 CXXFLAGS += $(ROOTCFLAGS)
 LDFLAGS  += $(ROOTLIBS)
 
-all: run-wenqin libWenqinFitter.so libGPXFitter.so
+all: run-wenqin MegaGPXEvolution libWenqinFitter.so libGPXFitter.so
+
+MegaGPXEvolution: MegaGPXEvolution.cc libGPXFitter.so
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o MegaGPXEvolution MegaGPXEvolution.cc libGPXFitter.so
 
 run-wenqin: run-wenqin.cc libWenqinFitter.so 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o run-wenqin run-wenqin.cc libWenqinFitter.so
@@ -21,4 +24,4 @@ libGPXFitter.so: GPXFitter.cc
 
 clean:
 	@echo "Removing all Wenqins...";
-	rm -f run-wenqin libWenqinFitter.so libGPXFitter.so
+	rm -f run-wenqin MegaGPXEvolution libWenqinFitter.so libGPXFitter.so

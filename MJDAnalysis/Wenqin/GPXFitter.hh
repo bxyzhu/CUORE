@@ -71,11 +71,7 @@ class GPXFitter {
 
         // Creates, draws, and saves Profile Likelihood -- argument must have same name as in ConstructPDF()!
         // This is the ProfileNLL built into RooFit
-        std::map<std::string, std::vector<double>> ProfileNLL(std::vector<std::string> argS = {"Tritium"});
-
-        // Creates, draws, and saves Profile Likelihood
-        // This is a custom one to get a finer scan, probably takes much longer
-        void ProfileNLLCustom(std::string argN = "Tritium");
+        std::map<std::string, std::vector<double>> ProfileNLL(std::vector<std::string> argS = {"Tritium"}, double CL = 0.683);
 
         // Saves fit results into file
         void SaveShit(std::string outfileName = "Test.root");
