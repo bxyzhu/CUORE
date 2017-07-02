@@ -14,6 +14,8 @@
 
 using namespace RooFit;
 
+// std::vector<double> RunWenqin(std::string argN);
+
 int main(int argc, char** argv)
 {
   	gROOT->ProcessLine("RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);");
@@ -37,18 +39,10 @@ int main(int argc, char** argv)
   	if(ftype == "Nat" || ftype == "nat") theCut += "isNat"; // Set Enriched or Natural
   	else if(ftype == "Enr" || ftype == "enr") theCut += "isEnr";
 
-  	// if(fDS == 0) theCut += "&&!(run==6811&&(channel==600||channel==696)) && channel!=656";
-  	// else if(fDS == 3) theCut += "&&channel!=592 && channel!=692";
-  	// if(fDS == 0) theCut += "&& (channel == 608 || channel==594||channel==592)";
-	// if(fDS == 0) theCut += "&& (channel == 592 || channel == 608 || channel == 594)";
-  	if(fDS == 0) theCut += "&& (channel == 646)";
-  	else if(fDS == 1) theCut += "&&(channel==600)";
-  	// else if(fDS == 3) theCut += "&&(channel == 624 || channel == 694 || channel == 614)";
-  	else if(fDS == 3) theCut += "&&(channel == 600)";
+  	if(fDS == 0) theCut += "&&!(run==6811&&(channel==600||channel==696)) && channel!=656";
+  	else if(fDS == 3) theCut += "&&channel!=592 && channel!=692";
   	else if(fDS == 4) theCut += "&&!(run==60001692 && (channel==1144))&&channel!=1332";
-  	// else if(fDS == 5) theCut += "&&channel!=1124";
-  	// else if(fDS == 5) theCut += "&&(channel == 624 || channel == 694 || channel == 614)";
-  	else if(fDS == 5) theCut += "&&(channel == 680)";
+  	else if(fDS == 5) theCut += "&&channel!=1124";
   	else if(fDS == 6) theCut += "&&!(run==6811&&(channel==600||channel==696)) && !(run==60001692 && (channel==1144))";
 
   	theCut += Form("&& trapENFCal>=%.2f && trapENFCal<=%.2f", fitMin, fitMax); // Energy cut for fit range
@@ -90,6 +84,9 @@ int main(int argc, char** argv)
 	// double geVal = dynamic_cast<RooRealVar*>(fitResult->floatParsFinal().find("Ge68"))->getValV();
 	std::vector<double> GeVals = fitter->GetVar("Ge68");
 	std::cout << "Ge68: " << GeVals[0] << " " <<  GeVals[1] << " " << GeVals[2] << std::endl;
+
+	std::vector<double> FeVals = fitter->GetVar("Fe55");
+	std::cout << "Fe55: " << FeVals[0] << " " <<  FeVals[1] << " " << FeVals[2] << std::endl;
 
 	return 0;
 }
