@@ -53,6 +53,9 @@ class GPXFitter {
         // According to the BDM PRL paper -- https://arxiv.org/abs/1612.00886
         double GetSigma(double energy);
 
+        // Wrapper for returning fit values for variables and their errors
+        std::vector<double> GetVar(std::string argN);
+
         // This function uses RooMCStudy to generate toy MC and then fit the results
         void GenerateMCStudy(std::vector<std::string> argS = {"Tritium"}, int nMC = 5000);
 
