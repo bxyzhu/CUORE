@@ -166,7 +166,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // Make names pretty for plots
     RooRealVar num_trit("Tritium", "Tritium", 6700.0, 0.0, 100000.);
     RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 100.);
-    RooRealVar num_bkg("Bkg", "Background", 50.0, 0.0, 100000.);
+    RooRealVar num_bkg("Bkg", "Bkg", 50.0, 0.0, 100000.);
     RooRealVar num_Mn54("Mn54", "Mn54", 5.0, 0.0, 50000.);
     RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 50000.);
     RooRealVar num_Co57("Co57", "Co57", 5.0, 0.0, 50000.);
@@ -494,11 +494,11 @@ double GPXFitter::GetSigma(double energy)
 void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
 {
     // First get TEntryList with TCut
-    skimTree->Draw(">> elist", Form("%s", theCut.c_str()), "entrylist goff");
+    skimTree->Draw(">> elist", Form("%s", theCut.c_str() ), "entrylist goff");
     TEntryList *elist = dynamic_cast<TEntryList*>(gDirectory->Get("elist"));
     skimTree->SetEntryList(&*elist); // This works
-    std::cout << Form("Using cut: %s", theCut.c_str()) << std::endl;
-    std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
+    // std::cout << Form("Using cut: %s", theCut.c_str() ) << std::endl;
+    // std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
 
     // I found it easier to work like this rather than with a TTreeReader... 
     std::vector<double> *ftrapENFCal = nullptr;
@@ -527,11 +527,10 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
             dummyTree->Fill();
         }
     }
-    std::cout << "Dummy Tree filled entries: " << dummyTree->GetEntries() << std::endl;
+    std::cout << "Entries = " << dummyTree->GetEntries() << std::endl;
 
     // Can and perhaps should split the data up by channel in a more complicated fit
     fEnergy = new RooRealVar("trapENFCal", "trapENFCal", fFitMin, fFitMax, "keV");
-    // fEnergy = new RooRealVar("trapENFCal", "trapENFCal", 0, 250, "keV");
     fRealData = new RooDataSet("data", "data", dummyTree, RooArgSet(*fEnergy));
 }
 

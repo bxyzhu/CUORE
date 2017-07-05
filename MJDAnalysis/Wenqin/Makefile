@@ -11,9 +11,9 @@ LDFLAGS  += $(ROOTLIBS)
 all: run-wenqin MegaGPXEvolution libWenqinFitter.so libGPXFitter.so
 
 MegaGPXEvolution: MegaGPXEvolution.cc libGPXFitter.so
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o MegaGPXEvolution MegaGPXEvolution.cc libGPXFitter.so
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o MegaGPXEvolution MegaGPXEvolution.cc libGPXFitter.so -framework Python
 
-run-wenqin: run-wenqin.cc libWenqinFitter.so 
+run-wenqin: run-wenqin.cc libWenqinFitter.so
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o run-wenqin run-wenqin.cc libWenqinFitter.so
 
 libWenqinFitter.so: WenqinFitter.cc
