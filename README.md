@@ -1,3 +1,4 @@
+This project was for the background model and two neutrino double beta decay analysis of CUORE-0
 Notes for the background model code (sometime in April, 2016)
 
 ### General
