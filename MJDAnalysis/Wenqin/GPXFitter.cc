@@ -128,6 +128,8 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooHistPdf axionPdf("axionPdf", "AxionPdf", *fEnergy, axionRooHist, 2);
 
 
+    RooRealVar DeltaE("DeltaE", "DeltaE", 0., -2.0, 2.0);
+
     // Change this for polynomial background or linear
     // RooRealVar polySlope("polySlope", "Background Slope", 0.00002, -0.2, 0.2);
     // RooArgList polyList(polySlope);
@@ -154,7 +156,8 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooRealVar Zn65_sigma("Zn65_sigma", "Zn65_sigma", GetSigma(8.98 + fDeltaE));
     RooGaussian Zn65_gauss("Zn65_gauss", "Zn65 Gaussian", *fEnergy, Zn65_mean, Zn65_sigma);
 
-    RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE);
+    // RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE);
+    RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE, 10.2, 10.45); // Floating mean
     RooRealVar Ge68_sigma("Ge68_sigma", "Ge68_sigma", GetSigma(10.37 + fDeltaE));
     RooGaussian Ge68_gauss("Ge68_gauss", "Ge68 Gaussian", *fEnergy, Ge68_mean, Ge68_sigma);
     
@@ -165,7 +168,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // Normalization parameters
     // Make names pretty for plots
     RooRealVar num_trit("Tritium", "Tritium", 6700.0, 0.0, 100000.);
-    RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 100.);
+    RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 10000.);
     RooRealVar num_bkg("Bkg", "Bkg", 50.0, 0.0, 100000.);
     RooRealVar num_Mn54("Mn54", "Mn54", 5.0, 0.0, 50000.);
     RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 50000.);
@@ -199,6 +202,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 
     // RooArgList shapes(tritPdfe, axionPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
+    // RooArgList shapes(tritPdfe, BkgPolye, Ge68_gausse, Pb210_gausse);
     RooAddPdf model("model", "total pdf", shapes);
 
     // Add model to workspace -- also adds all of the normalization constants
@@ -249,22 +253,27 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     double geErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Ge68"))->getError();
     double feVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getValV();
     double feErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getError();    
+    double bkgVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getValV();
+    double bkgErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getError();    
+
 
     // Add chi-square to the plot - it's fairly meaningless as it's an unbinned fit but people will want it
     fChiSquare = frameFit->chiSquare(8);
-    TPaveText *leg = new TPaveText(0.50, 0.70, 0.88, .88, "NDC");
+    TPaveText *leg = new TPaveText(0.50, 0.65, 0.88, .88, "NDC");
     leg->SetTextFont(133);
     leg->SetFillColor(0);
-    leg->SetBorderSize(1);
+    leg->SetBorderSize(0);
     leg->SetTextSize(22);
     leg->AddText(Form("#chi^{2}/NDF = %.3f" ,fChiSquare ) );
     leg->AddText(Form("Tritium (Uncorrected): %.3f #pm %.3f", tritVal, tritErr));
     leg->AddText(Form("Tritium (Corrected): %.3f #pm %.3f", tritValCorr, tritErrCorr));
+    leg->AddText(Form("Tritium (2-4 keV): %.3f #pm %.3f", tritValCorr*0.224487, tritErrCorr*0.224487));
     leg->AddText(Form("Ge68: %.3f #pm %.3f", geVal, geErr));    
     leg->AddText(Form("Fe55: %.3f #pm %.3f", feVal, feErr));
+    leg->AddText(Form("Bkg: %.3f #pm %.3f", bkgVal, bkgErr));
     frameFit->addObject(leg);
     frameFit->Draw();
-    cSpec->SaveAs(Form("./GPXResult/%s_Spec.pdf", fSavePrefix.c_str()) );
+    cSpec->SaveAs(Form("./GPXResultv4/%s_Spec.pdf", fSavePrefix.c_str()) );
     fFitWorkspace->import(*frameFit);
 
     if(drawMatrix)
@@ -272,7 +281,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
         TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1100, 800);
         TH2D *fCorrMatrix = dynamic_cast<TH2D*>(fFitResult->correlationHist("Correlation Matrix"));
         fCorrMatrix->Draw("colz");
-        cMatrix->SaveAs(Form("./GPXResult/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
+        cMatrix->SaveAs(Form("./GPXResultv4/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
         fFitWorkspace->import(*fCorrMatrix);
     }
 
@@ -284,7 +293,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
         frameResid->addPlotable(hresid, "P");
         frameResid->GetYaxis()->SetTitle("Normalized Residuals (#sigma)");
         frameResid->Draw();
-        cResidual->SaveAs(Form("./GPXResult/%s_Residual.pdf", fSavePrefix.c_str()) );
+        cResidual->SaveAs(Form("./GPXResultv4/%s_Residual.pdf", fSavePrefix.c_str()) );
     }
 }
 
@@ -307,7 +316,7 @@ void GPXFitter::DrawContour(std::string argN1, std::string argN2)
     frameContour->Draw();
     
     // Save plots into workspace and pdf
-    cContour->SaveAs(Form("./GPXResult/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
+    cContour->SaveAs(Form("./GPXResultv4/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
     fFitWorkspace->import(*frameContour);
 }
 
@@ -383,7 +392,7 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
         
         // Save MC Study to plot and workspace
         // fFitWorkspace->import(*fMCStudy);
-        cMCStudy->SaveAs(Form("./GPXResult/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
+        cMCStudy->SaveAs(Form("./GPXResultv4/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
     }    
 
 
@@ -411,17 +420,17 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
     // TCanvas *cM = new TCanvas("cM", "cM", 800, 600);
     // hMean->Draw();
     // l1.DrawLine(parVal0, 0, parVal0, hMean->GetBinContent(hMean->GetMaximumBin()) );
-    // cM->SaveAs("./GPXResult/MeanTest.pdf");
+    // cM->SaveAs("./GPXResultv4/MeanTest.pdf");
 
     // TCanvas *cLo = new TCanvas("cLo", "cLo", 800, 600);
     // hErrLo->Draw();
     // l1.DrawLine(parErrLo0, 0, parErrLo0, hErrLo->GetBinContent(hErrLo->GetMaximumBin()));
-    // cLo->SaveAs("./GPXResult/MeanTest_Low.pdf");
+    // cLo->SaveAs("./GPXResultv4/MeanTest_Low.pdf");
 
     // TCanvas *cHi = new TCanvas("cHi", "cHi", 800, 600);
     // hErrHi->Draw();
     // l1.DrawLine(parErrHi0, 0, parErrHi0, hErrHi->GetBinContent(hErrHi->GetMaximumBin()));
-    // cHi->SaveAs("./GPXResult/MeanTest_High.pdf");
+    // cHi->SaveAs("./GPXResultv4/MeanTest_High.pdf");
 
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getValV();
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getError();
@@ -485,7 +494,6 @@ double GPXFitter::GetSigma(double energy)
     else if(fDS==5) {p0 = 0.2121; p1=0.01838; p2=0.00031137;}
     else if(fDS==6) {p0 = 0.2121; p1=0.01838; p2=0.00031137;}
     double sig = std::sqrt(p0*p0 + p1*p1*energy + p2*p2*energy*energy );
-
 	return sig;
 }
 
@@ -497,8 +505,8 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
     skimTree->Draw(">> elist", Form("%s", theCut.c_str() ), "entrylist goff");
     TEntryList *elist = dynamic_cast<TEntryList*>(gDirectory->Get("elist"));
     skimTree->SetEntryList(&*elist); // This works
-    // std::cout << Form("Using cut: %s", theCut.c_str() ) << std::endl;
-    // std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
+    std::cout << Form("Using cut: %s", theCut.c_str() ) << std::endl;
+    std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
 
     // I found it easier to work like this rather than with a TTreeReader... 
     std::vector<double> *ftrapENFCal = nullptr;
@@ -527,7 +535,7 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
             dummyTree->Fill();
         }
     }
-    std::cout << "Entries = " << dummyTree->GetEntries() << std::endl;
+    std::cout << "Filled Entries = " << dummyTree->GetEntries() << std::endl;
 
     // Can and perhaps should split the data up by channel in a more complicated fit
     fEnergy = new RooRealVar("trapENFCal", "trapENFCal", fFitMin, fFitMax, "keV");
@@ -558,7 +566,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
         RooStats::LikelihoodIntervalPlot plot(interval);
         plot.SetRange(parVal - 1.5*(parVal - lowerLimit), parVal + 1.5*(upperLimit-parVal) );
         plot.Draw();
-        cNLL->SaveAs(Form("./GPXResult/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
+        cNLL->SaveAs(Form("./GPXResultv4/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
         std::vector<double> Limits = {lowerLimit, upperLimit};
         LimitMap[argN.c_str()] = Limits;
     }
@@ -568,7 +576,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
 
 void GPXFitter::SaveShit(std::string outfileName)
 {
-    TFile *fOut = new TFile( Form("./GPXResult/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
+    TFile *fOut = new TFile( Form("./GPXResultv4/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
     fOut->cd();
     fFitWorkspace->Write();
     fOut->Close();
