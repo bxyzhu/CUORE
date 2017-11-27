@@ -43,11 +43,11 @@
 
 using namespace RooFit;
 
-GPXFitter::GPXFitter() : 
+GPXFitter::GPXFitter() :
     fDS(1),
-    fFitMin(2.), 
-    fFitMax(100.), 
-    fEnergy(nullptr), 
+    fFitMin(2.),
+    fFitMax(100.),
+    fEnergy(nullptr),
     fRealData(nullptr),
     fMCData(nullptr),
     fMCStudy(nullptr),
@@ -65,7 +65,7 @@ GPXFitter::~GPXFitter()
 {
 	delete fEnergy;
 	fEnergy = nullptr;
-	
+
     delete fRealData;
 	fRealData = nullptr;
 
@@ -107,7 +107,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // this is necessary because we created a bunch of objects that aren't persistent here
     fFitWorkspace = new RooWorkspace("fFitWorkspace", "Fit Workspace");
 
-    // Energy shift 
+    // Energy shift
     double fDeltaE = 0.00;
 
 	std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
@@ -160,7 +160,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooRealVar Ge68_mean("Ge68_mean", "Ge68_mean", 10.37 + fDeltaE, 10.2, 10.45); // Floating mean
     RooRealVar Ge68_sigma("Ge68_sigma", "Ge68_sigma", GetSigma(10.37 + fDeltaE));
     RooGaussian Ge68_gauss("Ge68_gauss", "Ge68 Gaussian", *fEnergy, Ge68_mean, Ge68_sigma);
-    
+
     RooRealVar Pb210_mean("Pb210_mean", "Pb210_mean", 46.54 + fDeltaE);
     RooRealVar Pb210_sigma("Pb210_sigma", "Pb210_sigma", GetSigma(46.54 + fDeltaE));
     RooGaussian Pb210_gauss("Pb210_gauss", "Pb210 Gaussian", *fEnergy, Pb210_mean, Pb210_sigma);
@@ -189,8 +189,9 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooExtendPdf Ge68_gausse("Ge68_gausse", "Extended Ge68_gauss", Ge68_gauss, num_Ge68);
     RooExtendPdf Ge68L_gausse("Ge68L_gausse", "Extended Ge68L_gauss", Ge68L_gauss, num_Ge68L);
     RooExtendPdf Pb210_gausse("Pb210_gausse", "Extended Pb210_gauss", Pb210_gauss, num_Pb210);
-    
+
     // BDM PDF
+/*
     RooRealVar alpha("alpha", "Scale Correction", -0.0014, -0.01, -0.000001);
     RooRealVar E0("E0", "Offset Correction", -0.256, -0.4, -0.00001);
     RooRealVar envalRoo("envalRoo", "Real Energy", enVal); // Evaluated energy -- enVal changes
@@ -199,6 +200,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooRealVar peak_sigma("peak_sigma", "peak_sigma", GetSigma(enVal + fDeltaE));
     RooGaussian peakGaus("peak_gaus", "gaussian for DM signal", *fEnergy, peak_mean, peak_sigma);
     RooRealVar peakYieldInit("peakYieldInit", "yield signal peak", 0.1, 0.0, 10000.);
+*/
 
     // RooArgList shapes(tritPdfe, axionPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
@@ -215,7 +217,7 @@ void GPXFitter::DoFit(std::string Minimizer)
 {
     // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
     fNLL = fModelPDF->createNLL(*fRealData, Extended(), NumCPU(4));
-    
+
     // Create minimizer, fit model to data and save result
     fMinimizer = new RooMinimizer(*fNLL);
     fMinimizer->setMinimizerType(Form("%s", Minimizer.c_str()));
@@ -237,7 +239,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
     fRealData->plotOn(frameFit);
     // fModelPDF->plotOn(frameFit, Components("axionPdfe"), LineColor(kBlue), LineStyle(kDashed));
-    fModelPDF->plotOn(frameFit, LineColor(kRed)); 
+    fModelPDF->plotOn(frameFit, LineColor(kRed));
 	frameFit->SetTitle("");
 
     // Get parameter values from first fit... these methods suck
@@ -252,9 +254,9 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     double geVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Ge68"))->getValV();
     double geErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Ge68"))->getError();
     double feVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getValV();
-    double feErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getError();    
+    double feErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getError();
     double bkgVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getValV();
-    double bkgErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getError();    
+    double bkgErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getError();
 
 
     // Add chi-square to the plot - it's fairly meaningless as it's an unbinned fit but people will want it
@@ -268,12 +270,12 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     leg->AddText(Form("Tritium (Uncorrected): %.3f #pm %.3f", tritVal, tritErr));
     leg->AddText(Form("Tritium (Corrected): %.3f #pm %.3f", tritValCorr, tritErrCorr));
     leg->AddText(Form("Tritium (2-4 keV): %.3f #pm %.3f", tritValCorr*0.224487, tritErrCorr*0.224487));
-    leg->AddText(Form("Ge68: %.3f #pm %.3f", geVal, geErr));    
+    leg->AddText(Form("Ge68: %.3f #pm %.3f", geVal, geErr));
     leg->AddText(Form("Fe55: %.3f #pm %.3f", feVal, feErr));
     leg->AddText(Form("Bkg: %.3f #pm %.3f", bkgVal, bkgErr));
     frameFit->addObject(leg);
     frameFit->Draw();
-    cSpec->SaveAs(Form("./GPXResultv4/%s_Spec.pdf", fSavePrefix.c_str()) );
+    cSpec->SaveAs(Form("./LATv2Result/%s_Spec.pdf", fSavePrefix.c_str()) );
     fFitWorkspace->import(*frameFit);
 
     if(drawMatrix)
@@ -281,7 +283,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
         TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1100, 800);
         TH2D *fCorrMatrix = dynamic_cast<TH2D*>(fFitResult->correlationHist("Correlation Matrix"));
         fCorrMatrix->Draw("colz");
-        cMatrix->SaveAs(Form("./GPXResultv4/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
+        cMatrix->SaveAs(Form("./LATv2Result/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
         fFitWorkspace->import(*fCorrMatrix);
     }
 
@@ -293,7 +295,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
         frameResid->addPlotable(hresid, "P");
         frameResid->GetYaxis()->SetTitle("Normalized Residuals (#sigma)");
         frameResid->Draw();
-        cResidual->SaveAs(Form("./GPXResultv4/%s_Residual.pdf", fSavePrefix.c_str()) );
+        cResidual->SaveAs(Form("./LATv2Result/%s_Residual.pdf", fSavePrefix.c_str()) );
     }
 }
 
@@ -302,7 +304,7 @@ void GPXFitter::DrawContour(std::string argN1, std::string argN2)
     TCanvas *cContour = new TCanvas("cContour", "cContour", 1100, 800);
     RooPlot *frameContour = fMinimizer->contour( *fFitWorkspace->var(Form("%s", argN1.c_str())), *fFitWorkspace->var(Form("%s", argN2.c_str())), 1, 2, 3);
     frameContour->SetTitle(Form("Contour of %s vs %s", argN2.c_str(), argN1.c_str()) );
-    
+
     // Get range for plot -- make stuff pretty
     double meanx = fFitWorkspace->var(Form("%s", argN1.c_str()))->getValV();
     double uperrx = fFitWorkspace->var(Form("%s", argN1.c_str()))->getErrorHi();
@@ -314,9 +316,9 @@ void GPXFitter::DrawContour(std::string argN1, std::string argN2)
     frameContour->GetXaxis()->SetRangeUser(meanx + 4*lowerrx, meanx + 4*uperrx);
     frameContour->GetYaxis()->SetRangeUser(meany + 4*lowerry, meany + 4*uperry);
     frameContour->Draw();
-    
+
     // Save plots into workspace and pdf
-    cContour->SaveAs(Form("./GPXResultv4/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
+    cContour->SaveAs(Form("./LATv2Result/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
     fFitWorkspace->import(*frameContour);
 }
 
@@ -389,11 +391,11 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
         cMCStudy->cd(4); gPad->SetLeftMargin(0.15); frame4->GetYaxis()->SetTitleOffset(1.4); frame4->Draw();
         // Draw a line at minimum NLL position
         l1.DrawLine(fFitResult->minNll(), frame4->GetMinimum(), fFitResult->minNll(), frame4->GetMaximum());
-        
+
         // Save MC Study to plot and workspace
         // fFitWorkspace->import(*fMCStudy);
-        cMCStudy->SaveAs(Form("./GPXResultv4/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
-    }    
+        cMCStudy->SaveAs(Form("./LATv2Result/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
+    }
 
 
     // Study done for Jason to convince him I know what I'm doing
@@ -411,7 +413,7 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
     //     double parVal2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
     //     double parErrHi2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorHi();
     //     double parErrLo2 = dynamic_cast<RooRealVar*>(fFitMCResult->floatParsFinal().find(Form("%s", argN.c_str())))->getErrorLo();
-        
+
     //     hMean->Fill(parVal2);
     //     hErrLo->Fill(parErrLo2);
     //     hErrHi->Fill(parErrHi2);
@@ -420,17 +422,17 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
     // TCanvas *cM = new TCanvas("cM", "cM", 800, 600);
     // hMean->Draw();
     // l1.DrawLine(parVal0, 0, parVal0, hMean->GetBinContent(hMean->GetMaximumBin()) );
-    // cM->SaveAs("./GPXResultv4/MeanTest.pdf");
+    // cM->SaveAs("./LATv2Result/MeanTest.pdf");
 
     // TCanvas *cLo = new TCanvas("cLo", "cLo", 800, 600);
     // hErrLo->Draw();
     // l1.DrawLine(parErrLo0, 0, parErrLo0, hErrLo->GetBinContent(hErrLo->GetMaximumBin()));
-    // cLo->SaveAs("./GPXResultv4/MeanTest_Low.pdf");
+    // cLo->SaveAs("./LATv2Result/MeanTest_Low.pdf");
 
     // TCanvas *cHi = new TCanvas("cHi", "cHi", 800, 600);
     // hErrHi->Draw();
     // l1.DrawLine(parErrHi0, 0, parErrHi0, hErrHi->GetBinContent(hErrHi->GetMaximumBin()));
-    // cHi->SaveAs("./GPXResultv4/MeanTest_High.pdf");
+    // cHi->SaveAs("./LATv2Result/MeanTest_High.pdf");
 
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getValV();
     // double NLLmean = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("NLL"))->getError();
@@ -508,7 +510,7 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
     std::cout << Form("Using cut: %s", theCut.c_str() ) << std::endl;
     std::cout << Form("Found %lld entries passing cuts", elist->GetN()) << std::endl;
 
-    // I found it easier to work like this rather than with a TTreeReader... 
+    // I found it easier to work like this rather than with a TTreeReader...
     std::vector<double> *ftrapENFCal = nullptr;
     std::vector<int> *fchannel = nullptr;
     skimTree->SetBranchAddress("trapENFCal", &ftrapENFCal);
@@ -527,7 +529,7 @@ void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
         int treeEntry = elist->GetEntryAndTree(i, treeNum);
         skimTree->GetEntry( treeEntry + skimTree->GetTreeOffset()[treeNum] );
         if(i%5000==0) std::cout << "Processing event: " << i << std::endl;
-        
+
         for(int j = 0; j < ftrapENFCal->size(); j++)
         {
             trapENFCal = ftrapENFCal->at(j);
@@ -551,7 +553,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
     {
         // Draw Profile NLL and save as PDF
         TCanvas *cNLL = new TCanvas("cNLL", "cNLL", 900, 600);
-    
+
         // Best fit value -- just using this to set range
         double parVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find(Form("%s", argN.c_str())))->getValV();
 
@@ -566,7 +568,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
         RooStats::LikelihoodIntervalPlot plot(interval);
         plot.SetRange(parVal - 1.5*(parVal - lowerLimit), parVal + 1.5*(upperLimit-parVal) );
         plot.Draw();
-        cNLL->SaveAs(Form("./GPXResultv4/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
+        cNLL->SaveAs(Form("./LATv2Result/%s_%sNLL.pdf", fSavePrefix.c_str(), argN.c_str()) );
         std::vector<double> Limits = {lowerLimit, upperLimit};
         LimitMap[argN.c_str()] = Limits;
     }
@@ -576,7 +578,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
 
 void GPXFitter::SaveShit(std::string outfileName)
 {
-    TFile *fOut = new TFile( Form("./GPXResultv4/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
+    TFile *fOut = new TFile( Form("./LATv2Result/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
     fOut->cd();
     fFitWorkspace->Write();
     fOut->Close();
