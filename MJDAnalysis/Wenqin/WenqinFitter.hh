@@ -1,7 +1,10 @@
 #ifndef _WENQIN_FITTER_HH_
 #define _WENQIN_FITTER_HH_
 
-// Class that fits low energy crap
+/*
+		Little Wenqin can only fit data from histograms
+		If you want to fit unbinned data, you have to use big bad GPX
+*/
 
 #include <string>
 #include <vector>
@@ -19,17 +22,17 @@ class RooMCStudy;
 class TChain;
 
 class WenqinFitter {
-	
-	public: 
+
+	public:
 		WenqinFitter();
-		
+
                 WenqinFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
 
 		virtual ~WenqinFitter();
 
         // Constructs model PDF -- MUST be called after LoadData()!
         virtual void ConstructPDF(double enVal = 0., bool bBDM = false);
-        
+
         // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more
         // Honestly Minuit2 and Minuit are the same shit, one's just potentially slightly faster
@@ -37,9 +40,9 @@ class WenqinFitter {
         virtual void DoFit(std::string Minimizer = "Minuit");
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
-        // Binning is simply for visualization! 
+        // Binning is simply for visualization!
         void DrawBasicShit(double binSize = 0.2, bool drawResid = true, bool drawMatrix = true);
-        
+
         // Draws and saves contour plot -- arguments must have same name as in ConstructPDF()!
         // Parameters that become limited will take forever (as in never finish)
         void DrawContour(std::string argN1 = "Tritium", std::string argN2 = "Ge68");
@@ -116,7 +119,7 @@ class WenqinFitter {
         // Saved fit result
         RooFitResult *fFitResult;
 
-        // Fit workspace 
+        // Fit workspace
         RooWorkspace *fFitWorkspace;
 
 };

@@ -24,17 +24,17 @@ class RooMCStudy;
 class TChain;
 
 class GPXFitter {
-	
-	public: 
+
+	public:
 		GPXFitter();
-		
+
                 GPXFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
 
 		virtual ~GPXFitter();
 
         // Constructs model PDF -- MUST be called after LoadData()!
         virtual void ConstructPDF(double enVal = 0, bool bBDM = false);
-        
+
         // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more
         // Honestly Minuit2 and Minuit are the same shit, one's just potentially slightly faster
@@ -42,9 +42,9 @@ class GPXFitter {
         virtual void DoFit(std::string Minimizer = "Minuit");
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
-        // Binning is simply for visualization! 
+        // Binning is simply for visualization!
         void DrawBasicShit(double binSize = 0.2, bool drawResid = true, bool drawMatrix = true);
-        
+
         // Draws and saves contour plot -- arguments must have same name as in ConstructPDF()!
         // Parameters that become limited will take forever (as in never finish)
         void DrawContour(std::string argN1 = "Tritium", std::string argN2 = "Ge68");
@@ -71,6 +71,9 @@ class GPXFitter {
         // Load data from skim TChain with a TCut
         // This assumes standard skimTree format
         void LoadChainData(TChain *skimTree, std::string theCut);
+
+				// Load histogram from file
+        void LoadHistData(TChain *skimTree, std::string theCut);
 
         // Creates, draws, and saves Profile Likelihood -- argument must have same name as in ConstructPDF()!
         // This is the ProfileNLL built into RooFit
@@ -120,7 +123,7 @@ class GPXFitter {
         // Saved fit result
         RooFitResult *fFitResult;
 
-        // Fit workspace 
+        // Fit workspace
         RooWorkspace *fFitWorkspace;
 
 };
