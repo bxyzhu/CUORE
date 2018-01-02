@@ -21,6 +21,7 @@ class RooWorkspace;
 class RooAbsPdf;
 class RooMinimizer;
 class RooMCStudy;
+class RooEffProd;
 class TChain;
 
 class GPXFitter {
@@ -28,7 +29,7 @@ class GPXFitter {
 	public:
 		GPXFitter();
 
-                GPXFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
+		GPXFitter(int ds, double fitMin, double fitMax) {fDS = ds; fFitMin = fitMin; fFitMax = fitMax;}
 
 		virtual ~GPXFitter();
 
@@ -40,10 +41,13 @@ class GPXFitter {
         // Honestly Minuit2 and Minuit are the same shit, one's just potentially slightly faster
         // virtual void DoFit(std::string Minimizer = "Minuit2");
         virtual void DoFit(std::string Minimizer = "Minuit");
+				virtual void DoFitEff(std::string Minimizer = "Minuit");
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
         // Binning is simply for visualization!
         void DrawBasicShit(double binSize = 0.2, bool drawResid = true, bool drawMatrix = true);
+
+				void DrawModels(double binSize = 0.2);
 
         // Draws and saves contour plot -- arguments must have same name as in ConstructPDF()!
         // Parameters that become limited will take forever (as in never finish)
@@ -80,7 +84,7 @@ class GPXFitter {
         std::map<std::string, std::vector<double>> ProfileNLL(std::vector<std::string> argS = {"Tritium"}, double CL = 0.683);
 
         // Saves fit results into file
-        void SaveShit(std::string outfileName = "Test.root");
+        void SaveShit(std::string outfileName = "TestOutput.root");
 
         // Sets range for fit
         void SetFitRange(double fitMin, double fitMax);
@@ -94,11 +98,12 @@ class GPXFitter {
         double fChiSquare;
 
 	private:
-                // Dataset
-                int fDS;
-                // Fit range -- in keV
-		double fFitMin;
-		double fFitMax;
+				// Dataset
+				int fDS;
+
+				// Fit range -- in keV
+				double fFitMin;
+				double fFitMax;
 
         // Energy
         RooRealVar *fEnergy;
@@ -112,6 +117,9 @@ class GPXFitter {
 
         // Total PDF -- should change to RooSimultaneous for simultaneous fits
         RooAbsPdf *fModelPDF;
+
+				// Total PDF -- with efficiencies
+				RooAbsPdf *fModelPDFEff;
 
         // Minimizer
         RooMinimizer *fMinimizer;

@@ -20,6 +20,7 @@
 #include "RooDataHist.h"
 #include "RooMCStudy.h"
 #include "RooHist.h"
+#include "RooEffProd.h"
 
 #include "RooStats/ProfileLikelihoodCalculator.h"
 #include "RooStats/LikelihoodInterval.h"
@@ -58,6 +59,7 @@ GPXFitter::GPXFitter() :
     fMinimizer(nullptr),
     fFitResult(nullptr),
     fFitWorkspace(nullptr),
+    fModelPDFEff(nullptr),
     fSavePrefix("FitResult")
 { }
 
@@ -66,32 +68,32 @@ GPXFitter::~GPXFitter()
 	delete fEnergy;
 	fEnergy = nullptr;
 
-    delete fRealData;
+  delete fRealData;
 	fRealData = nullptr;
 
 	delete fModelPDF;
 	fModelPDF = nullptr;
 
-    delete fMCData;
-    fMCData = nullptr;
+  delete fMCData;
+  fMCData = nullptr;
 
-    delete fMCStudy;
-    fMCStudy = nullptr;
+  delete fMCStudy;
+  fMCStudy = nullptr;
 
-    delete fMinimizer;
-    fMinimizer = nullptr;
+  delete fMinimizer;
+  fMinimizer = nullptr;
 
-    delete fNLL;
-    fNLL = nullptr;
+  delete fNLL;
+  fNLL = nullptr;
 
-    delete fProfileNLL;
-    fProfileNLL = nullptr;
+  delete fProfileNLL;
+  fProfileNLL = nullptr;
 
 	delete fFitResult;
 	fFitResult = nullptr;
 
-    delete fFitWorkspace;
-    fFitWorkspace = nullptr;
+  delete fFitWorkspace;
+  fFitWorkspace = nullptr;
 }
 
 // Constructs model PDF, use only after LoadData or else!
@@ -110,7 +112,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // Energy shift
     double fDeltaE = 0.00;
 
-	std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
+    std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
     TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
 
@@ -127,6 +129,13 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     fEnergy->setRange(fFitMin, fFitMax);
     RooHistPdf axionPdf("axionPdf", "AxionPdf", *fEnergy, axionRooHist, 2);
 
+
+    std::string effDir = "/Users/brianzhu/macros/code/LAT/plots/spectra/PrelimSpectra";
+    TFile *effFile = new TFile(Form("%s/Bkg_isEnr_DS%d.root", effDir.c_str(), fDS));
+    TH1D *effSpec = dynamic_cast<TH1D*>(effFile->Get("effHist"));
+    RooDataHist effRooHist("eff", "Efficiency Histogram", *fEnergy, Import(*effSpec));
+    fEnergy->setRange(fFitMin, fFitMax);
+    RooHistPdf effPdf("effPdf", "EffPdf", *fEnergy, effRooHist, 2);
 
     RooRealVar DeltaE("DeltaE", "DeltaE", 0., -2.0, 2.0);
 
@@ -205,12 +214,18 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // RooArgList shapes(tritPdfe, axionPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     // RooArgList shapes(tritPdfe, BkgPolye, Ge68_gausse, Pb210_gausse);
+
+    // Add together to form total model
     RooAddPdf model("model", "total pdf", shapes);
+
+    // Combine with efficiency
+    RooEffProd modelEff("modelEff", "model with efficiency", model, effPdf);
 
     // Add model to workspace -- also adds all of the normalization constants
     // If this step isn't done, a lot of the later functions won`'t work!
     fFitWorkspace->import(RooArgSet(model));
     fModelPDF = fFitWorkspace->pdf("model");
+    fModelPDFEff = fFitWorkspace->pdf("modeleff");
 }
 
 void GPXFitter::DoFit(std::string Minimizer)
@@ -233,14 +248,34 @@ void GPXFitter::DoFit(std::string Minimizer)
     fFitWorkspace->import(*fFitResult);
 }
 
+void GPXFitter::DoFitEff(std::string Minimizer)
+{
+    // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
+    fNLL = fModelPDFEff->createNLL(*fRealData, Extended(), NumCPU(4));
+
+    // Create minimizer, fit model to data and save result
+    fMinimizer = new RooMinimizer(*fNLL);
+    fMinimizer->setMinimizerType(Form("%s", Minimizer.c_str()));
+    fMinimizer->setPrintLevel(-1);
+    fMinimizer->setStrategy(2);
+    fMinimizer->migrad();
+    fMinimizer->hesse();
+    // Use all these, fk if I know they're any good
+    fMinimizer->improve();
+    fMinimizer->minos();
+
+    fFitResult = fMinimizer->save();
+    fFitWorkspace->import(*fFitResult);
+}
+
 void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
 {
-	TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
+    TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
     fRealData->plotOn(frameFit);
     // fModelPDF->plotOn(frameFit, Components("axionPdfe"), LineColor(kBlue), LineStyle(kDashed));
     fModelPDF->plotOn(frameFit, LineColor(kRed));
-	frameFit->SetTitle("");
+    frameFit->SetTitle("");
 
     // Get parameter values from first fit... these methods suck
     std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
@@ -297,6 +332,17 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
         frameResid->Draw();
         cResidual->SaveAs(Form("./LATv2Result/%s_Residual.pdf", fSavePrefix.c_str()) );
     }
+}
+
+
+void GPXFitter::DrawModels(double binSize)
+{
+  TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
+  RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
+  fModelPDF->plotOn(frameFit, LineColor(kRed));
+  fModelPDFEff->plotOn(frameFit, LineColor(kBlue));
+  frameFit->SetTitle("");
+
 }
 
 void GPXFitter::DrawContour(std::string argN1, std::string argN2)
