@@ -69,11 +69,38 @@ int main(int argc, char** argv)
     double tritScale = 1./tritSpec->Integral(tritSpec->FindBin(fitMin), tritSpec->FindBin(fitMax));
 	vector<string> argList = {"Tritium", "Ge68", "Fe55", "Bkg"};
 
-	map<string, vector<double>> ValMap;
-	if(ftype == "Nat" || ftype == "nat" || ftype == "Enr" || ftype == "enr") ValMap = RunWenqin(argList, fDS, fitMin, fitMax, ftype, theCut);
-	// else  ValMap = RunWenqin(argList, fDS, fitMin, fitMax, theCut);
-	cout << "LiveTime: " << liveTime[fDS][bNat] << endl;
 
+
+  GPXFitter *fitter = new GPXFitter(fDS, fitMin, fitMax);
+	// This is just a string for output files
+	fitter->SetSavePrefix(Form("DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
+
+	// Load data from TChain with a cut string
+	TChain *skimTree = new TChain("skimTree");
+  if(fDS == 6) {
+    skimTree->Add("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS1-*.root" );
+    skimTree->Add("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS2-*.root" );
+    skimTree->Add("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS3-*.root" );
+    skimTree->Add("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS4-*.root" );
+    skimTree->Add("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS5-*.root" );
+  }
+  else skimTree->Add(Form("/Users/brianzhu/project/cuts/corrfs_rn/corrfs_rn-DS%d-*.root", fDS) );
+  fitter->LoadChainData(skimTree, theCut);
+
+	// Construct PDF and do fit
+	fitter->ConstructPDF();
+  fitter->DrawModels(0.2);
+  fitter->DoFitEff();
+	fitter->DrawBasicShit(0.2, false, false);
+	fitter->GetFitResult()->Print("v");
+
+
+	// map<string, vector<double>> ValMap;
+	// if(ftype == "Nat" || ftype == "nat" || ftype == "Enr" || ftype == "enr") ValMap = RunWenqin(argList, fDS, fitMin, fitMax, ftype, theCut);
+	// else  ValMap = RunWenqin(argList, fDS, fitMin, fitMax, theCut);
+	// cout << "LiveTime: " << liveTime[fDS][bNat] << endl;
+
+/*
   // Calculate Rates
   for(auto &kv : ValMap)
 	{
@@ -87,6 +114,8 @@ int main(int argc, char** argv)
 			cout << "Rates (c/keV/kg/day):" << kv.second[0]/liveTime[fDS][bNat]/(fitMax-fitMin) << " +" << kv.second[1]/liveTime[fDS][bNat]/(fitMax-fitMin) << " " << kv.second[2]/liveTime[fDS][bNat]/(fitMax-fitMin) << endl;
 		}
 	}
+*/
+
 
 	return 0;
 }

@@ -105,6 +105,9 @@ class GPXFitter {
 				double fFitMin;
 				double fFitMax;
 
+				// String used for cuts
+				std::string fCutString;
+
         // Energy
         RooRealVar *fEnergy;
 
@@ -120,6 +123,7 @@ class GPXFitter {
 
 				// Total PDF -- with efficiencies
 				RooAbsPdf *fModelPDFEff;
+				// RooEffProd *fModelPDFEff;
 
         // Minimizer
         RooMinimizer *fMinimizer;

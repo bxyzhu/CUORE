@@ -21,6 +21,7 @@
 #include "RooMCStudy.h"
 #include "RooHist.h"
 #include "RooEffProd.h"
+#include "RooProdPdf.h"
 
 #include "RooStats/ProfileLikelihoodCalculator.h"
 #include "RooStats/LikelihoodInterval.h"
@@ -43,6 +44,7 @@
 #include <iostream>
 
 using namespace RooFit;
+using namespace std;
 
 GPXFitter::GPXFitter() :
     fDS(1),
@@ -73,6 +75,9 @@ GPXFitter::~GPXFitter()
 
 	delete fModelPDF;
 	fModelPDF = nullptr;
+
+  delete fModelPDFEff;
+	fModelPDFEff = nullptr;
 
   delete fMCData;
   fMCData = nullptr;
@@ -131,11 +136,19 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 
 
     std::string effDir = "/Users/brianzhu/macros/code/LAT/plots/spectra/PrelimSpectra";
-    TFile *effFile = new TFile(Form("%s/Bkg_isEnr_DS%d.root", effDir.c_str(), fDS));
-    TH1D *effSpec = dynamic_cast<TH1D*>(effFile->Get("effHist"));
+    TFile *effFile;
+    TH1D *effSpec;
+    if(fCutString.find("isNat") != std::string::npos) {
+      effFile = new TFile(Form("%s/Bkg_isNat_DS%d.root", effDir.c_str(), fDS));
+      effSpec = dynamic_cast<TH1D*>(effFile->Get(Form("DS%d_isNat_EffTot", fDS)));
+    }
+    else if(fCutString.find("isEnr") != std::string::npos) {
+      effFile = new TFile(Form("%s/Bkg_isEnr_DS%d.root", effDir.c_str(), fDS));
+      effSpec = dynamic_cast<TH1D*>(effFile->Get(Form("DS%d_isEnr_EffTot", fDS)));
+    }
     RooDataHist effRooHist("eff", "Efficiency Histogram", *fEnergy, Import(*effSpec));
     fEnergy->setRange(fFitMin, fFitMax);
-    RooHistPdf effPdf("effPdf", "EffPdf", *fEnergy, effRooHist, 2);
+    RooHistPdf effPdf("effPdf", "EffPdf", *fEnergy, effRooHist, 1);
 
     RooRealVar DeltaE("DeltaE", "DeltaE", 0., -2.0, 2.0);
 
@@ -212,20 +225,23 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 */
 
     // RooArgList shapes(tritPdfe, axionPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
-    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
+    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Ge68L_gausse, Pb210_gausse);
+    // RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse);
     // RooArgList shapes(tritPdfe, BkgPolye, Ge68_gausse, Pb210_gausse);
 
     // Add together to form total model
     RooAddPdf model("model", "total pdf", shapes);
 
     // Combine with efficiency
+    // RooProdPdf modelEff("modelEff", "model with efficiency", RooArgSet(model, effPdf));
     RooEffProd modelEff("modelEff", "model with efficiency", model, effPdf);
 
     // Add model to workspace -- also adds all of the normalization constants
     // If this step isn't done, a lot of the later functions won`'t work!
-    fFitWorkspace->import(RooArgSet(model));
-    fModelPDF = fFitWorkspace->pdf("model");
-    fModelPDFEff = fFitWorkspace->pdf("modeleff");
+    // fFitWorkspace->import(RooArgSet(model));
+    fFitWorkspace->import(RooArgSet(modelEff));
+    // fModelPDF = fFitWorkspace->pdf("model");
+    fModelPDFEff = fFitWorkspace->pdf("modelEff");
 }
 
 void GPXFitter::DoFit(std::string Minimizer)
@@ -251,7 +267,7 @@ void GPXFitter::DoFit(std::string Minimizer)
 void GPXFitter::DoFitEff(std::string Minimizer)
 {
     // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
-    fNLL = fModelPDFEff->createNLL(*fRealData, Extended(), NumCPU(4));
+    fNLL = fModelPDFEff->createNLL(*fRealData, NumCPU(4));
 
     // Create minimizer, fit model to data and save result
     fMinimizer = new RooMinimizer(*fNLL);
@@ -274,7 +290,8 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
     fRealData->plotOn(frameFit);
     // fModelPDF->plotOn(frameFit, Components("axionPdfe"), LineColor(kBlue), LineStyle(kDashed));
-    fModelPDF->plotOn(frameFit, LineColor(kRed));
+    // fModelPDF->plotOn(frameFit, LineColor(kRed));
+    fModelPDFEff->plotOn(frameFit, LineColor(kRed));
     frameFit->SetTitle("");
 
     // Get parameter values from first fit... these methods suck
@@ -337,12 +354,13 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
 
 void GPXFitter::DrawModels(double binSize)
 {
-  TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
+  TCanvas *cModels = new TCanvas("cModels", "cModels", 1100, 800);
   RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
-  fModelPDF->plotOn(frameFit, LineColor(kRed));
+  fFitWorkspace->pdf("model")->plotOn(frameFit, LineColor(kRed), LineStyle(kDashed));
   fModelPDFEff->plotOn(frameFit, LineColor(kBlue));
   frameFit->SetTitle("");
-
+  frameFit->Draw();
+  cModels->SaveAs(Form("./LATv2Result/%s_Models.pdf", fSavePrefix.c_str()) );
 }
 
 void GPXFitter::DrawContour(std::string argN1, std::string argN2)
@@ -549,6 +567,7 @@ double GPXFitter::GetSigma(double energy)
 // Also assumes trapENFCal is the energy parameter of choice
 void GPXFitter::LoadChainData(TChain *skimTree, std::string theCut)
 {
+    fCutString = theCut;
     // First get TEntryList with TCut
     skimTree->Draw(">> elist", Form("%s", theCut.c_str() ), "entrylist goff");
     TEntryList *elist = dynamic_cast<TEntryList*>(gDirectory->Get("elist"));
