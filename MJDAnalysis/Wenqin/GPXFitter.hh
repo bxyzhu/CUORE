@@ -68,8 +68,9 @@ class GPXFitter {
 
         // Get Fit Result
         RooFitResult *GetFitResult() {return fFitResult;}
+        RooFitResult *GetFitResultEff() {return fFitResultEff;}
 
-        // Get Workspace
+				// Get Workspace
         RooWorkspace *GetWorkspace() {return fFitWorkspace;}
 
         // Load data from skim TChain with a TCut
@@ -127,13 +128,16 @@ class GPXFitter {
 
         // Minimizer
         RooMinimizer *fMinimizer;
+				RooMinimizer *fMinimizerEff;
 
         // NLL and ProfileNLL
         RooAbsReal *fNLL;
+				RooAbsReal *fNLLEff;
         RooAbsReal *fProfileNLL;
 
         // Saved fit result
         RooFitResult *fFitResult;
+				RooFitResult *fFitResultEff;
 
         // Fit workspace
         RooWorkspace *fFitWorkspace;

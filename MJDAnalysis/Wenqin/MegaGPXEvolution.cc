@@ -89,10 +89,12 @@ int main(int argc, char** argv)
 
 	// Construct PDF and do fit
 	fitter->ConstructPDF();
-  fitter->DrawModels(0.2);
+  // fitter->DrawModels(0.2);
+  fitter->DoFit();
   fitter->DoFitEff();
 	fitter->DrawBasicShit(0.2, false, false);
-	fitter->GetFitResult()->Print("v");
+  fitter->GetFitResult()->Print("v");
+	fitter->GetFitResultEff()->Print("v");
 
 
 	// map<string, vector<double>> ValMap;

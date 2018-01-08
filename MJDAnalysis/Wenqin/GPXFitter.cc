@@ -41,6 +41,8 @@
 #include "TEntryList.h"
 #include "TBranch.h"
 #include "TPaveText.h"
+#include "TText.h"
+#include "TLegend.h"
 #include <iostream>
 
 using namespace RooFit;
@@ -56,10 +58,13 @@ GPXFitter::GPXFitter() :
     fMCStudy(nullptr),
     fModelPDF(nullptr),
     fNLL(nullptr),
+    fNLLEff(nullptr),
     fProfileNLL(nullptr),
     fChiSquare(0),
     fMinimizer(nullptr),
+    fMinimizerEff(nullptr),
     fFitResult(nullptr),
+    fFitResultEff(nullptr),
     fFitWorkspace(nullptr),
     fModelPDFEff(nullptr),
     fSavePrefix("FitResult")
@@ -96,6 +101,9 @@ GPXFitter::~GPXFitter()
 
 	delete fFitResult;
 	fFitResult = nullptr;
+
+  delete fFitResultEff;
+	fFitResultEff = nullptr;
 
   delete fFitWorkspace;
   fFitWorkspace = nullptr;
@@ -146,6 +154,8 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
       effFile = new TFile(Form("%s/Bkg_isEnr_DS%d.root", effDir.c_str(), fDS));
       effSpec = dynamic_cast<TH1D*>(effFile->Get(Form("DS%d_isEnr_EffTot", fDS)));
     }
+    // Test normalization
+    effSpec->Scale(1./effSpec->Integral("w"));
     RooDataHist effRooHist("eff", "Efficiency Histogram", *fEnergy, Import(*effSpec));
     fEnergy->setRange(fFitMin, fFitMax);
     RooHistPdf effPdf("effPdf", "EffPdf", *fEnergy, effRooHist, 1);
@@ -189,16 +199,17 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 
     // Normalization parameters
     // Make names pretty for plots
-    RooRealVar num_trit("Tritium", "Tritium", 6700.0, 0.0, 100000.);
+    RooRealVar num_trit("Tritium", "Tritium", 700.0, 0.0, 100000.);
     RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 10000.);
-    RooRealVar num_bkg("Bkg", "Bkg", 50.0, 0.0, 100000.);
-    RooRealVar num_Mn54("Mn54", "Mn54", 5.0, 0.0, 50000.);
+    RooRealVar num_bkg("Bkg", "Bkg", 100.0, 0.0, 100000.);
+    RooRealVar num_Mn54("Mn54", "Mn54", 1.0, 0.0, 50000.);
     RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 50000.);
-    RooRealVar num_Co57("Co57", "Co57", 5.0, 0.0, 50000.);
-    RooRealVar num_Zn65("Zn65", "Zn65", 5.0, 0.0, 50000.);
+    RooRealVar num_Co57("Co57", "Co57", 1.0, 0.0, 50000.);
+    RooRealVar num_Zn65("Zn65", "Zn65", 1.0, 0.0, 50000.);
     RooRealVar num_Ge68("Ge68", "Ge68", 180.0, 0.0, 50000.);
-    RooRealVar num_Ge68L("Ge68L", "Ge68L", 10.0, 0.0, 50000.);
-    RooRealVar num_Pb210("Pb210", "Pb210", 5.0, 0.0, 50000.);
+    RooRealVar num_Ge68L("Ge68L", "Ge68L", 0.0, 0.0, 50000.);
+    RooRealVar num_Pb210("Pb210", "Pb210", 1.0, 0.0, 50000.);
+    RooRealVar num_Tot("Tot", "Tot", 5.0, 0.0, 100000.);
 
     // Extended PDF model -- use this to create an extended model
     RooExtendPdf tritPdfe("tritPdfe", "Extended trit", tritPdf, num_trit);
@@ -224,8 +235,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooRealVar peakYieldInit("peakYieldInit", "yield signal peak", 0.1, 0.0, 10000.);
 */
 
-    // RooArgList shapes(tritPdfe, axionPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
-    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Ge68L_gausse, Pb210_gausse);
+    RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse, Pb210_gausse);
     // RooArgList shapes(tritPdfe, BkgPolye, Mn54_gausse, Fe55_gausse, Zn65_gausse, Ge68_gausse);
     // RooArgList shapes(tritPdfe, BkgPolye, Ge68_gausse, Pb210_gausse);
 
@@ -233,21 +243,25 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     RooAddPdf model("model", "total pdf", shapes);
 
     // Combine with efficiency
-    // RooProdPdf modelEff("modelEff", "model with efficiency", RooArgSet(model, effPdf));
+    // RooProdPdf modelEff("modelEff", "model with efficiency", RooArgSet(model, effPdf)); // Can do with product also?
+    // RooProdPdf modelEff("modelEff", "model with efficiency", model, effPdf);
+
     RooEffProd modelEff("modelEff", "model with efficiency", model, effPdf);
+    RooExtendPdf modelEffe("modelEffe", "Extended model with efficiency", modelEff, num_Tot);
 
     // Add model to workspace -- also adds all of the normalization constants
     // If this step isn't done, a lot of the later functions won`'t work!
     // fFitWorkspace->import(RooArgSet(model));
     fFitWorkspace->import(RooArgSet(modelEff));
-    // fModelPDF = fFitWorkspace->pdf("model");
     fModelPDFEff = fFitWorkspace->pdf("modelEff");
+    fModelPDF = fFitWorkspace->pdf("model");
 }
 
 void GPXFitter::DoFit(std::string Minimizer)
 {
     // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
-    fNLL = fModelPDF->createNLL(*fRealData, Extended(), NumCPU(4));
+    fNLL = fFitWorkspace->pdf("model")->createNLL(*fRealData, Extended(), NumCPU(2));
+    // fNLL = fModelPDF->createNLL(*fRealData, Extended(), NumCPU(4));
 
     // Create minimizer, fit model to data and save result
     fMinimizer = new RooMinimizer(*fNLL);
@@ -257,8 +271,8 @@ void GPXFitter::DoFit(std::string Minimizer)
     fMinimizer->migrad();
     fMinimizer->hesse();
     // Use all these, fk if I know they're any good
-    fMinimizer->improve();
-    fMinimizer->minos();
+    // fMinimizer->improve();
+    // fMinimizer->minos();
 
     fFitResult = fMinimizer->save();
     fFitWorkspace->import(*fFitResult);
@@ -267,21 +281,22 @@ void GPXFitter::DoFit(std::string Minimizer)
 void GPXFitter::DoFitEff(std::string Minimizer)
 {
     // Create NLL (This is not a profile! When you draw it to one axis, it's just a projection!)
-    fNLL = fModelPDFEff->createNLL(*fRealData, NumCPU(4));
+    // fNLLEff = fModelPDFEff->createNLL(*fRealData, Extended(), NumCPU(4));
+    fNLLEff = fModelPDFEff->createNLL(*fRealData, NumCPU(2));
 
     // Create minimizer, fit model to data and save result
-    fMinimizer = new RooMinimizer(*fNLL);
-    fMinimizer->setMinimizerType(Form("%s", Minimizer.c_str()));
-    fMinimizer->setPrintLevel(-1);
-    fMinimizer->setStrategy(2);
-    fMinimizer->migrad();
-    fMinimizer->hesse();
+    fMinimizerEff = new RooMinimizer(*fNLLEff);
+    fMinimizerEff->setMinimizerType(Form("%s", Minimizer.c_str()));
+    fMinimizerEff->setPrintLevel(-1);
+    fMinimizerEff->setStrategy(2);
+    fMinimizerEff->migrad();
+    fMinimizerEff->hesse();
     // Use all these, fk if I know they're any good
-    fMinimizer->improve();
-    fMinimizer->minos();
+    fMinimizerEff->improve();
+    fMinimizerEff->minos();
 
-    fFitResult = fMinimizer->save();
-    fFitWorkspace->import(*fFitResult);
+    fFitResultEff = fMinimizerEff->save();
+    fFitWorkspace->import(*fFitResultEff);
 }
 
 void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
@@ -290,7 +305,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
     fRealData->plotOn(frameFit);
     // fModelPDF->plotOn(frameFit, Components("axionPdfe"), LineColor(kBlue), LineStyle(kDashed));
-    // fModelPDF->plotOn(frameFit, LineColor(kRed));
+    fModelPDF->plotOn(frameFit, LineColor(kBlue));
     fModelPDFEff->plotOn(frameFit, LineColor(kRed));
     frameFit->SetTitle("");
 
@@ -299,26 +314,30 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
 
-    double tritVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Tritium") )->getValV();
-    double tritErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Tritium") )->getError();
+    double tritVal = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Tritium") )->getValV();
+    double tritErr = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Tritium") )->getError();
     double tritValCorr = tritVal/(tritSpec->Integral(tritSpec->FindBin(fFitMin), tritSpec->FindBin(fFitMax)));
     double tritErrCorr = tritErr/(tritSpec->Integral(tritSpec->FindBin(fFitMin), tritSpec->FindBin(fFitMax)));
-    double geVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Ge68"))->getValV();
-    double geErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Ge68"))->getError();
-    double feVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getValV();
-    double feErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Fe55"))->getError();
-    double bkgVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getValV();
-    double bkgErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getError();
+    double geVal = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Ge68"))->getValV();
+    double geErr = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Ge68"))->getError();
+    double feVal = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Fe55"))->getValV();
+    double feErr = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Fe55"))->getError();
+    double bkgVal = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Bkg"))->getValV();
+    double bkgErr = dynamic_cast<RooRealVar*>(fFitResultEff->floatParsFinal().find("Bkg"))->getError();
 
 
     // Add chi-square to the plot - it's fairly meaningless as it's an unbinned fit but people will want it
     fChiSquare = frameFit->chiSquare(8);
-    TPaveText *leg = new TPaveText(0.50, 0.65, 0.88, .88, "NDC");
+    TPaveText *leg = new TPaveText(0.50, 0.55, 0.88, .88, "NDC");
     leg->SetTextFont(133);
     leg->SetFillColor(0);
     leg->SetBorderSize(0);
     leg->SetTextSize(22);
     leg->AddText(Form("#chi^{2}/NDF = %.3f" ,fChiSquare ) );
+    leg->AddText("Model without Efficiency function");
+    dynamic_cast<TText*>(leg->GetListOfLines()->Last())->SetTextColor(kBlue);
+    leg->AddText("Model with Efficiency function");
+    dynamic_cast<TText*>(leg->GetListOfLines()->Last())->SetTextColor(kRed);
     leg->AddText(Form("Tritium (Uncorrected): %.3f #pm %.3f", tritVal, tritErr));
     leg->AddText(Form("Tritium (Corrected): %.3f #pm %.3f", tritValCorr, tritErrCorr));
     leg->AddText(Form("Tritium (2-4 keV): %.3f #pm %.3f", tritValCorr*0.224487, tritErrCorr*0.224487));
