@@ -39,9 +39,8 @@ class GPXFitter {
         // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more
         // Honestly Minuit2 and Minuit are the same shit, one's just potentially slightly faster
-        // virtual void DoFit(std::string Minimizer = "Minuit2");
-        virtual void DoFit(std::string Minimizer = "Minuit");
-				virtual void DoFitEff(std::string Minimizer = "Minuit");
+        virtual void DoFit(std::string Minimizer = "Minuit2");
+				virtual void DoFitEff(std::string Minimizer = "Minuit2");
 
         // Draws and saves a plot of the fit as well as correlation matrix -- default binning is 0.2 keV
         // Binning is simply for visualization!
@@ -59,6 +58,7 @@ class GPXFitter {
 
         // Wrapper for returning fit values for variables and their errors
         std::vector<double> GetVar(std::string argN);
+				std::vector<double> GetVarEff(std::string argN);
 
         // This function uses RooMCStudy to generate toy MC and then fit the results
         void GenerateMCStudy(std::vector<std::string> argS = {"Tritium"}, int nMC = 5000);
@@ -89,6 +89,9 @@ class GPXFitter {
 
         // Sets range for fit
         void SetFitRange(double fitMin, double fitMax);
+
+				// Sets initial value of parameter
+        void SetParameter(std::string arg, double val, bool fix = false);
 
         // Sets prefix of output files
         void SetSavePrefix(std::string savePrefix) {fSavePrefix = savePrefix;}
@@ -124,7 +127,8 @@ class GPXFitter {
 
 				// Total PDF -- with efficiencies
 				RooAbsPdf *fModelPDFEff;
-				// RooEffProd *fModelPDFEff;
+				// RooAbsPdf *fModelPDFFinal;
+				// RooEffProd *fModelPDFFinal;
 
         // Minimizer
         RooMinimizer *fMinimizer;
