@@ -331,14 +331,14 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     // Load data from TChain with a cut string
     TChain *skimTree1 = new TChain("skimTree");
     if(fDS == 6) {
-    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS1-*.root" );
-    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS2-*.root" );
-    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS3-*.root" );
-    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS4-*.root" );
-    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS5-*.root" );
+    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS1_*.root" );
+    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS2_*.root" );
+    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS3_*.root" );
+    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS4_*.root" );
+    skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS5_*.root" );
     }
-    else skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d-*.root", fDS));
-    cout << "Ful Data entries: " << skimTree1->GetEntries() << endl;
+    else skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d_*.root", fDS));
+    cout << "Full Data entries: " << skimTree1->GetEntries() << endl;
     fitter1->LoadChainData(skimTree1, theCut0);
 
     // Construct PDF and do fit
