@@ -29,8 +29,8 @@ void CutEfficiencyStudy(int fDS, double fitMin, double fitMax, string ftype);
 
 int main(int argc, char** argv)
 {
-  	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
-  	gROOT->ProcessLine("RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);");
+  	// gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+  	// gROOT->ProcessLine("RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);");
 	if(argc <= 4)
 	{
 		cout << "Usage: " << argv[0] << " [DS] [Fit Min] [Fit Max] [Nat/Enr/Cut]" << endl;
@@ -308,8 +308,10 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     // Construct PDF and do fit
     fitter0->ConstructPDF();
     // fitter0->DrawModels(0.2);
-    fitter0->DoFit();
+    fitter0->DoFit("Minuit");
     fitter0->DrawBasicShit(0.2, false, false);
+    fitter0->GetFitResult()->Print("v");
+
     vector<double> valTrit0 = fitter0->GetVar("Tritium");
     double tritVal0 = valTrit0[0];
     double tritErr0 = valTrit0[1];
@@ -335,13 +337,16 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS4-*.root" );
     skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS5-*.root" );
     }
-    else skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d-*.root", fDS) );
+    else skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d-*.root", fDS));
+    cout << "Ful Data entries: " << skimTree1->GetEntries() << endl;
     fitter1->LoadChainData(skimTree1, theCut0);
 
     // Construct PDF and do fit
     fitter1->ConstructPDF();
-    fitter1->DoFit();
+    fitter1->DoFit("Minuit");
     fitter1->DrawBasicShit(0.2, false, false);
+    fitter1->GetFitResult()->Print("v");
+
     vector<double> valTrit1 = fitter1->GetVar("Tritium");
     double tritVal1 = valTrit1[0];
     double tritErr1 = valTrit1[1];
