@@ -291,7 +291,7 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     }
     else theCut0 = ftype;
     GPXFitter *fitter0 = new GPXFitter(fDS, fitMin, fitMax);
-    fitter0->SetSavePrefix(Form("EffTest0_DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
+    fitter0->SetSavePrefix(Form("CutData_DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
 
     // Load data from TChain with a cut string
     TChain *skimTree0 = new TChain("skimTree");
@@ -324,7 +324,7 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
 
 
     GPXFitter *fitter1 = new GPXFitter(fDS, fitMin, fitMax);
-    fitter1->SetSavePrefix(Form("EffTest0_DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
+    fitter1->SetSavePrefix(Form("FullData_DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
 
     // Load data from TChain with a cut string
     TChain *skimTree1 = new TChain("skimTree");
