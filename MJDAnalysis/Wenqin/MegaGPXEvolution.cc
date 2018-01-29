@@ -337,6 +337,9 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS4_*.root" );
     skimTree1->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS5_*.root" );
     }
+    else if(fDS == 5){
+      for(int i = 80; i < 113; i++) skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d_%d_*.root", fDS, i));
+    }
     else skimTree1->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/lat/latSkimDS%d_*.root", fDS));
     cout << "Full Data entries: " << skimTree1->GetEntries() << endl;
     fitter1->LoadChainData(skimTree1, theCut0);
