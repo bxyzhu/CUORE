@@ -230,7 +230,7 @@ void CutEfficiencyStudy(int fDS, double fitMin, double fitMax, string ftype)
       	}
   */
 
-    std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
+    std::string tritDir = "/mnt/mjdDisk1/Majorana/users/psz/CUORE/MJDAnalysis/Wenqin/Data";
     TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
     double tritScale0 = 1./tritSpec->Integral(tritSpec->FindBin(fitMin), tritSpec->FindBin(fitMax));

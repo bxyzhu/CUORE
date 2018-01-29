@@ -125,7 +125,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     // Energy shift
     double fDeltaE = 0.00;
 
-    std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion/";
+    std::string tritDir = "/mnt/mjdDisk1/Majorana/users/psz/CUORE/MJDAnalysis/Wenqin/Data";
     TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
 
@@ -141,7 +141,7 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
     fEnergy->setRange(fFitMin, fFitMax);
     RooHistPdf axionPdf("axionPdf", "AxionPdf", *fEnergy, axionRooHist, 2);
 
-    std::string effDir = "/Users/brianzhu/macros/code/LAT/plots/spectra/PrelimSpectra";
+    std::string effDir = "/mnt/mjdDisk1/Majorana/users/psz/CUORE/MJDAnalysis/Wenqin/Data";
     TFile *effFile;
     TH1D *effSpec;
     if(fCutString.find("isNat") != std::string::npos) {
@@ -336,7 +336,7 @@ void GPXFitter::DrawBasicShit(double binSize, bool drawResid, bool drawMatrix)
     frameFit->SetTitle("");
 
     // Get parameter values from first fit... these methods suck
-    std::string tritDir = "/Users/brianzhu/macros/code/MJDAnalysis/Axion";
+    std::string tritDir = "/mnt/mjdDisk1/Majorana/users/psz/CUORE/MJDAnalysis/Wenqin/Data";
     TFile *tritFile = new TFile(Form("%s/TritSpec.root", tritDir.c_str()));
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
 
