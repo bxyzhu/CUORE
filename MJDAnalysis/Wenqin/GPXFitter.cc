@@ -212,20 +212,20 @@ void GPXFitter::ConstructPDF(double enVal, bool bBDM)
 
     // Normalization parameters
     // Make names pretty for plots
-    RooRealVar num_trit("Tritium", "Tritium", 700.0, 0.0, 100000.);
+    RooRealVar num_trit("Tritium", "Tritium", 700.0, 0.0, 50000.);
     RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 10000.);
-    RooRealVar num_bkg("Bkg", "Bkg", 100.0, 0.0, 100000.);
-    RooRealVar num_V49("V49", "V49", 1.0, 0.0, 50000.);
-    RooRealVar num_Cr51("Cr51", "Cr51", 1.0, 0.0, 50000.);
-    RooRealVar num_Mn54("Mn54", "Mn54", 1.0, 0.0, 50000.);
-    RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 50000.);
-    RooRealVar num_Co57("Co57", "Co57", 1.0, 0.0, 50000.);
-    RooRealVar num_Zn65("Zn65", "Zn65", 1.0, 0.0, 50000.);
-    RooRealVar num_Ga68("Ga68", "Ga68", 5.0, 0.0, 50000.);
-    RooRealVar num_Ge68("Ge68", "Ge68", 180.0, 0.0, 50000.);
-    RooRealVar num_As73("As73", "As73", 5.0, 0.0, 50000.);
-    RooRealVar num_Ge68L("Ge68L", "Ge68L", 0.0, 0.0, 50000.);
-    RooRealVar num_Pb210("Pb210", "Pb210", 1.0, 0.0, 50000.);
+    RooRealVar num_bkg("Bkg", "Bkg", 100.0, 0.0, 50000.);
+    RooRealVar num_V49("V49", "V49", 1.0, 0.0, 5000.);
+    RooRealVar num_Cr51("Cr51", "Cr51", 1.0, 0.0, 5000.);
+    RooRealVar num_Mn54("Mn54", "Mn54", 1.0, 0.0, 5000.);
+    RooRealVar num_Fe55("Fe55", "Fe55", 5.0, 0.0, 5000.);
+    RooRealVar num_Co57("Co57", "Co57", 1.0, 0.0, 5000.);
+    RooRealVar num_Zn65("Zn65", "Zn65", 1.0, 0.0, 5000.);
+    RooRealVar num_Ga68("Ga68", "Ga68", 5.0, 0.0, 5000.);
+    RooRealVar num_Ge68("Ge68", "Ge68", 180.0, 0.0, 5000.);
+    RooRealVar num_As73("As73", "As73", 5.0, 0.0, 5000.);
+    RooRealVar num_Ge68L("Ge68L", "Ge68L", 0.0, 0.0, 5000.);
+    RooRealVar num_Pb210("Pb210", "Pb210", 1.0, 0.0, 5000.);
 
     // RooRealVar num_Tot("Tot", "Tot", 5.0, 0.0, 100000.);
 

@@ -55,7 +55,8 @@ int main(int argc, char** argv)
 	liveTime[5] = {492.158+182.193, 138.461+197.769};
   liveTime[6] = {460.054+661.811+106.286+368.52+102.858+492.158+182.193, 171.021+63.2937+10.6791+81.7408+73.8446+138.461+197.769};
 
-  RunCutComparison(fDS, fitMin, fitMax, ftype);
+  // RunCutComparison(fDS, fitMin, fitMax, ftype);
+	RunBasicFit(fDS, fitMin, fitMax, ftype);
 
 	return 0;
 }
