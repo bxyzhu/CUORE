@@ -24,13 +24,14 @@ using namespace std;
 
 map<string, vector<double>> RunWenqin(vector<string> argS, int fDS, float fitMin, float fitMax, string theCut);
 map<string, vector<double>> RunWenqin(vector<string> argS, int fDS, float fitMin, float fitMax, string ftype, string theCut);
+void RunBasicFit(int fDS, double fitMin, double fitMax, string ftype);
 void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype);
 void CutEfficiencyStudy(int fDS, double fitMin, double fitMax, string ftype);
 
 int main(int argc, char** argv)
 {
-  	// gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
-  	// gROOT->ProcessLine("RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);");
+  	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+  	gROOT->ProcessLine("RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);");
 	if(argc <= 4)
 	{
 		cout << "Usage: " << argv[0] << " [DS] [Fit Min] [Fit Max] [Nat/Enr/Cut]" << endl;
@@ -370,4 +371,64 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     cout << "Fe55 (Before): " << Fe55Val1 << " +/- " << Fe55Err1 << endl;
     cout << "Fe55 (After): " << Fe55Val0 << " +/- " << Fe55Err0 << endl;
     cout << "Ratios: " << tritVal0/tritVal1 << " (Tritium) --- " << Ge68Val0/Ge68Val1 << " (Ge68) --- " << Fe55Val0/Fe55Val1 << " (Fe55)" << endl;
+}
+
+void RunBasicFit(int fDS, double fitMin, double fitMax, string ftype)
+{
+  // Basic fit, 1 round
+    string theCut0 = "";
+    int bNat = 0;
+    theCut0 += Form("trapENFCal>=%.2f&&trapENFCal<=%.2f", fitMin, fitMax); // Energy cut for fit range
+
+    if(ftype == "Nat" || ftype == "nat"){
+      theCut0 += "&&isNat"; // Set Enriched or Natural
+      bNat = 1;
+    }
+    else if(ftype == "Enr" || ftype == "enr") {
+      theCut0 += "&&isEnr";
+      bNat = 0;
+    }
+    else theCut0 = ftype;
+    GPXFitter *fitter0 = new GPXFitter(fDS, fitMin, fitMax);
+    fitter0->SetSavePrefix(Form("BasicFit_DS%d_%s_%.1f_%.1f", fDS, ftype.c_str(), fitMin, fitMax));
+
+    // Load data from TChain with a cut string
+    TChain *skimTree0 = new TChain("skimTree");
+    if(fDS == 6) {
+    skimTree0->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS1-*.root" );
+    skimTree0->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS2-*.root" );
+    skimTree0->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS3-*.root" );
+    skimTree0->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS4-*.root" );
+    skimTree0->Add("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS5-*.root" );
+    }
+    else skimTree0->Add(Form("/mnt/mjdDisk1/Majorana/data/sandbox/latv4/cuts/corrfs_rn/corrfs_rn-DS%d-*.root", fDS) );
+    fitter0->LoadChainData(skimTree0, theCut0);
+
+    // Construct PDF and do fit
+    fitter0->ConstructPDF();
+    fitter0->DoFit("Minuit");
+    fitter0->DrawBasicShit(0.2, false, false);
+    fitter0->GetFitResult()->Print("v");
+
+    vector<double> valTrit0 = fitter0->GetVar("Tritium");
+    double tritVal0 = valTrit0[0];
+    double tritErr0 = valTrit0[1];
+
+    vector<double> valGe0 = fitter0->GetVar("Ge68");
+    double Ge68Val0 = valGe0[0];
+    double Ge68Err0 = valGe0[1];
+
+		vector<double> valZn0 = fitter0->GetVar("Zn65");
+    double Zn65Val0 = valZn0[0];
+    double Zn65Err0 = valZn0[1];
+
+    vector<double> valFe0 = fitter0->GetVar("Fe55");
+    double Fe55Val0 = valFe0[0];
+    double Fe55Err0 = valFe0[1];
+
+    cout << "Basic Fit Results DS" << fDS << " (" << ftype.c_str() << ")" << endl;
+    cout << "Tritium: " << tritVal0 << " +/- " << tritErr0 << endl;
+    cout << "Ge68: " << Ge68Val0 << " +/- " << Ge68Err0 << endl;
+		cout << "Zn65: " << Zn65Val0 << " +/- " << Zn65Err0 << endl;
+    cout << "Fe55: " << Fe55Val0 << " +/- " << Fe55Err0 << endl;
 }
