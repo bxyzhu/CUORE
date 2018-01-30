@@ -369,5 +369,5 @@ void RunCutComparison(int fDS, double fitMin, double fitMax, string ftype)
     cout << "Ge68 (After): " << Ge68Val0 << " +/- " << Ge68Err0 << endl;
     cout << "Fe55 (Before): " << Fe55Val1 << " +/- " << Fe55Err1 << endl;
     cout << "Fe55 (After): " << Fe55Val0 << " +/- " << Fe55Err0 << endl;
-    cout << "Ratios: " << tritVal1/tritVal0 << " (Tritium) --- " << Ge68Val1/Ge68Val0 << " (Ge68) --- " << Fe55Val1/Fe55Val0 << " (Fe55)" << endl;
+    cout << "Ratios: " << tritVal0/tritVal1 << " (Tritium) --- " << Ge68Val0/Ge68Val1 << " (Ge68) --- " << Fe55Val0/Fe55Val1 << " (Fe55)" << endl;
 }
