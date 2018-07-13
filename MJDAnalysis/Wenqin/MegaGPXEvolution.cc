@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	vector<string> dsList = {"0", "1", "2", "3", "4", "5A", "5B", "5C", "All", "LowBkg"};
+	vector<string> dsList = {"0", "1", "2", "3", "4", "5A", "5B", "5C", "6", "All", "LowBkg"};
 	vector<string> modeList = {"All", "Nat", "Enr", "M1LowBkg", "M1All", "M2LowBkg"};
 
 	string fDS = argv[1];
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 	if(bDS == 0)
 	{
 		cout << fDS << " is not an available dataset option!" << endl;
-		cout << "Options are: 0, 1, 2, 3, 4, 5A, 5B, 5C, All, LowBkg" << endl;
+		cout << "Options are: 0, 1, 2, 3, 4, 5A, 5B, 5C, 6, All, LowBkg" << endl;
 		return 0;
 	}
 	if(bMode == 0)
@@ -70,6 +70,7 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
 		// Reject C2P5D3 from good detector list in M2, it only contributes noise in DS5a, doesn't seem to exist in DS5b and is tiny in DS5c
 		GPXFitter *fitter = new GPXFitter(fDS, fitMin, fitMax, fMode);
 
+		// Goes Dataset: {Enr, Nat}
 		std::map<std::string, std::vector<double>> expoFull;
 		expoFull["0"] = {400.9074811876048, 157.92594939476592};
 		expoFull["1"] = {631.539647097231, 29.523527363230723};
@@ -79,8 +80,9 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
 		expoFull["5A"] = {798.8446523114309, 337.4631592176636};
 		expoFull["5B"] = {624.1459839987111, 226.37080226302683};
 		expoFull["5C"] = {173.0972327703449, 63.354681716529285};
-		expoFull["All"] = {3118.5913929874637, 891.613177148996};
-		expoFull["LowBkg"] = {2717.683911799859, 733.6872277542301};
+		expoFull["6"] = {1144.5646365776347, 389.58469957417987};
+		expoFull["All"] = {4288.611020012726, 1282.2269447556757};
+		expoFull["LowBkg"] = {3862.2485483774935, 1123.27192732841};
 
 		std::map<std::string, std::vector<double>> expoM1;
 		expoM1["0"] = {400.9074811876048, 157.92594939476592};
@@ -91,8 +93,9 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
 		expoM1["5A"] = {643.9921013269255, 190.41003908459194};
 		expoM1["5B"] = {481.69736138877846, 114.86835044020026};
 		expoM1["5C"] = {137.6058203337168, 30.73016914149956};
-		expoM1["All"] = {2735.0198083850464, 577.2840140018184};
-		expoM1["LowBkg"] = {2334.1123271974416, 419.3580646070525};
+		expoM1["6"] = {865.5945009994206, 205.83109592058972};
+		expoM1["All"] = {3600.6143093844676, 624.1600924951423};
+		expoM1["LowBkg"] = {3199.7068281968627, 466.2341431003764};
 
 		std::map<std::string, std::vector<double>> expoM2;
 		expoM2["0"] = {0., 0.};
@@ -103,8 +106,9 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
 		expoM2["5A"] = {154.8525509845091, 147.05312013307218};
 		expoM2["5B"] = {142.44862260993472, 111.50245182282691};
 		expoM2["5C"] = {35.49141243662807, 32.62451257502965};
-		expoM2["All"] = {383.5715846024233, 314.3291631471784};
-		expoM2["LowBkg"] = {383.5715846024233, 314.3291631471784};
+		expoM2["6"] = {278.9701355782069, 183.75360365359083};
+		expoM2["All"] = {662.5417201806301, 498.08276680076926};
+		expoM2["LowBkg"] = {662.5417201806301, 498.08276680076926}; // Needs to be updated
 
 		string inDir = "/Users/brianzhu/project/LATv2/bkg/cut/final95";
 		string theCut = "";
@@ -156,7 +160,8 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
     skimTree->Add(Form("%s/final95_DS3*.root", inDir.c_str()) );
     skimTree->Add(Form("%s/final95_DS4*.root", inDir.c_str()) );
     skimTree->Add(Form("%s/final95_DS5*.root", inDir.c_str()) );
-		fitter->SetSavePrefix(Form("BasicFit_%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
+		skimTree->Add(Form("%s/final95_DS6*.root", inDir.c_str()) );
+		fitter->SetSavePrefix(Form("EffCorr_%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
 		}
 		else if(fDS == "LowBkg")
 		{
@@ -165,28 +170,29 @@ void RunBasicFit(string fDS, double fitMin, double fitMax, string fMode)
 			skimTree->Add(Form("%s/final95_DS3*.root", inDir.c_str()) );
 			skimTree->Add(Form("%s/final95_DS4*.root", inDir.c_str()) );
 			skimTree->Add(Form("%s/final95_DS5*.root", inDir.c_str()) );
-			fitter->SetSavePrefix(Form("BasicFit_%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
+			skimTree->Add(Form("%s/final95_DS6*.root", inDir.c_str()) );
+			fitter->SetSavePrefix(Form("EffCorr_%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
 		}
 		// Single Datasets
 		else {
 			skimTree->Add(Form("%s/final95_DS%s*.root", inDir.c_str(), fDS.c_str()) );
-			fitter->SetSavePrefix(Form("BasicFit_DS%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
+			fitter->SetSavePrefix(Form("EffCorr_DS%s_%s_%.1f_%.1f", fDS.c_str(), fMode.c_str(), fitMin, fitMax));
 		}
     fitter->LoadChainData(skimTree, theCut);
 
+		std::string effDir = "/Users/brianzhu/macros/code/LAT/data";
+		TFile *effFile = new TFile(Form("%s/lat-expo-efficiency_final95.root", effDir.c_str()));
+
     // Construct PDF and do fit
 		bool bNoEff = false; // Turns on-off efficiency
-
 		fitter->ConstructPDF(bNoEff);
 		fitter->DoFit("Minuit");
-		fitter->GetFitResult()->Print("v");
 		fitter->DrawBasic(0.3, true, false, false);
+		fitter->GetFitResult()->Print("v");
 
 		// vector<string> argTest = {"Tritium", "Ge68", "Zn65", "Fe55", "Mn54"};
 		// auto LimitMap = fitter->ProfileNLL(argTest);
 
-		// fitter->GetFitResult()->Print("v");
-    // fitter->GetFitResultEff()->Print("v");
 		// cout << "Extended Term: " << fitter->GetWorkspace()->pdf("model")->extendedTerm(1) << endl;
 
 /*

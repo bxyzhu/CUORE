@@ -88,7 +88,7 @@ class GPXFitter {
         void SaveShit(std::string outfileName = "TestOutput.root");
 
 				// Manually set efficiency histogram
-        void SetEfficiency(TH1D* effSpec){fEffSpec = effSpec;}
+        void SetEfficiency(TH1D* effSpec){fEffSpec = effSpec; bCustomEff = true;}
 
 				// Set an exposure map different from default
         void SetExposureMap(std::map<std::string, std::vector<double>> fExposure){fExposureMap = fExposure;}
@@ -122,7 +122,10 @@ class GPXFitter {
 				// Exposure Map
 				std::map<std::string, std::vector<double>> fExposureMap;
 
-        // Energy
+				// Efficiency Scaling Map
+				std::map<std::string, double> fEffMap;
+
+				// Energy
         RooRealVar *fEnergy;
 				RooFormulaVar *fEnergyShift;
 
@@ -140,6 +143,7 @@ class GPXFitter {
 				// RooAbsPdf *fModelPDFFinal;
 				// RooEffProd *fModelPDFFinal;
     	  TH1D *fEffSpec;
+				bool bCustomEff;
 
         // Minimizer
         RooMinimizer *fMinimizer;
