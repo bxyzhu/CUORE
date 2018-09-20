@@ -67,7 +67,8 @@ GPXFitter::GPXFitter() :
     fMinimizer(nullptr),
     fFitResult(nullptr),
     fFitWorkspace(nullptr),
-    bCustomEff(false),
+    fWFMode(false),
+    fDetMode(false),
     fSavePrefix("FitResult")
 {
   // Set default exposure as full exposure
@@ -84,7 +85,8 @@ GPXFitter::GPXFitter() :
   expoFull["All"] = {4288.611020012726, 1282.2269447556757};
   expoFull["LowBkg"] = {3862.2485483774935, 1123.27192732841};
   fExposureMap = expoFull;
-
+  fWFMode = false;
+  fDetMode = false;
 }
 
 GPXFitter::~GPXFitter()
@@ -124,15 +126,21 @@ GPXFitter::~GPXFitter()
 }
 
 // Constructs model PDF, use only after LoadData or else!
-void GPXFitter::ConstructPDF(bool bNoEff)
+void GPXFitter::ConstructPDF(bool bNoEff, bool bWFMode, string fCPD)
 {
+  fWFMode = bWFMode;
+  if (fMode == "Det") fDetMode = true;
   if (bNoEff) fSavePrefix += "NoEff";
-
+  if (bWFMode)
+  {
+    fSavePrefix += "WF";
+  }
   if(fRealData == nullptr)
 	{
 		std::cout << "Error: Data not loaded! Will Segfault!" << std::endl;
 		return;
 	}
+  cout << "Waveform Mode? " << fWFMode << endl;
     // RooWorkspace is necessary for the model and parameters to be persistent
     // this is necessary because we created a bunch of objects that aren't persistent here
     fFitWorkspace = new RooWorkspace("fFitWorkspace", "Fit Workspace");
@@ -163,101 +171,122 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     TH1D *Ge68Spec = dynamic_cast<TH1D*>(gausFile->Get("hGe68"));
     TH1D *As73Spec = dynamic_cast<TH1D*>(gausFile->Get("hAs73"));
     TH1D *Pb210Spec = dynamic_cast<TH1D*>(gausFile->Get("hPb210"));
+    TH1D *WFSpec = dynamic_cast<TH1D*>(gausFile->Get("hWF"));
 
-    TFile *pb210File = new TFile(Form("%s/Pb210PDFs_Full.root", tritDir.c_str()));
+    TFile *pb210File = new TFile(Form("%s/Pb210PDF_TDL.root", tritDir.c_str()));
     TH1D *pb210Spec = dynamic_cast<TH1D*>(pb210File->Get("hPb210"));
 
     // Copy the pb210 (to get the same binning) for the flat background
     TH1D *bkgSpec = dynamic_cast<TH1D*>(pb210Spec->Clone("hBkg"));
 
     std::string effDir = "/Users/brianzhu/macros/code/LAT/data";
-    TFile *effFile = new TFile(Form("%s/lat-expo-efficiency_final95.root", effDir.c_str()));
+    TFile *effFile = new TFile(Form("%s/lat-expo-efficiency_final95_Full.root", effDir.c_str()));
+    TFile *effFileDet = new TFile(Form("%s/lat-expo-efficiency_final95_Det.root", effDir.c_str())); // Channel specific
 
-    if(!bCustomEff)
+    cout << "Using configuration: " << fDS.c_str() << " " << fMode.c_str() << endl;
+    if(fDS == "All" || fDS == "LowBkg")
     {
-      cout << "Using configuration: " << fDS.c_str() << " " << fMode.c_str() << endl;
-      if(fDS == "All" || fDS == "LowBkg")
+      if(fMode == "AllDet")
       {
-        if(fMode == "All")
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS1_Nat"));
+        if(fDS == "All")
         {
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS1_Nat"));
-          if(fDS == "All")
-          {
-            fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Nat")));
-            fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Enr")));
-          }
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS4_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Nat")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS1_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS4_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr")));
-          fEffSpec->Scale(1./(fExposureMap[fDS][0] + fExposureMap[fDS][1]));
+          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Nat")));
+          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Enr")));
         }
-        else if(fMode == "Nat" || fMode == "Enr")
-        {
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS1_%s", fMode.c_str())));
-          if(fDS == "All") fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS0_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS2_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS3_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS4_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5A_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5B_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5C_%s", fMode.c_str()))));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS6_%s", fMode.c_str()))));
-          if(fMode == "Enr") fEffSpec->Scale(1./(fExposureMap[fDS][0]));
-          else if(fMode == "Nat") fEffSpec->Scale(1./(fExposureMap[fDS][1]));
-        }
-        else if (fMode == "M1All" || fMode == "M1LowBkg")
-        {
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS1_Enr_M1"));
-          if(fMode == "M1All")fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M1")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M1")));
-          fEffSpec->Scale(1./(fExposureMap[fDS][0]));
-        }
-        else if (fMode == "M2LowBkg")
-        {
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS4_Enr_M2"));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M2")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M2")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M2")));
-          fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M2")));
-          fEffSpec->Scale(1./(fExposureMap[fDS][0]));
-        }
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS4_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Nat")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS1_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS4_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr")));
+        fEffSpec->Scale(1./(fExposureMap[fDS][0] + fExposureMap[fDS][1]));
       }
-      // Specific Dataset selection
-      else
+      else if(fMode == "Nat" || fMode == "Enr")
       {
-        if (fMode == "All")
-        {
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Enr", fDS.c_str())));
-          fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Nat", fDS.c_str())));
-          fEffSpec->Scale(1./(fExposureMap[fDS][0] + fExposureMap[fDS][1]));
-        }
-        else if (fMode == "Enr") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr", fDS.c_str())));
-        else if (fMode == "Nat") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Nat", fDS.c_str())));
-        else if (fMode == "M1LowBkg") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr_M1", fDS.c_str())));
-        else if (fMode == "M2LowBkg") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr_M2", fDS.c_str())));
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS1_%s", fMode.c_str())));
+        if(fDS == "All") fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS0_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS2_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS3_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS4_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5A_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5B_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS5C_%s", fMode.c_str()))));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get(Form("hDS6_%s", fMode.c_str()))));
+        if(fMode == "Enr") fEffSpec->Scale(1./(fExposureMap[fDS][0]));
+        else if(fMode == "Nat") fEffSpec->Scale(1./(fExposureMap[fDS][1]));
+      }
+      else if (fMode == "LowBkg")
+      {
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS1_Enr_M1"));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS4_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M2")));
+        fEffSpec->Scale(1./(fExposureMap[fDS][0]));
+      }
+      else if (fMode == "M1All" || fMode == "M1LowBkg" || fMode == "M1Enr")
+      {
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS1_Enr_M1"));
+        if(fMode == "M1All")fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS0_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS2_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS3_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M1")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M1")));
+        fEffSpec->Scale(1./(fExposureMap[fDS][0]));
+      }
+      else if (fMode == "M2LowBkg" || fMode == "M2LowCosmo" || fMode == "M2Enr")
+      {
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get("hDS4_Enr_M2"));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5A_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5B_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS5C_Enr_M2")));
+        fEffSpec->Add(dynamic_cast<TH1D*>(effFile->Get("hDS6_Enr_M2")));
+        fEffSpec->Scale(1./(fExposureMap[fDS][0]));
+      }
+      else if (fMode == "Det")
+      {
+        fEffSpec = dynamic_cast<TH1D*>(effFileDet->Get(Form("hEff_%c%c%c", fCPD.c_str()[0], fCPD.c_str()[1],fCPD.c_str()[2])));
       }
     }
+    // Specific Dataset selection
     else
     {
-      cout << "Using Custom Efficiency Function" << endl;
+      if (fMode == "AllDet")
+      {
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Enr", fDS.c_str())));
+        fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Nat", fDS.c_str())));
+        fEffSpec->Scale(1./(fExposureMap[fDS][0] + fExposureMap[fDS][1]));
+      }
+      else if (fMode == "Enr") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr", fDS.c_str())));
+      else if (fMode == "Nat") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Nat", fDS.c_str())));
+      else if (fMode == "M1LowBkg") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr_M1", fDS.c_str())));
+      else if (fMode == "M2LowBkg" || fMode == "M2LowCosmo") fEffSpec = dynamic_cast<TH1D*>(effFile->Get(Form("hDS%s_Norm_Enr_M2", fDS.c_str())));
     }
+
+    // }
+    // else
+    // {
+    //   cout << "Using Custom Efficiency Function" << endl;
+    // }
 
     // Pre-scale pdfs with energy dependence with Efficiency
     double xVal = 0;
@@ -284,6 +313,7 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     fEffMap["As73"] = As73Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax));
     fEffMap["Pb210"] = Pb210Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax));
     fEffMap["pb210"] = pb210Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax));
+    if (fWFMode) fEffMap["WF"] = WFSpec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax));
 
     for(int i = 1; i < pb210Spec->GetNbinsX(); i++)
     {
@@ -307,6 +337,7 @@ void GPXFitter::ConstructPDF(bool bNoEff)
       As73Spec->SetBinContent(i, As73Spec->GetBinContent(i)*effVal);
       Pb210Spec->SetBinContent(i, Pb210Spec->GetBinContent(i)*effVal);
       pb210Spec->SetBinContent(i, pb210Spec->GetBinContent(i)*effVal); // Not validated for use
+      WFSpec->SetBinContent(i, WFSpec->GetBinContent(i)*effVal);
     }
     cout << "Maximum Efficiency: " << effMax << endl;
     cout << "Exposure (Enr): " << fExposureMap[fDS][0] << endl;
@@ -327,6 +358,8 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     fEffMap["As73"] /= As73Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax))/effMax;
     fEffMap["Pb210"] /= Pb210Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax))/effMax;
     fEffMap["pb210"] /= pb210Spec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax))/effMax;
+    fEffMap["WF"] /= WFSpec->Integral(tritSpec->FindBin(fFitMin),tritSpec->FindBin(fFitMax))/effMax;
+
     fEffMap["Tritium"] /= effMax;
     fEffMap["Bkg"] /= effMax;
     fEffMap["Ge68L"] /= effMax;
@@ -341,16 +374,17 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     fEffMap["As73"] /= effMax;
     fEffMap["Pb210"] /= effMax;
     fEffMap["pb210"] /= effMax;
+    fEffMap["WF"] /= effMax;
 
-    // for(auto m: fEffMap)
-    // {
-    //   cout << m.first << " " << m.second << endl;
-    // }
+    // Debugging efficiency
+    for(auto m: fEffMap)
+    {
+      cout << m.first << " " << m.second << endl;
+    }
 
     RooDataHist tritRooHist("tritBulk", "Tritium Histogram (Bulk)", *fEnergy, Import(*tritSpec));
     RooDataHist pb210RooHist("pb210", "Pb210 Histogram", *fEnergy, Import(*pb210Spec));
     RooDataHist bkgRooHist("bkg", "Background Histogram", *fEnergy, Import(*bkgSpec));
-
     RooDataHist Ge68LRooHist("Ge68L", "Ge68L Histogram", *fEnergy, Import(*Ge68LSpec));
     RooDataHist V49RooHist("V49", "V49 Histogram", *fEnergy, Import(*V49Spec));
     RooDataHist Cr51RooHist("Cr51", "Cr51 Histogram", *fEnergy, Import(*Cr51Spec));
@@ -362,6 +396,7 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     RooDataHist Ge68RooHist("Ge68", "Ge68 Histogram", *fEnergy, Import(*Ge68Spec));
     RooDataHist As73RooHist("As73", "As73 Histogram", *fEnergy, Import(*As73Spec));
     RooDataHist Pb210RooHist("Pb210", "Pb210 Histogram", *fEnergy, Import(*Pb210Spec));
+    RooDataHist WFRooHist("WF", "WF Collapse Histogram", *fEnergy, Import(*WFSpec));
 
     RooHistPdf tritPdf("tritPdf", "TritiumPdf", *fEnergy, tritRooHist, 1);
     RooHistPdf pb210Pdf("pb210Pdf", "Pb210Pdf", *fEnergy, pb210RooHist, 1);
@@ -377,23 +412,25 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     RooHistPdf Ge68_gauss("Ge68_gauss", "Ge68_gauss", *fEnergy, Ge68RooHist, 1);
     RooHistPdf As73_gauss("As73_gauss", "As73_gauss", *fEnergy, As73RooHist, 1);
     RooHistPdf Pb210_gauss("Pb210_gauss", "Pb210_gauss", *fEnergy, Pb210RooHist, 1);
+    RooHistPdf WFPdf("WFPdf", "WFPdf", *fEnergy, WFRooHist, 1);
 
     // Normalization parameters
     // Make names pretty for plots
-    RooRealVar num_trit("Tritium", "Tritium", 1000.0, 0.0, 50000.);
+    RooRealVar num_trit("Tritium", "Tritium", 1000.0, 0.0, 100000.);
     RooRealVar num_axion("Axion", "Axion", 0.0, 0.0, 1000.);
-    RooRealVar num_bkg("Bkg", "Bkg", 1500, 0.0, 10000.);
+    RooRealVar num_bkg("Bkg", "Bkg", 1500, 0.0, 50000.);
     RooRealVar num_V49("V49", "V49", 0.0, 0.0, 1000.);
-    RooRealVar num_Cr51("Cr51", "Cr51", 0.0, 0.0, 1000.);
-    RooRealVar num_Mn54("Mn54", "Mn54", 0.0, 0.0, 1000.);
-    RooRealVar num_Fe55("Fe55", "Fe55", 3.0, 0.0, 1000.);
-    RooRealVar num_Co57("Co57", "Co57", 0.0, 0.0, 1000.);
-    RooRealVar num_Zn65("Zn65", "Zn65", 10.0, 0.0, 1000.);
+    RooRealVar num_Cr51("Cr51", "Cr51", 0.0, 0.0, 5000.);
+    RooRealVar num_Mn54("Mn54", "Mn54", 0.0, 0.0, 5000.);
+    RooRealVar num_Fe55("Fe55", "Fe55", 3.0, 0.0, 5000.);
+    RooRealVar num_Co57("Co57", "Co57", 0.0, 0.0, 5000.);
+    RooRealVar num_Zn65("Zn65", "Zn65", 10.0, 0.0, 5000.);
     RooRealVar num_Ga68("Ga68", "Ga68", 1.0, 0.0, 1000.);
-    RooRealVar num_Ge68("Ge68", "Ge68", 50.0, 0.0, 1000.);
-    RooRealVar num_As73("As73", "As73", 0.0, 0.0, 1000.);
+    RooRealVar num_Ge68("Ge68", "Ge68", 50.0, 0.0, 5000.);
+    RooRealVar num_As73("As73", "As73", 0.0, 0.0, 5000.);
     RooRealVar num_Ge68L("Ge68L", "Ge68L", 0.0, 0.0, 10.);
     RooRealVar num_Pb210("Pb210", "Pb210", 300.0, 0.0, 5000.);
+    RooRealVar num_WF("WF", "WF", 0.0, 0.0, 5000.);
 
     // Extended PDF model -- use this to create an extended model
     RooExtendPdf tritPdfe("tritPdfe", "Extended Tritium", tritPdf, num_trit);
@@ -411,6 +448,7 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     RooExtendPdf Ge68L_gausse("Ge68L_gausse", "Extended Ge68L_gauss", Ge68L_gauss, num_Ge68L);
     // Using Gaussian
     RooExtendPdf Pb210_gausse("Pb210_gausse", "Extended Pb210_gauss", Pb210_gauss, num_Pb210);
+    RooExtendPdf WFPdfe("WFPdfe", "Extended WFPdf", WFPdf, num_WF);
     // Using MaGe PDF
     // RooExtendPdf Pb210_gausse("Pb210_gausse", "Extended Pb210_gauss", pb210Pdf, num_Pb210);
 
@@ -418,6 +456,8 @@ void GPXFitter::ConstructPDF(bool bNoEff)
     shapes.add(Ga68_gausse);
     if(fFitMin < 1.0) shapes.add(Ge68L_gausse);
     if(fFitMax > 48) shapes.add(Pb210_gausse);
+    // if(fWFMode) shapes.add(WFPdfe);
+
     // Additional PDFs we don't use, but we can use
     // shapes.add(V49_gausse);
     // shapes.add(Cr51_gausse);
@@ -440,7 +480,7 @@ void GPXFitter::DoFit(std::string Minimizer)
     // Create minimizer, fit model to data and save result
     fMinimizer = new RooMinimizer(*fNLL);
     fMinimizer->setMinimizerType(Form("%s", Minimizer.c_str()));
-    fMinimizer->setPrintLevel(-1);
+    fMinimizer->setPrintLevel(1);
     fMinimizer->setStrategy(2);
     fMinimizer->migrad();
     fMinimizer->hesse();
@@ -453,7 +493,6 @@ void GPXFitter::DoFit(std::string Minimizer)
 
 void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool drawMatrix)
 {
-
     TCanvas *cSpec = new TCanvas("cSpec", "cSpec", 1100, 800);
     // cSpec->SetLogy();
     RooPlot* frameFit = fEnergy->frame(Range(fFitMin, fFitMax), Bins((fFitMax - fFitMin)*1.0/binSize + 0.5));
@@ -469,6 +508,8 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
     fModelPDF->plotOn(frameFit, Components("Fe55_gausse"), LineColor(kYellow+1), LineStyle(kDashed));
     fModelPDF->plotOn(frameFit, Components("Zn65_gausse"), LineColor(kMagenta-1), LineStyle(kDashed));
     fModelPDF->plotOn(frameFit, Components("Pb210_gausse"), LineColor(kBlack), LineStyle(kDashed));
+    if(fWFMode) fModelPDF->plotOn(frameFit, Components("WFPdfe"), LineColor(kBlue+1), LineStyle(kDashed));
+
     string figTitle = "";
     if (fMode == "M1LowBkg" && fDS == "LowBkg")
     {
@@ -479,6 +520,22 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
       figTitle = "Module 1 Enriched (DS0-6)";
     }
     else if (fMode == "M2LowBkg" && fDS == "LowBkg")
+    {
+      figTitle = "Module 2 Enriched (DS4-6)";
+    }
+    else if (fMode == "LowBkg" && fDS == "LowBkg")
+    {
+      figTitle = "Module 1 & 2 Enriched (DS1-6)";
+    }
+    else if (fMode == "LowBkg" && fDS == "Enr")
+    {
+      figTitle = "Module 1 & 2 Enriched (DS1-6)";
+    }
+    else if (fMode == "LowBkg" && fDS == "M1Enr")
+    {
+      figTitle = "Module 1 Enriched (DS1-6)";
+    }
+    else if (fMode == "LowBkg" && fDS == "M2Enr")
     {
       figTitle = "Module 2 Enriched (DS4-6)";
     }
@@ -500,6 +557,10 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
     TH1D *tritSpec = dynamic_cast<TH1D*>(tritFile->Get("tritHist"));
     tritSpec->Scale(1./tritSpec->Integral("w"));
 
+    TFile *gausFile = new TFile(Form("%s/GausCosmoPDFs.root", tritDir.c_str()));
+    TH1D *WFSpec = dynamic_cast<TH1D*>(gausFile->Get("hWF"));
+    WFSpec->Scale(1./WFSpec->Integral("w"));
+
     // Grab fitted values, also apply efficiency correction to each parameter
     double tritVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Tritium") )->getValV()*fEffMap["Tritium"];
     double tritErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Tritium") )->getError()*fEffMap["Tritium"];
@@ -519,6 +580,17 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
     double pbErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Pb210"))->getError()*fEffMap["Pb210"];
     double bkgVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getValV()*fEffMap["Bkg"];
     double bkgErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("Bkg"))->getError()*fEffMap["Bkg"];
+    double wfVal = 0.;
+    double wfErr = 0.;
+    double wfValCorr = 0.;
+    double wfErrCorr = 0.;
+    if(fWFMode)
+    {
+      wfVal = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("WF"))->getValV()*fEffMap["WF"];
+      wfErr = dynamic_cast<RooRealVar*>(fFitResult->floatParsFinal().find("WF"))->getError()*fEffMap["WF"];
+      wfValCorr = wfVal/(WFSpec->Integral(WFSpec->FindBin(fFitMin), WFSpec->FindBin(fFitMax)));
+      wfErrCorr = wfErr/(WFSpec->Integral(WFSpec->FindBin(fFitMin), WFSpec->FindBin(fFitMax)));
+    }
 
     if(drawLabels)
     {
@@ -548,11 +620,17 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
       dynamic_cast<TText*>(leg->GetListOfLines()->Last())->SetTextColor(kBlack);
       leg->AddText(Form("Bkg: %.3f #pm %.3f", bkgVal, bkgErr));
       dynamic_cast<TText*>(leg->GetListOfLines()->Last())->SetTextColor(kGreen+1);
+      if (fWFMode)
+      {
+        leg->AddText(Form("WF Collapse: %.3f #pm %.3f", wfValCorr, wfErrCorr));
+        dynamic_cast<TText*>(leg->GetListOfLines()->Last())->SetTextColor(kBlue+1);
+      }
+
       frameFit->addObject(leg);
     }
 
     frameFit->Draw();
-    cSpec->SaveAs(Form("./LATv2Result/%s_Spec.pdf", fSavePrefix.c_str()) );
+    cSpec->SaveAs(Form("./CosmoFits/%s_Spec.pdf", fSavePrefix.c_str()) );
     fFitWorkspace->import(*frameFit);
 
     if(drawMatrix)
@@ -560,7 +638,7 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
         TCanvas *cMatrix = new TCanvas("cMatrix", "cMatrix", 1100, 800);
         TH2D *fCorrMatrix = dynamic_cast<TH2D*>(fFitResult->correlationHist("Correlation Matrix"));
         fCorrMatrix->Draw("colz");
-        cMatrix->SaveAs(Form("./LATv2Result/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
+        cMatrix->SaveAs(Form("./CosmoFits/%s_CorrMatrix.pdf", fSavePrefix.c_str()) );
         fFitWorkspace->import(*fCorrMatrix);
     }
 
@@ -573,7 +651,7 @@ void GPXFitter::DrawBasic(double binSize, bool drawLabels, bool drawResid, bool 
         frameResid->addPlotable(hresid, "P");
         frameResid->GetYaxis()->SetTitle("Residuals");
         frameResid->Draw();
-        cResidual->SaveAs(Form("./LATv2Result/%s_Residual.pdf", fSavePrefix.c_str()) );
+        cResidual->SaveAs(Form("./CosmoFits/%s_Residual.pdf", fSavePrefix.c_str()) );
     }
 }
 
@@ -585,7 +663,7 @@ void GPXFitter::DrawModels(double binSize)
   fModelPDF->plotOn(frameFit, LineColor(kBlue));
   frameFit->SetTitle("");
   frameFit->Draw();
-  cModels->SaveAs(Form("./LATv2Result/%s_Models.pdf", fSavePrefix.c_str()) );
+  cModels->SaveAs(Form("./CosmoFits/%s_Models.pdf", fSavePrefix.c_str()) );
 }
 
 void GPXFitter::DrawContour(std::string argN1, std::string argN2)
@@ -607,7 +685,7 @@ void GPXFitter::DrawContour(std::string argN1, std::string argN2)
     frameContour->Draw();
 
     // Save plots into workspace and pdf
-    cContour->SaveAs(Form("./LATv2Result/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
+    cContour->SaveAs(Form("./CosmoFits/%s_Contour_%svs%s.pdf", fSavePrefix.c_str(), argN2.c_str(), argN1.c_str()));
     fFitWorkspace->import(*frameContour);
 }
 
@@ -683,7 +761,7 @@ void GPXFitter::GenerateMCStudy(std::vector<std::string> argS, int nMC)
 
         // Save MC Study to plot and workspace
         // fFitWorkspace->import(*fMCStudy);
-        cMCStudy->SaveAs(Form("./LATv2Result/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
+        cMCStudy->SaveAs(Form("./CosmoFits/%s_%s_MCStudy.pdf", fSavePrefix.c_str(), argN.c_str()) );
     }
 }
 
@@ -804,7 +882,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
         RooStats::LikelihoodIntervalPlot plot(interval);
         plot.SetRange(parVal - 1.5*(parVal - lowerLimit), parVal + 1.5*(upperLimit-parVal) );
         plot.Draw();
-        cNLL->SaveAs(Form("./LATv2Result/%s_%sNLL.C", fSavePrefix.c_str(), argN.c_str()) );
+        cNLL->SaveAs(Form("./CosmoFits/%s_%sNLL.C", fSavePrefix.c_str(), argN.c_str()) );
         std::vector<double> Limits = {lowerLimit, upperLimit};
         LimitMap[argN.c_str()] = Limits;
     }
@@ -814,7 +892,7 @@ std::map<std::string, std::vector<double>> GPXFitter::ProfileNLL(std::vector<std
 
 void GPXFitter::SaveShit(std::string outfileName)
 {
-    TFile *fOut = new TFile( Form("./LATv2Result/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
+    TFile *fOut = new TFile( Form("./CosmoFits/%s_%s", fSavePrefix.c_str(), outfileName.c_str()), "RECREATE" );
     fOut->cd();
     fFitWorkspace->Write();
     fOut->Close();

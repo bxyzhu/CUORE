@@ -36,7 +36,7 @@ class GPXFitter {
 		virtual ~GPXFitter();
 
         // Constructs model PDF -- MUST be called after LoadData()!
-        virtual void ConstructPDF(bool bNoEff = false);
+        virtual void ConstructPDF(bool bNoEff = false, bool bWFMode = false, std::string fCPD="");
 
         // Do the fit
         // Set minimizer type here also... there's like Minuit, Minuit2, probably more
@@ -88,7 +88,7 @@ class GPXFitter {
         void SaveShit(std::string outfileName = "TestOutput.root");
 
 				// Manually set efficiency histogram
-        void SetEfficiency(TH1D* effSpec){fEffSpec = effSpec; bCustomEff = true;}
+        void SetEfficiency(TH1D* effSpec){fEffSpec = effSpec;}
 
 				// Set an exposure map different from default
         void SetExposureMap(std::map<std::string, std::vector<double>> fExposure){fExposureMap = fExposure;}
@@ -144,6 +144,8 @@ class GPXFitter {
 				// RooEffProd *fModelPDFFinal;
     	  TH1D *fEffSpec;
 				bool bCustomEff;
+				bool fWFMode;
+				bool fDetMode;
 
         // Minimizer
         RooMinimizer *fMinimizer;
